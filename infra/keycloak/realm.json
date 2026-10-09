@@ -1,0 +1,66 @@
+{
+  "realm": "magic-shop",
+  "enabled": true,
+  "sslRequired": "all",
+  "registrationAllowed": false,
+  "registrationEmailAsUsername": false,
+  "resetPasswordAllowed": false,
+  "editUsernameAllowed": false,
+  "accessTokenLifespan": 120,
+  "ssoSessionIdleTimeout": 300,
+  "ssoSessionMaxLifespan": 600,
+  "roles": {"realm": [{"name":"customer"},{"name":"shopkeeper"},{"name":"shop-admin"}]},
+  "authenticationFlows": [{
+    "id": "certificate-browser",
+    "alias": "certificate-browser",
+    "providerId": "basic-flow",
+    "topLevel": true,
+    "builtIn": false,
+    "authenticationExecutions": [{
+      "authenticator": "auth-x509-client-username-form",
+      "authenticatorConfig": "certificate-config",
+      "requirement": "REQUIRED",
+      "priority": 10,
+      "authenticatorFlow": false,
+      "userSetupAllowed": false
+    }]
+  }],
+  "browserFlow": "certificate-browser",
+  "authenticatorConfig": [{"alias":"certificate-config","config":{
+    "x509-cert-auth.mapping-source-selection": "Subject's Common Name",
+    "x509-cert-auth.mapper-selection": "Custom Attribute Mapper",
+    "x509-cert-auth.mapper-selection.user-attribute-name": "cert_identity",
+    "x509-cert-auth.confirmation-page-disallowed": "true",
+    "x509-cert-auth.timestamp-validation-enabled": "true",
+    "x509-cert-auth.revalidate-certificate-enabled": "true",
+    "x509-cert-auth.keyusage": "digitalSignature",
+    "x509-cert-auth.extendedkeyusage": "1.3.6.1.5.5.7.3.2",
+    "x509-cert-auth.crl-checking-enabled": "true",
+    "x509-cert-auth.crldp-checking-enabled": "false",
+    "x509-cert-auth.crl-relative-path": "crl/user.crl.pem",
+    "x509-cert-auth-crl-abort-if-non-updated": "true",
+    "x509-cert-auth.ocsp-checking-enabled": "false"
+  }}],
+  "components": {"org.keycloak.userprofile.UserProfileProvider": [{
+    "providerId": "declarative-user-profile",
+    "config": {"kc.user.profile.config": ["{\"attributes\":[{\"name\":\"username\",\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\"]}},{\"name\":\"email\",\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\"]}},{\"name\":\"cert_identity\",\"multivalued\":false,\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\"]}}]}"]}
+  }]},
+  "clients": [{
+    "clientId": "shop-spa",
+    "publicClient": true,
+    "standardFlowEnabled": true,
+    "directAccessGrantsEnabled": false,
+    "implicitFlowEnabled": false,
+    "serviceAccountsEnabled": false,
+    "redirectUris": ["https://shop.magic.test:8443/callback"],
+    "webOrigins": ["https://shop.magic.test:8443"],
+    "attributes": {"pkce.code.challenge.method": "S256", "post.logout.redirect.uris": "https://shop.magic.test:8443/"},
+    "authenticationFlowBindingOverrides": {"browser":"certificate-browser"},
+    "protocolMappers": [
+      {"name":"certificate-identity","protocol":"openid-connect","protocolMapper":"oidc-usermodel-attribute-mapper","config":{"user.attribute":"cert_identity","claim.name":"cert_identity","jsonType.label":"String","multivalued":"false","access.token.claim":"true","id.token.claim":"false"}},
+      {"name":"catalog-audience","protocol":"openid-connect","protocolMapper":"oidc-audience-mapper","config":{"included.custom.audience":"catalog-api","access.token.claim":"true","id.token.claim":"false"}},
+      {"name":"customer-audience","protocol":"openid-connect","protocolMapper":"oidc-audience-mapper","config":{"included.custom.audience":"customer-api","access.token.claim":"true","id.token.claim":"false"}},
+      {"name":"insights-audience","protocol":"openid-connect","protocolMapper":"oidc-audience-mapper","config":{"included.custom.audience":"insights-api","access.token.claim":"true","id.token.claim":"false"}}
+    ]
+  }]
+}

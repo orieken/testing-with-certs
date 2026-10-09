@@ -1,0 +1,5 @@
+FROM postgres:16.15-trixie@sha256:65b16a8b326e0cfbdf33fa7e783f2a0cb352a61448616ccccfd616ef42aa0f65
+COPY infra/postgres/secure-entrypoint.sh /usr/local/bin/secure-entrypoint.sh
+COPY infra/postgres/pg_hba.conf /etc/postgresql/pg_hba.conf
+RUN chmod 0755 /usr/local/bin/secure-entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/secure-entrypoint.sh"]

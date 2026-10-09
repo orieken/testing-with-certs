@@ -1,0 +1,116 @@
+name: certificate-login-spike
+services:
+  pki:
+    build: {context: ., dockerfile: container/Pki.Dockerfile}
+    profiles: [tools]
+    network_mode: none
+    volumes:
+      - ca-state:/state
+      - public-trust:/public
+      - gateway-cert:/gateway
+      - keycloak-cert:/keycloak
+      - landing-cert:/landing
+      - fixtures:/fixtures
+      - manual-customer:/manual-customer
+      - manual-admin:/manual-admin
+  keycloak:
+    build: {context: ., dockerfile: container/Keycloak.Dockerfile}
+    environment:
+      KC_HOSTNAME: https://auth.magic.test:9443
+      KC_HTTP_ENABLED: "false"
+      KC_HTTP_MANAGEMENT_SCHEME: http
+      KC_HTTP_MANAGEMENT_HOST: 127.0.0.1
+      KC_HTTPS_CERTIFICATE_FILE: /credentials/cert.pem
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /credentials/key.pem
+      KC_HTTPS_CLIENT_AUTH: request
+      KC_TRUSTSTORE_PATHS: /trust/user-ca.pem
+      JAVA_OPTS_APPEND: -Djboss.server.config.dir=/opt/keycloak/conf
+    volumes:
+      - keycloak-cert:/credentials:ro
+      - public-trust:/trust:ro
+      - public-trust:/opt/keycloak/conf/crl:ro
+      - keycloak-data:/opt/keycloak/data
+    networks: [auth]
+    mem_limit: 1g
+    cpus: 2
+    healthcheck:
+      test: [CMD-SHELL, "bash -c 'exec 3<>/dev/tcp/127.0.0.1/9000; printf \"GET /health/ready HTTP/1.0\\r\\n\\r\\n\" >&3; grep -q UP <&3'"]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+  landing:
+    build: {context: ., dockerfile: container/Landing.Dockerfile}
+    environment:
+      NODE_EXTRA_CA_CERTS: /public/server-ca.pem
+    volumes:
+      - landing-cert:/landing:ro
+      - public-trust:/public:ro
+    networks: [back, front]
+    mem_limit: 256m
+    cpus: 1
+  gateway:
+    build: {context: ., dockerfile: container/Gateway.Dockerfile}
+    user: "1000:1000"
+    volumes:
+      - gateway-cert:/gateway:ro
+      - public-trust:/public:ro
+    networks:
+      front:
+        aliases: [shop.magic.test, auth.magic.test, wrong.magic.test]
+      back: {}
+      auth: {}
+    depends_on:
+      keycloak: {condition: service_healthy}
+      landing: {condition: service_started}
+    mem_limit: 128m
+    cpus: 1
+  tests:
+    build: {context: ., dockerfile: container/Runner.Dockerfile, platforms: [linux/amd64]}
+    image: certificate-login-runner:01
+    platform: linux/amd64
+    profiles: [test]
+    init: true
+    shm_size: 1g
+    environment:
+      NODE_EXTRA_CA_CERTS: /public/server-ca.pem
+      HOME: /tmp/browser-home
+      LAB_BROWSER: ${LAB_BROWSER:-chrome}
+      EXPECT_REVOKED: ${EXPECT_REVOKED:-false}
+    volumes:
+      - fixtures:/fixtures:ro
+      - public-trust:/public:ro
+    networks: [front]
+    mem_limit: 2g
+    cpus: 2
+  manual:
+    image: certificate-login-runner:01
+    platform: linux/amd64
+    profiles: [manual]
+    init: true
+    shm_size: 1g
+    environment:
+      HOME: /tmp/browser-home
+      LAB_BROWSER: ${LAB_BROWSER:-chrome}
+      LAB_USER: ${LAB_USER:-customer}
+    command: ["sh", "/work/container/manual.sh"]
+    volumes:
+      - manual-${LAB_USER:-customer}:/identity:ro
+      - public-trust:/public:ro
+    ports: ["127.0.0.1:6080:6080"]
+    networks: [front]
+    mem_limit: 2g
+    cpus: 2
+networks:
+  front: {}
+  back: {internal: true}
+  auth: {internal: true}
+volumes:
+  ca-state: {}
+  public-trust: {}
+  gateway-cert: {}
+  keycloak-cert: {}
+  landing-cert: {}
+  fixtures: {}
+  manual-customer: {}
+  manual-admin: {}
+  keycloak-data: {}

@@ -1,0 +1,6 @@
+[project]
+name = "magic-shop-insights-api"
+version = "0.1.0"
+description = "Certificate-authenticated regional reporting and local follow-ups"
+requires-python = ">=3.12,<3.15"
+dependencies = ["PyJWT[crypto]==2.15.1", "psycopg[binary]==3.2.13"]

@@ -1,0 +1,24 @@
+{
+  "sourceRevision": "b5d3b1e45e4e45ffd0384958c9159298ae4395ca",
+  "sourceFiles": {
+    "packages/saturday-playwright-certs/src/index.ts": "4846345484646294bb7fefdbb09b24cce1d9b024d156d4835c6e8a913e6f3674",
+    "packages/saturday-playwright-certs/src/fixture.ts": "a0886bd8b7f69104f238c2d09cf4539a8a465c341fe5f631c17a8b28a554acf4",
+    "packages/saturday-playwright-certs/tsconfig.json": "7f98c276a91b104c0763f5c656b73b5e0be834c4a7d8a1ea69cc62cc563eb4b8",
+    "packages/saturday-playwright-certs/package.json": "701297164d199681e34989efef2a3a826ca1bb686de6e8ec7cc117e71502be43",
+    "packages/saturday-playwright-certs/README.md": "375da3f7878b186dd36b4774cce0d53a46a33a49f99a7994a5d9827f4f20f96b",
+    "LICENSE": "0ab63a93e82ed08cd4ea2ef988c102e61f2c1b062b26d4e0b6cea11adcab7863",
+    "NOTICE": "1ead892e287ab83e03cd2ab1dc0e14850b6cf30f711dd66c0a8c551a3ed13a12"
+  },
+  "tarballSha256": "e6e2d73dab528a27381de940719f009e3a50ecaa0a6dd7857cb95e54a33b58b3",
+  "toolchain": {
+    "node": "24.10.0",
+    "tsup": "8.5.1",
+    "typescript": "5.9.3"
+  },
+  "adaptations": [
+    "workspace core dependency changed to published 0.1.3",
+    "build scripts omitted from packed manifest",
+    "LICENSE and NOTICE included",
+    "package file list restricted to built dist, README, LICENSE and NOTICE"
+  ]
+}

@@ -1,0 +1,26 @@
+npm notice
+npm notice package: @orieken/saturday-playwright-certs@0.1.0
+npm notice Tarball Contents
+npm notice 11.3kB LICENSE
+npm notice 233B NOTICE
+npm notice 5.5kB README.md
+npm notice 2.6kB dist/fixture.cjs
+npm notice 470B dist/fixture.d.cts
+npm notice 470B dist/fixture.d.ts
+npm notice 897B dist/fixture.js
+npm notice 3.1kB dist/index.cjs
+npm notice 1.9kB dist/index.d.cts
+npm notice 1.9kB dist/index.d.ts
+npm notice 1.9kB dist/index.js
+npm notice 1.1kB package.json
+npm notice Tarball Details
+npm notice name: @orieken/saturday-playwright-certs
+npm notice version: 0.1.0
+npm notice filename: orieken-saturday-playwright-certs-0.1.0.tgz
+npm notice package size: 9.3 kB
+npm notice unpacked size: 31.3 kB
+npm notice shasum: 42e826e112b22d70ca5072c38c4656f6c51d5c75
+npm notice integrity: sha512-YmcUeLeazqrcG[...]n04X8j4PLaEUA==
+npm notice total files: 12
+npm notice
+/output/orieken-saturday-playwright-certs-0.1.0.tgz: OK

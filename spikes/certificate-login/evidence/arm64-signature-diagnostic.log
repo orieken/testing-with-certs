@@ -1,0 +1,20 @@
+Unable to find image 'node:24.10.0-bookworm-slim' locally
+24.10.0-bookworm-slim: Pulling from library/node
+Digest: sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+Status: Downloaded newer image for node:24.10.0-bookworm-slim
+Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+Err:1 http://deb.debian.org/debian bookworm InRelease
+  At least one invalid signature was encountered.
+Err:2 http://deb.debian.org/debian bookworm-updates InRelease
+  At least one invalid signature was encountered.
+Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
+Err:3 http://deb.debian.org/debian-security bookworm-security InRelease
+  At least one invalid signature was encountered.
+Reading package lists...
+W: GPG error: http://deb.debian.org/debian bookworm InRelease: At least one invalid signature was encountered.
+E: The repository 'http://deb.debian.org/debian bookworm InRelease' is not signed.
+W: GPG error: http://deb.debian.org/debian bookworm-updates InRelease: At least one invalid signature was encountered.
+E: The repository 'http://deb.debian.org/debian bookworm-updates InRelease' is not signed.
+W: GPG error: http://deb.debian.org/debian-security bookworm-security InRelease: At least one invalid signature was encountered.
+E: The repository 'http://deb.debian.org/debian-security bookworm-security InRelease' is not signed.

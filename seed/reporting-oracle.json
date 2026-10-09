@@ -1,0 +1,15 @@
+{
+  "period":{"from":"2026-09-01T00:00:00Z","to":"2026-10-01T00:00:00Z","status":"completed","dateField":"completedAt","bounds":"from-inclusive-to-exclusive"},
+  "overall":{"orderCount":5,"customerCount":2,"salesCopper":124000},
+  "regions":[
+    {"regionId":"waterdeep","orderIds":["order-001","order-002","order-009"],"customerSubs":["10101010-1010-4010-8010-101010101010","20202020-2020-4020-8020-202020202020"],"orderCount":3,"customerCount":2,"salesCopper":57000},
+    {"regionId":"baldurs-gate","orderIds":["order-003"],"customerSubs":["20202020-2020-4020-8020-202020202020"],"orderCount":1,"customerCount":1,"salesCopper":27000},
+    {"regionId":"neverwinter","orderIds":["order-007"],"customerSubs":["10101010-1010-4010-8010-101010101010"],"orderCount":1,"customerCount":1,"salesCopper":40000},
+    {"regionId":"empty-march","orderIds":[],"customerSubs":[],"orderCount":0,"customerCount":0,"salesCopper":0}
+  ],
+  "boundaryChecks":[
+    {"from":"2026-09-02T00:00:00Z","to":"2026-09-03T00:00:00Z","orderIds":["order-002","order-003"],"salesCopper":57000},
+    {"from":"2026-10-01T00:00:00Z","to":"2026-10-02T00:00:00Z","orderIds":["order-008"],"salesCopper":5000}
+  ],
+  "snapshotCheck":{"orderId":"order-002","itemId":"cloak-shadows","unitPriceCopper":30000,"currentCatalogPriceCopper":35000}
+}

@@ -1,0 +1,16 @@
+Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
+Err:1 http://deb.debian.org/debian bookworm InRelease
+  At least one invalid signature was encountered.
+Err:2 http://deb.debian.org/debian bookworm-updates InRelease
+  At least one invalid signature was encountered.
+Err:3 http://deb.debian.org/debian-security bookworm-security InRelease
+  At least one invalid signature was encountered.
+Reading package lists...
+W: GPG error: http://deb.debian.org/debian bookworm InRelease: At least one invalid signature was encountered.
+E: The repository 'http://deb.debian.org/debian bookworm InRelease' is not signed.
+W: GPG error: http://deb.debian.org/debian bookworm-updates InRelease: At least one invalid signature was encountered.
+E: The repository 'http://deb.debian.org/debian bookworm-updates InRelease' is not signed.
+W: GPG error: http://deb.debian.org/debian-security bookworm-security InRelease: At least one invalid signature was encountered.
+E: The repository 'http://deb.debian.org/debian-security bookworm-security InRelease' is not signed.

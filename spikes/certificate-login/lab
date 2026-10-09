@@ -1,0 +1,19 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")"
+case "${LAB_USER:-customer}" in customer|admin) ;; *) echo 'LAB_USER must be customer or admin' >&2; exit 2;; esac
+case "${LAB_BROWSER:-chrome}" in chrome|msedge) ;; *) echo 'LAB_BROWSER must be chrome or msedge' >&2; exit 2;; esac
+case "${1:-}" in
+  build) docker compose build pki keycloak landing gateway tests;;
+  up) docker compose run --rm pki init; docker compose up -d --wait --wait-timeout 180 keycloak landing gateway;;
+  test) shift; docker compose run --rm tests npm test -- "$@";;
+  cucumber) docker compose run --rm tests npm run bdd;;
+  unit) docker compose run --rm tests sh -c 'npm run typecheck && npm run unit';;
+  no-trust) docker compose run --rm --entrypoint env tests -u NODE_EXTRA_CA_CERTS node --import tsx tests/no-trust.ts;;
+  manual) docker compose up -d --force-recreate manual;;
+  viewer-password) docker compose exec manual cat /tmp/viewer-password;;
+  native) docker compose run --rm --no-deps manual sh -c 'sh /work/container/native-identity.sh; exec xvfb-run -a node --import tsx tests/native.ts';;
+  revoke) docker compose run --rm pki revoke; docker compose restart gateway keycloak; docker compose up -d --wait --wait-timeout 180 keycloak gateway;;
+  down) docker compose --profile manual down;;
+  *) echo 'Usage: ./lab build|up|test|cucumber|unit|no-trust|manual|viewer-password|native|revoke|down' >&2; exit 2;;
+esac

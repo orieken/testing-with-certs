@@ -1,0 +1,292 @@
+ Image certificate-login-spike-keycloak Building 
+ Image certificate-login-spike-landing Building 
+ Image certificate-login-runner:01 Building 
+ Image certificate-login-spike-pki Building 
+ Image certificate-login-spike-gateway Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.99kB done
+#1 DONE 0.0s
+
+#2 [landing internal] load build definition from Landing.Dockerfile
+#2 transferring dockerfile: 807B done
+#2 DONE 0.2s
+
+#3 [gateway internal] load build definition from Gateway.Dockerfile
+#3 transferring dockerfile: 430B done
+#3 DONE 0.1s
+
+#4 [pki internal] load build definition from Pki.Dockerfile
+#4 transferring dockerfile: 665B done
+#4 DONE 0.1s
+
+#5 [keycloak internal] load build definition from Keycloak.Dockerfile
+#5 transferring dockerfile: 616B done
+#5 DONE 0.2s
+
+#6 [pki internal] load metadata for registry.access.redhat.com/ubi9/ubi:9.6@sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc
+#6 DONE 0.0s
+
+#7 [tests internal] load build definition from Runner.Dockerfile
+#7 transferring dockerfile: 747B done
+#7 DONE 0.2s
+
+#8 [pki internal] load .dockerignore
+#8 transferring context: 116B done
+#8 DONE 0.0s
+
+#9 [pki source 1/3] FROM registry.access.redhat.com/ubi9/ubi:9.6@sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc
+#9 DONE 0.0s
+
+#10 [pki internal] load build context
+#10 transferring context: 57B done
+#10 DONE 0.0s
+
+#11 [pki source 3/3] COPY pki/issue.sh /work/issue.sh
+#11 CACHED
+
+#12 [pki source 2/3] WORKDIR /work
+#12 CACHED
+
+#13 [pki stage-1 3/4] RUN mkdir /state /public /gateway /keycloak /landing /fixtures /manual-customer /manual-admin && chown 1000:1000 /state /public /gateway /keycloak /landing /fixtures /manual-customer /manual-admin
+#13 CACHED
+
+#14 [pki stage-1 4/4] COPY --from=source --chown=1000:1000 /work/issue.sh /work/issue.sh
+#14 CACHED
+
+#15 [pki] exporting to image
+#15 exporting layers done
+#15 writing image sha256:3fa1ac5982af1aca2c7e15bc7a98c0e95710be6955a16c1f1d686fba99e75550 done
+#15 naming to docker.io/library/certificate-login-spike-pki done
+#15 DONE 0.0s
+
+#16 [pki] resolving provenance for metadata file
+#16 DONE 0.0s
+
+#17 [landing internal] load metadata for docker.io/library/node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+#17 ...
+
+#18 [keycloak internal] load metadata for quay.io/keycloak/keycloak:26.4.0@sha256:5f3fb534cde6bf006d79f5912473e5d2c828c707cdfc52e16972803aca9d43dd
+#18 DONE 0.3s
+
+#8 [keycloak internal] load .dockerignore
+#8 CACHED
+
+#19 [keycloak builder 1/3] FROM quay.io/keycloak/keycloak:26.4.0@sha256:5f3fb534cde6bf006d79f5912473e5d2c828c707cdfc52e16972803aca9d43dd
+#19 DONE 0.0s
+
+#20 [keycloak builder 2/3] WORKDIR /opt/keycloak
+#20 CACHED
+
+#21 [keycloak internal] load build context
+#21 transferring context: 3.36kB done
+#21 DONE 0.0s
+
+#22 [keycloak builder 3/3] RUN /opt/keycloak/bin/kc.sh build --db=dev-file --health-enabled=true
+#22 ...
+
+#23 [auth] library/haproxy:pull token for registry-1.docker.io
+#23 DONE 0.0s
+
+#24 [auth] library/node:pull token for registry-1.docker.io
+#24 DONE 0.0s
+
+#17 [landing internal] load metadata for docker.io/library/node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+#17 DONE 0.7s
+
+#25 [tests internal] load metadata for docker.io/library/node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+#25 DONE 0.7s
+
+#8 [gateway internal] load .dockerignore
+#8 CACHED
+
+#26 [landing dependencies 1/7] FROM docker.io/library/node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+#26 DONE 0.0s
+
+#27 [landing dependencies 2/7] WORKDIR /work
+#27 CACHED
+
+#28 [tests dependencies 1/5] FROM docker.io/library/node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+#28 DONE 0.0s
+
+#29 [landing internal] load build context
+#29 transferring context: 604B done
+#29 DONE 0.0s
+
+#30 [gateway internal] load metadata for docker.io/library/haproxy:3.2.6@sha256:7a5f2b4eac999e35d38b0c49040ec885ac2929c6b1a17fde0d1dc2fbcaf07c52
+#30 DONE 0.7s
+
+#31 [landing dependencies 3/7] COPY package.json package-lock.json ./
+#31 CACHED
+
+#32 [landing dependencies 4/7] COPY vendor/ vendor/
+#32 CACHED
+
+#33 [gateway configuration 1/3] FROM docker.io/library/haproxy:3.2.6@sha256:7a5f2b4eac999e35d38b0c49040ec885ac2929c6b1a17fde0d1dc2fbcaf07c52
+#33 DONE 0.0s
+
+#34 [gateway internal] load build context
+#34 transferring context: 1.03kB done
+#34 DONE 0.0s
+
+#35 [gateway configuration 3/3] COPY container/haproxy.cfg /work/haproxy.cfg
+#35 CACHED
+
+#36 [gateway configuration 2/3] WORKDIR /work
+#36 CACHED
+
+#37 [gateway stage-1 2/3] WORKDIR /usr/local/etc/haproxy
+#37 CACHED
+
+#38 [gateway stage-1 3/3] COPY --from=configuration /work/haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+#38 CACHED
+
+#39 [tests internal] load build context
+#39 transferring context: 264.30kB 0.0s done
+#39 DONE 0.0s
+
+#40 [tests dependencies 4/5] COPY vendor/ vendor/
+#40 CACHED
+
+#41 [tests dependencies 5/5] RUN npm ci --ignore-scripts --fetch-timeout=30000 --fetch-retries=1
+#41 CACHED
+
+#42 [tests dependencies 3/5] COPY package.json package-lock.json ./
+#42 CACHED
+
+#43 [tests stage-1 5/7] COPY --from=dependencies /work/node_modules /work/node_modules
+#43 CACHED
+
+#44 [tests dependencies 2/5] WORKDIR /work
+#44 CACHED
+
+#45 [tests stage-1 3/7] COPY container/ container/
+#45 CACHED
+
+#46 [tests stage-1 4/7] RUN sh container/install-packages.sh
+#46 CACHED
+
+#47 [tests stage-1 6/7] COPY . .
+#47 CACHED
+
+#48 [tests stage-1 7/7] RUN chown 1000:1000 /work
+#48 CACHED
+
+#49 [gateway] exporting to image
+#49 exporting layers done
+#49 writing image sha256:21806cc3aa8946cd7f2bb0a40cf376b0846434760195e6f70a0e2eeff7778152 done
+#49 naming to docker.io/library/certificate-login-spike-gateway done
+#49 DONE 0.0s
+
+#50 [tests] exporting to image
+#50 exporting layers done
+#50 writing image sha256:c0021cb359f6624335dfcd2e05fcac61d742cc7fc537351e3f793d4087d224f9 done
+#50 naming to docker.io/library/certificate-login-runner:01 done
+#50 DONE 0.0s
+
+#51 [gateway] resolving provenance for metadata file
+#51 DONE 0.0s
+
+#52 [tests] resolving provenance for metadata file
+#52 DONE 0.0s
+
+#53 [landing dependencies 5/7] RUN npm ci --ignore-scripts --fetch-timeout=30000 --fetch-retries=1
+#53 2.057 npm warn deprecated reflect-metadata@0.2.1: This version has a critical bug in fallback handling. Please upgrade to reflect-metadata@0.2.2 or newer.
+#53 3.023 npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+#53 3.241 npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+#53 3.392 npm warn deprecated uuid@10.0.0: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+#53 4.691 
+#53 4.691 added 342 packages, and audited 343 packages in 4s
+#53 4.691 
+#53 4.691 58 packages are looking for funding
+#53 4.691   run `npm fund` for details
+#53 4.699 
+#53 4.699 10 vulnerabilities (1 low, 7 moderate, 2 critical)
+#53 4.699 
+#53 4.699 To address issues that do not require attention, run:
+#53 4.699   npm audit fix
+#53 4.699 
+#53 4.699 To address all issues (including breaking changes), run:
+#53 4.699   npm audit fix --force
+#53 4.699 
+#53 4.699 Run `npm audit` for details.
+#53 4.701 npm notice
+#53 4.701 npm notice New minor version of npm available! 11.6.1 -> 11.21.0
+#53 4.701 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.0
+#53 4.701 npm notice To update run: npm install -g npm@11.21.0
+#53 4.701 npm notice
+#53 DONE 5.0s
+
+#22 [keycloak builder 3/3] RUN /opt/keycloak/bin/kc.sh build --db=dev-file --health-enabled=true
+#22 0.876 Updating the configuration and installing your custom providers, if any. Please wait.
+#22 ...
+
+#54 [landing dependencies 6/7] COPY src/ src/
+#54 DONE 0.0s
+
+#55 [landing dependencies 7/7] RUN ./node_modules/.bin/tsup src/app.ts --platform browser --format esm --out-dir public
+#55 0.245 CLI Building entry: src/app.ts
+#55 0.245 CLI tsup v8.5.1
+#55 0.246 CLI Target: node16
+#55 0.247 ESM Build start
+#55 0.257 ESM public/app.js 1.25 KB
+#55 0.258 ESM ⚡️ Build success in 11ms
+#55 DONE 0.3s
+
+#22 [keycloak builder 3/3] RUN /opt/keycloak/bin/kc.sh build --db=dev-file --health-enabled=true
+#22 ...
+
+#56 [landing stage-1 3/6] COPY --from=dependencies /work/node_modules /work/node_modules
+#56 ...
+
+#22 [keycloak builder 3/3] RUN /opt/keycloak/bin/kc.sh build --db=dev-file --health-enabled=true
+#22 6.323 2026-10-06 01:18:05,685 INFO  [io.quarkus.deployment.QuarkusAugmentor] (main) Quarkus augmentation completed in 4225ms
+#22 6.355 Server configuration updated and persisted. Run the following command to review the configuration:
+#22 6.355 
+#22 6.355 	kc.sh show-config
+#22 6.355 
+#22 DONE 6.5s
+
+#56 [landing stage-1 3/6] COPY --from=dependencies /work/node_modules /work/node_modules
+#56 DONE 0.5s
+
+#57 [landing stage-1 4/6] COPY --from=dependencies /work/public /work/public
+#57 DONE 0.0s
+
+#58 [landing stage-1 5/6] COPY package.json tsconfig.json ./
+#58 DONE 0.0s
+
+#59 [landing stage-1 6/6] COPY src/ src/
+#59 DONE 0.0s
+
+#60 [keycloak stage-1 3/4] COPY --from=builder /opt/keycloak/ /opt/keycloak/
+#60 DONE 0.2s
+
+#61 [landing] exporting to image
+#61 exporting layers
+#61 ...
+
+#62 [keycloak stage-1 4/4] COPY --chown=1000:0 keycloak/realm.json /opt/keycloak/data/import/realm.json
+#62 DONE 0.0s
+
+#61 [landing] exporting to image
+#61 exporting layers 0.5s done
+#61 writing image sha256:4639535dd8d36df21b07c051d9de2564268c55a79a328218ba74095b01f7c3a6 done
+#61 naming to docker.io/library/certificate-login-spike-landing done
+#61 DONE 0.5s
+
+#63 [landing] resolving provenance for metadata file
+#63 DONE 0.0s
+
+#64 [keycloak] exporting to image
+#64 exporting layers 0.2s done
+#64 writing image sha256:7e546cef912a8992e1f28bb4a093e19b43c4bccfa973b492caab2af3f8f7b418 done
+#64 naming to docker.io/library/certificate-login-spike-keycloak done
+#64 DONE 0.2s
+
+#65 [keycloak] resolving provenance for metadata file
+#65 DONE 0.0s
+ Image certificate-login-spike-gateway Built 
+ Image certificate-login-runner:01 Built 
+ Image certificate-login-spike-pki Built 
+ Image certificate-login-spike-keycloak Built 
+ Image certificate-login-spike-landing Built 

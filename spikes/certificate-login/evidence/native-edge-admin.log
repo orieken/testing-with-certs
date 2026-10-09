@@ -1,0 +1,6 @@
+ Container certificate-login-spike-manual-run-454f6f3ef910 Creating 
+ Container certificate-login-spike-manual-run-454f6f3ef910 Created 
+pk12util: no nickname for cert in PKCS12 file.
+pk12util: using nickname: 22222222-2222-4222-8222-222222222222
+pk12util: PKCS12 IMPORT SUCCESSFUL
+msedge: native certificate login and policy name observed

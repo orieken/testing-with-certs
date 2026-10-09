@@ -1,0 +1,5 @@
+FROM registry.access.redhat.com/ubi9/python-312@sha256:d3a5322122fd7efd5d5a2486c8c221f4785c364199f27e50a33aced417047e6a
+RUN python -m pip install --no-cache-dir --disable-pip-version-check lizard==1.24.1 pygments==2.21.0 pathspec==1.1.1
+USER 1000:1000
+WORKDIR /work
+ENTRYPOINT ["python", "/work/infra/check-complexity.py"]

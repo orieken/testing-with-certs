@@ -1,0 +1,14 @@
+ Container certificate-login-spike-tests-run-8b27554d1791 Creating 
+ Container certificate-login-spike-tests-run-8b27554d1791 Created 
+RESPONSE 200 shop.magic.test:8443 /
+RESPONSE 200 shop.magic.test:8443 /app.js
+PAGEERROR Failed to resolve module specifier "keycloak-js". Relative references must start with either "/", "./", or "../".
+CONSOLE error Failed to load resource: the server responded with a status of 404 ()
+STATUS_INITIAL Ready
+STATUS_AFTER Certificate login spike
+
+Local teaching lab. Your certificate selects your identity.
+
+Sign in with certificate
+
+Ready

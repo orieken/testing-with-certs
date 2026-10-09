@@ -1,0 +1,14 @@
+Unable to find image 'node:24.10.0-bookworm-slim' locally
+24.10.0-bookworm-slim: Pulling from library/node
+Digest: sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+Status: Downloaded newer image for node:24.10.0-bookworm-slim
+Get:1 https://dl.google.com/linux/chrome/deb stable InRelease [2548 B]
+Get:2 http://deb.debian.org/debian bookworm InRelease [151 kB]
+Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
+Get:4 https://packages.microsoft.com/repos/edge stable InRelease [3590 B]
+Get:5 https://dl.google.com/linux/chrome/deb stable/main amd64 Packages [1410 B]
+Get:6 http://deb.debian.org/debian bookworm/main amd64 Packages [8790 kB]
+Get:7 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [349 kB]
+Get:8 https://packages.microsoft.com/repos/edge stable/main amd64 Packages [58.0 kB]
+Fetched 9391 kB in 2s (4390 kB/s)
+Reading package lists...

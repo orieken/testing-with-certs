@@ -1,0 +1,19 @@
+ Container certificate-login-spike-tests-run-2230b7929a5a Creating 
+ Container certificate-login-spike-tests-run-2230b7929a5a Created 
+
+> certificate-login-spike@0.0.1 test
+> playwright test --grep independent Keycloak (untrusted|collision) boundary
+
+
+Running 4 tests using 1 worker
+
+[1/4] [chrome] › tests/login.spec.ts:96:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak untrusted boundary
+[2/4] [chrome] › tests/login.spec.ts:96:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak collision boundary
+[3/4] [msedge] › tests/login.spec.ts:96:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak untrusted boundary
+[4/4] [msedge] › tests/login.spec.ts:96:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak collision boundary
+  4 passed (20.3s)
+npm notice
+npm notice New minor version of npm available! 11.6.1 -> 11.21.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.0
+npm notice To update run: npm install -g npm@11.21.0
+npm notice

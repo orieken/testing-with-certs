@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 1,
+  "status": "scaffold-only-no-live-provider-coverage",
+  "operations": [
+    {
+      "service": "catalog",
+      "operationId": "listItems",
+      "method": "get",
+      "path": "/api/catalog/items",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "catalog",
+      "operationId": "createItem",
+      "method": "post",
+      "path": "/api/catalog/items",
+      "requiredStatuses": [
+        201,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "catalog",
+      "operationId": "getItem",
+      "method": "get",
+      "path": "/api/catalog/items/{itemId}",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "catalog",
+      "operationId": "updateItem",
+      "method": "patch",
+      "path": "/api/catalog/items/{itemId}",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "catalog",
+      "operationId": "archiveItem",
+      "method": "delete",
+      "path": "/api/catalog/items/{itemId}",
+      "requiredStatuses": [
+        204,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "catalog",
+      "operationId": "quoteItems",
+      "method": "post",
+      "path": "/internal/catalog/quotes",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "customer",
+      "operationId": "getMyProfile",
+      "method": "get",
+      "path": "/api/customer/me",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "customer",
+      "operationId": "updateMyProfile",
+      "method": "patch",
+      "path": "/api/customer/me",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "customer",
+      "operationId": "listMyOrders",
+      "method": "get",
+      "path": "/api/customer/orders",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "customer",
+      "operationId": "createOrder",
+      "method": "post",
+      "path": "/api/customer/orders",
+      "requiredStatuses": [
+        201,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "customer",
+      "operationId": "getMyOrder",
+      "method": "get",
+      "path": "/api/customer/orders/{orderId}",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "customer",
+      "operationId": "getMyWidgets",
+      "method": "get",
+      "path": "/api/customer/me/widgets",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "customer",
+      "operationId": "putMyWidgets",
+      "method": "put",
+      "path": "/api/customer/me/widgets",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "customer",
+      "operationId": "listAdminUsers",
+      "method": "get",
+      "path": "/api/customer/admin/users",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "customer",
+      "operationId": "listAdminOrders",
+      "method": "get",
+      "path": "/api/customer/admin/orders",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "customer",
+      "operationId": "listReportingOrders",
+      "method": "get",
+      "path": "/internal/reporting/orders",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "insights",
+      "operationId": "listRegions",
+      "method": "get",
+      "path": "/api/insights/regions",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "insights",
+      "operationId": "getSalesSummary",
+      "method": "get",
+      "path": "/api/insights/sales",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "insights",
+      "operationId": "listRegionalCustomers",
+      "method": "get",
+      "path": "/api/insights/customers",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "insights",
+      "operationId": "listRegionalOrders",
+      "method": "get",
+      "path": "/api/insights/orders",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "insights",
+      "operationId": "listFollowUps",
+      "method": "get",
+      "path": "/api/insights/follow-ups",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "insights",
+      "operationId": "createFollowUp",
+      "method": "post",
+      "path": "/api/insights/follow-ups",
+      "requiredStatuses": [
+        201,
+        400,
+        401,
+        403
+      ]
+    },
+    {
+      "service": "insights",
+      "operationId": "updateFollowUp",
+      "method": "patch",
+      "path": "/api/insights/follow-ups/{followUpId}",
+      "requiredStatuses": [
+        200,
+        400,
+        401,
+        403
+      ]
+    }
+  ]
+}

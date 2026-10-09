@@ -1,0 +1,12 @@
+{
+  "name": "magic-shop-certificate-prototype",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@12.9.1",
+  "engines": {
+    "node": "24.10.0"
+  },
+  "scripts": {
+    "workspace:list": "pnpm -r list --depth -1"
+  }
+}

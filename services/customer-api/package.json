@@ -1,0 +1,20 @@
+{
+  "name": "@magic-shop/customer-api",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Node/TypeScript customer, orders and widget API",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "jose": "6.2.12",
+    "pg": "8.23.1"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "@types/pg": "8.23.1",
+    "typescript": "5.9.3"
+  }
+}

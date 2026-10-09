@@ -1,0 +1,992 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Magic Shop catalog API",
+    "version": "0.1.0",
+    "description": "Go-owned item catalog. All public operations require human mTLS plus a matching user access token. Private quotes require the paired Node service identity."
+  },
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "servers": [
+    {
+      "url": "https://shop.magic.test:8443",
+      "description": "Public HAProxy gateway; human certificate required."
+    }
+  ],
+  "security": [
+    {
+      "clientCertificate": [],
+      "accessToken": []
+    }
+  ],
+  "paths": {
+    "/api/catalog/items": {
+      "get": {
+        "operationId": "listItems",
+        "summary": "List active items",
+        "description": "Returns only active items in stable id order; archived items do not appear.",
+        "tags": [
+          "catalog"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "catalog-api",
+          "roles": [
+            "customer",
+            "shopkeeper",
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Page size; maximum 100.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Opaque cursor from the previous page.",
+            "schema": {
+              "$ref": "#/components/schemas/Cursor"
+            }
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "required": false,
+            "description": "Optional category.",
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "description": "Case-insensitive name search.",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createItem",
+        "summary": "Create item",
+        "description": "Create item",
+        "tags": [
+          "catalog"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "catalog-api",
+          "roles": [
+            "shopkeeper",
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Item"
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "required": true,
+                "description": "Canonical public resource path.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^/api/"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          },
+          "409": {
+            "description": "Idempotency-key reuse or dataset revision conflict.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "conflict"
+          },
+          "422": {
+            "description": "Validly shaped request violates a business rule.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "unprocessable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "description": "New item. ID is server assigned.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemCreate"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/catalog/items/{itemId}": {
+      "get": {
+        "operationId": "getItem",
+        "summary": "Get item",
+        "description": "Get item",
+        "tags": [
+          "catalog"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "catalog-api",
+          "roles": [
+            "customer",
+            "shopkeeper",
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Item"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          },
+          "404": {
+            "description": "Resource absent or hidden from this owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "not_found"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateItem",
+        "summary": "Update item",
+        "description": "Update item",
+        "tags": [
+          "catalog"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "catalog-api",
+          "roles": [
+            "shopkeeper",
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Item"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          },
+          "404": {
+            "description": "Resource absent or hidden from this owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "not_found"
+          },
+          "422": {
+            "description": "Validly shaped request violates a business rule.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "unprocessable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "description": "Nonempty field patch.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemPatch"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "archiveItem",
+        "summary": "Archive item",
+        "description": "Idempotent archive; historical order snapshots remain unchanged.",
+        "tags": [
+          "catalog"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "catalog-api",
+          "roles": [
+            "shopkeeper",
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Archived; no response body."
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          },
+          "404": {
+            "description": "Resource absent or hidden from this owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "not_found"
+          },
+          "409": {
+            "description": "Idempotency-key reuse or dataset revision conflict.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "conflict"
+          }
+        }
+      }
+    },
+    "/internal/catalog/quotes": {
+      "post": {
+        "operationId": "quoteItems",
+        "summary": "Resolve authoritative item quotes",
+        "description": "Service-only; validates all requested items are active and available before returning ordered snapshots. No partial quote.",
+        "tags": [
+          "catalog"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "private",
+        "x-auth": {
+          "audience": "catalog-api",
+          "roles": [],
+          "scope": "catalog.quote",
+          "certificateCaller": "customer-api",
+          "tokenClient": "customer-catalog",
+          "pairing": "service certificate identity must match token client"
+        },
+        "x-network-timeout-ms": 10000,
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          },
+          "422": {
+            "description": "Validly shaped request violates a business rule.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "unprocessable"
+          },
+          "503": {
+            "description": "Required dependency unavailable within a bounded timeout.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "dependency_unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "description": "Batch of item IDs and integer quantities; no client price.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuoteRequest"
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://catalog-api:8443",
+            "description": "Private service listener; never routed through public HAProxy."
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "clientCertificate": {
+        "type": "mutualTLS",
+        "description": "Caller certificate verified at the gateway (public) or service listener (private)."
+      },
+      "accessToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Keycloak access token, exact issuer https://auth.magic.test:9443/realms/magic-shop; ID tokens rejected."
+      }
+    },
+    "schemas": {
+      "Item": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "description",
+          "rarity",
+          "image",
+          "priceCopper",
+          "active"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "description": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "rarity": {
+            "type": "string",
+            "enum": [
+              "Common",
+              "Uncommon",
+              "Rare",
+              "Very Rare",
+              "Legendary",
+              "Artifact"
+            ]
+          },
+          "image": {
+            "type": "string",
+            "pattern": "^/images/[a-z0-9-]+\\.png$"
+          },
+          "priceCopper": {
+            "$ref": "#/components/schemas/Copper"
+          },
+          "categoryId": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "displayStock": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ItemCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "description",
+          "rarity",
+          "image",
+          "priceCopper"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "description": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "rarity": {
+            "type": "string",
+            "enum": [
+              "Common",
+              "Uncommon",
+              "Rare",
+              "Very Rare",
+              "Legendary",
+              "Artifact"
+            ]
+          },
+          "image": {
+            "type": "string",
+            "pattern": "^/images/[a-z0-9-]+\\.png$"
+          },
+          "priceCopper": {
+            "$ref": "#/components/schemas/Copper"
+          },
+          "categoryId": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "displayStock": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          }
+        }
+      },
+      "ItemPatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "description": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "rarity": {
+            "type": "string",
+            "enum": [
+              "Common",
+              "Uncommon",
+              "Rare",
+              "Very Rare",
+              "Legendary",
+              "Artifact"
+            ]
+          },
+          "image": {
+            "type": "string",
+            "pattern": "^/images/[a-z0-9-]+\\.png$"
+          },
+          "priceCopper": {
+            "$ref": "#/components/schemas/Copper"
+          },
+          "categoryId": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "displayStock": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          }
+        },
+        "minProperties": 1
+      },
+      "ItemPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Item"
+            },
+            "maxItems": 100
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Cursor"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "QuoteLine": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "itemId",
+          "quantity"
+        ],
+        "properties": {
+          "itemId": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "quantity": {
+            "$ref": "#/components/schemas/Quantity"
+          }
+        }
+      },
+      "QuoteRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lines"
+        ],
+        "properties": {
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuoteLine"
+            },
+            "maxItems": 50,
+            "minItems": 1
+          }
+        }
+      },
+      "QuotedLine": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "itemId",
+          "name",
+          "unitPriceCopper",
+          "quantity",
+          "lineTotalCopper"
+        ],
+        "properties": {
+          "itemId": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "unitPriceCopper": {
+            "$ref": "#/components/schemas/Copper"
+          },
+          "quantity": {
+            "$ref": "#/components/schemas/Quantity"
+          },
+          "lineTotalCopper": {
+            "$ref": "#/components/schemas/Copper"
+          }
+        }
+      },
+      "QuoteResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lines",
+          "totalCopper"
+        ],
+        "properties": {
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuotedLine"
+            },
+            "maxItems": 50
+          },
+          "totalCopper": {
+            "$ref": "#/components/schemas/Copper"
+          }
+        }
+      },
+      "Cursor": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      },
+      "Id": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+        "maxLength": 64
+      },
+      "Copper": {
+        "type": "integer",
+        "format": "int64",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{2,63}$"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "requestId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        }
+      },
+      "Quantity": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      }
+    }
+  }
+}

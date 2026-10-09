@@ -1,0 +1,400 @@
+google-chrome-stable:
+  Installed: (none)
+  Candidate: 154.0.8037.97-1
+  Version table:
+     154.0.8037.97-1 500
+        500 https://dl.google.com/linux/chrome/deb stable/main amd64 Packages
+microsoft-edge-stable:
+  Installed: (none)
+  Candidate: 154.0.4258.62-1
+  Version table:
+     154.0.4258.62-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     154.0.4258.53-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     154.0.4258.48-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     154.0.4258.37-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     153.0.4234.48-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     153.0.4234.46-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     153.0.4234.32-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     152.0.4191.66-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     152.0.4191.62-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     152.0.4191.53-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     151.0.4129.107-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     151.0.4129.101-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     151.0.4129.93-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     151.0.4129.86-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     151.0.4129.78-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     151.0.4129.72-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     151.0.4129.59-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     150.0.4078.105-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     150.0.4078.99-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     150.0.4078.96-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     150.0.4078.83-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     150.0.4078.80-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     150.0.4078.65-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     150.0.4078.48-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     149.0.4022.98-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     149.0.4022.96-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     149.0.4022.80-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     149.0.4022.69-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     149.0.4022.62-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     149.0.4022.52-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     148.0.3967.96-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     148.0.3967.83-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     148.0.3967.70-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     148.0.3967.54-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     147.0.3912.98-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     147.0.3912.86-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     147.0.3912.60-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     146.0.3856.97-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     146.0.3856.84-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     146.0.3856.72-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     146.0.3856.62-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     146.0.3856.59-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     145.0.3800.97-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     145.0.3800.82-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     145.0.3800.70-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     144.0.3719.115-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     144.0.3719.104-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     144.0.3719.92-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     144.0.3719.82-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     143.0.3650.139-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     143.0.3650.96-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     143.0.3650.80-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     143.0.3650.66-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     142.0.3595.94-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     142.0.3595.90-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     142.0.3595.80-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     142.0.3595.65-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     142.0.3595.53-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     141.0.3537.99-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     141.0.3537.92-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     141.0.3537.85-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     141.0.3537.71-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     141.0.3537.57-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     140.0.3485.94-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     140.0.3485.81-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     140.0.3485.66-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     140.0.3485.54-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     139.0.3405.125-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     139.0.3405.119-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     139.0.3405.111-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     139.0.3405.102-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     139.0.3405.86-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     138.0.3351.121-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     138.0.3351.109-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     138.0.3351.95-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     138.0.3351.83-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     138.0.3351.77-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     138.0.3351.65-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     138.0.3351.55-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     137.0.3296.93-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     137.0.3296.83-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     137.0.3296.68-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     137.0.3296.62-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     137.0.3296.58-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     137.0.3296.52-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     136.0.3240.92-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     136.0.3240.76-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     136.0.3240.64-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     136.0.3240.50-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     135.0.3179.98-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     135.0.3179.85-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     135.0.3179.73-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     135.0.3179.54-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     134.0.3124.95-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     134.0.3124.85-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     134.0.3124.83-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     134.0.3124.68-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     134.0.3124.51-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     133.0.3065.92-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     133.0.3065.82-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     133.0.3065.69-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     133.0.3065.59-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     132.0.2957.140-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     132.0.2957.127-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     132.0.2957.115-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     131.0.2903.147-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     131.0.2903.112-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     131.0.2903.99-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     131.0.2903.86-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     131.0.2903.70-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     131.0.2903.63-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     131.0.2903.51-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     131.0.2903.48-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     130.0.2849.80-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     130.0.2849.68-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     130.0.2849.56-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     130.0.2849.52-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     130.0.2849.46-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     129.0.2792.89-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     129.0.2792.79-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     129.0.2792.65-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     129.0.2792.52-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     128.0.2739.79-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     128.0.2739.67-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     128.0.2739.63-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     128.0.2739.54-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     128.0.2739.42-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     127.0.2651.105-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     127.0.2651.98-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     127.0.2651.86-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     127.0.2651.74-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     126.0.2592.113-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     126.0.2592.102-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     126.0.2592.87-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     126.0.2592.81-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     126.0.2592.68-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     126.0.2592.61-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     126.0.2592.56-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     125.0.2535.92-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     125.0.2535.85-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     125.0.2535.79-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     125.0.2535.67-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     125.0.2535.51-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     124.0.2478.109-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     124.0.2478.105-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     124.0.2478.97-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     124.0.2478.80-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     124.0.2478.67-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     124.0.2478.51-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     123.0.2420.97-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     123.0.2420.81-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     123.0.2420.65-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     123.0.2420.53-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     122.0.2365.92-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     122.0.2365.80-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     122.0.2365.63-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     122.0.2365.59-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     122.0.2365.52-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     121.0.2277.128-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     121.0.2277.113-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     121.0.2277.106-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     121.0.2277.98-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     121.0.2277.83-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     120.0.2210.144-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     120.0.2210.133-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     120.0.2210.121-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     120.0.2210.91-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     120.0.2210.89-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     120.0.2210.77-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     120.0.2210.61-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     119.0.2151.97-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     119.0.2151.72-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     119.0.2151.58-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     119.0.2151.44-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     118.0.2088.76-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     118.0.2088.69-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     118.0.2088.61-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     118.0.2088.57-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     118.0.2088.46-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     117.0.2045.55-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     117.0.2045.47-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     117.0.2045.40-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     117.0.2045.35-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     117.0.2045.31-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     116.0.1938.81-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     116.0.1938.76-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     116.0.1938.69-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     116.0.1938.62-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     116.0.1938.54-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     115.0.1901.203-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     115.0.1901.200-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     115.0.1901.188-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     114.0.1823.82-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     95.0.1020.40-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages
+     95.0.1020.38-1 500
+        500 https://packages.microsoft.com/repos/edge stable/main amd64 Packages

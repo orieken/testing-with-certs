@@ -1,0 +1,10 @@
+packages:
+  - apps/*
+  - packages/*
+  - services/customer-api
+  - testing
+  - contracts
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - '@redocly/cli@2.58.1'

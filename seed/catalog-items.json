@@ -1,0 +1,114 @@
+[
+  {
+    "id": "wand-embers",
+    "name": "Wand of Embers",
+    "description": "A slender wand that emits warm, perpetual embers. Grants +1 to fire bolt once per short rest.",
+    "rarity": "Uncommon",
+    "image": "/images/wand-embers.png",
+    "priceCopper": 12000
+  },
+  {
+    "id": "cloak-shadows",
+    "name": "Cloak of Shadows",
+    "description": "Draped in shifting darkness. Wearer gains advantage on stealth checks in dim light.",
+    "rarity": "Rare",
+    "image": "/images/cloak-shadows.png",
+    "priceCopper": 35000
+  },
+  {
+    "id": "ring-truth",
+    "name": "Ring of Truth-Telling",
+    "description": "Simple silver band. Once per day, wearer can force a creature to speak a single truthful sentence.",
+    "rarity": "Uncommon",
+    "image": "/images/ring-truth.png",
+    "priceCopper": 22000
+  },
+  {
+    "id": "vorpal-sword",
+    "name": "Vorpal Sword",
+    "description": "A sword that decapitates on a critical hit.",
+    "rarity": "Legendary",
+    "image": "/images/vorpal-sword.png",
+    "priceCopper": 500000
+  },
+  {
+    "id": "bag-holding",
+    "name": "Bag of Holding",
+    "description": "A bag that is bigger on the inside.",
+    "rarity": "Uncommon",
+    "image": "/images/bag-holding.png",
+    "priceCopper": 50000
+  },
+  {
+    "id": "potion-healing",
+    "name": "Potion of Healing",
+    "description": "A red liquid that heals wounds.",
+    "rarity": "Common",
+    "image": "/images/potion-healing.png",
+    "priceCopper": 5000
+  },
+  {
+    "id": "staff-power",
+    "name": "Staff of Power",
+    "description": "A staff of great power.",
+    "rarity": "Very Rare",
+    "image": "/images/staff-power.png",
+    "priceCopper": 400000
+  },
+  {
+    "id": "boots-speed",
+    "name": "Boots of Speed",
+    "description": "Boots that double your speed.",
+    "rarity": "Rare",
+    "image": "/images/boots-speed.png",
+    "priceCopper": 40000
+  },
+  {
+    "id": "amulet-health",
+    "name": "Amulet of Health",
+    "description": "Sets your Constitution to 19.",
+    "rarity": "Rare",
+    "image": "/images/amulet-health.png",
+    "priceCopper": 40000
+  },
+  {
+    "id": "deck-many-things",
+    "name": "Deck of Many Things",
+    "description": "A deck of cards with wild effects.",
+    "rarity": "Legendary",
+    "image": "/images/deck-many-things.png",
+    "priceCopper": 1000000
+  },
+  {
+    "id": "holy-avenger",
+    "name": "Holy Avenger",
+    "description": "A paladin's holy sword.",
+    "rarity": "Legendary",
+    "image": "/images/holy-avenger.png",
+    "priceCopper": 600000
+  },
+  {
+    "id": "sphere-annihilation",
+    "name": "Sphere of Annihilation",
+    "description": "A sphere of pure void.",
+    "rarity": "Legendary",
+    "image": "/images/sphere-annihilation.png",
+    "priceCopper": 800000
+  },
+  {
+    "id": "hand-vecna",
+    "name": "Hand of Vecna",
+    "description": "A mummified hand of a lich.",
+    "rarity": "Artifact",
+    "image": "/images/hand-vecna.png",
+    "priceCopper": 2000000
+  },
+  {
+    "id": "eye-vecna",
+    "name": "Eye of Vecna",
+    "description": "A mummified eye of a lich.",
+    "rarity": "Artifact",
+    "image": "/images/eye-vecna.png",
+    "priceCopper": 2000000
+  }
+]

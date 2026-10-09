@@ -1,0 +1,10 @@
+node_modules
+artifacts
+.git
+*.key
+*.p12
+*.pem
+*.crt
+*.crl
+coverage
+evidence

@@ -1,0 +1,2 @@
+import {defineConfig} from '@playwright/test';
+export default defineConfig({testDir:'tests',timeout:45000,workers:1,retries:0,reporter:[['line']],use:{actionTimeout:10000,navigationTimeout:20000,ignoreHTTPSErrors:false,trace:'off',video:'off',screenshot:'off'},projects:[{name:'chrome',testMatch:'login.spec.ts',use:{channel:'chrome'}},{name:'msedge',testMatch:'login.spec.ts',use:{channel:'msedge'}},{name:'transport',testMatch:'transport.spec.ts'}]});

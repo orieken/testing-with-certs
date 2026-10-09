@@ -1,0 +1,1428 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Magic Shop customer API",
+    "version": "0.1.0",
+    "description": "Node-owned profiles, orders, widgets and a private revision-pinned reporting feed. Ownership is derived from token sub."
+  },
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "servers": [
+    {
+      "url": "https://shop.magic.test:8443",
+      "description": "Public HAProxy gateway; human certificate required."
+    }
+  ],
+  "security": [
+    {
+      "clientCertificate": [],
+      "accessToken": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "clientCertificate": {
+        "type": "mutualTLS",
+        "description": "Caller certificate verified at the gateway (public) or service listener (private)."
+      },
+      "accessToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Keycloak access token, exact issuer https://auth.magic.test:9443/realms/magic-shop; ID tokens rejected."
+      }
+    },
+    "schemas": {
+      "Profile": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sub",
+          "displayName",
+          "regionId",
+          "location"
+        ],
+        "properties": {
+          "sub": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/Subject"
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "regionId": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/RegionId"
+          },
+          "location": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/LonLat"
+          }
+        }
+      },
+      "ProfilePatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "regionId": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/RegionId"
+          },
+          "location": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/LonLat"
+          }
+        },
+        "minProperties": 1
+      },
+      "CheckoutLine": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "itemId",
+          "quantity"
+        ],
+        "properties": {
+          "itemId": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/Id"
+          },
+          "quantity": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/Quantity"
+          }
+        }
+      },
+      "CheckoutRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "regionId",
+          "lines"
+        ],
+        "properties": {
+          "regionId": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/RegionId"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckoutLine"
+            },
+            "maxItems": 50,
+            "minItems": 1
+          }
+        }
+      },
+      "OrderLine": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "itemId",
+          "name",
+          "unitPriceCopper",
+          "quantity",
+          "lineTotalCopper"
+        ],
+        "properties": {
+          "itemId": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/Id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "unitPriceCopper": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/Copper"
+          },
+          "quantity": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/Quantity"
+          },
+          "lineTotalCopper": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/Copper"
+          }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "orderId",
+          "ownerSub",
+          "regionId",
+          "status",
+          "createdAt",
+          "completedAt",
+          "lines",
+          "totalCopper"
+        ],
+        "properties": {
+          "orderId": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/Id"
+          },
+          "ownerSub": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/Subject"
+          },
+          "regionId": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/RegionId"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "completed",
+              "cancelled"
+            ]
+          },
+          "createdAt": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/UtcTimestamp"
+          },
+          "completedAt": {
+            "anyOf": [
+              {
+                "$ref": "./shared/schemas.yaml#/components/schemas/UtcTimestamp"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderLine"
+            },
+            "maxItems": 50,
+            "minItems": 1
+          },
+          "totalCopper": {
+            "$ref": "./shared/schemas.yaml#/components/schemas/Copper"
+          }
+        }
+      },
+      "OrderPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "maxItems": 100
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "$ref": "./shared/schemas.yaml#/components/schemas/Cursor"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "WidgetLayout": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "widgetIds"
+        ],
+        "properties": {
+          "widgetIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "recent-orders",
+                "total-sales",
+                "sales-by-region",
+                "recent-admin-orders",
+                "customer-list"
+              ]
+            },
+            "maxItems": 10,
+            "uniqueItems": true
+          }
+        }
+      },
+      "ProfilePage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Profile"
+            },
+            "maxItems": 100
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "$ref": "./shared/schemas.yaml#/components/schemas/Cursor"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "ReportingRecord": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "order",
+          "customer"
+        ],
+        "properties": {
+          "order": {
+            "$ref": "#/components/schemas/Order"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/Profile"
+          }
+        }
+      },
+      "ReportingPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "revision",
+          "items",
+          "nextCursor"
+        ],
+        "properties": {
+          "revision": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReportingRecord"
+            },
+            "maxItems": 100
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "$ref": "./shared/schemas.yaml#/components/schemas/Cursor"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/customer/me": {
+      "get": {
+        "operationId": "getMyProfile",
+        "summary": "Get own profile",
+        "description": "Get own profile",
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "customer-api",
+          "roles": [
+            "customer",
+            "shopkeeper",
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          },
+          "404": {
+            "description": "Resource absent or hidden from this owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "not_found"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateMyProfile",
+        "summary": "Update own profile",
+        "description": "Update own profile",
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "customer-api",
+          "roles": [
+            "customer",
+            "shopkeeper",
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          },
+          "404": {
+            "description": "Resource absent or hidden from this owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "not_found"
+          },
+          "422": {
+            "description": "Validly shaped request violates a business rule.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "unprocessable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "description": "Only editable profile fields.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfilePatch"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/orders": {
+      "get": {
+        "operationId": "listMyOrders",
+        "summary": "List own orders",
+        "description": "Newest createdAt first, then orderId; ownership comes only from token sub.",
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "customer-api",
+          "roles": [
+            "customer",
+            "shopkeeper",
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Page size; maximum 100.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Opaque cursor from the previous page.",
+            "schema": {
+              "$ref": "./shared/schemas.yaml#/components/schemas/Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createOrder",
+        "summary": "Create simulated order",
+        "description": "Node obtains current quotes using its private service identity, snapshots prices, and atomically persists order plus idempotency result. No payment or inventory reservation.",
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "customer-api",
+          "roles": [
+            "customer",
+            "shopkeeper",
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "Scoped to the verified owner sub; same key and body returns the original 201 order and Location.",
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "required": true,
+                "description": "Canonical public resource path.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^/api/"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          },
+          "409": {
+            "description": "Idempotency-key reuse or dataset revision conflict.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "conflict"
+          },
+          "422": {
+            "description": "Validly shaped request violates a business rule.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "unprocessable"
+          },
+          "503": {
+            "description": "Required dependency unavailable within a bounded timeout.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "dependency_unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "description": "Item IDs, quantities and selected region only; prices/totals forbidden.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/orders/{orderId}": {
+      "get": {
+        "operationId": "getMyOrder",
+        "summary": "Get own order",
+        "description": "Another owner’s ID returns 404, not an order or ownership hint.",
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "customer-api",
+          "roles": [
+            "customer",
+            "shopkeeper",
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "./shared/schemas.yaml#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          },
+          "404": {
+            "description": "Resource absent or hidden from this owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "not_found"
+          }
+        }
+      }
+    },
+    "/api/customer/me/widgets": {
+      "get": {
+        "operationId": "getMyWidgets",
+        "summary": "Get own widget layout",
+        "description": "Get own widget layout",
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "customer-api",
+          "roles": [
+            "customer",
+            "shopkeeper",
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WidgetLayout"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          }
+        }
+      },
+      "put": {
+        "operationId": "putMyWidgets",
+        "summary": "Replace own widget layout",
+        "description": "Replace own widget layout",
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "customer-api",
+          "roles": [
+            "customer",
+            "shopkeeper",
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WidgetLayout"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          },
+          "422": {
+            "description": "Validly shaped request violates a business rule.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "unprocessable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "description": "Unique ordered widget IDs; server checks role-specific allowlist.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WidgetLayout"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/admin/users": {
+      "get": {
+        "operationId": "listAdminUsers",
+        "summary": "List customer profiles for admin",
+        "description": "Stable sub order; no credential, certificate or token material.",
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "customer-api",
+          "roles": [
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Page size; maximum 100.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Opaque cursor from the previous page.",
+            "schema": {
+              "$ref": "./shared/schemas.yaml#/components/schemas/Cursor"
+            }
+          },
+          {
+            "name": "regionId",
+            "in": "query",
+            "required": false,
+            "description": "Historical order region filter.",
+            "schema": {
+              "$ref": "./shared/schemas.yaml#/components/schemas/RegionId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfilePage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          }
+        }
+      }
+    },
+    "/api/customer/admin/orders": {
+      "get": {
+        "operationId": "listAdminOrders",
+        "summary": "List orders for admin",
+        "description": "Newest createdAt first, then orderId; date filter applies to createdAt, unlike completed-order sales.",
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "public",
+        "x-auth": {
+          "audience": "customer-api",
+          "roles": [
+            "shop-admin"
+          ],
+          "scope": null,
+          "certificateCaller": "human",
+          "tokenClient": "human",
+          "pairing": "verified gateway certificate identity must equal signed cert_identity"
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Page size; maximum 100.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Opaque cursor from the previous page.",
+            "schema": {
+              "$ref": "./shared/schemas.yaml#/components/schemas/Cursor"
+            }
+          },
+          {
+            "name": "regionId",
+            "in": "query",
+            "required": false,
+            "description": "Historical order region filter.",
+            "schema": {
+              "$ref": "./shared/schemas.yaml#/components/schemas/RegionId"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "Inclusive UTC createdAt boundary for the admin order list.",
+            "schema": {
+              "$ref": "./shared/schemas.yaml#/components/schemas/UtcTimestamp"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Exclusive UTC createdAt boundary for the admin order list.",
+            "schema": {
+              "$ref": "./shared/schemas.yaml#/components/schemas/UtcTimestamp"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Order status filter.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "completed",
+                "cancelled"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          }
+        }
+      }
+    },
+    "/internal/reporting/orders": {
+      "get": {
+        "operationId": "listReportingOrders",
+        "summary": "Read revision-pinned reporting page",
+        "description": "Service-only stable orderId pagination. First page returns revision; following pages pin it. Includes profile snapshots for permitted reporting only, bounded to 100 records per page.",
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "clientCertificate": [],
+            "accessToken": []
+          }
+        ],
+        "x-visibility": "private",
+        "x-auth": {
+          "audience": "customer-api",
+          "roles": [],
+          "scope": "reporting.read",
+          "certificateCaller": "insights-api",
+          "tokenClient": "insights-reporting",
+          "pairing": "service certificate identity must match token client"
+        },
+        "x-network-timeout-ms": 10000,
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Page size; maximum 100.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Opaque cursor from the previous page.",
+            "schema": {
+              "$ref": "./shared/schemas.yaml#/components/schemas/Cursor"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "query",
+            "required": false,
+            "description": "Required after first page; must match the original dataset revision.",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          {
+            "name": "regionId",
+            "in": "query",
+            "required": false,
+            "description": "Historical order region filter.",
+            "schema": {
+              "$ref": "./shared/schemas.yaml#/components/schemas/RegionId"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "Inclusive UTC completedAt boundary.",
+            "schema": {
+              "$ref": "./shared/schemas.yaml#/components/schemas/UtcTimestamp"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Exclusive UTC completedAt boundary.",
+            "schema": {
+              "$ref": "./shared/schemas.yaml#/components/schemas/UtcTimestamp"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportingPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid path, query, header or JSON request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_request"
+          },
+          "401": {
+            "description": "Missing, expired or invalid access token; TLS handshake failures have no HTTP response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "invalid_token"
+          },
+          "403": {
+            "description": "Wrong role, scope, service identity or certificate/token identity pairing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "forbidden"
+          },
+          "409": {
+            "description": "Idempotency-key reuse or dataset revision conflict.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "conflict"
+          },
+          "503": {
+            "description": "Required dependency unavailable within a bounded timeout.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared/schemas.yaml#/components/schemas/Error"
+                }
+              }
+            },
+            "x-error-code": "dependency_unavailable"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://customer-api:8443",
+            "description": "Private service listener; never routed through public HAProxy."
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "root": "/identity",
+  "identities": {
+    "lab/customer-waterdeep": {
+      "cert": "cert.pem",
+      "key": "key.pem",
+      "pfx": "identity.p12",
+      "passphrase": "password"
+    }
+  },
+  "target": {
+    "origins": ["https://shop.magic.test:8443", "https://auth.magic.test:9443"],
+    "issuer": "https://auth.magic.test:9443/realms/magic-shop"
+  },
+  "trustFiles": ["/public/user-ca.pem", "/public/server-ca.pem"]
+}

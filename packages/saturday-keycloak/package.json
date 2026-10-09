@@ -1,0 +1,42 @@
+{
+  "name": "saturday-keycloak-prototype",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Portable certificate and Keycloak adapters for Saturday tests",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./playwright": { "types": "./dist/playwright.d.ts", "import": "./dist/playwright.js" },
+    "./cucumber": { "types": "./dist/cucumber.d.ts", "import": "./dist/cucumber.js" },
+    "./manual": { "types": "./dist/manual.d.ts", "import": "./dist/manual.js" },
+    "./cli": { "types": "./dist/cli.d.ts", "import": "./dist/cli.js" }
+  },
+  "bin": { "saturday-keycloak": "./dist/cli.js" },
+  "files": ["dist", "README.md", "LICENSE", "NOTICE"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test:build": "tsc -p tsconfig.json --outDir dist-tests",
+    "test": "node --test dist-tests/tests/*.test.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "@playwright/test": "1.61.0",
+    "@cucumber/cucumber": "11.3.0",
+    "@orieken/saturday-playwright-certs": "0.1.0",
+    "@orieken/saturday-cucumber": "0.1.1"
+  },
+  "peerDependenciesMeta": {
+    "@playwright/test": { "optional": true },
+    "@cucumber/cucumber": { "optional": true },
+    "@orieken/saturday-playwright-certs": { "optional": true },
+    "@orieken/saturday-cucumber": { "optional": true }
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "typescript": "5.9.3",
+    "@playwright/test": "1.61.0",
+    "@cucumber/cucumber": "11.3.0",
+    "@orieken/saturday-playwright-certs": "file:../../spikes/certificate-login/vendor/orieken-saturday-playwright-certs-0.1.0.tgz",
+    "@orieken/saturday-cucumber": "0.1.1"
+  }
+}

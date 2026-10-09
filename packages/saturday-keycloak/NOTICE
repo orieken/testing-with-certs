@@ -1,0 +1,6 @@
+Saturday Keycloak prototype package
+Copyright 2026 Saturday Keycloak prototype contributors
+
+The optional Saturday certificate-helper dependency is distributed separately.
+Its Apache-2.0 LICENSE and NOTICE are retained with the recorded tarball in
+spikes/certificate-login/vendor. No Saturday source is copied into this package.

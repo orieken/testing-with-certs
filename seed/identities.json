@@ -1,0 +1,8 @@
+[
+  {"username":"customer-waterdeep","sub":"10101010-1010-4010-8010-101010101010","certIdentity":"11111111-1111-4111-8111-111111111111","role":"customer","enabled":true},
+  {"username":"customer-baldur","sub":"20202020-2020-4020-8020-202020202020","certIdentity":"33333333-3333-4333-8333-333333333333","role":"customer","enabled":true},
+  {"username":"customer-neverwinter","sub":"30303030-3030-4030-8030-303030303030","certIdentity":"77777777-7777-4777-8777-777777777777","role":"customer","enabled":true},
+  {"username":"shopkeeper","sub":"40404040-4040-4040-8040-404040404040","certIdentity":"55555555-5555-4555-8555-555555555555","role":"shopkeeper","enabled":true},
+  {"username":"shop-admin","sub":"50505050-5050-4050-8050-505050505050","certIdentity":"22222222-2222-4222-8222-222222222222","role":"shop-admin","enabled":true},
+  {"username":"disabled-customer","sub":"60606060-6060-4060-8060-606060606060","certIdentity":"66666666-6666-4666-8666-666666666666","role":"customer","enabled":false}
+]

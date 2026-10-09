@@ -1,0 +1,170 @@
+ Container certificate-login-spike-tests-run-98e67b9e195d Creating 
+ Container certificate-login-spike-tests-run-98e67b9e195d Created 
+
+> certificate-login-spike@0.0.1 test
+> playwright test
+
+
+Running 31 tests using 1 worker
+
+[1/31] [chrome] › tests/login.spec.ts:20:3 › prompt01 AUTH-01/02: customer certificate PKCE login
+[chrome] › tests/login.spec.ts:20:3 › prompt01 AUTH-01/02: customer certificate PKCE login
+HTTP 200 shop.magic.test/
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 302 auth.magic.test/realms/magic-shop/protocol/openid-connect/auth
+
+HTTP 200 shop.magic.test/callback
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 200 auth.magic.test/realms/magic-shop/protocol/openid-connect/token
+
+HTTP 200 shop.magic.test/api/identity
+
+[2/31] [chrome] › tests/login.spec.ts:20:3 › prompt01 AUTH-01/02: admin certificate PKCE login
+[chrome] › tests/login.spec.ts:20:3 › prompt01 AUTH-01/02: admin certificate PKCE login
+HTTP 200 shop.magic.test/
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 302 auth.magic.test/realms/magic-shop/protocol/openid-connect/auth
+
+HTTP 200 shop.magic.test/callback
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 200 auth.magic.test/realms/magic-shop/protocol/openid-connect/token
+
+HTTP 200 shop.magic.test/api/identity
+
+[3/31] [chrome] › tests/login.spec.ts:33:1 › prompt01 AUTH-11: saved admin cookies cannot override customer certificate
+[chrome] › tests/login.spec.ts:33:1 › prompt01 AUTH-11: saved admin cookies cannot override customer certificate
+HTTP 200 shop.magic.test/
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 302 auth.magic.test/realms/magic-shop/protocol/openid-connect/auth
+
+HTTP 200 shop.magic.test/callback
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 200 auth.magic.test/realms/magic-shop/protocol/openid-connect/token
+
+HTTP 200 shop.magic.test/api/identity
+
+HTTP 200 shop.magic.test/
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 302 auth.magic.test/realms/magic-shop/protocol/openid-connect/auth
+
+HTTP 200 shop.magic.test/callback
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 200 auth.magic.test/realms/magic-shop/protocol/openid-connect/token
+
+HTTP 200 shop.magic.test/api/identity
+
+[4/31] [chrome] › tests/login.spec.ts:59:1 › prompt01 AUTH-05: unknown user receives no token or password fallback
+[5/31] [chrome] › tests/login.spec.ts:69:1 › prompt01 AUTH-03: missing user certificate rejects shop
+[6/31] [chrome] › tests/login.spec.ts:75:3 › prompt01 AUTH-04: untrusted issuer rejects shop
+[7/31] [chrome] › tests/login.spec.ts:75:3 › prompt01 AUTH-04: collision issuer rejects shop
+[8/31] [chrome] › tests/login.spec.ts:81:1 › prompt01 TRUST-01: wrong server hostname rejects
+[9/31] [chrome] › tests/login.spec.ts:86:1 › prompt01 exact origins: shop-only certificate cannot authenticate at auth
+[10/31] [chrome] › tests/login.spec.ts:96:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak untrusted boundary
+[11/31] [chrome] › tests/login.spec.ts:96:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak collision boundary
+[12/31] [chrome] › tests/login.spec.ts:96:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak revocable boundary
+[13/31] [chrome] › tests/login.spec.ts:119:1 › prompt01 real branded binary and absence of TLS bypass flags
+[chrome] › tests/login.spec.ts:119:1 › prompt01 real branded binary and absence of TLS bypass flags
+chrome reported browser version: 154.0.8037.97
+
+[14/31] [msedge] › tests/login.spec.ts:20:3 › prompt01 AUTH-01/02: customer certificate PKCE login
+[msedge] › tests/login.spec.ts:20:3 › prompt01 AUTH-01/02: customer certificate PKCE login
+HTTP 200 shop.magic.test/
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 302 auth.magic.test/realms/magic-shop/protocol/openid-connect/auth
+
+HTTP 200 shop.magic.test/callback
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 200 auth.magic.test/realms/magic-shop/protocol/openid-connect/token
+
+HTTP 200 shop.magic.test/api/identity
+
+[15/31] [msedge] › tests/login.spec.ts:20:3 › prompt01 AUTH-01/02: admin certificate PKCE login
+[msedge] › tests/login.spec.ts:20:3 › prompt01 AUTH-01/02: admin certificate PKCE login
+HTTP 200 shop.magic.test/
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 302 auth.magic.test/realms/magic-shop/protocol/openid-connect/auth
+
+HTTP 200 shop.magic.test/callback
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 200 auth.magic.test/realms/magic-shop/protocol/openid-connect/token
+
+HTTP 200 shop.magic.test/api/identity
+
+[16/31] [msedge] › tests/login.spec.ts:33:1 › prompt01 AUTH-11: saved admin cookies cannot override customer certificate
+[msedge] › tests/login.spec.ts:33:1 › prompt01 AUTH-11: saved admin cookies cannot override customer certificate
+HTTP 200 shop.magic.test/
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 302 auth.magic.test/realms/magic-shop/protocol/openid-connect/auth
+
+HTTP 200 shop.magic.test/callback
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 200 auth.magic.test/realms/magic-shop/protocol/openid-connect/token
+
+HTTP 200 shop.magic.test/api/identity
+
+HTTP 200 shop.magic.test/
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 302 auth.magic.test/realms/magic-shop/protocol/openid-connect/auth
+
+HTTP 200 shop.magic.test/callback
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 200 auth.magic.test/realms/magic-shop/protocol/openid-connect/token
+
+HTTP 200 shop.magic.test/api/identity
+
+[17/31] [msedge] › tests/login.spec.ts:59:1 › prompt01 AUTH-05: unknown user receives no token or password fallback
+[18/31] [msedge] › tests/login.spec.ts:69:1 › prompt01 AUTH-03: missing user certificate rejects shop
+[19/31] [msedge] › tests/login.spec.ts:75:3 › prompt01 AUTH-04: untrusted issuer rejects shop
+[20/31] [msedge] › tests/login.spec.ts:75:3 › prompt01 AUTH-04: collision issuer rejects shop
+[21/31] [msedge] › tests/login.spec.ts:81:1 › prompt01 TRUST-01: wrong server hostname rejects
+[22/31] [msedge] › tests/login.spec.ts:86:1 › prompt01 exact origins: shop-only certificate cannot authenticate at auth
+[23/31] [msedge] › tests/login.spec.ts:96:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak untrusted boundary
+[24/31] [msedge] › tests/login.spec.ts:96:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak collision boundary
+[25/31] [msedge] › tests/login.spec.ts:96:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak revocable boundary
+[26/31] [msedge] › tests/login.spec.ts:119:1 › prompt01 real branded binary and absence of TLS bypass flags
+[msedge] › tests/login.spec.ts:119:1 › prompt01 real branded binary and absence of TLS bypass flags
+msedge reported browser version: 154.0.4258.62
+
+[27/31] [transport] › tests/transport.spec.ts:6:3 › prompt01 TRUST-01 validated TLS at https://shop.magic.test:8443
+[28/31] [transport] › tests/transport.spec.ts:6:3 › prompt01 TRUST-01 validated TLS at https://auth.magic.test:9443
+[29/31] [transport] › tests/transport.spec.ts:16:3 › prompt01 AUTH-04 raw TLS refuses untrusted
+[30/31] [transport] › tests/transport.spec.ts:16:3 › prompt01 AUTH-04 raw TLS refuses collision
+[31/31] [transport] › tests/transport.spec.ts:22:1 › prompt01 AUTH-07 dedicated certificate lifecycle
+  31 passed (1.1m)
+npm notice
+npm notice New minor version of npm available! 11.6.1 -> 11.21.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.0
+npm notice To update run: npm install -g npm@11.21.0
+npm notice

@@ -1,0 +1,33 @@
+ Container certificate-login-spike-tests-run-bf3776d36e42 Creating 
+ Container certificate-login-spike-tests-run-bf3776d36e42 Created 
+
+> certificate-login-spike@0.0.1 typecheck
+> tsc --noEmit
+
+npm notice
+npm notice New minor version of npm available! 11.6.1 -> 11.21.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.0
+npm notice To update run: npm install -g npm@11.21.0
+npm notice
+
+> certificate-login-spike@0.0.1 unit
+> vitest run --coverage
+
+
+ RUN  v3.2.7 /work
+      Coverage enabled with v8
+
+ ✓ tests/identity.test.ts (4 tests) 7ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  01:40:42
+   Duration  992ms (transform 107ms, setup 0ms, collect 71ms, tests 7ms, environment 0ms, prepare 135ms)
+
+ % Coverage report from v8
+-------------|---------|----------|---------|---------|-------------------
+File         | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------|---------|----------|---------|---------|-------------------
+All files    |     100 |      100 |     100 |     100 |                   
+ identity.ts |     100 |      100 |     100 |     100 |                   
+-------------|---------|----------|---------|---------|-------------------

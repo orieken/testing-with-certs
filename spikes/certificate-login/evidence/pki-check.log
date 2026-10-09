@@ -1,0 +1,7 @@
+CA state and isolated leaves ready; no private material exported to host.
+/state/revocable.crt: OK
+CN=44444444-4444-4444-8444-444444444444
+error 23 at 0 depth lookup: certificate revoked
+error /state/revocable.crt: verification failed
+/state/customer.crt: OK
+/state/shop.crt: OK

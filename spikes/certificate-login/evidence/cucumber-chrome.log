@@ -1,0 +1,17 @@
+ Container certificate-login-spike-tests-run-10a051120624 Creating 
+ Container certificate-login-spike-tests-run-10a051120624 Created 
+
+> certificate-login-spike@0.0.1 bdd
+> node --import tsx node_modules/@cucumber/cucumber/bin/cucumber.js --import tests/steps.ts tests/login.feature
+
+This Node.js version (v24.10.0) has not been tested with this version of Cucumber; it should work normally, but please raise an issue if you see anything unexpected.
+.....
+
+1 scenario (1 passed)
+3 steps (3 passed)
+0m05.177s (executing steps: 0m05.159s)
+npm notice
+npm notice New minor version of npm available! 11.6.1 -> 11.21.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.0
+npm notice To update run: npm install -g npm@11.21.0
+npm notice

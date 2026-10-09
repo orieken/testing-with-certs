@@ -1,0 +1,30 @@
+FROM node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9 AS base
+WORKDIR /work
+ENV CI=true PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+RUN mkdir -p /home/runner && chown node:node /work /home/runner
+COPY --chown=node:node . .
+
+FROM base AS workspace
+RUN npm install --global --ignore-scripts --no-audit --no-fund pnpm@12.9.1 --fetch-timeout=30000 --fetch-retries=1
+USER node
+RUN pnpm install --frozen-lockfile --fetch-timeout=30000
+RUN pnpm --filter saturday-keycloak-prototype run build \
+    && pnpm -r --if-present run typecheck \
+    && pnpm -r --if-present run build
+RUN pnpm --filter saturday-keycloak-prototype run test:build \
+    && pnpm --filter saturday-keycloak-prototype run test
+RUN pnpm --filter @magic-shop/contracts run lint \
+    && pnpm --filter @magic-shop/contracts run check \
+    && node --test infra/check-openapi-breaking.test.mjs \
+    && node infra/check-openapi-inventory.mjs \
+    && node infra/check-contract-coverage.mjs --inventory \
+    && pnpm --filter @magic-shop/testing run contracts:validator \
+    && node infra/validate-seed.mjs
+CMD ["node", "--version"]
+
+FROM base AS spike
+WORKDIR /work/spikes/certificate-login
+USER node
+RUN npm ci --no-audit --no-fund --fetch-timeout=30000 --fetch-retries=1
+RUN npm run typecheck && npm run unit
+CMD ["node", "--version"]

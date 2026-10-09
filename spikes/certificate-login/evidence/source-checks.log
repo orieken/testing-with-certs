@@ -1,0 +1,74 @@
+
+> certificate-login-spike@0.0.1 typecheck
+> tsc --noEmit
+
+npm notice
+npm notice New minor version of npm available! 11.6.1 -> 11.21.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.0
+npm notice To update run: npm install -g npm@11.21.0
+npm notice
+
+> certificate-login-spike@0.0.1 unit
+> vitest run --coverage
+
+
+ RUN  v3.2.7 /work
+      Coverage enabled with v8
+
+ ✓ tests/identity.test.ts (4 tests) 2ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  20:05:29
+   Duration  322ms (transform 25ms, setup 0ms, collect 23ms, tests 2ms, environment 0ms, prepare 76ms)
+
+ % Coverage report from v8
+-------------|---------|----------|---------|---------|-------------------
+File         | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------|---------|----------|---------|---------|-------------------
+All files    |     100 |      100 |     100 |     100 |                   
+ identity.ts |     100 |      100 |     100 |     100 |                   
+-------------|---------|----------|---------|---------|-------------------
+Listing tests:
+  [chrome] › login.spec.ts:17:3 › prompt01 AUTH-01/02: customer certificate PKCE login
+  [chrome] › login.spec.ts:17:3 › prompt01 AUTH-01/02: admin certificate PKCE login
+  [chrome] › login.spec.ts:30:1 › prompt01 AUTH-11: saved admin cookies cannot override customer certificate
+  [chrome] › login.spec.ts:43:1 › prompt01 AUTH-05: unknown user receives no token or password fallback
+  [chrome] › login.spec.ts:53:1 › prompt01 AUTH-03: missing user certificate rejects shop
+  [chrome] › login.spec.ts:59:3 › prompt01 AUTH-04: untrusted issuer rejects shop
+  [chrome] › login.spec.ts:59:3 › prompt01 AUTH-04: collision issuer rejects shop
+  [chrome] › login.spec.ts:65:1 › prompt01 TRUST-01: wrong server hostname rejects
+  [chrome] › login.spec.ts:70:1 › prompt01 exact origins: shop-only certificate cannot authenticate at auth
+  [chrome] › login.spec.ts:80:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak untrusted boundary
+  [chrome] › login.spec.ts:80:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak collision boundary
+  [chrome] › login.spec.ts:80:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak revocable boundary
+  [chrome] › login.spec.ts:101:1 › prompt01 real branded binary and absence of TLS bypass flags
+  [msedge] › login.spec.ts:17:3 › prompt01 AUTH-01/02: customer certificate PKCE login
+  [msedge] › login.spec.ts:17:3 › prompt01 AUTH-01/02: admin certificate PKCE login
+  [msedge] › login.spec.ts:30:1 › prompt01 AUTH-11: saved admin cookies cannot override customer certificate
+  [msedge] › login.spec.ts:43:1 › prompt01 AUTH-05: unknown user receives no token or password fallback
+  [msedge] › login.spec.ts:53:1 › prompt01 AUTH-03: missing user certificate rejects shop
+  [msedge] › login.spec.ts:59:3 › prompt01 AUTH-04: untrusted issuer rejects shop
+  [msedge] › login.spec.ts:59:3 › prompt01 AUTH-04: collision issuer rejects shop
+  [msedge] › login.spec.ts:65:1 › prompt01 TRUST-01: wrong server hostname rejects
+  [msedge] › login.spec.ts:70:1 › prompt01 exact origins: shop-only certificate cannot authenticate at auth
+  [msedge] › login.spec.ts:80:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak untrusted boundary
+  [msedge] › login.spec.ts:80:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak collision boundary
+  [msedge] › login.spec.ts:80:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak revocable boundary
+  [msedge] › login.spec.ts:101:1 › prompt01 real branded binary and absence of TLS bypass flags
+  [transport] › transport.spec.ts:6:3 › prompt01 TRUST-01 validated TLS at https://shop.magic.test:8443
+  [transport] › transport.spec.ts:6:3 › prompt01 TRUST-01 validated TLS at https://auth.magic.test:9443
+  [transport] › transport.spec.ts:16:3 › prompt01 AUTH-04 raw TLS refuses untrusted
+  [transport] › transport.spec.ts:16:3 › prompt01 AUTH-04 raw TLS refuses collision
+  [transport] › transport.spec.ts:22:1 › prompt01 AUTH-07 dedicated certificate lifecycle
+Total: 31 tests in 2 files
+
+> certificate-login-spike@0.0.1 bdd
+> node --import tsx node_modules/@cucumber/cucumber/bin/cucumber.js --import tests/steps.ts tests/login.feature --dry-run
+
+This Node.js version (v24.10.0) has not been tested with this version of Cucumber; it should work normally, but please raise an issue if you see anything unexpected.
+-----
+
+1 scenario (1 skipped)
+3 steps (3 skipped)
+0m00.004s (executing steps: 0m00.000s)

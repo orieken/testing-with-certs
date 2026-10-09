@@ -1,0 +1,16 @@
+FROM golang:1.25.3-bookworm@sha256:4f43b271f9673eb7bd0cb3a49cc17b08d8d6ee110277e26dbacc93c43a5a7793 AS build
+WORKDIR /work
+COPY services/catalog-api/go.mod ./
+COPY services/catalog-api/go.sum ./
+RUN go mod download
+COPY services/catalog-api/ ./
+COPY contracts/bundled/catalog.json ./contract/catalog.json
+RUN go vet ./... && go test ./... && CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o /out/catalog ./src
+
+FROM registry.access.redhat.com/ubi9/ubi:9.6@sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc
+COPY --from=build --chown=1000:1000 /out/catalog /usr/local/bin/catalog-api
+COPY --chown=1000:1000 services/catalog-api/migrations/ /app/migrations/
+COPY --chown=1000:1000 seed/catalog-items.json /app/seed/catalog-items.json
+COPY --chown=1000:1000 contracts/bundled/catalog.json /app/contracts/catalog.json
+USER 1000:1000
+ENTRYPOINT ["/usr/local/bin/catalog-api"]

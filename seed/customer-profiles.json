@@ -1,0 +1,8 @@
+[
+  {"sub":"10101010-1010-4010-8010-101010101010","displayName":"Arin of Waterdeep","regionId":"neverwinter","location":[-121,47.5]},
+  {"sub":"20202020-2020-4020-8020-202020202020","displayName":"Bryn of Baldur's Gate","regionId":"baldurs-gate","location":[-119.5,42]},
+  {"sub":"30303030-3030-4030-8030-303030303030","displayName":"Ceri of Neverwinter","regionId":"neverwinter","location":[-121,47.5]},
+  {"sub":"40404040-4040-4040-8040-404040404040","displayName":"Dara the Shopkeeper","regionId":"waterdeep","location":[-120,45]},
+  {"sub":"50505050-5050-4050-8050-505050505050","displayName":"Eryn the Steward","regionId":"waterdeep","location":[-120,45]},
+  {"sub":"60606060-6060-4060-8060-606060606060","displayName":"Fenn the Inactive","regionId":"empty-march","location":[-118.5,46.5]}
+]

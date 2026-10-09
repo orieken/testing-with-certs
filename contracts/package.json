@@ -1,0 +1,17 @@
+{
+  "name": "@magic-shop/contracts",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "lint": "redocly lint openapi/catalog.yaml openapi/customer.yaml openapi/insights.yaml --extends spec",
+    "generate": "node ../infra/contracts-tooling.mjs generate",
+    "check": "node ../infra/contracts-tooling.mjs check",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@redocly/cli": "2.58.1",
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3"
+  }
+}

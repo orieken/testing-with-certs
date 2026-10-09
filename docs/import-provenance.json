@@ -1,0 +1,287 @@
+{
+  "sourceRepository": "saturday-monorepo",
+  "sourceHead": "b5d3b1e45e4e45ffd0384958c9159298ae4395ca",
+  "sourceWorkingTreeCaveat": "HEAD does not assert every source file was committed or clean; hashes identify exact copied inputs.",
+  "copiedFiles": [
+    {
+      "source": "apps/ye-olde-magic-shop/index.html",
+      "sourceSha256": "834e81477eed8c469cd394aa87044251d601417aa783a01a733aa3d2601d4860",
+      "target": "apps/magic-shop/index.html",
+      "targetSha256": "834e81477eed8c469cd394aa87044251d601417aa783a01a733aa3d2601d4860",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/LICENSE",
+      "sourceSha256": "0ab63a93e82ed08cd4ea2ef988c102e61f2c1b062b26d4e0b6cea11adcab7863",
+      "target": "apps/magic-shop/LICENSE",
+      "targetSha256": "0ab63a93e82ed08cd4ea2ef988c102e61f2c1b062b26d4e0b6cea11adcab7863",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/NOTICE",
+      "sourceSha256": "1ead892e287ab83e03cd2ab1dc0e14850b6cf30f711dd66c0a8c551a3ed13a12",
+      "target": "apps/magic-shop/NOTICE",
+      "targetSha256": "1ead892e287ab83e03cd2ab1dc0e14850b6cf30f711dd66c0a8c551a3ed13a12",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/src/main.ts",
+      "sourceSha256": "a6ae359f0b8fd0d7c2591bff22da22fbe2bf714310731e229975e60f219b8f86",
+      "target": "apps/magic-shop/src/main.ts",
+      "targetSha256": "a6ae359f0b8fd0d7c2591bff22da22fbe2bf714310731e229975e60f219b8f86",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/src/App.vue",
+      "sourceSha256": "1e9d3d0de14683e41af47bc0b9c30b2676ed0bfc7f2a05e7baf5d7a2ac70a4d2",
+      "target": "apps/magic-shop/src/App.vue",
+      "targetSha256": "c1b7d68f99bc47913ed41456f8b0d8ac651296d1f65a5ef1ccd5f32a4ba361f2",
+      "modifiedAfterCopy": true
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/src/styles.css",
+      "sourceSha256": "18899f0f19c9d89b15aeb63ee11b00a1b0dac95208a9bce8de1aa58a3b3b5eed",
+      "target": "apps/magic-shop/src/styles.css",
+      "targetSha256": "a481b8cbd1dc04ab7a70ee0b6db77e59693a63fdfb2dbf77b08461640d4d281f",
+      "modifiedAfterCopy": true
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/src/router/index.ts",
+      "sourceSha256": "beaffcb12b4a9c6d04e5dac57ec3eb9d62534e7cc850e1280e076d22d9676483",
+      "target": "apps/magic-shop/src/router/index.ts",
+      "targetSha256": "c31fb3b0aeb91982fb42fc2310c01d83c5c1669687510f9f76c4f869a24d147d",
+      "modifiedAfterCopy": true
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/src/views/ShopHome.vue",
+      "sourceSha256": "78e7102d3f5f0c62ae06c0edbf96901ac5aecd4bc0feccda3d196d452d860dad",
+      "target": "apps/magic-shop/src/views/ShopHome.vue",
+      "targetSha256": "29ac15d597558898d8e7d6bd1669a42852b1e4f9d5f0f4335c47c5b5a0bab6ae",
+      "modifiedAfterCopy": true
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/src/views/ItemPage.vue",
+      "sourceSha256": "a58a80cd538f6ddb3895d7117f5234b13c49c597f1e4b74694bab5d81b879a60",
+      "target": "apps/magic-shop/src/views/ItemPage.vue",
+      "targetSha256": "f2f0fd765eae4d5a063bf67c6b82c1b33faa2edc4479de23a9a822e4837497be",
+      "modifiedAfterCopy": true
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/src/views/CartView.vue",
+      "sourceSha256": "9561d01ea9a2a3815e2c6bfe9ef686c1af13880c87bb6c3d57e293f74671b001",
+      "target": "apps/magic-shop/src/views/CartView.vue",
+      "targetSha256": "85ccf048f285dda5287243fda8106b3de855f910e87abc461415f3aad4e0b756",
+      "modifiedAfterCopy": true
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/src/views/LocationsView.vue",
+      "sourceSha256": "246c7242e73dacc8cb9aefacb54c3f3ef8a7bfdabbe3903a2efd613be27ba807",
+      "target": "apps/magic-shop/src/views/LocationsView.vue",
+      "targetSha256": "4075667138897779d000d59ead07dec3cfaf2ee0c0186afa72540d01cb5ace63",
+      "modifiedAfterCopy": true
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/src/components/ItemCard.vue",
+      "sourceSha256": "49b84ce3b1a83f8d01e51a4b27e46c8c0fa57abb67d3917f1f43a2254299d260",
+      "target": "apps/magic-shop/src/components/ItemCard.vue",
+      "targetSha256": "91a9753fc3f190fe7f3865f4c263dca8cf00fa5e23d27a99e18d7489ed357621",
+      "modifiedAfterCopy": true
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/src/stores/cartStore.ts",
+      "sourceSha256": "ee450cfd3818855a77189a9504704f873fc886696feb16b7a94ac9ee8ec524a6",
+      "target": "apps/magic-shop/src/stores/cartStore.ts",
+      "targetSha256": "e06ee8a0e7702b67dfb52d908d71a54cad05c94a33e2f227a0c86ba15323fc9c",
+      "modifiedAfterCopy": true
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/public/favicon.svg",
+      "sourceSha256": "73471b1167041f2e264d34e9704b5c57c023ca38f75d216fdbd0a5a00f412a1c",
+      "target": "apps/magic-shop/public/favicon.svg",
+      "targetSha256": "73471b1167041f2e264d34e9704b5c57c023ca38f75d216fdbd0a5a00f412a1c",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/public/logo.png",
+      "sourceSha256": "670817d66ae58176130430004c792c5b72298e3258cf781f10695e29c2489348",
+      "target": "apps/magic-shop/public/logo.png",
+      "targetSha256": "670817d66ae58176130430004c792c5b72298e3258cf781f10695e29c2489348",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/lib/site/HomePage.ts",
+      "sourceSha256": "abbba795f8d790f0cb7d38e0a258ff4b754cd441954529331ee6bf6fa9157d60",
+      "target": "testing/site/HomePage.ts",
+      "targetSha256": "f52cf1750ac4247bda935b339317b4814a73b47f430522c2b7cb098daa4002da",
+      "modifiedAfterCopy": true
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/lib/site/ProductDetailsPage.ts",
+      "sourceSha256": "01067323c010a50a0528048778938d96f25c18b00932a5f5aba5c09c0b567b8d",
+      "target": "testing/site/ProductDetailsPage.ts",
+      "targetSha256": "01067323c010a50a0528048778938d96f25c18b00932a5f5aba5c09c0b567b8d",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/lib/site/CartPage.ts",
+      "sourceSha256": "2d41103ac8d01d1f9848b990c1a21dde68d9104673dc517b7517948b46728309",
+      "target": "testing/site/CartPage.ts",
+      "targetSha256": "2d41103ac8d01d1f9848b990c1a21dde68d9104673dc517b7517948b46728309",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/features/inventory-list.feature",
+      "sourceSha256": "6589b7e35ed2411f1241065cc9e6a384cc1e7bb40e690b0b2efc50b2eee21a9a",
+      "target": "testing/cucumber/features/inventory-list.feature",
+      "targetSha256": "6589b7e35ed2411f1241065cc9e6a384cc1e7bb40e690b0b2efc50b2eee21a9a",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/features/item-details.feature",
+      "sourceSha256": "4b45bf316f25dc6d1bb559c33328049b20c238a3cb8c7deb8204bb1a210126a5",
+      "target": "testing/cucumber/features/item-details.feature",
+      "targetSha256": "4b45bf316f25dc6d1bb559c33328049b20c238a3cb8c7deb8204bb1a210126a5",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/features/cart.feature",
+      "sourceSha256": "a77de33970b175b1f0deede867a007274b4ada7dd76663b9948ae157b4d82146",
+      "target": "testing/cucumber/features/cart.feature",
+      "targetSha256": "a77de33970b175b1f0deede867a007274b4ada7dd76663b9948ae157b4d82146",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/LICENSE",
+      "sourceSha256": "0ab63a93e82ed08cd4ea2ef988c102e61f2c1b062b26d4e0b6cea11adcab7863",
+      "target": "testing/LICENSE",
+      "targetSha256": "0ab63a93e82ed08cd4ea2ef988c102e61f2c1b062b26d4e0b6cea11adcab7863",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/LICENSE",
+      "sourceSha256": "0ab63a93e82ed08cd4ea2ef988c102e61f2c1b062b26d4e0b6cea11adcab7863",
+      "target": "apps/magic-shop/public/images/LICENSE",
+      "targetSha256": "0ab63a93e82ed08cd4ea2ef988c102e61f2c1b062b26d4e0b6cea11adcab7863",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/ye-olde-magic-shop/NOTICE",
+      "sourceSha256": "1ead892e287ab83e03cd2ab1dc0e14850b6cf30f711dd66c0a8c551a3ed13a12",
+      "target": "testing/NOTICE",
+      "targetSha256": "1ead892e287ab83e03cd2ab1dc0e14850b6cf30f711dd66c0a8c551a3ed13a12",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/NOTICE",
+      "sourceSha256": "1ead892e287ab83e03cd2ab1dc0e14850b6cf30f711dd66c0a8c551a3ed13a12",
+      "target": "apps/magic-shop/public/images/NOTICE",
+      "targetSha256": "1ead892e287ab83e03cd2ab1dc0e14850b6cf30f711dd66c0a8c551a3ed13a12",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/data/items.json",
+      "sourceSha256": "09f9037eca5d2840cddc72641aae060207f5b79509b0b611c2d5ebe0e7cb94d3",
+      "target": "seed/catalog-items.json",
+      "targetSha256": "4e951803614eec025ca201bef275ee404783deb8856afcfd0453cea7e5432a39",
+      "modifiedAfterCopy": true
+    },
+    {
+      "source": "apps/mock-api/public/images/vorpal-sword.png",
+      "sourceSha256": "bfc2cdcaa1d0ad53d11a544f3d4912e09586d845029610924cae27c2042897c8",
+      "target": "apps/magic-shop/public/images/vorpal-sword.png",
+      "targetSha256": "bfc2cdcaa1d0ad53d11a544f3d4912e09586d845029610924cae27c2042897c8",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/public/images/cloak-shadows.png",
+      "sourceSha256": "a2c2465bcf146733c3940f8791261b4a4a84e10f391f031c140e5a1fdd889cdb",
+      "target": "apps/magic-shop/public/images/cloak-shadows.png",
+      "targetSha256": "a2c2465bcf146733c3940f8791261b4a4a84e10f391f031c140e5a1fdd889cdb",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/public/images/wand-embers.png",
+      "sourceSha256": "b9d859e93f13b7887f09e9faed146540678cf4753307dd393801be563486c8c0",
+      "target": "apps/magic-shop/public/images/wand-embers.png",
+      "targetSha256": "b9d859e93f13b7887f09e9faed146540678cf4753307dd393801be563486c8c0",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/public/images/holy-avenger.png",
+      "sourceSha256": "81d803a0019b057910a26d21c5d0560d29fee19c1873fa64f2aadb2d45b54646",
+      "target": "apps/magic-shop/public/images/holy-avenger.png",
+      "targetSha256": "81d803a0019b057910a26d21c5d0560d29fee19c1873fa64f2aadb2d45b54646",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/public/images/boots-speed.png",
+      "sourceSha256": "4ed26bf102637e81c4572fb9196c7bdda2846763393ce33491f64fa89ce536ad",
+      "target": "apps/magic-shop/public/images/boots-speed.png",
+      "targetSha256": "4ed26bf102637e81c4572fb9196c7bdda2846763393ce33491f64fa89ce536ad",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/public/images/staff-power.png",
+      "sourceSha256": "faece22b19b621981b58da29ec8dee4ff7e48f0011516dd520b9bc47f9e66e38",
+      "target": "apps/magic-shop/public/images/staff-power.png",
+      "targetSha256": "faece22b19b621981b58da29ec8dee4ff7e48f0011516dd520b9bc47f9e66e38",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/public/images/potion-healing.png",
+      "sourceSha256": "8d186016fc45dae59905fb72b99ac9300e35f226b0859f6194225ba124deffeb",
+      "target": "apps/magic-shop/public/images/potion-healing.png",
+      "targetSha256": "8d186016fc45dae59905fb72b99ac9300e35f226b0859f6194225ba124deffeb",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/public/images/ring-truth.png",
+      "sourceSha256": "136cb76650f6bb16ed20a6c8faa9db7362e9cd284b85a3ee04c9244ab838462a",
+      "target": "apps/magic-shop/public/images/ring-truth.png",
+      "targetSha256": "136cb76650f6bb16ed20a6c8faa9db7362e9cd284b85a3ee04c9244ab838462a",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/public/images/amulet-health.png",
+      "sourceSha256": "74136dc90ada1771c6608a11a0ab26db73eb7ad4e4be0a262c6a340760b81560",
+      "target": "apps/magic-shop/public/images/amulet-health.png",
+      "targetSha256": "74136dc90ada1771c6608a11a0ab26db73eb7ad4e4be0a262c6a340760b81560",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/public/images/deck-many-things.png",
+      "sourceSha256": "0845b8b623f518aa0269eab971914a5221f29b480d32e6b6b0183f4cd3c616e5",
+      "target": "apps/magic-shop/public/images/deck-many-things.png",
+      "targetSha256": "0845b8b623f518aa0269eab971914a5221f29b480d32e6b6b0183f4cd3c616e5",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/public/images/eye-vecna.png",
+      "sourceSha256": "adb6400d6f64364f7834fbd9e3b0e7a2bb019780fbc95bcb98a08cf2c03050df",
+      "target": "apps/magic-shop/public/images/eye-vecna.png",
+      "targetSha256": "adb6400d6f64364f7834fbd9e3b0e7a2bb019780fbc95bcb98a08cf2c03050df",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/public/images/hand-vecna.png",
+      "sourceSha256": "2b31cb8f1d3ccd1c00eb0878a67e37a43cc1cc9cbd013c2f887049893e656d3b",
+      "target": "apps/magic-shop/public/images/hand-vecna.png",
+      "targetSha256": "2b31cb8f1d3ccd1c00eb0878a67e37a43cc1cc9cbd013c2f887049893e656d3b",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/public/images/sphere-annihilation.png",
+      "sourceSha256": "c1d1a7d3a7f406ee23363628412d22b9515130d08024b178471a28b985415b18",
+      "target": "apps/magic-shop/public/images/sphere-annihilation.png",
+      "targetSha256": "c1d1a7d3a7f406ee23363628412d22b9515130d08024b178471a28b985415b18",
+      "modifiedAfterCopy": false
+    },
+    {
+      "source": "apps/mock-api/public/images/bag-holding.png",
+      "sourceSha256": "8f62aac011932cb9c459f09f1686d700d68887bd81c5bbfa5b11f90ab5f7c471",
+      "target": "apps/magic-shop/public/images/bag-holding.png",
+      "targetSha256": "8f62aac011932cb9c459f09f1686d700d68887bd81c5bbfa5b11f90ab5f7c471",
+      "modifiedAfterCopy": false
+    }
+  ]
+}

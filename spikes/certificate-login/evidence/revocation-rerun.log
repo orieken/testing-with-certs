@@ -1,0 +1,18 @@
+ Container certificate-login-spike-tests-run-0a3c2f03e5ab Creating 
+ Container certificate-login-spike-tests-run-0a3c2f03e5ab Created 
+
+> certificate-login-spike@0.0.1 test
+> playwright test --grep independent Keycloak revocable boundary|dedicated certificate lifecycle
+
+
+Running 3 tests using 1 worker
+
+[1/3] [chrome] › tests/login.spec.ts:96:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak revocable boundary
+[2/3] [msedge] › tests/login.spec.ts:96:3 › prompt01 AUTH-04/AUTH-07: independent Keycloak revocable boundary
+[3/3] [transport] › tests/transport.spec.ts:22:1 › prompt01 AUTH-07 dedicated certificate lifecycle
+  3 passed (14.5s)
+npm notice
+npm notice New minor version of npm available! 11.6.1 -> 11.21.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.0
+npm notice To update run: npm install -g npm@11.21.0
+npm notice

@@ -1,0 +1,9 @@
+{
+  "type":"FeatureCollection",
+  "features":[
+    {"type":"Feature","properties":{"regionId":"waterdeep","name":"Waterdeep","center":[-120,45]},"geometry":{"type":"Polygon","coordinates":[[[-120.5,44.5],[-119.5,44.5],[-119.5,45.5],[-120.5,45.5],[-120.5,44.5]]]}},
+    {"type":"Feature","properties":{"regionId":"baldurs-gate","name":"Baldur's Gate","center":[-119.5,42]},"geometry":{"type":"Polygon","coordinates":[[[-120,41.5],[-119,41.5],[-119,42.5],[-120,42.5],[-120,41.5]]]}},
+    {"type":"Feature","properties":{"regionId":"neverwinter","name":"Neverwinter","center":[-121,47.5]},"geometry":{"type":"Polygon","coordinates":[[[-121.5,47],[-120.5,47],[-120.5,48],[-121.5,48],[-121.5,47]]]}},
+    {"type":"Feature","properties":{"regionId":"empty-march","name":"Empty March","center":[-118.5,46.5]},"geometry":{"type":"Polygon","coordinates":[[[-119,46],[-118,46],[-118,47],[-119,47],[-119,46]]]}}
+  ]
+}

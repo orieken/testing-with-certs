@@ -1,0 +1,55 @@
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          59G   56G     0 100% /
+Mon Oct  5 15:39:43 UTC 2026
+Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+inside VerifyGetSigners
+Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
+Preparing to exec:  /usr/bin/apt-key --quiet --readonly --keyring /usr/share/keyrings/debian-archive-keyring.gpg verify --status-fd 3 /tmp/apt.sig.pDyegY /tmp/apt.data.7i6taz
+gpgv exited with status 1
+Summary:
+  Good: 
+  Valid: 
+  Bad: 
+  Worthless: 
+  SoonWorthless: 
+  NoPubKey: 
+  Signed-By: 
+  NODATA: no
+Err:1 http://deb.debian.org/debian bookworm InRelease
+  At least one invalid signature was encountered.
+inside VerifyGetSigners
+Preparing to exec:  /usr/bin/apt-key --quiet --readonly --keyring /usr/share/keyrings/debian-archive-keyring.gpg verify --status-fd 3 /tmp/apt.sig.A7AG6i /tmp/apt.data.gnq7tO
+gpgv exited with status 1
+Summary:
+  Good: 
+  Valid: 
+  Bad: 
+  Worthless: 
+  SoonWorthless: 
+  NoPubKey: 
+  Signed-By: 
+  NODATA: no
+Err:2 http://deb.debian.org/debian bookworm-updates InRelease
+  At least one invalid signature was encountered.
+inside VerifyGetSigners
+Preparing to exec:  /usr/bin/apt-key --quiet --readonly --keyring /usr/share/keyrings/debian-archive-keyring.gpg verify --status-fd 3 /tmp/apt.sig.IInS6C /tmp/apt.data.IsSWkt
+gpgv exited with status 1
+Summary:
+  Good: 
+  Valid: 
+  Bad: 
+  Worthless: 
+  SoonWorthless: 
+  NoPubKey: 
+  Signed-By: 
+  NODATA: no
+Err:3 http://deb.debian.org/debian-security bookworm-security InRelease
+  At least one invalid signature was encountered.
+Reading package lists...
+W: GPG error: http://deb.debian.org/debian bookworm InRelease: At least one invalid signature was encountered.
+E: The repository 'http://deb.debian.org/debian bookworm InRelease' is not signed.
+W: GPG error: http://deb.debian.org/debian bookworm-updates InRelease: At least one invalid signature was encountered.
+E: The repository 'http://deb.debian.org/debian bookworm-updates InRelease' is not signed.
+W: GPG error: http://deb.debian.org/debian-security bookworm-security InRelease: At least one invalid signature was encountered.
+E: The repository 'http://deb.debian.org/debian-security bookworm-security InRelease' is not signed.

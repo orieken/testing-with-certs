@@ -1,0 +1,147 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  javascript:
+    name: ${{ matrix.target }} checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [workspace, spike]
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Build and test in the pinned Node container
+        env:
+          CI_TARGET: ${{ matrix.target }}
+        run: docker build --platform linux/amd64 --progress plain --target "$CI_TARGET" -f infra/ci/Containerfile .
+      - name: Compare existing OpenAPI surface with pull-request base
+        if: matrix.target == 'workspace' && github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -eu
+          if ! git cat-file -e "$BASE_SHA:contracts/bundled/catalog.json" 2>/dev/null; then
+            echo 'Base revision has no canonical contract bundle; this change establishes the first baseline.'
+            exit 0
+          fi
+          mkdir -p "$RUNNER_TEMP/openapi-base"
+          git archive "$BASE_SHA" contracts/bundled | tar -x -C "$RUNNER_TEMP/openapi-base"
+          docker build --platform linux/amd64 --target base -t magic-shop-ci-base:local -f infra/ci/Containerfile .
+          docker run --rm --platform linux/amd64 --entrypoint node \
+            -v "$RUNNER_TEMP/openapi-base/contracts/bundled:/base:ro" \
+            magic-shop-ci-base:local infra/check-openapi-breaking.mjs /base
+      - name: Bound authored Go, TypeScript and Python complexity
+        if: matrix.target == 'workspace'
+        run: |
+          docker build --platform linux/amd64 -t magic-shop-quality:ci -f infra/quality/Containerfile .
+          docker run --rm --platform linux/amd64 -v "$PWD:/work:ro" magic-shop-quality:ci
+
+  services:
+    name: ${{ matrix.service }} build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [catalog-api, insights-api]
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Build and check the service container
+        env:
+          CI_SERVICE: ${{ matrix.service }}
+        run: docker build --platform linux/amd64 --progress plain -f "services/$CI_SERVICE/Containerfile" .
+
+  compose:
+    name: Compose configuration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Validate all Compose profiles
+        run: docker compose -f infra/compose.yaml --profile '*' config --quiet
+      - name: Check service ownership, credential mounts, networks and TLS verification
+        run: |
+          set -eu
+          docker build --platform linux/amd64 --target base -t magic-shop-ci-base:local -f infra/ci/Containerfile .
+          docker compose -f infra/compose.yaml --profile '*' config --format json | \
+            docker run -i --rm --platform linux/amd64 --entrypoint node -v "$PWD:/work:ro" \
+              magic-shop-ci-base:local \
+              /work/infra/check-architecture.mjs
+
+  integration:
+    name: Isolated contracts, security and real-browser suites
+    needs: [javascript, services, compose]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      LAB_PROJECT: magic-shop-ci-${{ github.run_id }}-${{ github.run_attempt }}
+      LAB_CI_REPORTS: "1"
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Start isolated healthy Compose stack and bootstrap realm
+        run: ./lab up
+      - name: Record real browser versions in the container
+        run: |
+          docker compose -f infra/compose.yaml --profile test build runner-test
+          docker compose -f infra/compose.yaml --profile test run --rm --no-deps runner-test \
+            sh -c 'google-chrome --version && microsoft-edge --version && node --version'
+      - name: Gate on live OpenAPI contracts and operation coverage
+        run: ./lab test --runner playwright --suite contracts
+      - name: Run live TLS, token, identity and ownership checks
+        run: ./lab test --runner playwright --suite security
+      - name: Run both runners in real Chrome and Edge with customer and admin identities
+        run: |
+          set -eu
+          for browser in chrome msedge; do
+            for runner in playwright cucumber; do
+              for user in customer-waterdeep shop-admin; do
+                ./lab test --runner "$runner" --browser "$browser" --user "$user"
+              done
+            done
+          done
+      - name: Scan only local reports for credential material
+        id: scan
+        if: always()
+        run: |
+          if [ ! -d artifacts/contracts ] && [ ! -d artifacts/teaching ]; then exit 1; fi
+          docker run --rm --platform linux/amd64 --entrypoint node \
+            -v "$PWD/artifacts:/work/artifacts:ro" magic-shop-runner:03 \
+            /work/testing/container/check-artifacts.mjs /work/artifacts/.
+      - name: Upload scanned text-only contract and teaching results
+        if: always() && steps.scan.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: magic-shop-reports-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            artifacts/contracts/*/junit.xml
+            artifacts/teaching/*/junit.xml
+            artifacts/teaching/*/cucumber.json
+            artifacts/teaching/*/scenario-telemetry.jsonl
+            artifacts/contract-coverage.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Remove only this CI project's containers and volumes
+        if: always()
+        run: ./lab reset --project "$LAB_PROJECT"

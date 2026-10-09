@@ -1,0 +1,10 @@
+FROM registry.access.redhat.com/ubi9/python-312@sha256:d3a5322122fd7efd5d5a2486c8c221f4785c364199f27e50a33aced417047e6a
+WORKDIR /app
+COPY services/insights-api/requirements.txt /app/requirements.txt
+RUN python -m pip install --no-cache-dir --disable-pip-version-check -r /app/requirements.txt
+COPY services/insights-api/server.py services/insights-api/domain.py services/insights-api/test_domain.py services/insights-api/test_contract.py services/insights-api/test_reporting.py services/insights-api/test_security.py /app/
+COPY seed/regions.geojson /app/regions.geojson
+COPY contracts/bundled/insights.json /app/contracts/insights.json
+RUN python -m compileall -q /app && python -m unittest discover -s /app -p 'test_*.py'
+USER 1000:1000
+CMD ["python", "/app/server.py"]

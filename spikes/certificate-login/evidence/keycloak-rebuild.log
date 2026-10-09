@@ -1,0 +1,51 @@
+ Image certificate-login-spike-keycloak Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 667B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Keycloak.Dockerfile
+#2 transferring dockerfile: 644B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for quay.io/keycloak/keycloak:26.4.0@sha256:5f3fb534cde6bf006d79f5912473e5d2c828c707cdfc52e16972803aca9d43dd
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 116B done
+#4 DONE 0.0s
+
+#5 [builder 1/3] FROM quay.io/keycloak/keycloak:26.4.0@sha256:5f3fb534cde6bf006d79f5912473e5d2c828c707cdfc52e16972803aca9d43dd
+#5 DONE 0.0s
+
+#6 [builder 2/3] WORKDIR /opt/keycloak
+#6 CACHED
+
+#7 [internal] load build context
+#7 transferring context: 69B done
+#7 DONE 0.0s
+
+#8 [builder 3/3] RUN /opt/keycloak/bin/kc.sh build --db=dev-file --health-enabled=true --https-client-auth=request
+#8 0.608 Updating the configuration and installing your custom providers, if any. Please wait.
+#8 4.434 2026-10-06 01:18:43,795 INFO  [io.quarkus.deployment.QuarkusAugmentor] (main) Quarkus augmentation completed in 3451ms
+#8 4.446 Server configuration updated and persisted. Run the following command to review the configuration:
+#8 4.446 
+#8 4.446 	kc.sh show-config
+#8 4.446 
+#8 DONE 4.5s
+
+#9 [stage-1 3/4] COPY --from=builder /opt/keycloak/ /opt/keycloak/
+#9 DONE 0.2s
+
+#10 [stage-1 4/4] COPY --chown=1000:0 keycloak/realm.json /opt/keycloak/data/import/realm.json
+#10 DONE 0.0s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 0.2s done
+#11 writing image sha256:4685f9c698aa3e778b624d5145d488997873cc911df143ee9522768dab1cc57f done
+#11 naming to docker.io/library/certificate-login-spike-keycloak done
+#11 DONE 0.2s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ Image certificate-login-spike-keycloak Built 

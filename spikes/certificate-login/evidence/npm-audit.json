@@ -1,0 +1,267 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@cucumber/cucumber": {
+      "name": "@cucumber/cucumber",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "@cucumber/gherkin",
+        "@cucumber/gherkin-utils",
+        "@cucumber/messages"
+      ],
+      "effects": [],
+      "range": "<=12.2.0",
+      "nodes": [
+        "node_modules/@cucumber/cucumber"
+      ],
+      "fixAvailable": {
+        "name": "@cucumber/cucumber",
+        "version": "13.3.0",
+        "isSemVerMajor": true
+      }
+    },
+    "@cucumber/gherkin": {
+      "name": "@cucumber/gherkin",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@cucumber/messages"
+      ],
+      "effects": [
+        "@cucumber/gherkin-utils"
+      ],
+      "range": "<=34.0.0",
+      "nodes": [
+        "node_modules/@cucumber/gherkin",
+        "node_modules/@cucumber/gherkin-utils/node_modules/@cucumber/gherkin"
+      ],
+      "fixAvailable": {
+        "name": "@cucumber/cucumber",
+        "version": "13.3.0",
+        "isSemVerMajor": true
+      }
+    },
+    "@cucumber/gherkin-utils": {
+      "name": "@cucumber/gherkin-utils",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@cucumber/gherkin",
+        "@cucumber/messages"
+      ],
+      "effects": [
+        "@cucumber/cucumber"
+      ],
+      "range": "<=10.0.0",
+      "nodes": [
+        "node_modules/@cucumber/gherkin-utils"
+      ],
+      "fixAvailable": {
+        "name": "@cucumber/cucumber",
+        "version": "13.3.0",
+        "isSemVerMajor": true
+      }
+    },
+    "@cucumber/messages": {
+      "name": "@cucumber/messages",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "uuid"
+      ],
+      "effects": [
+        "@cucumber/cucumber",
+        "@cucumber/gherkin",
+        "@cucumber/gherkin-utils"
+      ],
+      "range": "<=28.1.0",
+      "nodes": [
+        "node_modules/@cucumber/cucumber/node_modules/@cucumber/messages",
+        "node_modules/@cucumber/gherkin-utils/node_modules/@cucumber/gherkin/node_modules/@cucumber/messages",
+        "node_modules/@cucumber/gherkin-utils/node_modules/@cucumber/messages",
+        "node_modules/@cucumber/messages"
+      ],
+      "fixAvailable": {
+        "name": "@cucumber/cucumber",
+        "version": "13.3.0",
+        "isSemVerMajor": true
+      }
+    },
+    "@vitest/coverage-v8": {
+      "name": "@vitest/coverage-v8",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "vitest"
+      ],
+      "effects": [],
+      "range": "2.1.0-beta.1 - 4.1.10",
+      "nodes": [
+        "node_modules/@vitest/coverage-v8"
+      ],
+      "fixAvailable": {
+        "name": "@vitest/coverage-v8",
+        "version": "5.0.3",
+        "isSemVerMajor": true
+      }
+    },
+    "@vitest/mocker": {
+      "name": "@vitest/mocker",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1193684,
+          "name": "@vitest/mocker",
+          "dependency": "@vitest/mocker",
+          "title": "Vitest: Path Traversal / Arbitrary File Read via @vitest/mocker Redirect Mock",
+          "url": "https://github.com/advisories/GHSA-82fw-gwwq-j7x9",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-22"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N"
+          },
+          "range": ">=2.1.0 <4.1.11"
+        }
+      ],
+      "effects": [
+        "vitest"
+      ],
+      "range": "2.1.0 - 4.1.10",
+      "nodes": [
+        "node_modules/@vitest/mocker"
+      ],
+      "fixAvailable": {
+        "name": "vitest",
+        "version": "5.0.3",
+        "isSemVerMajor": true
+      }
+    },
+    "esbuild": {
+      "name": "esbuild",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1120680,
+          "name": "esbuild",
+          "dependency": "esbuild",
+          "title": "esbuild allows arbitrary file read when running the development server on Windows",
+          "url": "https://github.com/advisories/GHSA-g7r4-m6w7-qqqr",
+          "severity": "low",
+          "cwe": [
+            "CWE-22"
+          ],
+          "cvss": {
+            "score": 2.5,
+            "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": ">=0.27.3 <0.28.1"
+        }
+      ],
+      "effects": [],
+      "range": "0.27.3 - 0.28.0",
+      "nodes": [
+        "node_modules/esbuild"
+      ],
+      "fixAvailable": true
+    },
+    "uuid": {
+      "name": "uuid",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1119441,
+          "name": "uuid",
+          "dependency": "uuid",
+          "title": "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided",
+          "url": "https://github.com/advisories/GHSA-w5hq-g745-h8pq",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-787",
+            "CWE-1285"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+          },
+          "range": "<11.1.1"
+        }
+      ],
+      "effects": [
+        "@cucumber/messages"
+      ],
+      "range": "<11.1.1",
+      "nodes": [
+        "node_modules/@cucumber/cucumber/node_modules/uuid",
+        "node_modules/@cucumber/gherkin-utils/node_modules/@cucumber/gherkin/node_modules/uuid",
+        "node_modules/@cucumber/gherkin-utils/node_modules/uuid",
+        "node_modules/uuid"
+      ],
+      "fixAvailable": {
+        "name": "@cucumber/cucumber",
+        "version": "13.3.0",
+        "isSemVerMajor": true
+      }
+    },
+    "vitest": {
+      "name": "vitest",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "@vitest/mocker",
+        {
+          "source": 1193683,
+          "name": "vitest",
+          "dependency": "vitest",
+          "title": "Vitest: Path Traversal / Arbitrary File Read via @vitest/mocker Redirect Mock",
+          "url": "https://github.com/advisories/GHSA-82fw-gwwq-j7x9",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-22"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N"
+          },
+          "range": ">=2.1.0 <4.1.11"
+        }
+      ],
+      "effects": [
+        "@vitest/coverage-v8"
+      ],
+      "range": "2.1.0-beta.1 - 4.1.10",
+      "nodes": [
+        "node_modules/vitest"
+      ],
+      "fixAvailable": {
+        "name": "vitest",
+        "version": "5.0.3",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 1,
+      "moderate": 8,
+      "high": 0,
+      "critical": 0,
+      "total": 9
+    },
+    "dependencies": {
+      "prod": 156,
+      "dev": 179,
+      "optional": 83,
+      "peer": 12,
+      "peerOptional": 0,
+      "total": 342
+    }
+  }
+}

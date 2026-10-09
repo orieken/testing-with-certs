@@ -1,0 +1,7 @@
+FROM registry.access.redhat.com/ubi9/ubi:9.6@sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc
+WORKDIR /work
+COPY infra/pki/issue.sh /work/issue.sh
+RUN bash -c 'mkdir -p /state /public /out/{shop,auth,ui,customer-api,catalog-api,insights-api,postgres,gateway-client,customer-client,catalog-client,insights-client,customer-waterdeep,customer-baldur,customer-neverwinter,shopkeeper,shop-admin,disabled-customer,unknown-user,negative}' \
+    && chown -R 1000:1000 /state /public /out /work/issue.sh
+USER 1000:1000
+ENTRYPOINT ["bash", "/work/issue.sh"]

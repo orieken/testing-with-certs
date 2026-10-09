@@ -1,0 +1,770 @@
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  adwaita-icon-theme at-spi2-common ca-certificates dbus dbus-bin dbus-daemon
+  dbus-session-bus-common dbus-system-bus-common dbus-user-session
+  dconf-gsettings-backend dconf-service dmsetup docutils-common fontconfig
+  fontconfig-config fonts-liberation fonts-urw-base35 gtk-update-icon-cache
+  hicolor-icon-theme ieee-data libaom3 libapparmor1 libargon2-1 libasound2
+  libasound2-data libatk-bridge2.0-0 libatk1.0-0 libatspi2.0-0
+  libavahi-client3 libavahi-common-data libavahi-common3 libblas3 libbrotli1
+  libbsd0 libc-ares2 libcairo-gobject2 libcairo2 libcolord2 libcryptsetup12
+  libcups2 libcurl3-gnutls libdatrie1 libdav1d6 libdbus-1-3 libdconf1
+  libde265-0 libdeflate0 libdevmapper1.02.1 libdrm-amdgpu1 libdrm-common
+  libdrm-intel1 libdrm-nouveau2 libdrm-radeon1 libdrm2 libedit2 libelf1
+  libepoxy0 libexpat1 libfdisk1 libfontconfig1 libfontenc1 libfreetype6
+  libfribidi0 libgbm1 libgdbm-compat4 libgdbm6 libgdk-pixbuf-2.0-0
+  libgdk-pixbuf2.0-common libgfortran5 libgif7 libgl1 libgl1-mesa-dri
+  libglapi-mesa libglib2.0-0 libglvnd0 libglx-mesa0 libglx0 libgomp1
+  libgraphite2-3 libgs-common libgs10 libgs10-common libgssapi-krb5-2
+  libgtk-3-0 libgtk-3-common libharfbuzz0b libheif1 libhwy1 libice6 libicu72
+  libid3tag0 libidn12 libijs-0.35 libimagequant0 libimlib2 libip4tc2 libjbig0
+  libjbig2dec0 libjpeg62-turbo libjson-c5 libjxl0.7 libk5crypto3 libkeyutils1
+  libkmod2 libkrb5-3 libkrb5support0 liblapack3 liblcms2-2 libldap-2.5-0
+  liblerc4 libllvm15 liblzo2-2 libncursesw6 libnghttp2-14 libnode108 libnsl2
+  libnspr4 libnss3 libnuma1 libopenjp2-7 libpam-systemd libpango-1.0-0
+  libpangocairo-1.0-0 libpangoft2-1.0-0 libpaper1 libpciaccess0 libperl5.36
+  libpixman-1-0 libpng16-16 libproc2-0 libpsl5 libpython3-stdlib
+  libpython3.11-minimal libpython3.11-stdlib libquadmath0 libraqm0
+  libreadline8 librsvg2-2 librtmp1 libsasl2-2 libsasl2-modules-db
+  libsensors-config libsensors5 libsm6 libspectre1 libsqlite3-0 libssh2-1
+  libssl3 libsystemd-shared libsystemd0 libtcl8.6 libthai-data libthai0
+  libtiff6 libtirpc-common libtirpc3 libtk8.6 libudev1 libunwind8 libuv1
+  libvncclient1 libvncserver1 libvulkan1 libwayland-client0 libwayland-cursor0
+  libwayland-egl1 libwayland-server0 libwebp7 libwebpdemux2 libwebpmux3
+  libx11-6 libx11-data libx11-xcb1 libx265-199 libxau6 libxaw7 libxcb-dri2-0
+  libxcb-dri3-0 libxcb-glx0 libxcb-present0 libxcb-randr0 libxcb-render0
+  libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-xfixes0 libxcb1 libxcomposite1
+  libxcursor1 libxdamage1 libxdmcp6 libxext6 libxfixes3 libxfont2 libxft2
+  libxi6 libxinerama1 libxkbcommon0 libxkbfile1 libxml2 libxmu6 libxmuu1
+  libxpm4 libxrandr2 libxrender1 libxshmfence1 libxss1 libxt6 libxtst6 libxv1
+  libxxf86dga1 libxxf86vm1 libyaml-0-2 libz3-4 mailcap media-types menu
+  mime-support net-tools node-acorn node-busboy node-cjs-module-lexer
+  node-undici node-xtend nodejs perl perl-base perl-modules-5.36 poppler-data
+  procps python3 python3-certifi python3-cffi-backend python3-chardet
+  python3-charset-normalizer python3-cryptography python3-dateutil
+  python3-debtcollector python3-deprecated python3-distutils python3-docutils
+  python3-idna python3-importlib-metadata python3-iso8601 python3-jwcrypto
+  python3-lib2to3 python3-minimal python3-more-itertools python3-msgpack
+  python3-netaddr python3-netifaces python3-novnc python3-numpy
+  python3-oslo.config python3-oslo.context python3-oslo.i18n python3-oslo.log
+  python3-oslo.serialization python3-oslo.utils python3-packaging python3-pbr
+  python3-pil python3-pkg-resources python3-pyinotify python3-pyparsing
+  python3-requests python3-rfc3986 python3-roman python3-setuptools
+  python3-six python3-stevedore python3-tz python3-urllib3 python3-websockify
+  python3-wrapt python3-yaml python3-zipp python3.11 python3.11-minimal
+  readline-common sensible-utils sgml-base shared-mime-info systemd
+  systemd-sysv tcl tcl8.6 tk tk8.6 ucf wget x11-common x11-xkb-utils xdg-utils
+  xfonts-encodings xfonts-utils xkb-data xml-core xserver-common
+Suggested packages:
+  fbpager fbdesk fbautostart fonts-freefont-otf | fonts-freefont-ttf
+  fonts-texgyre libasound2-plugins alsa-utils colord cups-common gdbm-l10n
+  low-memory-monitor krb5-doc krb5-user gvfs liblcms2-utils pciutils
+  librsvg2-bin lm-sensors menu-l10n gksu | kde-cli-tools | ktsuss npm
+  python-nova perl-doc libterm-readline-gnu-perl | libterm-readline-perl-perl
+  make libtap-harness-archive-perl poppler-utils ghostscript
+  fonts-japanese-mincho | fonts-ipafont-mincho fonts-japanese-gothic
+  | fonts-ipafont-gothic fonts-arphic-ukai fonts-arphic-uming fonts-nanum
+  python3-doc python3-tk python3-venv python-cryptography-doc
+  python3-cryptography-vectors python-debtcollector-doc docutils-doc
+  fonts-linuxlibertine | ttf-linux-libertine texlive-lang-french
+  texlive-latex-base texlive-latex-recommended ipython3 python-netaddr-docs
+  python3-nova gcc gfortran python3-dev python3-pytest python-oslo.log-doc
+  python-pil-doc python-pyinotify-doc python-pyparsing-doc python3-openssl
+  python3-socks python-requests-doc python-setuptools-doc python3-brotli
+  python3.11-venv python3.11-doc binutils binfmt-support readline-doc
+  sgml-base-doc systemd-container systemd-homed systemd-userdbd systemd-boot
+  systemd-resolved libfido2-1 libqrencode4 libtss2-esys-3.0.2-0 libtss2-mu0
+  libtss2-rc0 polkitd | policykit-1 tcl-tclreadline mesa-utils debhelper
+Recommended packages:
+  librsvg2-common xfonts-terminus feh | eterm | hsetroot | xloadimage
+  alsa-ucm-conf alsa-topology-conf at-spi2-core libgdk-pixbuf2.0-bin
+  libglib2.0-data xdg-user-dirs fonts-droid-fallback libgtk-3-bin krb5-locales
+  libldap-common libgpm2 libpaper-utils publicsuffix libsasl2-modules
+  mesa-vulkan-drivers | vulkan-icd bzip2 file xz-utils nodejs-doc netbase
+  psmisc python3-pygments python3-olefile systemd-timesyncd | time-daemon
+  libnss-systemd libfile-mimeinfo-perl libnet-dbus-perl libx11-protocol-perl
+  x11-xserver-utils xfonts-base
+The following NEW packages will be installed:
+  adwaita-icon-theme at-spi2-common ca-certificates dbus dbus-bin dbus-daemon
+  dbus-session-bus-common dbus-system-bus-common dbus-user-session
+  dconf-gsettings-backend dconf-service dmsetup docutils-common fluxbox
+  fontconfig fontconfig-config fonts-liberation fonts-urw-base35
+  google-chrome-stable gtk-update-icon-cache hicolor-icon-theme ieee-data
+  libaom3 libapparmor1 libargon2-1 libasound2 libasound2-data
+  libatk-bridge2.0-0 libatk1.0-0 libatspi2.0-0 libavahi-client3
+  libavahi-common-data libavahi-common3 libblas3 libbrotli1 libbsd0 libc-ares2
+  libcairo-gobject2 libcairo2 libcolord2 libcryptsetup12 libcups2
+  libcurl3-gnutls libdatrie1 libdav1d6 libdbus-1-3 libdconf1 libde265-0
+  libdeflate0 libdevmapper1.02.1 libdrm-amdgpu1 libdrm-common libdrm-intel1
+  libdrm-nouveau2 libdrm-radeon1 libdrm2 libedit2 libelf1 libepoxy0 libexpat1
+  libfdisk1 libfontconfig1 libfontenc1 libfreetype6 libfribidi0 libgbm1
+  libgdbm-compat4 libgdbm6 libgdk-pixbuf-2.0-0 libgdk-pixbuf2.0-common
+  libgfortran5 libgif7 libgl1 libgl1-mesa-dri libglapi-mesa libglib2.0-0
+  libglvnd0 libglx-mesa0 libglx0 libgomp1 libgraphite2-3 libgs-common libgs10
+  libgs10-common libgssapi-krb5-2 libgtk-3-0 libgtk-3-common libharfbuzz0b
+  libheif1 libhwy1 libice6 libicu72 libid3tag0 libidn12 libijs-0.35
+  libimagequant0 libimlib2 libip4tc2 libjbig0 libjbig2dec0 libjpeg62-turbo
+  libjson-c5 libjxl0.7 libk5crypto3 libkeyutils1 libkmod2 libkrb5-3
+  libkrb5support0 liblapack3 liblcms2-2 libldap-2.5-0 liblerc4 libllvm15
+  liblzo2-2 libncursesw6 libnghttp2-14 libnode108 libnsl2 libnspr4 libnss3
+  libnss3-tools libnuma1 libopenjp2-7 libpam-systemd libpango-1.0-0
+  libpangocairo-1.0-0 libpangoft2-1.0-0 libpaper1 libpciaccess0 libperl5.36
+  libpixman-1-0 libpng16-16 libproc2-0 libpsl5 libpython3-stdlib
+  libpython3.11-minimal libpython3.11-stdlib libquadmath0 libraqm0
+  libreadline8 librsvg2-2 librtmp1 libsasl2-2 libsasl2-modules-db
+  libsensors-config libsensors5 libsm6 libspectre1 libsqlite3-0 libssh2-1
+  libssl3 libsystemd-shared libtcl8.6 libthai-data libthai0 libtiff6
+  libtirpc-common libtirpc3 libtk8.6 libunwind8 libuv1 libvncclient1
+  libvncserver1 libvulkan1 libwayland-client0 libwayland-cursor0
+  libwayland-egl1 libwayland-server0 libwebp7 libwebpdemux2 libwebpmux3
+  libx11-6 libx11-data libx11-xcb1 libx265-199 libxau6 libxaw7 libxcb-dri2-0
+  libxcb-dri3-0 libxcb-glx0 libxcb-present0 libxcb-randr0 libxcb-render0
+  libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-xfixes0 libxcb1 libxcomposite1
+  libxcursor1 libxdamage1 libxdmcp6 libxext6 libxfixes3 libxfont2 libxft2
+  libxi6 libxinerama1 libxkbcommon0 libxkbfile1 libxml2 libxmu6 libxmuu1
+  libxpm4 libxrandr2 libxrender1 libxshmfence1 libxss1 libxt6 libxtst6 libxv1
+  libxxf86dga1 libxxf86vm1 libyaml-0-2 libz3-4 mailcap media-types menu
+  microsoft-edge-stable mime-support net-tools node-acorn node-busboy
+  node-cjs-module-lexer node-undici node-xtend nodejs novnc openssl perl
+  perl-modules-5.36 poppler-data procps python3 python3-certifi
+  python3-cffi-backend python3-chardet python3-charset-normalizer
+  python3-cryptography python3-dateutil python3-debtcollector
+  python3-deprecated python3-distutils python3-docutils python3-idna
+  python3-importlib-metadata python3-iso8601 python3-jwcrypto python3-lib2to3
+  python3-minimal python3-more-itertools python3-msgpack python3-netaddr
+  python3-netifaces python3-novnc python3-numpy python3-oslo.config
+  python3-oslo.context python3-oslo.i18n python3-oslo.log
+  python3-oslo.serialization python3-oslo.utils python3-packaging python3-pbr
+  python3-pil python3-pkg-resources python3-pyinotify python3-pyparsing
+  python3-requests python3-rfc3986 python3-roman python3-setuptools
+  python3-six python3-stevedore python3-tz python3-urllib3 python3-websockify
+  python3-wrapt python3-yaml python3-zipp python3.11 python3.11-minimal
+  readline-common sensible-utils sgml-base shared-mime-info systemd
+  systemd-sysv tcl tcl8.6 tk tk8.6 ucf websockify wget x11-common x11-utils
+  x11-xkb-utils x11vnc xauth xdg-utils xfonts-encodings xfonts-utils xkb-data
+  xml-core xserver-common xvfb
+The following packages will be upgraded:
+  libsystemd0 libudev1 perl-base
+3 upgraded, 307 newly installed, 0 to remove and 19 not upgraded.
+Inst perl-base [5.36.0-7+deb12u3] (5.36.0-7+deb12u4 Debian-Security:12/oldstable-security [amd64])
+Conf perl-base (5.36.0-7+deb12u4 Debian-Security:12/oldstable-security [amd64])
+Inst libssl3 (3.0.22-1~deb12u1 Debian-Security:12/oldstable-security [amd64])
+Inst libargon2-1 (0~20171227-0.3+deb12u1 Debian:12.15/oldstable [amd64])
+Inst libudev1 [252.39-1~deb12u1] (252.39-1~deb12u2 Debian:12.15/oldstable [amd64])
+Conf libudev1 (252.39-1~deb12u2 Debian:12.15/oldstable [amd64])
+Inst dmsetup (2:1.02.185-2 Debian:12.15/oldstable [amd64]) []
+Inst libdevmapper1.02.1 (2:1.02.185-2 Debian:12.15/oldstable [amd64])
+Inst libjson-c5 (0.16-2 Debian:12.15/oldstable [amd64])
+Inst libcryptsetup12 (2:2.6.1-4~deb12u2 Debian:12.15/oldstable [amd64])
+Inst libfdisk1 (2.38.1-5+deb12u3 Debian:12.15/oldstable [amd64])
+Inst libkmod2 (30+20221128-1 Debian:12.15/oldstable [amd64])
+Inst libapparmor1 (3.0.8-3 Debian:12.15/oldstable [amd64])
+Inst libip4tc2 (1.8.9-2 Debian:12.15/oldstable [amd64])
+Inst libsystemd-shared (252.39-1~deb12u2 Debian:12.15/oldstable [amd64])
+Inst libsystemd0 [252.39-1~deb12u1] (252.39-1~deb12u2 Debian:12.15/oldstable [amd64])
+Conf libsystemd0 (252.39-1~deb12u2 Debian:12.15/oldstable [amd64])
+Conf libssl3 (3.0.22-1~deb12u1 Debian-Security:12/oldstable-security [amd64])
+Inst systemd (252.39-1~deb12u2 Debian:12.15/oldstable [amd64])
+Conf libargon2-1 (0~20171227-0.3+deb12u1 Debian:12.15/oldstable [amd64])
+Conf dmsetup (2:1.02.185-2 Debian:12.15/oldstable [amd64])
+Conf libdevmapper1.02.1 (2:1.02.185-2 Debian:12.15/oldstable [amd64])
+Conf libjson-c5 (0.16-2 Debian:12.15/oldstable [amd64])
+Conf libcryptsetup12 (2:2.6.1-4~deb12u2 Debian:12.15/oldstable [amd64])
+Conf libfdisk1 (2.38.1-5+deb12u3 Debian:12.15/oldstable [amd64])
+Conf libkmod2 (30+20221128-1 Debian:12.15/oldstable [amd64])
+Conf libapparmor1 (3.0.8-3 Debian:12.15/oldstable [amd64])
+Conf libip4tc2 (1.8.9-2 Debian:12.15/oldstable [amd64])
+Conf libsystemd-shared (252.39-1~deb12u2 Debian:12.15/oldstable [amd64])
+Conf systemd (252.39-1~deb12u2 Debian:12.15/oldstable [amd64])
+Inst systemd-sysv (252.39-1~deb12u2 Debian:12.15/oldstable [amd64])
+Inst libdbus-1-3 (1.14.10-1~deb12u1 Debian:12.15/oldstable [amd64])
+Inst dbus-bin (1.14.10-1~deb12u1 Debian:12.15/oldstable [amd64])
+Inst dbus-session-bus-common (1.14.10-1~deb12u1 Debian:12.15/oldstable [all])
+Inst libexpat1 (2.5.0-1+deb12u4 Debian-Security:12/oldstable-security [amd64])
+Inst dbus-daemon (1.14.10-1~deb12u1 Debian:12.15/oldstable [amd64])
+Inst dbus-system-bus-common (1.14.10-1~deb12u1 Debian:12.15/oldstable [all])
+Inst dbus (1.14.10-1~deb12u1 Debian:12.15/oldstable [amd64])
+Inst perl-modules-5.36 (5.36.0-7+deb12u4 Debian-Security:12/oldstable-security [all])
+Inst libgdbm6 (1.23-3 Debian:12.15/oldstable [amd64])
+Inst libgdbm-compat4 (1.23-3 Debian:12.15/oldstable [amd64])
+Inst libperl5.36 (5.36.0-7+deb12u4 Debian-Security:12/oldstable-security [amd64])
+Inst perl (5.36.0-7+deb12u4 Debian-Security:12/oldstable-security [amd64])
+Inst openssl (3.0.22-1~deb12u1 Debian-Security:12/oldstable-security [amd64])
+Inst ca-certificates (20250419~deb12u1 Debian-Security:12/oldstable-security [all])
+Inst fonts-liberation (1:1.07.4-11 Debian:12.15/oldstable [all])
+Inst libasound2-data (1.2.8-1 Debian:12.15/oldstable [all])
+Inst libasound2 (1.2.8-1+b1 Debian:12.15/oldstable [amd64])
+Inst libglib2.0-0 (2.74.6-2+deb12u9 Debian:12.15/oldstable [amd64])
+Inst at-spi2-common (2.46.0-5 Debian:12.15/oldstable [all])
+Inst libatk1.0-0 (2.46.0-5 Debian:12.15/oldstable [amd64])
+Inst libxau6 (1:1.0.9-1 Debian:12.15/oldstable [amd64])
+Inst libbsd0 (0.11.7-2 Debian:12.15/oldstable [amd64])
+Inst libxdmcp6 (1:1.1.2-3 Debian:12.15/oldstable [amd64])
+Inst libxcb1 (1.15-1 Debian:12.15/oldstable [amd64])
+Inst libx11-data (2:1.8.4-2+deb12u2 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [all])
+Inst libx11-6 (2:1.8.4-2+deb12u2 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libxext6 (2:1.3.4-1+b1 Debian:12.15/oldstable [amd64])
+Inst libxi6 (2:1.8-1+b1 Debian:12.15/oldstable [amd64])
+Inst libatspi2.0-0 (2.46.0-5 Debian:12.15/oldstable [amd64])
+Inst libatk-bridge2.0-0 (2.46.0-5 Debian:12.15/oldstable [amd64])
+Inst libbrotli1 (1.0.9-2+b6 Debian:12.15/oldstable [amd64])
+Inst libpng16-16 (1.6.39-2+deb12u6 Debian-Security:12/oldstable-security [amd64])
+Inst libfreetype6 (2.12.1+dfsg-5+deb12u4 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libfontenc1 (1:1.1.4-1 Debian:12.15/oldstable [amd64])
+Inst x11-common (1:7.7+23 Debian:12.15/oldstable [all])
+Inst xfonts-encodings (1:1.0.4-2.2 Debian:12.15/oldstable [all])
+Inst xfonts-utils (1:7.7+6 Debian:12.15/oldstable [amd64])
+Inst fonts-urw-base35 (20200910-7 Debian:12.15/oldstable [all])
+Inst fontconfig-config (2.14.1-4 Debian:12.15/oldstable [amd64])
+Inst libfontconfig1 (2.14.1-4 Debian:12.15/oldstable [amd64])
+Inst libpixman-1-0 (0.42.2-1 Debian:12.15/oldstable [amd64])
+Inst libxcb-render0 (1.15-1 Debian:12.15/oldstable [amd64])
+Inst libxcb-shm0 (1.15-1 Debian:12.15/oldstable [amd64])
+Inst libxrender1 (1:0.9.10-1.1 Debian:12.15/oldstable [amd64])
+Inst libcairo2 (1.16.0-7 Debian:12.15/oldstable [amd64])
+Inst libavahi-common-data (0.8-10+deb12u1 Debian:12.15/oldstable [amd64])
+Inst libavahi-common3 (0.8-10+deb12u1 Debian:12.15/oldstable [amd64])
+Inst libavahi-client3 (0.8-10+deb12u1 Debian:12.15/oldstable [amd64])
+Inst libkrb5support0 (1.20.1-2+deb12u5 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libk5crypto3 (1.20.1-2+deb12u5 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libkeyutils1 (1.6.3-2 Debian:12.15/oldstable [amd64])
+Inst libkrb5-3 (1.20.1-2+deb12u5 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libgssapi-krb5-2 (1.20.1-2+deb12u5 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libcups2 (2.4.2-3+deb12u9 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libsasl2-modules-db (2.1.28+dfsg-10 Debian:12.15/oldstable [amd64])
+Inst libsasl2-2 (2.1.28+dfsg-10 Debian:12.15/oldstable [amd64])
+Inst libldap-2.5-0 (2.5.13+dfsg-5 Debian:12.15/oldstable [amd64])
+Inst libnghttp2-14 (1.52.0-1+deb12u3 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libpsl5 (0.21.2-1 Debian:12.15/oldstable [amd64])
+Inst librtmp1 (2.4+20151223.gitfa8646d.1-2+b2 Debian:12.15/oldstable [amd64])
+Inst libssh2-1 (1.10.0-3+deb12u1 Debian-Security:12/oldstable-security [amd64])
+Inst libcurl3-gnutls (7.88.1-10+deb12u15 Debian:12.15/oldstable [amd64])
+Inst libdrm-common (2.4.114-1 Debian:12.15/oldstable [all])
+Inst libdrm2 (2.4.114-1+b1 Debian:12.15/oldstable [amd64])
+Inst libwayland-server0 (1.21.0-1 Debian:12.15/oldstable [amd64])
+Inst libgbm1 (22.3.6-1+deb12u2 Debian:12.15/oldstable [amd64])
+Inst hicolor-icon-theme (0.17-2 Debian:12.15/oldstable [all])
+Inst libgdk-pixbuf2.0-common (2.42.10+dfsg-1+deb12u4 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [all])
+Inst libicu72 (72.1-3+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libxml2 (2.9.14+dfsg-1.3~deb12u6 Debian:12.15/oldstable [amd64])
+Inst shared-mime-info (2.2-1 Debian:12.15/oldstable [amd64])
+Inst libjpeg62-turbo (1:2.1.5-2 Debian:12.15/oldstable [amd64])
+Inst libdeflate0 (1.14-1 Debian:12.15/oldstable [amd64])
+Inst libjbig0 (2.1-6.1 Debian:12.15/oldstable [amd64])
+Inst liblerc4 (4.0.0+ds-2 Debian:12.15/oldstable [amd64])
+Inst libwebp7 (1.2.4-0.2+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libtiff6 (4.5.0-6+deb12u4 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libgdk-pixbuf-2.0-0 (2.42.10+dfsg-1+deb12u4 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst gtk-update-icon-cache (3.24.38-2~deb12u3 Debian:12.15/oldstable [amd64])
+Inst adwaita-icon-theme (43-1 Debian:12.15/oldstable [all])
+Inst libcairo-gobject2 (1.16.0-7 Debian:12.15/oldstable [amd64])
+Inst liblcms2-2 (2.14-2+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libcolord2 (1.4.6-2.2 Debian:12.15/oldstable [amd64])
+Inst libepoxy0 (1.5.10-1 Debian:12.15/oldstable [amd64])
+Inst libfribidi0 (1.0.8-2.1 Debian:12.15/oldstable [amd64])
+Inst libgraphite2-3 (1.3.14-1+deb12u1 Debian:12.15/oldstable [amd64])
+Inst libharfbuzz0b (6.0.0+dfsg-3 Debian:12.15/oldstable [amd64])
+Inst fontconfig (2.14.1-4 Debian:12.15/oldstable [amd64])
+Inst libthai-data (0.1.29-1 Debian:12.15/oldstable [all])
+Inst libdatrie1 (0.2.13-2+b1 Debian:12.15/oldstable [amd64])
+Inst libthai0 (0.1.29-1 Debian:12.15/oldstable [amd64])
+Inst libpango-1.0-0 (1.50.12+ds-1 Debian:12.15/oldstable [amd64])
+Inst libpangoft2-1.0-0 (1.50.12+ds-1 Debian:12.15/oldstable [amd64])
+Inst libpangocairo-1.0-0 (1.50.12+ds-1 Debian:12.15/oldstable [amd64])
+Inst libwayland-client0 (1.21.0-1 Debian:12.15/oldstable [amd64])
+Inst libwayland-cursor0 (1.21.0-1 Debian:12.15/oldstable [amd64])
+Inst libwayland-egl1 (1.21.0-1 Debian:12.15/oldstable [amd64])
+Inst libxcomposite1 (1:0.4.5-1 Debian:12.15/oldstable [amd64])
+Inst libxfixes3 (1:6.0.0-2 Debian:12.15/oldstable [amd64])
+Inst libxcursor1 (1:1.2.1-1 Debian:12.15/oldstable [amd64])
+Inst libxdamage1 (1:1.1.6-1 Debian:12.15/oldstable [amd64])
+Inst libxinerama1 (2:1.1.4-3 Debian:12.15/oldstable [amd64])
+Inst xkb-data (2.35.1-1 Debian:12.15/oldstable [all])
+Inst libxkbcommon0 (1.5.0-1 Debian:12.15/oldstable [amd64])
+Inst libxrandr2 (2:1.5.2-2+b1 Debian:12.15/oldstable [amd64])
+Inst libpam-systemd (252.39-1~deb12u2 Debian:12.15/oldstable [amd64])
+Inst dbus-user-session (1.14.10-1~deb12u1 Debian:12.15/oldstable [amd64])
+Inst libdconf1 (0.40.0-4 Debian:12.15/oldstable [amd64])
+Inst libncursesw6 (6.4-4 Debian:12.15/oldstable [amd64])
+Inst libproc2-0 (2:4.0.2-3 Debian:12.15/oldstable [amd64])
+Inst procps (2:4.0.2-3 Debian:12.15/oldstable [amd64])
+Inst dconf-service (0.40.0-4 Debian:12.15/oldstable [amd64])
+Inst dconf-gsettings-backend (0.40.0-4 Debian:12.15/oldstable [amd64])
+Inst libgtk-3-common (3.24.38-2~deb12u3 Debian:12.15/oldstable [all])
+Inst libgtk-3-0 (3.24.38-2~deb12u3 Debian:12.15/oldstable [amd64])
+Inst libnspr4 (2:4.35-1 Debian:12.15/oldstable [amd64])
+Inst libsqlite3-0 (3.40.1-2+deb12u2 Debian:12.15/oldstable [amd64])
+Inst libnss3 (2:3.87.1-1+deb12u4 Debian-Security:12/oldstable-security [amd64])
+Inst libvulkan1 (1.3.239.0-1 Debian:12.15/oldstable [amd64])
+Inst wget (1.21.3-1+deb12u1 Debian:12.15/oldstable [amd64])
+Inst xdg-utils (1.1.3-4.1 Debian:12.15/oldstable [all])
+Inst google-chrome-stable (154.0.8037.97-1 Google:1.0/stable [amd64])
+Inst microsoft-edge-stable (154.0.4258.62-1 edge stable:stable [amd64])
+Inst poppler-data (0.4.12-1 Debian:12.15/oldstable [all])
+Inst libpython3.11-minimal (3.11.2-6+deb12u8 Debian:12.15/oldstable [amd64])
+Inst python3.11-minimal (3.11.2-6+deb12u8 Debian:12.15/oldstable [amd64])
+Conf libpython3.11-minimal (3.11.2-6+deb12u8 Debian:12.15/oldstable [amd64])
+Conf libexpat1 (2.5.0-1+deb12u4 Debian-Security:12/oldstable-security [amd64])
+Conf python3.11-minimal (3.11.2-6+deb12u8 Debian:12.15/oldstable [amd64])
+Inst python3-minimal (3.11.2-1+b1 Debian:12.15/oldstable [amd64])
+Inst media-types (10.0.0 Debian:12.15/oldstable [all])
+Inst mailcap (3.70+nmu1 Debian:12.15/oldstable [all])
+Inst mime-support (3.66 Debian:12.15/oldstable [all])
+Inst libtirpc-common (1.3.3+ds-1 Debian:12.15/oldstable [all])
+Inst libtirpc3 (1.3.3+ds-1 Debian:12.15/oldstable [amd64])
+Inst libnsl2 (1.3.0-2 Debian:12.15/oldstable [amd64])
+Inst readline-common (8.2-1.3 Debian:12.15/oldstable [all])
+Inst libreadline8 (8.2-1.3 Debian:12.15/oldstable [amd64])
+Inst libpython3.11-stdlib (3.11.2-6+deb12u8 Debian:12.15/oldstable [amd64])
+Inst python3.11 (3.11.2-6+deb12u8 Debian:12.15/oldstable [amd64])
+Inst libpython3-stdlib (3.11.2-1+b1 Debian:12.15/oldstable [amd64])
+Conf python3-minimal (3.11.2-1+b1 Debian:12.15/oldstable [amd64])
+Inst python3 (3.11.2-1+b1 Debian:12.15/oldstable [amd64])
+Inst sgml-base (1.31 Debian:12.15/oldstable [all])
+Inst sensible-utils (0.0.17+nmu1 Debian:12.15/oldstable [all])
+Inst ucf (3.0043+nmu1+deb12u1 Debian:12.15/oldstable [all])
+Inst xml-core (0.18+nmu1 Debian:12.15/oldstable [all])
+Inst docutils-common (0.19+dfsg-6 Debian:12.15/oldstable [all])
+Inst menu (2.1.49 Debian:12.15/oldstable [amd64])
+Inst libgif7 (5.2.1-2.5+deb12u1 Debian:12.15/oldstable [amd64])
+Inst libaom3 (3.6.0-1+deb12u3 Debian-Security:12/oldstable-security [amd64])
+Inst libdav1d6 (1.0.0-2+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libde265-0 (1.0.11-1+deb12u3 Debian-Security:12/oldstable-security [amd64])
+Inst libnuma1 (2.0.16-1 Debian:12.15/oldstable [amd64])
+Inst libx265-199 (3.5-2+b1 Debian:12.15/oldstable [amd64])
+Inst libheif1 (1.15.1-1+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libid3tag0 (0.15.1b-14 Debian:12.15/oldstable [amd64])
+Inst libhwy1 (1.0.3-3+deb12u1 Debian:12.15/oldstable [amd64])
+Inst libjxl0.7 (0.7.0-10+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libopenjp2-7 (2.5.0-2+deb12u3 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst librsvg2-2 (2.54.7+dfsg-1~deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libgs-common (10.0.0~dfsg-11+deb12u8 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [all])
+Inst libgs10-common (10.0.0~dfsg-11+deb12u8 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [all])
+Inst libidn12 (1.41-1 Debian:12.15/oldstable [amd64])
+Inst libijs-0.35 (0.35-15 Debian:12.15/oldstable [amd64])
+Inst libjbig2dec0 (0.19-3+deb12u1 Debian-Security:12/oldstable-security [amd64])
+Inst libpaper1 (1.1.29 Debian:12.15/oldstable [amd64])
+Inst libice6 (2:1.0.10-1 Debian:12.15/oldstable [amd64])
+Inst libsm6 (2:1.2.3-1 Debian:12.15/oldstable [amd64])
+Inst libxt6 (1:1.2.1-1.1 Debian:12.15/oldstable [amd64])
+Inst libgs10 (10.0.0~dfsg-11+deb12u8 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libspectre1 (0.2.12-1 Debian:12.15/oldstable [amd64])
+Inst libwebpdemux2 (1.2.4-0.2+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libx11-xcb1 (2:1.8.4-2+deb12u2 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libimlib2 (1.10.0-4+deb12u1 Debian:12.15/oldstable [amd64])
+Inst libxft2 (2.3.6-1 Debian:12.15/oldstable [amd64])
+Inst libxpm4 (1:3.5.12-1.1+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst fluxbox (1.3.5-2.1 Debian:12.15/oldstable [amd64])
+Inst ieee-data (20220827.1 Debian:12.15/oldstable [all])
+Inst libblas3 (3.11.0-2 Debian:12.15/oldstable [amd64])
+Inst libc-ares2 (1.18.1-3 Debian:12.15/oldstable [amd64])
+Inst libdrm-amdgpu1 (2.4.114-1+b1 Debian:12.15/oldstable [amd64])
+Inst libpciaccess0 (0.17-2 Debian:12.15/oldstable [amd64])
+Inst libdrm-intel1 (2.4.114-1+b1 Debian:12.15/oldstable [amd64])
+Inst libdrm-nouveau2 (2.4.114-1+b1 Debian:12.15/oldstable [amd64])
+Inst libdrm-radeon1 (2.4.114-1+b1 Debian:12.15/oldstable [amd64])
+Inst libedit2 (3.1-20221030-2 Debian:12.15/oldstable [amd64])
+Inst libelf1 (0.188-2.1 Debian:12.15/oldstable [amd64])
+Inst libquadmath0 (12.2.0-14+deb12u1 Debian:12.15/oldstable [amd64])
+Inst libgfortran5 (12.2.0-14+deb12u1 Debian:12.15/oldstable [amd64])
+Inst libglvnd0 (1.6.0-1 Debian:12.15/oldstable [amd64])
+Inst libglapi-mesa (22.3.6-1+deb12u2 Debian:12.15/oldstable [amd64])
+Inst libxcb-dri2-0 (1.15-1 Debian:12.15/oldstable [amd64])
+Inst libxcb-dri3-0 (1.15-1 Debian:12.15/oldstable [amd64])
+Inst libxcb-glx0 (1.15-1 Debian:12.15/oldstable [amd64])
+Inst libxcb-present0 (1.15-1 Debian:12.15/oldstable [amd64])
+Inst libxcb-randr0 (1.15-1 Debian:12.15/oldstable [amd64])
+Inst libxcb-sync1 (1.15-1 Debian:12.15/oldstable [amd64])
+Inst libxcb-xfixes0 (1.15-1 Debian:12.15/oldstable [amd64])
+Inst libxshmfence1 (1.3-1 Debian:12.15/oldstable [amd64])
+Inst libxxf86vm1 (1:1.1.4-1+b2 Debian:12.15/oldstable [amd64])
+Inst libz3-4 (4.8.12-3.1 Debian:12.15/oldstable [amd64])
+Inst libllvm15 (1:15.0.6-4+b1 Debian:12.15/oldstable [amd64])
+Inst libsensors-config (1:3.6.0-7.1 Debian:12.15/oldstable [all])
+Inst libsensors5 (1:3.6.0-7.1 Debian:12.15/oldstable [amd64])
+Inst libgl1-mesa-dri (22.3.6-1+deb12u2 Debian:12.15/oldstable [amd64])
+Inst libglx-mesa0 (22.3.6-1+deb12u2 Debian:12.15/oldstable [amd64])
+Inst libglx0 (1.6.0-1 Debian:12.15/oldstable [amd64])
+Inst libgl1 (1.6.0-1 Debian:12.15/oldstable [amd64])
+Inst libgomp1 (12.2.0-14+deb12u1 Debian:12.15/oldstable [amd64])
+Inst libimagequant0 (2.17.0-1 Debian:12.15/oldstable [amd64])
+Inst liblapack3 (3.11.0-2 Debian:12.15/oldstable [amd64])
+Inst liblzo2-2 (2.10-2 Debian:12.15/oldstable [amd64])
+Inst libuv1 (1.44.2-1+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst node-xtend (4.0.2-3 Debian:12.15/oldstable [all])
+Inst nodejs (18.20.4+dfsg-1~deb12u3 Debian-Security:12/oldstable-security [amd64]) []
+Inst node-acorn (8.8.1+ds+~cs25.17.7-2 Debian:12.15/oldstable [all]) []
+Inst node-cjs-module-lexer (1.2.2+dfsg-5 Debian:12.15/oldstable [all]) []
+Inst node-busboy (1.6.0+~cs2.6.0-2 Debian:12.15/oldstable [all]) []
+Inst node-undici (5.15.0+dfsg1+~cs20.10.9.3-1+deb12u4 Debian:12.15/oldstable [all]) []
+Inst libnode108 (18.20.4+dfsg-1~deb12u3 Debian-Security:12/oldstable-security [amd64])
+Inst libnss3-tools (2:3.87.1-1+deb12u4 Debian-Security:12/oldstable-security [amd64])
+Inst libraqm0 (0.7.0-4.1 Debian:12.15/oldstable [amd64])
+Inst libtcl8.6 (8.6.13+dfsg-2 Debian:12.15/oldstable [amd64])
+Inst libxss1 (1:1.2.3-1 Debian:12.15/oldstable [amd64])
+Inst libtk8.6 (8.6.13-2 Debian:12.15/oldstable [amd64])
+Inst libunwind8 (1.6.2-3 Debian:12.15/oldstable [amd64])
+Inst libvncclient1 (0.9.14+dfsg-1+deb12u2 Debian:12.15/oldstable [amd64])
+Inst libvncserver1 (0.9.14+dfsg-1+deb12u2 Debian:12.15/oldstable [amd64])
+Inst libwebpmux3 (1.2.4-0.2+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst libxmu6 (2:1.1.3-3 Debian:12.15/oldstable [amd64])
+Inst libxaw7 (2:1.0.14-1 Debian:12.15/oldstable [amd64])
+Inst libxcb-shape0 (1.15-1 Debian:12.15/oldstable [amd64])
+Inst libxfont2 (1:2.0.6-1+deb12u1 Debian-Security:12/oldstable-security [amd64])
+Inst libxkbfile1 (1:1.1.0-1 Debian:12.15/oldstable [amd64])
+Inst libxmuu1 (2:1.1.3-3 Debian:12.15/oldstable [amd64])
+Inst libxtst6 (2:1.2.3-1.1 Debian:12.15/oldstable [amd64])
+Inst libxv1 (2:1.0.11-1.1 Debian:12.15/oldstable [amd64])
+Inst libxxf86dga1 (2:1.1.5-1 Debian:12.15/oldstable [amd64])
+Inst libyaml-0-2 (0.2.5-1 Debian:12.15/oldstable [amd64])
+Inst net-tools (2.10-0.1+deb12u2 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst python3-pkg-resources (66.1.1-1+deb12u2 Debian:12.15/oldstable [all])
+Inst python3-lib2to3 (3.11.2-3 Debian:12.15/oldstable [all])
+Inst python3-distutils (3.11.2-3 Debian:12.15/oldstable [all])
+Inst python3-setuptools (66.1.1-1+deb12u2 Debian:12.15/oldstable [all])
+Inst python3-six (1.16.0-4 Debian:12.15/oldstable [all])
+Inst python3-pbr (5.10.0-2 Debian:12.15/oldstable [all])
+Inst python3-wrapt (1.14.1-2+b2 Debian:12.15/oldstable [amd64])
+Inst python3-more-itertools (8.10.0-2 Debian:12.15/oldstable [all])
+Inst python3-zipp (1.0.0-6+deb12u1 Debian:12.15/oldstable [all])
+Inst python3-importlib-metadata (4.12.0-1 Debian:12.15/oldstable [all])
+Inst python3-debtcollector (2.5.0-2 Debian:12.15/oldstable [all])
+Inst python3-roman (3.3-3 Debian:12.15/oldstable [all])
+Inst python3-docutils (0.19+dfsg-6 Debian:12.15/oldstable [all])
+Inst python3-netaddr (0.8.0-2 Debian:12.15/oldstable [all])
+Inst python3-oslo.i18n (5.1.0-3 Debian:12.15/oldstable [all])
+Inst python3-dateutil (2.8.2-2 Debian:12.15/oldstable [all])
+Inst python3-oslo.context (5.0.0-2 Debian:12.15/oldstable [all])
+Inst python3-msgpack (1.0.3-2+b1 Debian:12.15/oldstable [amd64])
+Inst python3-iso8601 (1.0.2-1 Debian:12.15/oldstable [all])
+Inst python3-netifaces (0.11.0-2+b1 Debian:12.15/oldstable [amd64])
+Inst python3-packaging (23.0-1 Debian:12.15/oldstable [all])
+Inst python3-pyparsing (3.0.9-1 Debian:12.15/oldstable [all])
+Inst python3-tz (2022.7.1-4 Debian:12.15/oldstable [all])
+Inst python3-oslo.utils (6.0.1-2 Debian:12.15/oldstable [all])
+Inst python3-yaml (6.0-3+b2 Debian:12.15/oldstable [amd64])
+Inst python3-oslo.serialization (5.0.0-2 Debian:12.15/oldstable [all])
+Inst python3-pyinotify (0.9.6-2 Debian:12.15/oldstable [all])
+Inst python3-oslo.log (5.0.1-1 Debian:12.15/oldstable [all]) []
+Inst python3-certifi (2022.9.24-1 Debian:12.15/oldstable [all]) []
+Inst python3-charset-normalizer (3.0.1-2 Debian:12.15/oldstable [all]) []
+Inst python3-idna (3.3-1+deb12u1 Debian:12.15/oldstable [all]) []
+Inst python3-urllib3 (1.26.12-1+deb12u4 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [all]) []
+Inst python3-chardet (5.1.0+dfsg-2 Debian:12.15/oldstable [all]) []
+Inst python3-requests (2.28.1+dfsg-1 Debian:12.15/oldstable [all]) []
+Inst python3-rfc3986 (1.5.0-2 Debian:12.15/oldstable [all]) []
+Inst python3-stevedore (4.0.2-2 Debian:12.15/oldstable [all]) []
+Inst python3-oslo.config (1:9.0.0-3 Debian:12.15/oldstable [all])
+Inst python3-pil (9.4.0-1.1+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Inst python3-novnc (1:1.3.0-1 Debian:12.15/oldstable [all])
+Inst python3-numpy (1:1.24.2-1+deb12u1 Debian:12.15/oldstable [amd64])
+Inst python3-cffi-backend (1.15.1-5+b1 Debian:12.15/oldstable [amd64])
+Inst python3-cryptography (38.0.4-3+deb12u1 Debian:12.15/oldstable [amd64])
+Inst python3-deprecated (1.2.13-3 Debian:12.15/oldstable [all])
+Inst python3-jwcrypto (1.1.0-1+deb12u1 Debian:12.15/oldstable [all])
+Inst python3-websockify (0.10.0+dfsg1-4+b1 Debian:12.15/oldstable [amd64])
+Inst websockify (0.10.0+dfsg1-4+b1 Debian:12.15/oldstable [amd64])
+Inst novnc (1:1.3.0-1 Debian:12.15/oldstable [all])
+Inst tcl8.6 (8.6.13+dfsg-2 Debian:12.15/oldstable [amd64])
+Inst tcl (8.6.13 Debian:12.15/oldstable [amd64])
+Inst tk8.6 (8.6.13-2 Debian:12.15/oldstable [amd64])
+Inst tk (8.6.13 Debian:12.15/oldstable [amd64])
+Inst x11-utils (7.7+5 Debian:12.15/oldstable [amd64])
+Inst x11-xkb-utils (7.7+7 Debian:12.15/oldstable [amd64])
+Inst x11vnc (0.9.16-9 Debian:12.15/oldstable [amd64])
+Inst xauth (1:1.1.2-1 Debian:12.15/oldstable [amd64])
+Inst xserver-common (2:21.1.7-3+deb12u13 Debian-Security:12/oldstable-security [all])
+Inst xvfb (2:21.1.7-3+deb12u13 Debian-Security:12/oldstable-security [amd64])
+Conf systemd-sysv (252.39-1~deb12u2 Debian:12.15/oldstable [amd64])
+Conf libdbus-1-3 (1.14.10-1~deb12u1 Debian:12.15/oldstable [amd64])
+Conf dbus-bin (1.14.10-1~deb12u1 Debian:12.15/oldstable [amd64])
+Conf dbus-session-bus-common (1.14.10-1~deb12u1 Debian:12.15/oldstable [all])
+Conf dbus-daemon (1.14.10-1~deb12u1 Debian:12.15/oldstable [amd64])
+Conf dbus-system-bus-common (1.14.10-1~deb12u1 Debian:12.15/oldstable [all])
+Conf dbus (1.14.10-1~deb12u1 Debian:12.15/oldstable [amd64])
+Conf perl-modules-5.36 (5.36.0-7+deb12u4 Debian-Security:12/oldstable-security [all])
+Conf libgdbm6 (1.23-3 Debian:12.15/oldstable [amd64])
+Conf libgdbm-compat4 (1.23-3 Debian:12.15/oldstable [amd64])
+Conf libperl5.36 (5.36.0-7+deb12u4 Debian-Security:12/oldstable-security [amd64])
+Conf perl (5.36.0-7+deb12u4 Debian-Security:12/oldstable-security [amd64])
+Conf openssl (3.0.22-1~deb12u1 Debian-Security:12/oldstable-security [amd64])
+Conf ca-certificates (20250419~deb12u1 Debian-Security:12/oldstable-security [all])
+Conf fonts-liberation (1:1.07.4-11 Debian:12.15/oldstable [all])
+Conf libasound2-data (1.2.8-1 Debian:12.15/oldstable [all])
+Conf libasound2 (1.2.8-1+b1 Debian:12.15/oldstable [amd64])
+Conf libglib2.0-0 (2.74.6-2+deb12u9 Debian:12.15/oldstable [amd64])
+Conf at-spi2-common (2.46.0-5 Debian:12.15/oldstable [all])
+Conf libatk1.0-0 (2.46.0-5 Debian:12.15/oldstable [amd64])
+Conf libxau6 (1:1.0.9-1 Debian:12.15/oldstable [amd64])
+Conf libbsd0 (0.11.7-2 Debian:12.15/oldstable [amd64])
+Conf libxdmcp6 (1:1.1.2-3 Debian:12.15/oldstable [amd64])
+Conf libxcb1 (1.15-1 Debian:12.15/oldstable [amd64])
+Conf libx11-data (2:1.8.4-2+deb12u2 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [all])
+Conf libx11-6 (2:1.8.4-2+deb12u2 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libxext6 (2:1.3.4-1+b1 Debian:12.15/oldstable [amd64])
+Conf libxi6 (2:1.8-1+b1 Debian:12.15/oldstable [amd64])
+Conf libatspi2.0-0 (2.46.0-5 Debian:12.15/oldstable [amd64])
+Conf libatk-bridge2.0-0 (2.46.0-5 Debian:12.15/oldstable [amd64])
+Conf libbrotli1 (1.0.9-2+b6 Debian:12.15/oldstable [amd64])
+Conf libpng16-16 (1.6.39-2+deb12u6 Debian-Security:12/oldstable-security [amd64])
+Conf libfreetype6 (2.12.1+dfsg-5+deb12u4 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libfontenc1 (1:1.1.4-1 Debian:12.15/oldstable [amd64])
+Conf x11-common (1:7.7+23 Debian:12.15/oldstable [all])
+Conf xfonts-encodings (1:1.0.4-2.2 Debian:12.15/oldstable [all])
+Conf xfonts-utils (1:7.7+6 Debian:12.15/oldstable [amd64])
+Conf fonts-urw-base35 (20200910-7 Debian:12.15/oldstable [all])
+Conf fontconfig-config (2.14.1-4 Debian:12.15/oldstable [amd64])
+Conf libfontconfig1 (2.14.1-4 Debian:12.15/oldstable [amd64])
+Conf libpixman-1-0 (0.42.2-1 Debian:12.15/oldstable [amd64])
+Conf libxcb-render0 (1.15-1 Debian:12.15/oldstable [amd64])
+Conf libxcb-shm0 (1.15-1 Debian:12.15/oldstable [amd64])
+Conf libxrender1 (1:0.9.10-1.1 Debian:12.15/oldstable [amd64])
+Conf libcairo2 (1.16.0-7 Debian:12.15/oldstable [amd64])
+Conf libavahi-common-data (0.8-10+deb12u1 Debian:12.15/oldstable [amd64])
+Conf libavahi-common3 (0.8-10+deb12u1 Debian:12.15/oldstable [amd64])
+Conf libavahi-client3 (0.8-10+deb12u1 Debian:12.15/oldstable [amd64])
+Conf libkrb5support0 (1.20.1-2+deb12u5 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libk5crypto3 (1.20.1-2+deb12u5 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libkeyutils1 (1.6.3-2 Debian:12.15/oldstable [amd64])
+Conf libkrb5-3 (1.20.1-2+deb12u5 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libgssapi-krb5-2 (1.20.1-2+deb12u5 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libcups2 (2.4.2-3+deb12u9 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libsasl2-modules-db (2.1.28+dfsg-10 Debian:12.15/oldstable [amd64])
+Conf libsasl2-2 (2.1.28+dfsg-10 Debian:12.15/oldstable [amd64])
+Conf libldap-2.5-0 (2.5.13+dfsg-5 Debian:12.15/oldstable [amd64])
+Conf libnghttp2-14 (1.52.0-1+deb12u3 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libpsl5 (0.21.2-1 Debian:12.15/oldstable [amd64])
+Conf librtmp1 (2.4+20151223.gitfa8646d.1-2+b2 Debian:12.15/oldstable [amd64])
+Conf libssh2-1 (1.10.0-3+deb12u1 Debian-Security:12/oldstable-security [amd64])
+Conf libcurl3-gnutls (7.88.1-10+deb12u15 Debian:12.15/oldstable [amd64])
+Conf libdrm-common (2.4.114-1 Debian:12.15/oldstable [all])
+Conf libdrm2 (2.4.114-1+b1 Debian:12.15/oldstable [amd64])
+Conf libwayland-server0 (1.21.0-1 Debian:12.15/oldstable [amd64])
+Conf libgbm1 (22.3.6-1+deb12u2 Debian:12.15/oldstable [amd64])
+Conf hicolor-icon-theme (0.17-2 Debian:12.15/oldstable [all])
+Conf libgdk-pixbuf2.0-common (2.42.10+dfsg-1+deb12u4 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [all])
+Conf libicu72 (72.1-3+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libxml2 (2.9.14+dfsg-1.3~deb12u6 Debian:12.15/oldstable [amd64])
+Conf shared-mime-info (2.2-1 Debian:12.15/oldstable [amd64])
+Conf libjpeg62-turbo (1:2.1.5-2 Debian:12.15/oldstable [amd64])
+Conf libdeflate0 (1.14-1 Debian:12.15/oldstable [amd64])
+Conf libjbig0 (2.1-6.1 Debian:12.15/oldstable [amd64])
+Conf liblerc4 (4.0.0+ds-2 Debian:12.15/oldstable [amd64])
+Conf libwebp7 (1.2.4-0.2+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libtiff6 (4.5.0-6+deb12u4 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libgdk-pixbuf-2.0-0 (2.42.10+dfsg-1+deb12u4 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf gtk-update-icon-cache (3.24.38-2~deb12u3 Debian:12.15/oldstable [amd64])
+Conf adwaita-icon-theme (43-1 Debian:12.15/oldstable [all])
+Conf libcairo-gobject2 (1.16.0-7 Debian:12.15/oldstable [amd64])
+Conf liblcms2-2 (2.14-2+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libcolord2 (1.4.6-2.2 Debian:12.15/oldstable [amd64])
+Conf libepoxy0 (1.5.10-1 Debian:12.15/oldstable [amd64])
+Conf libfribidi0 (1.0.8-2.1 Debian:12.15/oldstable [amd64])
+Conf libgraphite2-3 (1.3.14-1+deb12u1 Debian:12.15/oldstable [amd64])
+Conf libharfbuzz0b (6.0.0+dfsg-3 Debian:12.15/oldstable [amd64])
+Conf fontconfig (2.14.1-4 Debian:12.15/oldstable [amd64])
+Conf libthai-data (0.1.29-1 Debian:12.15/oldstable [all])
+Conf libdatrie1 (0.2.13-2+b1 Debian:12.15/oldstable [amd64])
+Conf libthai0 (0.1.29-1 Debian:12.15/oldstable [amd64])
+Conf libpango-1.0-0 (1.50.12+ds-1 Debian:12.15/oldstable [amd64])
+Conf libpangoft2-1.0-0 (1.50.12+ds-1 Debian:12.15/oldstable [amd64])
+Conf libpangocairo-1.0-0 (1.50.12+ds-1 Debian:12.15/oldstable [amd64])
+Conf libwayland-client0 (1.21.0-1 Debian:12.15/oldstable [amd64])
+Conf libwayland-cursor0 (1.21.0-1 Debian:12.15/oldstable [amd64])
+Conf libwayland-egl1 (1.21.0-1 Debian:12.15/oldstable [amd64])
+Conf libxcomposite1 (1:0.4.5-1 Debian:12.15/oldstable [amd64])
+Conf libxfixes3 (1:6.0.0-2 Debian:12.15/oldstable [amd64])
+Conf libxcursor1 (1:1.2.1-1 Debian:12.15/oldstable [amd64])
+Conf libxdamage1 (1:1.1.6-1 Debian:12.15/oldstable [amd64])
+Conf libxinerama1 (2:1.1.4-3 Debian:12.15/oldstable [amd64])
+Conf xkb-data (2.35.1-1 Debian:12.15/oldstable [all])
+Conf libxkbcommon0 (1.5.0-1 Debian:12.15/oldstable [amd64])
+Conf libxrandr2 (2:1.5.2-2+b1 Debian:12.15/oldstable [amd64])
+Conf libpam-systemd (252.39-1~deb12u2 Debian:12.15/oldstable [amd64])
+Conf dbus-user-session (1.14.10-1~deb12u1 Debian:12.15/oldstable [amd64])
+Conf libdconf1 (0.40.0-4 Debian:12.15/oldstable [amd64])
+Conf libncursesw6 (6.4-4 Debian:12.15/oldstable [amd64])
+Conf libproc2-0 (2:4.0.2-3 Debian:12.15/oldstable [amd64])
+Conf procps (2:4.0.2-3 Debian:12.15/oldstable [amd64])
+Conf dconf-service (0.40.0-4 Debian:12.15/oldstable [amd64])
+Conf dconf-gsettings-backend (0.40.0-4 Debian:12.15/oldstable [amd64])
+Conf libgtk-3-common (3.24.38-2~deb12u3 Debian:12.15/oldstable [all])
+Conf libgtk-3-0 (3.24.38-2~deb12u3 Debian:12.15/oldstable [amd64])
+Conf libnspr4 (2:4.35-1 Debian:12.15/oldstable [amd64])
+Conf libsqlite3-0 (3.40.1-2+deb12u2 Debian:12.15/oldstable [amd64])
+Conf libnss3 (2:3.87.1-1+deb12u4 Debian-Security:12/oldstable-security [amd64])
+Conf libvulkan1 (1.3.239.0-1 Debian:12.15/oldstable [amd64])
+Conf wget (1.21.3-1+deb12u1 Debian:12.15/oldstable [amd64])
+Conf xdg-utils (1.1.3-4.1 Debian:12.15/oldstable [all])
+Conf google-chrome-stable (154.0.8037.97-1 Google:1.0/stable [amd64])
+Conf microsoft-edge-stable (154.0.4258.62-1 edge stable:stable [amd64])
+Conf poppler-data (0.4.12-1 Debian:12.15/oldstable [all])
+Conf media-types (10.0.0 Debian:12.15/oldstable [all])
+Conf mailcap (3.70+nmu1 Debian:12.15/oldstable [all])
+Conf mime-support (3.66 Debian:12.15/oldstable [all])
+Conf libtirpc-common (1.3.3+ds-1 Debian:12.15/oldstable [all])
+Conf libtirpc3 (1.3.3+ds-1 Debian:12.15/oldstable [amd64])
+Conf libnsl2 (1.3.0-2 Debian:12.15/oldstable [amd64])
+Conf readline-common (8.2-1.3 Debian:12.15/oldstable [all])
+Conf libreadline8 (8.2-1.3 Debian:12.15/oldstable [amd64])
+Conf libpython3.11-stdlib (3.11.2-6+deb12u8 Debian:12.15/oldstable [amd64])
+Conf python3.11 (3.11.2-6+deb12u8 Debian:12.15/oldstable [amd64])
+Conf libpython3-stdlib (3.11.2-1+b1 Debian:12.15/oldstable [amd64])
+Conf python3 (3.11.2-1+b1 Debian:12.15/oldstable [amd64])
+Conf sgml-base (1.31 Debian:12.15/oldstable [all])
+Conf sensible-utils (0.0.17+nmu1 Debian:12.15/oldstable [all])
+Conf ucf (3.0043+nmu1+deb12u1 Debian:12.15/oldstable [all])
+Conf xml-core (0.18+nmu1 Debian:12.15/oldstable [all])
+Conf docutils-common (0.19+dfsg-6 Debian:12.15/oldstable [all])
+Conf menu (2.1.49 Debian:12.15/oldstable [amd64])
+Conf libgif7 (5.2.1-2.5+deb12u1 Debian:12.15/oldstable [amd64])
+Conf libaom3 (3.6.0-1+deb12u3 Debian-Security:12/oldstable-security [amd64])
+Conf libdav1d6 (1.0.0-2+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libde265-0 (1.0.11-1+deb12u3 Debian-Security:12/oldstable-security [amd64])
+Conf libnuma1 (2.0.16-1 Debian:12.15/oldstable [amd64])
+Conf libx265-199 (3.5-2+b1 Debian:12.15/oldstable [amd64])
+Conf libheif1 (1.15.1-1+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libid3tag0 (0.15.1b-14 Debian:12.15/oldstable [amd64])
+Conf libhwy1 (1.0.3-3+deb12u1 Debian:12.15/oldstable [amd64])
+Conf libjxl0.7 (0.7.0-10+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libopenjp2-7 (2.5.0-2+deb12u3 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf librsvg2-2 (2.54.7+dfsg-1~deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libgs-common (10.0.0~dfsg-11+deb12u8 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [all])
+Conf libgs10-common (10.0.0~dfsg-11+deb12u8 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [all])
+Conf libidn12 (1.41-1 Debian:12.15/oldstable [amd64])
+Conf libijs-0.35 (0.35-15 Debian:12.15/oldstable [amd64])
+Conf libjbig2dec0 (0.19-3+deb12u1 Debian-Security:12/oldstable-security [amd64])
+Conf libpaper1 (1.1.29 Debian:12.15/oldstable [amd64])
+Conf libice6 (2:1.0.10-1 Debian:12.15/oldstable [amd64])
+Conf libsm6 (2:1.2.3-1 Debian:12.15/oldstable [amd64])
+Conf libxt6 (1:1.2.1-1.1 Debian:12.15/oldstable [amd64])
+Conf libgs10 (10.0.0~dfsg-11+deb12u8 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libspectre1 (0.2.12-1 Debian:12.15/oldstable [amd64])
+Conf libwebpdemux2 (1.2.4-0.2+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libx11-xcb1 (2:1.8.4-2+deb12u2 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libimlib2 (1.10.0-4+deb12u1 Debian:12.15/oldstable [amd64])
+Conf libxft2 (2.3.6-1 Debian:12.15/oldstable [amd64])
+Conf libxpm4 (1:3.5.12-1.1+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf fluxbox (1.3.5-2.1 Debian:12.15/oldstable [amd64])
+Conf ieee-data (20220827.1 Debian:12.15/oldstable [all])
+Conf libblas3 (3.11.0-2 Debian:12.15/oldstable [amd64])
+Conf libc-ares2 (1.18.1-3 Debian:12.15/oldstable [amd64])
+Conf libdrm-amdgpu1 (2.4.114-1+b1 Debian:12.15/oldstable [amd64])
+Conf libpciaccess0 (0.17-2 Debian:12.15/oldstable [amd64])
+Conf libdrm-intel1 (2.4.114-1+b1 Debian:12.15/oldstable [amd64])
+Conf libdrm-nouveau2 (2.4.114-1+b1 Debian:12.15/oldstable [amd64])
+Conf libdrm-radeon1 (2.4.114-1+b1 Debian:12.15/oldstable [amd64])
+Conf libedit2 (3.1-20221030-2 Debian:12.15/oldstable [amd64])
+Conf libelf1 (0.188-2.1 Debian:12.15/oldstable [amd64])
+Conf libquadmath0 (12.2.0-14+deb12u1 Debian:12.15/oldstable [amd64])
+Conf libgfortran5 (12.2.0-14+deb12u1 Debian:12.15/oldstable [amd64])
+Conf libglvnd0 (1.6.0-1 Debian:12.15/oldstable [amd64])
+Conf libglapi-mesa (22.3.6-1+deb12u2 Debian:12.15/oldstable [amd64])
+Conf libxcb-dri2-0 (1.15-1 Debian:12.15/oldstable [amd64])
+Conf libxcb-dri3-0 (1.15-1 Debian:12.15/oldstable [amd64])
+Conf libxcb-glx0 (1.15-1 Debian:12.15/oldstable [amd64])
+Conf libxcb-present0 (1.15-1 Debian:12.15/oldstable [amd64])
+Conf libxcb-randr0 (1.15-1 Debian:12.15/oldstable [amd64])
+Conf libxcb-sync1 (1.15-1 Debian:12.15/oldstable [amd64])
+Conf libxcb-xfixes0 (1.15-1 Debian:12.15/oldstable [amd64])
+Conf libxshmfence1 (1.3-1 Debian:12.15/oldstable [amd64])
+Conf libxxf86vm1 (1:1.1.4-1+b2 Debian:12.15/oldstable [amd64])
+Conf libz3-4 (4.8.12-3.1 Debian:12.15/oldstable [amd64])
+Conf libllvm15 (1:15.0.6-4+b1 Debian:12.15/oldstable [amd64])
+Conf libsensors-config (1:3.6.0-7.1 Debian:12.15/oldstable [all])
+Conf libsensors5 (1:3.6.0-7.1 Debian:12.15/oldstable [amd64])
+Conf libgl1-mesa-dri (22.3.6-1+deb12u2 Debian:12.15/oldstable [amd64])
+Conf libglx-mesa0 (22.3.6-1+deb12u2 Debian:12.15/oldstable [amd64])
+Conf libglx0 (1.6.0-1 Debian:12.15/oldstable [amd64])
+Conf libgl1 (1.6.0-1 Debian:12.15/oldstable [amd64])
+Conf libgomp1 (12.2.0-14+deb12u1 Debian:12.15/oldstable [amd64])
+Conf libimagequant0 (2.17.0-1 Debian:12.15/oldstable [amd64])
+Conf liblapack3 (3.11.0-2 Debian:12.15/oldstable [amd64])
+Conf liblzo2-2 (2.10-2 Debian:12.15/oldstable [amd64])
+Conf libuv1 (1.44.2-1+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf node-xtend (4.0.2-3 Debian:12.15/oldstable [all])
+Conf nodejs (18.20.4+dfsg-1~deb12u3 Debian-Security:12/oldstable-security [amd64])
+Conf node-acorn (8.8.1+ds+~cs25.17.7-2 Debian:12.15/oldstable [all])
+Conf node-cjs-module-lexer (1.2.2+dfsg-5 Debian:12.15/oldstable [all])
+Conf node-busboy (1.6.0+~cs2.6.0-2 Debian:12.15/oldstable [all])
+Conf node-undici (5.15.0+dfsg1+~cs20.10.9.3-1+deb12u4 Debian:12.15/oldstable [all])
+Conf libnode108 (18.20.4+dfsg-1~deb12u3 Debian-Security:12/oldstable-security [amd64])
+Conf libnss3-tools (2:3.87.1-1+deb12u4 Debian-Security:12/oldstable-security [amd64])
+Conf libraqm0 (0.7.0-4.1 Debian:12.15/oldstable [amd64])
+Conf libtcl8.6 (8.6.13+dfsg-2 Debian:12.15/oldstable [amd64])
+Conf libxss1 (1:1.2.3-1 Debian:12.15/oldstable [amd64])
+Conf libtk8.6 (8.6.13-2 Debian:12.15/oldstable [amd64])
+Conf libunwind8 (1.6.2-3 Debian:12.15/oldstable [amd64])
+Conf libvncclient1 (0.9.14+dfsg-1+deb12u2 Debian:12.15/oldstable [amd64])
+Conf libvncserver1 (0.9.14+dfsg-1+deb12u2 Debian:12.15/oldstable [amd64])
+Conf libwebpmux3 (1.2.4-0.2+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf libxmu6 (2:1.1.3-3 Debian:12.15/oldstable [amd64])
+Conf libxaw7 (2:1.0.14-1 Debian:12.15/oldstable [amd64])
+Conf libxcb-shape0 (1.15-1 Debian:12.15/oldstable [amd64])
+Conf libxfont2 (1:2.0.6-1+deb12u1 Debian-Security:12/oldstable-security [amd64])
+Conf libxkbfile1 (1:1.1.0-1 Debian:12.15/oldstable [amd64])
+Conf libxmuu1 (2:1.1.3-3 Debian:12.15/oldstable [amd64])
+Conf libxtst6 (2:1.2.3-1.1 Debian:12.15/oldstable [amd64])
+Conf libxv1 (2:1.0.11-1.1 Debian:12.15/oldstable [amd64])
+Conf libxxf86dga1 (2:1.1.5-1 Debian:12.15/oldstable [amd64])
+Conf libyaml-0-2 (0.2.5-1 Debian:12.15/oldstable [amd64])
+Conf net-tools (2.10-0.1+deb12u2 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf python3-pkg-resources (66.1.1-1+deb12u2 Debian:12.15/oldstable [all])
+Conf python3-lib2to3 (3.11.2-3 Debian:12.15/oldstable [all])
+Conf python3-distutils (3.11.2-3 Debian:12.15/oldstable [all])
+Conf python3-setuptools (66.1.1-1+deb12u2 Debian:12.15/oldstable [all])
+Conf python3-six (1.16.0-4 Debian:12.15/oldstable [all])
+Conf python3-pbr (5.10.0-2 Debian:12.15/oldstable [all])
+Conf python3-wrapt (1.14.1-2+b2 Debian:12.15/oldstable [amd64])
+Conf python3-more-itertools (8.10.0-2 Debian:12.15/oldstable [all])
+Conf python3-zipp (1.0.0-6+deb12u1 Debian:12.15/oldstable [all])
+Conf python3-importlib-metadata (4.12.0-1 Debian:12.15/oldstable [all])
+Conf python3-debtcollector (2.5.0-2 Debian:12.15/oldstable [all])
+Conf python3-roman (3.3-3 Debian:12.15/oldstable [all])
+Conf python3-docutils (0.19+dfsg-6 Debian:12.15/oldstable [all])
+Conf python3-netaddr (0.8.0-2 Debian:12.15/oldstable [all])
+Conf python3-oslo.i18n (5.1.0-3 Debian:12.15/oldstable [all])
+Conf python3-dateutil (2.8.2-2 Debian:12.15/oldstable [all])
+Conf python3-oslo.context (5.0.0-2 Debian:12.15/oldstable [all])
+Conf python3-msgpack (1.0.3-2+b1 Debian:12.15/oldstable [amd64])
+Conf python3-iso8601 (1.0.2-1 Debian:12.15/oldstable [all])
+Conf python3-netifaces (0.11.0-2+b1 Debian:12.15/oldstable [amd64])
+Conf python3-packaging (23.0-1 Debian:12.15/oldstable [all])
+Conf python3-pyparsing (3.0.9-1 Debian:12.15/oldstable [all])
+Conf python3-tz (2022.7.1-4 Debian:12.15/oldstable [all])
+Conf python3-oslo.utils (6.0.1-2 Debian:12.15/oldstable [all])
+Conf python3-yaml (6.0-3+b2 Debian:12.15/oldstable [amd64])
+Conf python3-oslo.serialization (5.0.0-2 Debian:12.15/oldstable [all])
+Conf python3-pyinotify (0.9.6-2 Debian:12.15/oldstable [all])
+Conf python3-oslo.log (5.0.1-1 Debian:12.15/oldstable [all])
+Conf python3-certifi (2022.9.24-1 Debian:12.15/oldstable [all])
+Conf python3-charset-normalizer (3.0.1-2 Debian:12.15/oldstable [all])
+Conf python3-idna (3.3-1+deb12u1 Debian:12.15/oldstable [all])
+Conf python3-urllib3 (1.26.12-1+deb12u4 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [all])
+Conf python3-chardet (5.1.0+dfsg-2 Debian:12.15/oldstable [all])
+Conf python3-requests (2.28.1+dfsg-1 Debian:12.15/oldstable [all])
+Conf python3-rfc3986 (1.5.0-2 Debian:12.15/oldstable [all])
+Conf python3-stevedore (4.0.2-2 Debian:12.15/oldstable [all])
+Conf python3-oslo.config (1:9.0.0-3 Debian:12.15/oldstable [all])
+Conf python3-pil (9.4.0-1.1+deb12u1 Debian:12.15/oldstable, Debian-Security:12/oldstable-security [amd64])
+Conf python3-novnc (1:1.3.0-1 Debian:12.15/oldstable [all])
+Conf python3-numpy (1:1.24.2-1+deb12u1 Debian:12.15/oldstable [amd64])
+Conf python3-cffi-backend (1.15.1-5+b1 Debian:12.15/oldstable [amd64])
+Conf python3-cryptography (38.0.4-3+deb12u1 Debian:12.15/oldstable [amd64])
+Conf python3-deprecated (1.2.13-3 Debian:12.15/oldstable [all])
+Conf python3-jwcrypto (1.1.0-1+deb12u1 Debian:12.15/oldstable [all])
+Conf python3-websockify (0.10.0+dfsg1-4+b1 Debian:12.15/oldstable [amd64])
+Conf websockify (0.10.0+dfsg1-4+b1 Debian:12.15/oldstable [amd64])
+Conf novnc (1:1.3.0-1 Debian:12.15/oldstable [all])
+Conf tcl8.6 (8.6.13+dfsg-2 Debian:12.15/oldstable [amd64])
+Conf tcl (8.6.13 Debian:12.15/oldstable [amd64])
+Conf tk8.6 (8.6.13-2 Debian:12.15/oldstable [amd64])
+Conf tk (8.6.13 Debian:12.15/oldstable [amd64])
+Conf x11-utils (7.7+5 Debian:12.15/oldstable [amd64])
+Conf x11-xkb-utils (7.7+7 Debian:12.15/oldstable [amd64])
+Conf x11vnc (0.9.16-9 Debian:12.15/oldstable [amd64])
+Conf xauth (1:1.1.2-1 Debian:12.15/oldstable [amd64])
+Conf xserver-common (2:21.1.7-3+deb12u13 Debian-Security:12/oldstable-security [all])
+Conf xvfb (2:21.1.7-3+deb12u13 Debian-Security:12/oldstable-security [amd64])

@@ -1,0 +1,31 @@
+ Container certificate-login-spike-tests-run-2d7eba3af50c Creating 
+ Container certificate-login-spike-tests-run-2d7eba3af50c Created 
+
+> certificate-login-spike@0.0.1 test
+> playwright test --project chrome --grep customer certificate PKCE login
+
+
+Running 1 test using 1 worker
+
+[1/1] [chrome] › tests/login.spec.ts:19:3 › prompt01 AUTH-01/02: customer certificate PKCE login
+[chrome] › tests/login.spec.ts:19:3 › prompt01 AUTH-01/02: customer certificate PKCE login
+HTTP 200 shop.magic.test/
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 302 auth.magic.test/realms/magic-shop/protocol/openid-connect/auth
+
+HTTP 200 shop.magic.test/callback
+
+HTTP 200 shop.magic.test/app.js
+
+HTTP 200 auth.magic.test/realms/magic-shop/protocol/openid-connect/token
+
+HTTP 200 shop.magic.test/api/identity
+
+  1 passed (6.9s)
+npm notice
+npm notice New minor version of npm available! 11.6.1 -> 11.21.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.0
+npm notice To update run: npm install -g npm@11.21.0
+npm notice

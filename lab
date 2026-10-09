@@ -1,0 +1,268 @@
+#!/bin/sh
+set -eu
+
+root_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+compose_file="$root_dir/infra/compose.yaml"
+project=${LAB_PROJECT:-magic-shop-lab}
+
+usage() {
+  cat >&2 <<'EOF'
+Usage: ./lab pki init|verify|renew USER|revoke USER [previous]|retire USER|migrate-service SERVICE|revoke-service SERVICE
+       ./lab db init|verify
+       ./lab up|infra up
+       ./lab test chrome|msedge [SEED_USER]
+       ./lab test --runner playwright --suite contracts|security|package
+       ./lab test --runner playwright|cucumber --browser chrome|msedge --user SEED_USER
+       ./lab record chrome|msedge [SEED_USER]
+       ./lab manual --user SEED_USER --browser chrome|msedge
+       ./lab manual stop
+       ./lab viewer-password
+       ./lab user provision|inspect|disable|enable SEED_USER
+       ./lab status|down
+       ./lab reset --project PROJECT
+       ./lab operator [status|healthcheck|health|telemetry|certs|logs SERVICE|diagnose|test RUNNER BROWSER USER|start SERVICE|stop SERVICE --yes|reset PROJECT --yes]
+EOF
+  exit 2
+}
+
+valid_project() {
+  case "$1" in
+    ''|*[!a-z0-9_-]*) echo 'Project must use lowercase letters, digits, _ or -' >&2; exit 2;;
+  esac
+}
+
+valid_user() {
+  case "$1" in
+    customer-waterdeep|customer-baldur|customer-neverwinter|shopkeeper|shop-admin|disabled-customer|unknown-user) ;;
+    *) echo 'Unsupported seed user' >&2; exit 2;;
+  esac
+}
+
+valid_browser() {
+  case "$1" in chrome|msedge) ;; *) echo 'Browser must be chrome or msedge' >&2; exit 2;; esac
+}
+
+prepare_report_dir() {
+  mkdir -p "$1"
+  if [ "${LAB_CI_REPORTS:-}" = 1 ]; then
+    # The Linux CI host UID differs from the non-root runner UID. Only disposable
+    # report paths are made writable; certificate and secret volumes are untouched.
+    chmod 0777 "$root_dir/artifacts" "$1"
+  fi
+}
+
+command -v docker >/dev/null 2>&1 || { echo 'Docker is required' >&2; exit 127; }
+valid_project "$project"
+export LAB_PROJECT="$project"
+
+case "${1:-}" in
+  operator)
+    shift
+    binary="$root_dir/artifacts/operator/bin/magic-shop-operator"
+    if [ ! -x "$binary" ] || [ "$root_dir/operator/go.mod" -nt "$binary" ] || [ "$root_dir/operator/main.go" -nt "$binary" ]; then
+      "$root_dir/operator/build.sh"
+    fi
+    exec "$binary" --root "$root_dir" --project "$project" "$@"
+    ;;
+  pki)
+    shift
+    case "${1:-}" in
+      init|verify) [ "$#" -eq 1 ] || usage;;
+      renew|retire|migrate-service|revoke-service) [ "$#" -eq 2 ] || usage;;
+      revoke) [ "$#" -ge 2 ] && [ "$#" -le 3 ] || usage;;
+      *) usage;;
+    esac
+    exec docker compose -f "$compose_file" run --rm pki "$@"
+    ;;
+  db)
+    [ "$#" -eq 2 ] || usage
+    case "$2" in
+      init) exec docker compose -f "$compose_file" run --rm db-bootstrap;;
+      verify) exec docker compose -f "$compose_file" run --rm --entrypoint bash db-bootstrap /bootstrap/verify.sh;;
+      *) usage;;
+    esac
+    ;;
+  infra)
+    [ "$#" -eq 2 ] && [ "$2" = up ] || usage
+    exec docker compose -f "$compose_file" up -d --build --wait --wait-timeout 120 gateway
+    ;;
+  up)
+    [ "$#" -eq 1 ] || usage
+    docker compose -f "$compose_file" up -d --build --wait --wait-timeout 120 gateway
+    docker compose -f "$compose_file" build realm-bootstrap
+    exec docker compose -f "$compose_file" run --rm --no-deps realm-bootstrap
+    ;;
+  test)
+    if [ "${2:-}" = --runner ]; then
+      shift
+      runner=
+      suite=teaching
+      LAB_BROWSER=
+      LAB_USER=customer-waterdeep
+      while [ "$#" -gt 0 ]; do
+        [ "$#" -ge 2 ] || usage
+        case "$1" in
+          --runner) runner=$2;;
+          --suite) suite=$2;;
+          --browser) LAB_BROWSER=$2;;
+          --user) LAB_USER=$2;;
+          *) usage;;
+        esac
+        shift 2
+      done
+      case "$runner:$suite" in
+        playwright:contracts)
+          [ -z "$LAB_BROWSER" ] || usage
+          LAB_RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)-contracts-$$"
+          LAB_CONTRACT_RUN_DIR="/work/artifacts/contracts/$LAB_RUN_ID"
+          export LAB_RUN_ID LAB_CONTRACT_RUN_DIR
+          prepare_report_dir "$root_dir/artifacts/contracts/$LAB_RUN_ID"
+          echo "Local contract report: $root_dir/artifacts/contracts/$LAB_RUN_ID" >&2
+          docker compose -f "$compose_file" --profile test build runner-test
+          docker compose -f "$compose_file" --profile test run --rm --no-deps \
+            -e LAB_CONTRACT_REPORT_DIR=/work/artifacts -e LAB_CONTRACT_RUN_DIR \
+            -v "$root_dir/artifacts:/work/artifacts" runner-contracts \
+            sh -c 'cd /work/testing; /work/testing/node_modules/.bin/playwright test --config playwright.config.ts --project=contracts-validator --project=contracts; result=$?; node /work/testing/container/check-artifacts.mjs "$LAB_CONTRACT_RUN_DIR"; scan=$?; if [ "$result" -ne 0 ]; then exit "$result"; fi; exit "$scan"'
+          exec docker compose -f "$compose_file" --profile test run --rm --no-deps \
+            -v "$root_dir:/repo:ro" runner-contracts node /repo/infra/check-contract-coverage.mjs
+          ;;
+        playwright:package)
+          [ -z "$LAB_BROWSER" ] || usage
+          docker build -f "$root_dir/packages/saturday-keycloak/Containerfile" -t magic-shop-saturday-keycloak:05 "$root_dir"
+          exec docker build -f "$root_dir/packages/saturday-keycloak/Consumer.Containerfile" -t magic-shop-saturday-keycloak-consumer:05 "$root_dir"
+          ;;
+        playwright:security)
+          [ -z "$LAB_BROWSER" ] || usage
+          docker compose -f "$compose_file" --profile test build runner-test
+          exec docker compose -f "$compose_file" --profile test run --rm --no-deps -e LAB_SECURITY_RUN=1 runner-security \
+            sh -c 'cd /work/testing && /work/testing/node_modules/.bin/playwright test --config playwright.config.ts --project=security'
+          ;;
+        playwright:teaching|cucumber:teaching) ;;
+        *) usage;;
+      esac
+      valid_browser "$LAB_BROWSER"
+      valid_user "$LAB_USER"
+      if [ "$runner" = playwright ]; then
+        case "$LAB_USER" in customer-waterdeep|shopkeeper|shop-admin) ;; *) echo 'Playwright teaching examples require customer-waterdeep, shopkeeper or shop-admin' >&2; exit 2;; esac
+      else
+        case "$LAB_USER" in customer-waterdeep|shop-admin) ;; *) echo 'Cucumber teaching examples require customer-waterdeep or shop-admin' >&2; exit 2;; esac
+      fi
+      LAB_RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)-${runner}-${LAB_BROWSER}-${LAB_USER}-$$"
+      export LAB_BROWSER LAB_USER LAB_RUN_ID
+      prepare_report_dir "$root_dir/artifacts/teaching/$LAB_RUN_ID"
+      echo "Local teaching report: $root_dir/artifacts/teaching/$LAB_RUN_ID" >&2
+      docker compose -f "$compose_file" --profile test build runner-test
+      if [ "$runner" = playwright ]; then
+        LAB_TEST_WORKERS=${LAB_TEST_WORKERS:-1}
+        case "$LAB_TEST_WORKERS" in 1|2|3|4) ;; *) echo 'LAB_TEST_WORKERS must be 1–4' >&2; exit 2;; esac
+        export LAB_TEST_WORKERS
+        exec docker compose -f "$compose_file" --profile test run --rm --no-deps \
+          -e LAB_RUN_ID -e LAB_TEST_WORKERS -v "$root_dir/artifacts:/work/artifacts" runner-test \
+          sh -c 'cd /work/testing; /work/testing/node_modules/.bin/playwright test --config playwright.teaching.config.ts; result=$?; node /work/testing/container/check-artifacts.mjs "/work/artifacts/teaching/$LAB_RUN_ID"; scan=$?; if [ "$result" -ne 0 ]; then exit "$result"; fi; exit "$scan"'
+      fi
+      if [ "$LAB_USER" = shop-admin ]; then LAB_CUCUMBER_TAGS='not @customer'; else LAB_CUCUMBER_TAGS='not @admin'; fi
+      LAB_SCENARIO_TELEMETRY="/work/artifacts/teaching/$LAB_RUN_ID/scenario-telemetry.jsonl"
+      export LAB_CUCUMBER_TAGS LAB_SCENARIO_TELEMETRY
+      exec docker compose -f "$compose_file" --profile test run --rm --no-deps \
+        -e LAB_RUN_ID -e LAB_CUCUMBER_TAGS -e LAB_SCENARIO_TELEMETRY \
+        -v "$root_dir/artifacts:/work/artifacts" runner-test \
+        sh -c 'cd /work/testing; /work/testing/node_modules/.bin/cucumber-js --import cucumber/package-adapter.mjs --import cucumber/teaching-steps.mjs --tags "$LAB_CUCUMBER_TAGS" --format progress --format "json:/work/artifacts/teaching/$LAB_RUN_ID/cucumber.json" --format "junit:/work/artifacts/teaching/$LAB_RUN_ID/junit.xml" cucumber/features/teaching.feature; result=$?; node /work/testing/container/check-artifacts.mjs "/work/artifacts/teaching/$LAB_RUN_ID"; scan=$?; if [ "$result" -ne 0 ]; then exit "$result"; fi; exit "$scan"'
+    fi
+    [ "$#" -ge 2 ] && [ "$#" -le 3 ] || usage
+    valid_browser "$2"
+    LAB_BROWSER=$2
+    LAB_USER=${3:-customer-waterdeep}
+    valid_user "$LAB_USER"
+    export LAB_BROWSER LAB_USER
+    docker compose -f "$compose_file" --profile test build runner-test
+    exec docker compose -f "$compose_file" --profile test run --rm runner-test
+    ;;
+  manual)
+    shift
+    if [ "${1:-}" = stop ]; then
+      [ "$#" -eq 1 ] || usage
+      exec docker compose -f "$compose_file" --profile manual rm --stop --force runner-manual
+    fi
+    LAB_USER=customer-waterdeep
+    LAB_BROWSER=chrome
+    if [ "${1:-}" = --user ] || [ "${1:-}" = --browser ]; then
+      [ "$#" -eq 4 ] || usage
+      while [ "$#" -gt 0 ]; do
+        case "$1" in
+          --user) LAB_USER=$2;;
+          --browser) LAB_BROWSER=$2;;
+          *) usage;;
+        esac
+        shift 2
+      done
+    else
+      [ "$#" -ge 1 ] && [ "$#" -le 2 ] || usage
+      LAB_BROWSER=$1
+      LAB_USER=${2:-customer-waterdeep}
+    fi
+    valid_browser "$LAB_BROWSER"
+    valid_user "$LAB_USER"
+    export LAB_BROWSER LAB_USER
+    case "${LAB_VIEWER_PORT:-6080}" in
+      ''|*[!0-9]*) echo 'LAB_VIEWER_PORT must be numeric' >&2; exit 2;;
+    esac
+    [ "${LAB_VIEWER_PORT:-6080}" -ge 1024 ] && [ "${LAB_VIEWER_PORT:-6080}" -le 65535 ] || {
+      echo 'LAB_VIEWER_PORT must be between 1024 and 65535' >&2; exit 2;
+    }
+    docker compose -f "$compose_file" --profile manual up -d --build --no-deps --force-recreate --wait --wait-timeout 120 runner-manual
+    printf 'Manual %s session for %s: http://127.0.0.1:%s/vnc.html\n' "$LAB_BROWSER" "$LAB_USER" "${LAB_VIEWER_PORT:-6080}"
+    printf 'Retrieve the one-session viewer password with: ./lab viewer-password\n'
+    printf 'Stop and discard the browser profile with: ./lab manual stop\n'
+    ;;
+  record)
+    [ "$#" -ge 2 ] && [ "$#" -le 3 ] || usage
+    valid_browser "$2"
+    LAB_BROWSER=$2
+    LAB_USER=${3:-customer-waterdeep}
+    valid_user "$LAB_USER"
+    case "$LAB_USER" in
+      customer-waterdeep|shop-admin) ;;
+      *) echo 'Recorded UI examples currently support customer-waterdeep and shop-admin' >&2; exit 2;;
+    esac
+    LAB_RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)-${LAB_BROWSER}-${LAB_USER}-$$"
+    export LAB_BROWSER LAB_USER LAB_RUN_ID
+    docker compose -f "$compose_file" --profile test build runner-test
+    echo "Local videos and report: $root_dir/artifacts/playwright/$LAB_RUN_ID" >&2
+    exec docker compose -f "$compose_file" --profile test run --rm --no-deps \
+      -e LAB_RUN_ID -v "$root_dir/artifacts:/work/artifacts" \
+      runner-test sh -c 'cd /work/testing && /work/testing/node_modules/.bin/playwright test --config playwright.browser.config.ts'
+    ;;
+  viewer-password)
+    [ "$#" -eq 1 ] || usage
+    exec docker compose -f "$compose_file" --profile manual exec -T runner-manual cat /tmp/viewer-password
+    ;;
+  user)
+    [ "$#" -eq 3 ] || usage
+    case "$2" in provision|inspect|disable|enable) ;; *) usage;; esac
+    valid_user "$3"
+    [ "$3" != unknown-user ] || { echo 'Unknown-user is a negative fixture, not a Keycloak user' >&2; exit 2; }
+    LAB_USER=$3
+    export LAB_USER
+    exec docker compose -f "$compose_file" --profile operator run --rm realm-user "$2" "$3"
+    ;;
+  status)
+    [ "$#" -eq 1 ] || usage
+    exec docker compose -f "$compose_file" ps --all
+    ;;
+  down)
+    [ "$#" -eq 1 ] || usage
+    exec docker compose -f "$compose_file" down
+    ;;
+  reset)
+    [ "$#" -eq 3 ] && [ "$2" = --project ] || usage
+    valid_project "$3"
+    export LAB_PROJECT="$3"
+    docker compose -f "$compose_file" down -v
+    # Compose may leave one-shot-only named volumes after --rm jobs.
+    docker volume ls --filter "label=com.docker.compose.project=$LAB_PROJECT" --format '{{.Name}}' |
+      while IFS= read -r volume; do
+        case "$volume" in "$LAB_PROJECT"_*) docker volume rm "$volume";; esac
+      done
+    ;;
+  *) usage;;
+esac

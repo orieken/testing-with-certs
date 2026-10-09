@@ -1,0 +1,510 @@
+name: ${LAB_PROJECT:-magic-shop-lab}
+
+services:
+  pki:
+    build:
+      context: ..
+      dockerfile: infra/pki/Containerfile
+    image: magic-shop-pki:03
+    user: "1000:1000"
+    network_mode: none
+    volumes:
+      - ca-state:/state
+      - public-trust:/public
+      - cert-shop:/out/shop
+      - cert-auth:/out/auth
+      - cert-ui:/out/ui
+      - cert-customer-api:/out/customer-api
+      - cert-catalog-api:/out/catalog-api
+      - cert-insights-api:/out/insights-api
+      - cert-postgres:/out/postgres
+      - cert-gateway-client:/out/gateway-client
+      - cert-customer-client:/out/customer-client
+      - cert-catalog-client:/out/catalog-client
+      - cert-insights-client:/out/insights-client
+      - cert-customer-waterdeep:/out/customer-waterdeep
+      - cert-customer-baldur:/out/customer-baldur
+      - cert-customer-neverwinter:/out/customer-neverwinter
+      - cert-shopkeeper:/out/shopkeeper
+      - cert-shop-admin:/out/shop-admin
+      - cert-disabled-customer:/out/disabled-customer
+      - cert-unknown-user:/out/unknown-user
+
+  db-secrets:
+    build:
+      context: ..
+      dockerfile: infra/postgres/Secrets.Containerfile
+    image: magic-shop-db-secrets:03
+    network_mode: none
+    volumes:
+      - db-secret-admin:/out/admin
+      - db-secret-keycloak:/out/keycloak
+      - db-secret-customer:/out/customer
+      - db-secret-catalog:/out/catalog
+      - db-secret-insights:/out/insights
+
+  auth-secrets:
+    build:
+      context: ..
+      dockerfile: infra/keycloak/AuthSecrets.Containerfile
+    image: magic-shop-auth-secrets:04
+    user: "1000:1000"
+    network_mode: none
+    volumes:
+      - auth-secret-admin:/out/admin
+      - auth-secret-catalog:/out/catalog
+      - auth-secret-reporting:/out/reporting
+
+  postgres:
+    build:
+      context: ..
+      dockerfile: infra/postgres/Containerfile
+    image: magic-shop-postgres:03
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD_FILE: /secrets/admin/postgres-password
+      POSTGRES_INITDB_ARGS: --auth-local=peer --auth-host=scram-sha-256
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+      - cert-postgres:/tls:ro
+      - db-secret-admin:/secrets/admin:ro
+    networks: [database]
+    depends_on:
+      pki: {condition: service_completed_successfully}
+      db-secrets: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -h 127.0.0.1 -p 5432 -U postgres -d postgres -t 2"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  db-bootstrap:
+    image: postgres:16.15-trixie@sha256:65b16a8b326e0cfbdf33fa7e783f2a0cb352a61448616ccccfd616ef42aa0f65
+    user: postgres
+    entrypoint: [bash, /bootstrap/bootstrap.sh]
+    volumes:
+      - ./postgres/bootstrap.sh:/bootstrap/bootstrap.sh:ro
+      - ./postgres/verify.sh:/bootstrap/verify.sh:ro
+      - public-trust:/public:ro
+      - db-secret-admin:/secrets/admin:ro
+      - db-secret-keycloak:/secrets/keycloak:ro
+      - db-secret-customer:/secrets/customer:ro
+      - db-secret-catalog:/secrets/catalog:ro
+      - db-secret-insights:/secrets/insights:ro
+    networks: [database]
+    depends_on:
+      postgres: {condition: service_healthy}
+
+  keycloak:
+    build:
+      context: ..
+      dockerfile: infra/keycloak/Containerfile
+    image: magic-shop-keycloak:03
+    user: "1000:0"
+    environment:
+      KC_HOSTNAME: https://auth.magic.test:9443
+      KC_HTTP_ENABLED: "false"
+      KC_HTTP_MANAGEMENT_SCHEME: http
+      KC_HTTP_MANAGEMENT_HOST: 127.0.0.1
+      KC_HTTPS_CERTIFICATE_FILE: /credentials/cert.pem
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /credentials/key.pem
+      KC_HTTPS_CLIENT_AUTH: request
+      KC_TRUSTSTORE_PATHS: /trust/user-ca.pem
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db?sslmode=verify-full&sslrootcert=/trust/server-ca.pem
+      KC_DB_USERNAME: keycloak_app
+      KC_BOOTSTRAP_ADMIN_CLIENT_ID: lab-bootstrap
+      JAVA_OPTS_APPEND: -Djboss.server.config.dir=/opt/keycloak/conf
+    volumes:
+      - cert-auth:/credentials:ro
+      - public-trust:/trust:ro
+      - public-trust:/opt/keycloak/conf/crl:ro
+      - db-secret-keycloak:/secrets:ro
+      - auth-secret-admin:/bootstrap-secret:ro
+    networks: [auth, database]
+    depends_on:
+      pki: {condition: service_completed_successfully}
+      db-bootstrap: {condition: service_completed_successfully}
+      auth-secrets: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD-SHELL, "bash -c 'exec 3<>/dev/tcp/127.0.0.1/9000; printf \"GET /health/ready HTTP/1.0\\r\\n\\r\\n\" >&3; grep -q UP <&3'"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    mem_limit: 1g
+
+  ui:
+    build:
+      context: ..
+      dockerfile: infra/ui/Containerfile
+    image: magic-shop-ui:03
+    user: "1000:1000"
+    volumes:
+      - cert-ui:/credentials:ro
+      - public-trust:/trust:ro
+    networks: [backend]
+    depends_on:
+      pki: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, node, -e, "require('http').get('http://127.0.0.1:9000/health/ready',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  customer-api:
+    build:
+      context: ..
+      dockerfile: services/customer-api/Containerfile
+    image: magic-shop-customer-api:03
+    user: "1000:1000"
+    volumes:
+      - cert-customer-api:/credentials:ro
+      - cert-customer-client:/caller:ro
+      - public-trust:/trust:ro
+      - db-secret-customer:/db-secret:ro
+      - auth-secret-catalog:/service-secret:ro
+    networks: [backend, database]
+    depends_on:
+      pki: {condition: service_completed_successfully}
+      db-bootstrap: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, node, -e, "require('http').get('http://127.0.0.1:9000/health/ready',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  catalog-api:
+    build:
+      context: ..
+      dockerfile: services/catalog-api/Containerfile
+    image: magic-shop-catalog-api:03
+    user: "1000:1000"
+    volumes:
+      - cert-catalog-api:/credentials:ro
+      - public-trust:/trust:ro
+      - db-secret-catalog:/db-secret:ro
+    networks: [backend, database]
+    depends_on:
+      pki: {condition: service_completed_successfully}
+      db-bootstrap: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD-SHELL, "bash -c 'exec 3<>/dev/tcp/127.0.0.1/9000; printf \"GET /health/ready HTTP/1.0\\r\\n\\r\\n\" >&3; grep -q UP <&3'"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  insights-api:
+    build:
+      context: ..
+      dockerfile: services/insights-api/Containerfile
+    image: magic-shop-insights-api:03
+    user: "1000:1000"
+    volumes:
+      - cert-insights-api:/credentials:ro
+      - cert-insights-client:/caller:ro
+      - public-trust:/trust:ro
+      - db-secret-insights:/db-secret:ro
+      - auth-secret-reporting:/service-secret:ro
+    networks: [backend, database]
+    depends_on:
+      pki: {condition: service_completed_successfully}
+      db-bootstrap: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; assert urllib.request.urlopen('http://127.0.0.1:9000/health/ready', timeout=2).status == 200"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  gateway:
+    build:
+      context: ..
+      dockerfile: infra/haproxy/Containerfile
+    image: magic-shop-gateway:03
+    user: "1000:1000"
+    volumes:
+      - cert-shop:/shop:ro
+      - cert-gateway-client:/gateway-client:ro
+      - public-trust:/trust:ro
+    networks:
+      front:
+        aliases: [shop.magic.test, auth.magic.test]
+      backend:
+        aliases: [auth.magic.test]
+      auth: {}
+    depends_on:
+      ui: {condition: service_healthy}
+      customer-api: {condition: service_healthy}
+      catalog-api: {condition: service_healthy}
+      insights-api: {condition: service_healthy}
+      keycloak: {condition: service_healthy}
+    healthcheck:
+      test: [CMD-SHELL, "bash -c 'exec 3<>/dev/tcp/127.0.0.1/9000; printf \"GET /health/ready HTTP/1.0\\r\\n\\r\\n\" >&3; grep -q UP <&3'"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  realm-bootstrap:
+    build:
+      context: ..
+      dockerfile: infra/keycloak/Bootstrap.Containerfile
+    image: magic-shop-realm-bootstrap:04
+    user: "1000:1000"
+    environment:
+      NODE_EXTRA_CA_CERTS: /trust/server-ca.pem
+    volumes:
+      - public-trust:/trust:ro
+      - auth-secret-admin:/secrets/admin:ro
+      - auth-secret-catalog:/secrets/catalog:ro
+      - auth-secret-reporting:/secrets/reporting:ro
+    networks: [front]
+    depends_on:
+      gateway: {condition: service_healthy}
+
+  realm-user:
+    profiles: [operator]
+    image: magic-shop-realm-bootstrap:04
+    user: "1000:1000"
+    entrypoint: [node, /app/operator.mjs]
+    environment:
+      NODE_EXTRA_CA_CERTS: /trust/server-ca.pem
+    volumes:
+      - public-trust:/trust:ro
+      - auth-secret-admin:/secrets/admin:ro
+      - selected-user:/identity:ro
+    networks: [front]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+
+  runner-test:
+    profiles: [test]
+    platform: linux/amd64
+    build:
+      context: ..
+      dockerfile: testing/container/Runner.Containerfile
+    image: magic-shop-runner:03
+    user: "1000:1000"
+    environment:
+      LAB_BROWSER: ${LAB_BROWSER:-chrome}
+      LAB_USER: ${LAB_USER:-customer-waterdeep}
+    volumes:
+      - public-trust:/public:ro
+      - selected-user:/identity:ro
+    networks: [front]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+
+  runner-contracts:
+    profiles: [test]
+    platform: linux/amd64
+    image: magic-shop-runner:03
+    user: "1000:1000"
+    environment:
+      LAB_BROWSER: chrome
+      LAB_USER: customer-waterdeep
+      LAB_CONTRACT_REPORT_DIR: /home/runner/contract-artifacts
+    volumes:
+      - ../seed:/work/seed:ro
+      - public-trust:/public:ro
+      - cert-customer-waterdeep:/identity-customer:ro
+      - cert-shop-admin:/identity-admin:ro
+      - cert-customer-baldur:/identity-second-customer:ro
+      - cert-customer-client:/service-identity:ro
+      - cert-insights-client:/reporting-identity:ro
+      - auth-secret-catalog:/service-secret:ro
+      - auth-secret-reporting:/reporting-secret:ro
+    networks: [front, backend]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+
+  runner-security:
+    profiles: [test]
+    platform: linux/amd64
+    image: magic-shop-runner:03
+    user: "1000:1000"
+    environment:
+      LAB_BROWSER: chrome
+      LAB_USER: customer-waterdeep
+    volumes:
+      - public-trust:/public:ro
+      - cert-customer-waterdeep:/identity-customer:ro
+      - cert-customer-baldur:/identity-second-customer:ro
+      - cert-shopkeeper:/identity-shopkeeper:ro
+    networks: [front, backend]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+
+  runner-service-revocation:
+    profiles: [test]
+    platform: linux/amd64
+    image: magic-shop-runner:03
+    user: "1000:1000"
+    environment:
+      LAB_BROWSER: chrome
+      LAB_USER: customer-waterdeep
+    volumes:
+      - public-trust:/public:ro
+      - cert-customer-client:/service-identity:ro
+      - auth-secret-catalog:/service-secret:ro
+    networks: [front, backend]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+
+  runner-reporting-scope:
+    profiles: [test]
+    platform: linux/amd64
+    image: magic-shop-runner:03
+    user: "1000:1000"
+    volumes:
+      - public-trust:/public:ro
+      - cert-insights-client:/service-identity:ro
+      - auth-secret-reporting:/service-secret:ro
+    networks: [front, backend]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+
+  scope-fixture-admin:
+    profiles: [test]
+    image: magic-shop-realm-bootstrap:04
+    user: "1000:1000"
+    entrypoint: [node, /app/scope-negative.mjs]
+    environment:
+      NODE_EXTRA_CA_CERTS: /trust/server-ca.pem
+    volumes:
+      - public-trust:/trust:ro
+      - auth-secret-admin:/secrets/admin:ro
+    networks: [front]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+
+  key-rotation-admin:
+    profiles: [test]
+    image: magic-shop-realm-bootstrap:04
+    user: "1000:1000"
+    entrypoint: [node, /app/rotate-key.mjs]
+    environment:
+      NODE_EXTRA_CA_CERTS: /trust/server-ca.pem
+    volumes:
+      - public-trust:/trust:ro
+      - auth-secret-admin:/secrets/admin:ro
+    networks: [front]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+
+  runner-key-rotation:
+    profiles: [test]
+    platform: linux/amd64
+    image: magic-shop-runner:03
+    user: "1000:1000"
+    volumes:
+      - public-trust:/public:ro
+      - cert-shop-admin:/identity-admin:ro
+    networks: [front]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+
+  jwt-matrix-admin:
+    profiles: [test]
+    image: magic-shop-realm-bootstrap:04
+    user: "1000:1000"
+    entrypoint: [node, /app/jwt-matrix-key.mjs]
+    environment:
+      NODE_EXTRA_CA_CERTS: /trust/server-ca.pem
+    volumes:
+      - public-trust:/trust:ro
+      - auth-secret-admin:/secrets/admin:ro
+      - jwt-matrix-key:/matrix-key
+    networks: [front]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+
+  runner-jwt-matrix:
+    profiles: [test]
+    platform: linux/amd64
+    image: magic-shop-runner:03
+    user: "1000:1000"
+    volumes:
+      - public-trust:/public:ro
+      - cert-shop-admin:/identity-admin:ro
+      - jwt-matrix-key:/matrix-key:ro
+    networks: [front]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+
+  runner-user-validity:
+    profiles: [test]
+    platform: linux/amd64
+    image: magic-shop-runner:03
+    user: "1000:1000"
+    environment:
+      LAB_BROWSER: chrome
+      LAB_USER: customer-waterdeep
+    volumes:
+      - public-trust:/public:ro
+    networks: [front]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+
+  runner-manual:
+    profiles: [manual]
+    platform: linux/amd64
+    build:
+      context: ..
+      dockerfile: testing/container/Runner.Containerfile
+    image: magic-shop-runner:03
+    user: "1000:1000"
+    environment:
+      LAB_BROWSER: ${LAB_BROWSER:-chrome}
+      LAB_USER: ${LAB_USER:-customer-waterdeep}
+    command: [sh, /work/testing/container/manual.sh]
+    ports:
+      - "127.0.0.1:${LAB_VIEWER_PORT:-6080}:6080"
+    volumes:
+      - public-trust:/public:ro
+      - selected-user:/identity:ro
+    networks: [front]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD-SHELL, "test -s /tmp/viewer-password && pgrep -f websockify >/dev/null && { pgrep -f google-chrome >/dev/null || pgrep -f microsoft-edge >/dev/null; }"]
+      interval: 5s
+      timeout: 3s
+      retries: 8
+
+networks:
+  front: {}
+  backend: {internal: true}
+  auth: {internal: true}
+  database: {internal: true}
+
+volumes:
+  ca-state: {}
+  public-trust: {}
+  cert-shop: {}
+  cert-auth: {}
+  cert-ui: {}
+  cert-customer-api: {}
+  cert-catalog-api: {}
+  cert-insights-api: {}
+  cert-postgres: {}
+  cert-gateway-client: {}
+  cert-customer-client: {}
+  cert-catalog-client: {}
+  cert-insights-client: {}
+  cert-customer-waterdeep: {}
+  cert-customer-baldur: {}
+  cert-customer-neverwinter: {}
+  cert-shopkeeper: {}
+  cert-shop-admin: {}
+  cert-disabled-customer: {}
+  cert-unknown-user: {}
+  db-secret-admin: {}
+  db-secret-keycloak: {}
+  db-secret-customer: {}
+  db-secret-catalog: {}
+  db-secret-insights: {}
+  pg-data: {}
+  auth-secret-admin: {}
+  auth-secret-catalog: {}
+  auth-secret-reporting: {}
+  selected-user:
+    name: ${LAB_PROJECT:-magic-shop-lab}_cert-${LAB_USER:-customer-waterdeep}
+  jwt-matrix-key: {}

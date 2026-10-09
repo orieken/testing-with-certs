@@ -1,0 +1,23 @@
+FROM node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9 AS build
+WORKDIR /work
+RUN npm install --global pnpm@12.9.1 --fetch-timeout=30000 --fetch-retries=1
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY apps/magic-shop/package.json apps/magic-shop/package.json
+COPY packages/saturday-keycloak/package.json packages/saturday-keycloak/package.json
+COPY services/customer-api/ services/customer-api/
+COPY contracts/bundled/customer.json contracts/bundled/customer.json
+COPY testing/package.json testing/package.json
+COPY contracts/package.json contracts/package.json
+COPY spikes/certificate-login/vendor/orieken-saturday-playwright-certs-0.1.0.tgz spikes/certificate-login/vendor/orieken-saturday-playwright-certs-0.1.0.tgz
+RUN pnpm install --frozen-lockfile --fetch-timeout=30000
+RUN pnpm --filter @magic-shop/customer-api typecheck && pnpm --filter @magic-shop/customer-api build && node --test services/customer-api/dist/*.test.js && pnpm --filter @magic-shop/customer-api deploy --prod /out
+
+FROM node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+WORKDIR /app
+COPY --from=build /out /app
+COPY --chown=1000:1000 services/customer-api/migrations/ /app/migrations/
+COPY --chown=1000:1000 seed/customer-profiles.json /app/seed/customer-profiles.json
+COPY --chown=1000:1000 seed/orders.json /app/seed/orders.json
+COPY --chown=1000:1000 contracts/bundled/customer.json /app/contracts/customer.json
+USER 1000:1000
+CMD ["node", "/app/dist/server.js"]
