@@ -60,8 +60,11 @@ signed apt index. The full-stack `testing/container/apt.lock` now pins Chrome
 `155.0.8059.39-1`, confirmed in the signed index and a fresh no-cache amd64
 runner build; Edge remains `154.0.4258.62-1`. The refreshed image reported
 both exact binaries and passed local real Chrome/customer and Edge/admin
-teaching smoke runs. The isolated spike lock and its historical result are
-unchanged. See [native CI continuation](completion/12-native-linux-ci.md).
+teaching smoke runs. A second GitHub Linux run built this refreshed runner and
+passed live contracts, security and the eight browser selections; its report
+upload failed on a Cucumber file permission unrelated to package resolution.
+The isolated spike lock and its historical result are unchanged. See
+[native CI continuation](completion/12-native-linux-ci.md).
 
 Resolution is an explicit maintenance task (`container/resolve-metadata.*`), not a
 build-time upgrade. Repository retention can make an old pinned version unavailable;

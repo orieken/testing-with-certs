@@ -1,8 +1,8 @@
 # System and infrastructure workflows
 
-Status: the nine main workflows describe the full-stack design. Prompts 03–10 infrastructure, Keycloak provisioning, local package adapters, all three business providers, the integrated Vue UI and selected-user manual desktop are observed on Apple Silicon amd64 emulation. Prompt 11 shared Saturday customer/admin teaching examples pass in Playwright Test and Cucumber under both real Chrome and Edge; a shopkeeper inventory example passes in Playwright Test under both browsers. Concurrent two-worker customer/admin runs, isolated service-scope and signing-key rotation checks, and the live signed JWT-01 failure matrix passed. Prompt 12's static, live contract, security and eight browser/runner/identity CI-equivalent selections passed locally. The first native GitHub Linux run passed static jobs and stack startup, then stopped before live contracts and browsers at an unavailable old Chrome pin; the refreshed-pin rerun is pending. See [architecture](architecture.md), [authentication](authentication.md), and the [test matrix](test-plan.md) for detailed rules.
+Status: the nine main workflows describe the full-stack design. Prompts 03–10 infrastructure, Keycloak provisioning, local package adapters, all three business providers, the integrated Vue UI and selected-user manual desktop are observed on Apple Silicon amd64 emulation. Prompt 11 shared Saturday customer/admin teaching examples pass in Playwright Test and Cucumber under both real Chrome and Edge; a shopkeeper inventory example passes in Playwright Test under both browsers. Concurrent two-worker customer/admin runs, isolated service-scope and signing-key rotation checks, and the live signed JWT-01 failure matrix passed. Prompt 12's static, live contract, security and eight browser/runner/identity CI-equivalent selections passed locally and in the second native GitHub Linux run. Its credential scan and cleanup passed, but text report upload failed on a file permission and awaits rerun. See [architecture](architecture.md), [authentication](authentication.md), and the [test matrix](test-plan.md) for detailed rules.
 
-Solid arrows describe requests or ordered actions. Dotted arrows in the infrastructure diagram describe credential provisioning/mounts. A box inside a container group is a component or logical database, not an additional container. The shop/auth ports shown are the observed Compose values; the first GitHub Linux workflow ran only through stack startup.
+Solid arrows describe requests or ordered actions. Dotted arrows in the infrastructure diagram describe credential provisioning/mounts. A box inside a container group is a component or logical database, not an additional container. The shop/auth ports shown are the observed Compose values; the second GitHub Linux workflow passed the test matrix but not artifact upload.
 
 ## 1. Containers, routing and persistent storage
 
@@ -324,26 +324,28 @@ The request contexts use the real providers and exact-origin client certificates
 
 ## 9. Isolated CI gate and report boundary
 
-The workflow is implemented in `.github/workflows/ci.yml`. Its static checks, live contracts/security suite and all eight customer/admin combinations passed in a disposable Compose project on Apple Silicon amd64 emulation. The first GitHub Linux push passed static jobs and isolated stack/realm startup. Its runner build failed on the removed Chrome 154 apt package, so native contracts, security, browsers and artifact upload remain unobserved pending the refreshed-pin rerun. The actual pull-request base comparison remains unobserved because this was a push. The CI host controls Docker while signing keys, user leaves and service credentials stay in project-scoped volumes and scoped containers. The report scanner precedes upload.
+The workflow is implemented in `.github/workflows/ci.yml`. Its static checks, live contracts/security suite and all eight customer/admin combinations passed in a disposable Compose project on Apple Silicon amd64 emulation and in the second GitHub Linux push. The native scan and cleanup passed; upload failed because the Cucumber telemetry file was mode `0600` and the GitHub host runner could not read it. The file now uses mode `0644` for synthetic, scanner-approved metadata, with an explicit host-readability gate before upload; that final CI path is pending rerun. The actual pull-request base comparison remains unobserved because this was a push. The CI host controls Docker while signing keys, user leaves and service credentials stay in project-scoped volumes and scoped containers.
 
 ```mermaid
 flowchart TD
-  Trigger["Observed GitHub Linux push; full integration pending"] --> Static["Observed on Linux: pinned builds, types, units, OpenAPI drift, architecture and complexity gates"]
+  Trigger["Observed GitHub Linux push; full workflow upload pending"] --> Static["Observed on Linux: pinned builds, types, units, OpenAPI drift, architecture and complexity gates"]
   Static --> Base{"Pull request with existing base bundles?"}
   Base -->|"Yes: planned live PR check"| Compare["Conservative existing-operation, schema, origin and auth comparator"]
   Base -->|"No first baseline"| Compose
   Compare --> Compose["Observed on Linux: unique LAB_PROJECT, one-shot PKI/secrets/DB/realm jobs, healthy stack"]
   Compose --> Certs[("Isolated Docker volumes: CA key PKI-only; per-runner leaves and scoped secrets")]
-  Compose --> Contracts["Observed locally: browserless Playwright live contracts, 23 operations and status gate"]
-  Contracts --> Security["Observed locally: TLS, token, ownership and identity checks"]
-  Security --> Matrix["Observed locally: real Chrome and Edge; Playwright Test and Cucumber; customer and admin"]
+  Compose --> Contracts["Observed on Linux: browserless Playwright live contracts, 23 operations and status gate"]
+  Contracts --> Security["Observed on Linux: TLS, token, ownership and identity checks"]
+  Security --> Matrix["Observed on Linux: real Chrome and Edge; Playwright Test and Cucumber; customer and admin"]
   Certs -.->|"selected mounts only"| Contracts
   Certs -.->|"selected mounts only"| Security
   Certs -.->|"one selected identity per job"| Matrix
-  Matrix --> Scan["Observed locally: container credential-artifact scan"]
-  Scan -->|"success only; planned CI action"| Upload["Text-only JUnit, Cucumber and coverage artifact; WebM/HTML remain local"]
+  Matrix --> Scan["Observed on Linux: container credential-artifact scan"]
+  Scan --> Readable["Pending rerun: GitHub host can read approved text files"]
+  Readable -->|"success only"| Upload["Pending rerun: text-only JUnit, Cucumber and coverage artifact; WebM/HTML remain local"]
   Compose --> Cleanup["Always: remove this CI project's containers and volumes"]
   Scan --> Cleanup
+  Readable --> Cleanup
   Upload --> Cleanup
 ```
 

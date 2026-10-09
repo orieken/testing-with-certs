@@ -129,8 +129,18 @@ jobs:
           docker run --rm --platform linux/amd64 --entrypoint node \
             -v "$PWD/artifacts:/work/artifacts:ro" magic-shop-runner:03 \
             /work/testing/container/check-artifacts.mjs /work/artifacts/.
-      - name: Upload scanned text-only contract and teaching results
+      - name: Verify approved text reports are readable by the CI runner
+        id: readable
         if: always() && steps.scan.outcome == 'success'
+        run: |
+          set -eu
+          for file in artifacts/contracts/*/junit.xml artifacts/teaching/*/junit.xml \
+            artifacts/teaching/*/cucumber.json artifacts/teaching/*/scenario-telemetry.jsonl \
+            artifacts/contract-coverage.json; do
+            if [ -e "$file" ]; then test -r "$file"; fi
+          done
+      - name: Upload scanned text-only contract and teaching results
+        if: always() && steps.scan.outcome == 'success' && steps.readable.outcome == 'success'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: magic-shop-reports-${{ github.run_id }}-${{ github.run_attempt }}

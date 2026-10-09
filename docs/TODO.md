@@ -1,6 +1,6 @@
 # Implementation todo list
 
-Status: Prompts 01–11 have observed Apple Silicon amd64-emulation evidence, including all three live business APIs, the 23-operation Playwright OpenAPI coverage gate, integrated customer/admin UI, both teaching runners in Chrome and Edge, and the signed JWT-01 matrix. Prompt 12's static and isolated live CI-equivalent checks, new-volume/repeat startup, teaching guide, diagrams and local host-trust before/after audit passed. Prompt 13's Go operator passed local CLI/TUI, diagnostic and runner checks. The initial GitHub Linux push passed static checks and stack startup, then stopped at an unavailable old Chrome pin; the exact pin is refreshed locally and the full rerun is pending. Native integration boxes remain unchecked. A literal clean-clone test and actual PR-base comparison also remain unverified. See [native CI continuation](completion/12-native-linux-ci.md) and [implementation prompts](implementation-prompts.md).
+Status: Prompts 01–11 have observed Apple Silicon amd64-emulation evidence, including all three live business APIs, the 23-operation Playwright OpenAPI coverage gate, integrated customer/admin UI, both teaching runners in Chrome and Edge, and the signed JWT-01 matrix. Prompt 12's static and isolated live CI-equivalent checks, new-volume/repeat startup, teaching guide, diagrams and local host-trust before/after audit passed. Prompt 13's Go operator passed local CLI/TUI, diagnostic and runner checks. The second GitHub Linux push passed static checks, stack startup, live contracts/security, all eight browser selections, credential scan and cleanup. Its text-report upload failed on a Cucumber file permission; a fix awaits rerun. Native manual viewer/operator, a literal clean-clone test and an actual PR-base comparison remain unverified. See [native CI continuation](completion/12-native-linux-ci.md) and [implementation prompts](implementation-prompts.md).
 
 ## Planning baseline
 
@@ -17,7 +17,7 @@ Status: Prompts 01–11 have observed Apple Silicon amd64-emulation evidence, in
 - [x] Pin compatible browser, Playwright, Saturday, Cucumber and Keycloak versions.
 - [x] Confirm published package availability or reproducible packed-source fallback.
 - [x] Build and launch actual Chrome and Edge in the documented supported Bookworm fallback image; verified UBI9 package gaps prevented its browser use.
-- [ ] Exercise native Linux amd64 and Apple Silicon emulation; Apple Silicon passed, native GitHub Linux static/startup checks passed but real-browser integration is pending.
+- [ ] Exercise native Linux amd64 and Apple Silicon emulation; automated real Chrome/Edge login passed on both, while a native manual selected-user viewer remains unverified.
 - [x] Observe a human selected-user login through the loopback manual viewer; customer identity and role were visible in remote Chrome.
 - [x] Choose and document any justified base-image/remote-runner fallback.
 - [x] Prove certificate login through both origins with no TLS bypass on Apple Silicon emulation.
@@ -127,8 +127,8 @@ Observed partial work (does not close the runtime checks above):
 
 ## 12 — CI and handoff
 
-- [ ] Build/run isolated Compose stack in Linux amd64 CI (static and startup passed; runner package refresh and integration rerun pending).
-- [ ] Gate CI on OpenAPI validity, generated/spec drift, breaking changes and Playwright contract coverage before browser suites (native static checks passed; live contract/browser suites and actual PR-base comparison unrun).
+- [x] Build/run isolated Compose stack in Linux amd64 CI; the second GitHub push passed startup, live contracts/security and all eight real-browser selections, plus cleanup.
+- [ ] Gate CI on OpenAPI validity, generated/spec drift, breaking changes and Playwright contract coverage before browser suites (native static, contracts and browser ordering passed; artifact upload fix and actual PR-base comparison remain unverified).
 - [x] Implement the conservative OpenAPI base-bundle comparison and test its unchanged, additive and changed cases in a pinned container; the actual PR base comparison awaits a pull request and CI run.
 - [x] Pass a disposable Apple Silicon CI-equivalent stack through live contracts, security, and all Chrome/Edge × Playwright/Cucumber × customer/admin selections; scan reports and remove only that project's volumes.
 - [x] Add architecture/mount/TLS checks, the 23-operation/92-status contract coverage gate, and a measured Go/TypeScript/Python complexity cap over authored source; two existing transport handlers have explicit non-increasing baselines.
@@ -137,7 +137,7 @@ Observed partial work (does not close the runtime checks above):
 - [x] Reconcile architecture/workflow diagrams with implemented behavior and observed/planned CI status; link them from the teaching guide.
 - [x] Render all 20 Mermaid blocks from the Markdown sources with a digest-pinned container; inspect the topology, infrastructure and CI layouts, and simplify the two crowded overviews.
 - [x] Demonstrate zero host certificate installation/management in the audited Apple Silicon run; user/admin trust settings and login/System keychain fingerprints were unchanged before/after containerized PKI and security tests.
-- [x] Record historical Chrome 154.0.8037.97 and refreshed Chrome 155.0.8059.39, Edge 154.0.4258.62, Node 24.10.0 and pinned base/container versions with Apple Silicon results; the native Linux browser rerun remains unverified.
+- [x] Record historical Chrome 154.0.8037.97 and refreshed Chrome 155.0.8059.39, Edge 154.0.4258.62, Node 24.10.0 and pinned base/container versions with Apple Silicon and native GitHub browser results.
 - [x] Document limitations and possible package upstreaming in the teaching guide and completion note; no package was published.
 
 ## 13 — Operator CLI/TUI (after the core lab)

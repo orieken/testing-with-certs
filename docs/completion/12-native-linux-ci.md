@@ -28,3 +28,20 @@ The fresh no-cache amd64 runner build completed with the new Chrome package and 
 ## Decisions and limits
 
 Retaining an unavailable browser pin would make a clean CI rebuild impossible; refreshing the exact version from signed package metadata preserves real Chrome and deterministic installation at the time of verification. The package repository may retire this version later, so long-term reproducibility needs a reviewed immutable package mirror or another content-addressed source. No floating browser installation or TLS bypass was used. No host certificate store or Saturday checkout was changed. A manual noVNC viewer and operator TUI were not exercised in the GitHub job; those native-platform paths remain unverified even if the automated CI matrix later passes. The actual PR base comparison requires a pull-request event.
+
+## Second GitHub run and report-upload correction
+
+[GitHub Actions run 37977595683](https://github.com/orieken/testing-with-certs/actions/runs/37977595683) used commit `07d349a74e0838cb6a5367b49d66da9e72d62477`. All five static/build jobs passed. The native amd64 integration job passed isolated startup, exact real Chrome/Edge version recording, live Playwright OpenAPI contracts and coverage, TLS/token/identity/ownership security, all eight Chrome/Edge × Playwright Test/Cucumber × customer/admin selections, the credential-artifact scan and project cleanup. The workflow's sole failure was the final text-artifact upload: the GitHub host runner received `EACCES` opening `scenario-telemetry.jsonl`, which Cucumber created with explicit mode `0600` under container UID 1000. The report scan ran inside that container and therefore could read it; the host runner had a different UID. No certificate or test failure was hidden by this error.
+
+The Cucumber telemetry contains synthetic scenario title, status, duration, selected browser and fixture user, not credentials. It now uses mode `0644` so the host runner can read only this approved text report. The workflow checks host readability **after** the credential scan and **before** upload; upload still requires both checks to succeed. Local Chrome/customer Cucumber passed four scenarios and 14 steps with a safe artifact scan, and `stat` reported the new telemetry as `-rw-r--r--` (`644`). The new workflow path has not yet run on GitHub.
+
+```sh
+gh run view 37977595683 --repo orieken/testing-with-certs --log-failed
+./lab test --runner cucumber --browser chrome --user customer-waterdeep
+stat -f '%Sp %OLp %u:%g %N' artifacts/teaching/20261009T191554Z-cucumber-chrome-customer-waterdeep-29929/scenario-telemetry.jsonl
+docker run --rm --platform linux/amd64 --entrypoint node -v "$PWD:/repo:ro" magic-shop-runner:03 -e 'const fs=require("fs"); const YAML=require("/work/node_modules/.pnpm/yaml@2.9.1/node_modules/yaml"); const doc=YAML.parse(fs.readFileSync("/repo/.github/workflows/ci.yml","utf8")); if(!doc.jobs?.integration?.steps?.some(s=>s.id==="readable")) process.exit(1); process.stdout.write("CI workflow parsed; readability gate present\n")'
+./infra/render-diagrams.sh
+git diff --check
+```
+
+The edited workflow parsed with its pinned YAML dependency, all 21 updated Mermaid blocks rendered and `git diff --check` passed. This closes the native automated stack/test-matrix check, but not the full CI workflow: approved text upload still requires a passing rerun. Manual noVNC and operator TUI behavior on Linux, literal clean-clone/repeat-startup, and the pull-request-only base comparison also remain unverified.

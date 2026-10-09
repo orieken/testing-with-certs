@@ -21,7 +21,7 @@ After(async function (scenario) {
   const path = process.env.LAB_SCENARIO_TELEMETRY;
   if (path) {
     await mkdir(dirname(path), { recursive: true });
-    await appendFile(path, `${JSON.stringify({ scenario: this.scenarioTitle, status: scenario.result?.status, durationMs: Number(process.hrtime.bigint() - this.startedAt) / 1e6, browser: channel, selectedUser: selected })}\n`, { mode: 0o600 });
+    await appendFile(path, `${JSON.stringify({ scenario: this.scenarioTitle, status: scenario.result?.status, durationMs: Number(process.hrtime.bigint() - this.startedAt) / 1e6, browser: channel, selectedUser: selected })}\n`, { mode: 0o644 });
   }
 });
 
