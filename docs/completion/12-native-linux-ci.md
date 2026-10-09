@@ -45,3 +45,29 @@ git diff --check
 ```
 
 The edited workflow parsed with its pinned YAML dependency, all 21 updated Mermaid blocks rendered and `git diff --check` passed. This closes the native automated stack/test-matrix check, but not the full CI workflow: approved text upload still requires a passing rerun. Manual noVNC and operator TUI behavior on Linux, literal clean-clone/repeat-startup, and the pull-request-only base comparison also remain unverified.
+
+## Third GitHub run and pinned runner candidate
+
+[GitHub Actions run 37979583499](https://github.com/orieken/testing-with-certs/actions/runs/37979583499) used commit `fef27b32abdec9ba3e9dcf25f1505c6766b0f6ac`. Five static/build jobs, isolated stack startup, real browser version recording, live OpenAPI contracts, security and the Chrome/customer selections passed. At the Chrome/admin Cucumber selection, Node `v24.10.0` aborted with `node::http2::Http2Session::OnStreamAfterWrite` assertion `is_write_in_progress()` and exit 134. This was a native runtime crash, not a test assertion. The workflow did not reach report upload. It is a regression in reliability despite the previous run's passing matrix; no Linux completion is inferred for the corrected upload path.
+
+The runner now pins Node `24.19.0` Bookworm slim at verified index digest `sha256:a9f5f7c91a432850b2a8a7797adf5eadb6c733ceed61167806cee7ea7fbc29df`. Cucumber is pinned to `12.9.0`, whose published `enginesTested` includes Node 24, instead of 11.3.0's untested-Node-24 warning. The private package's optional peer range accepts both Cucumber 11.3 and 12.9; its own dev tests and independent packed consumer now use 12.9. The Saturday Cucumber adapter's published peer range is `>=10.0.0`. Playwright 1.61.0, exact Chrome `155.0.8059.39-1`, exact Edge `154.0.4258.62-1`, both HTTPS origins and strict TLS remain unchanged. The historical spike dependency lock and completion evidence remain unchanged. [Node issue 61304](https://github.com/nodejs/node/issues/61304) documents the same assertion in a different HTTP/2/TLS race; it does not prove this patch release fixes our crash.
+
+```sh
+gh run view 37979583499 --repo orieken/testing-with-certs --log-failed
+docker buildx imagetools inspect node:24.19.0-bookworm-slim
+docker run --rm --platform linux/amd64 --entrypoint npm node:24.19.0-bookworm-slim@sha256:a9f5f7c91a432850b2a8a7797adf5eadb6c733ceed61167806cee7ea7fbc29df view @cucumber/cucumber@12.9.0 version engines enginesTested --json --fetch-timeout=30000 --fetch-retries=1
+docker run --rm --platform linux/amd64 -v "$PWD:/work" -w /work node:24.19.0-bookworm-slim@sha256:a9f5f7c91a432850b2a8a7797adf5eadb6c733ceed61167806cee7ea7fbc29df sh -c 'npm install --global pnpm@12.9.1 --fetch-timeout=30000 --fetch-retries=1 >/dev/null && pnpm install --lockfile-only --ignore-scripts --fetch-timeout=30000 && pnpm peers check'
+docker compose -f infra/compose.yaml --profile test build --no-cache runner-test
+docker compose -f infra/compose.yaml --profile test build runner-test
+./lab test --runner cucumber --browser chrome --user shop-admin
+./lab test --runner cucumber --browser msedge --user customer-waterdeep
+./lab test --runner playwright --browser chrome --user customer-waterdeep
+docker build --platform linux/amd64 -t magic-shop-saturday-keycloak:05 -f packages/saturday-keycloak/Containerfile .
+docker build --platform linux/amd64 -f packages/saturday-keycloak/Consumer.Containerfile .
+docker build --platform linux/amd64 --target workspace -f infra/ci/Containerfile .
+docker compose -f infra/compose.yaml --profile '*' config --quiet
+./infra/render-diagrams.sh
+git diff --check
+```
+
+On local Apple Silicon amd64 emulation, the fresh runner build resolved the signed exact apt closure, reported Node `v24.19.0`, Chrome `155.0.8059.39` and Edge `154.0.4258.62`, and completed the frozen workspace install and TypeScript build. Chrome/admin Cucumber passed 3 scenarios/11 steps; Edge/customer passed 4 scenarios/14 steps; both safe artifact scans passed. Chrome/customer Playwright passed four applicable tests with four role skips and a safe 54-entry artifact scan. The private package image passed seven unit tests, and the independent packed consumer loaded core, Playwright, Cucumber and manual exports. The CI-equivalent workspace image passed typechecks, seven private-package unit tests, OpenAPI lint/drift, the 23-operation/92-status inventory, six contract-validator tests and seed validation. Compose configuration and `git diff --check` passed; all 21 Mermaid blocks rendered. An initial mixed Cucumber 12 runner/Cucumber 11 private package build failed with the expected duplicate-instance `PENDING` hook error; aligning both installations removed it. No host runtime or certificate store was changed. The next dependency is a full native GitHub rerun, including the host readability gate and text-only artifact upload. Native manual viewer/operator and a real PR comparator still require separate evidence.

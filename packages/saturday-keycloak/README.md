@@ -35,8 +35,9 @@ separately under `dist-tests`, excluded from the packed file set. The package
 is developed and packed inside containers. A clean packed installation is
 checked by `Consumer.Containerfile`; no workspace links are used there.
 
-This prototype pins Playwright Test 1.61.0 and Cucumber 11.3.0, the exact
-versions exercised with Chrome 154.0.8037.97 and Edge 154.0.4258.62 on
-Apple Silicon amd64 emulation. The Saturday certificate-helper peer uses the
-recorded local 0.1.0 tarball; Saturday Cucumber uses 0.1.1. Native Linux
-amd64 remains to be checked after the rest of the project is built.
+This prototype currently pins Playwright Test 1.61.0 and Cucumber 12.9.0.
+The earlier Cucumber 11.3.0 integration was exercised with Chrome
+154.0.8037.97 and Edge 154.0.4258.62 on Apple Silicon amd64 emulation;
+the refreshed runner and independent packed consumer pass with Cucumber 12.9.0.
+The Saturday certificate-helper peer uses the recorded local 0.1.0 tarball;
+Saturday Cucumber uses 0.1.1. Native Linux validation of this update is pending.

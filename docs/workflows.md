@@ -324,11 +324,11 @@ The request contexts use the real providers and exact-origin client certificates
 
 ## 9. Isolated CI gate and report boundary
 
-The workflow is implemented in `.github/workflows/ci.yml`. Its static checks, live contracts/security suite and all eight customer/admin combinations passed in a disposable Compose project on Apple Silicon amd64 emulation and in the second GitHub Linux push. The native scan and cleanup passed; upload failed because the Cucumber telemetry file was mode `0600` and the GitHub host runner could not read it. The file now uses mode `0644` for synthetic, scanner-approved metadata, with an explicit host-readability gate before upload; that final CI path is pending rerun. The actual pull-request base comparison remains unobserved because this was a push. The CI host controls Docker while signing keys, user leaves and service credentials stay in project-scoped volumes and scoped containers.
+The workflow is implemented in `.github/workflows/ci.yml`. Its static checks, live contracts/security suite and all eight customer/admin combinations passed in a disposable Compose project on Apple Silicon amd64 emulation and in the second GitHub Linux push. The native scan and cleanup passed; upload failed because the Cucumber telemetry file was mode `0600` and the GitHub host runner could not read it. The third run hit a Node HTTP/2 assertion in Cucumber before upload. The file now uses mode `0644` for synthetic, scanner-approved metadata, with an explicit host-readability gate before upload. A pinned Node 24.19/Cucumber 12.9 runner passed local browser checks and awaits native rerun. The actual pull-request base comparison remains unobserved because this was a push. The CI host controls Docker while signing keys, user leaves and service credentials stay in project-scoped volumes and scoped containers.
 
 ```mermaid
 flowchart TD
-  Trigger["Observed GitHub Linux push; full workflow upload pending"] --> Static["Observed on Linux: pinned builds, types, units, OpenAPI drift, architecture and complexity gates"]
+  Trigger["Observed GitHub Linux pushes; current runner and full upload pending"] --> Static["Observed on Linux: pinned builds, types, units, OpenAPI drift, architecture and complexity gates"]
   Static --> Base{"Pull request with existing base bundles?"}
   Base -->|"Yes: planned live PR check"| Compare["Conservative existing-operation, schema, origin and auth comparator"]
   Base -->|"No first baseline"| Compose
@@ -336,7 +336,8 @@ flowchart TD
   Compose --> Certs[("Isolated Docker volumes: CA key PKI-only; per-runner leaves and scoped secrets")]
   Compose --> Contracts["Observed on Linux: browserless Playwright live contracts, 23 operations and status gate"]
   Contracts --> Security["Observed on Linux: TLS, token, ownership and identity checks"]
-  Security --> Matrix["Observed on Linux: real Chrome and Edge; Playwright Test and Cucumber; customer and admin"]
+  Security --> Candidate["Local candidate: pinned Node 24.19 and Cucumber 12.9; native rerun pending"]
+  Candidate --> Matrix["Previously observed on Linux: real Chrome and Edge; both runners; customer and admin"]
   Certs -.->|"selected mounts only"| Contracts
   Certs -.->|"selected mounts only"| Security
   Certs -.->|"one selected identity per job"| Matrix

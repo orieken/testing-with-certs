@@ -3,20 +3,21 @@
 Status: Apple Silicon emulation passed the browser/authentication thin slice,
 including a human viewer login. GitHub Actions passed native Linux static,
 contract, security and real-browser matrix checks on its second run. The
-workflow remains red because report upload could not read one Cucumber
-telemetry file; a permission fix awaits rerun. Manual viewer/operator native
+workflow remained red because report upload could not read one Cucumber
+telemetry file; a permission fix was made. A third run crashed in Node HTTP/2
+during Cucumber, so the pinned runner update awaits a native rerun. Manual viewer/operator native
 paths are separate and remain unverified.
 
 ## Full-stack Prompt 12 platform update (2026-10-08 baseline; 2026-10-09 CI continuation)
 
 | Check | Apple Silicon Docker Desktop, linux/amd64 emulation | Native Linux amd64 GitHub CI |
 | --- | --- | --- |
-| Static container build, strict types, package/unit checks, OpenAPI lint and generated drift | Passed in pinned Node 24.10.0 Bookworm CI image | First and second pushes passed static, spike, service-build and Compose architecture jobs |
+| Static container build, strict types, package/unit checks, OpenAPI lint and generated drift | Passed in pinned Node 24.10.0 Bookworm CI image | First three pushes passed static, spike, service-build and Compose architecture jobs |
 | Three live OpenAPI providers and 23-operation/92-status inventory | 17 live Playwright tests and full coverage gate passed in disposable `magic-shop-ci-local-12` | Second run passed live Playwright contract/coverage gate |
 | Security and eight browser/runner/identity selections | 12 security tests; real Chrome/Edge × Playwright Test/Cucumber × customer/admin passed | Second run passed live security and all eight real-browser selections |
 | Browser binaries in the runner | Historical Chrome 154.0.8037.97 and Edge 154.0.4258.62; refreshed Chrome 155.0.8059.39 and Edge 154.0.4258.62 passed local real-browser teaching smoke | Second run built and recorded refreshed real Chrome and Edge |
 | Clean new-volume and repeated startup | Disposable `magic-shop-repeat-12` created then retained realm and database marker on repeat; DB TLS/isolation and PKI/CRLs re-verified | Isolated stack startup and realm bootstrap passed; repeat startup unverified |
-| Report boundary | Local credential scan passed; CI upload is limited to text JUnit/Cucumber/coverage data | Second run scan passed; upload failed on mode `0600` Cucumber telemetry, fix pending rerun |
+| Report boundary | Local credential scan passed; CI upload is limited to text JUnit/Cucumber/coverage data | Second run scan passed but upload failed on mode `0600` Cucumber telemetry; third run crashed during browser matrix before upload |
 
 The initial source commit establishes a baseline. An actual PR base-contract comparison has not run because the triggers were pushes, and a literal clean-clone/repeat-startup check remains open. The current Compose viewer click-through passed for admin Edge and customer Chrome on Apple Silicon. The runner uses pinned amd64 Bookworm for actual branded browsers; UBI9 remains the PKI, Go runtime and Python base. The [native CI continuation](completion/12-native-linux-ci.md) records both GitHub runs and fixes; earlier full-stack commands are in [completion note 12](completion/12-ci-handoff.md).
 
@@ -33,12 +34,16 @@ The 2026-10-09 context recheck found only `default` and `desktop-linux`; both `d
   `xorg-x11-server-Xvfb` or `xdg-utils`. No unsigned CentOS overlay or dependency
   bypass was used. Retain UBI9 for PKI; evaluate Debian Bookworm for the browser runner.
 - Node 24.10.0 Bookworm slim index digest
-  `sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9`.
+  `sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9`
+  remains the spike and application base. The candidate browser runner uses
+  Node 24.19.0 Bookworm slim index digest
+  `sha256:a9f5f7c91a432850b2a8a7797adf5eadb6c733ceed61167806cee7ea7fbc29df`.
 - Keycloak 26.4.0 index digest
   `sha256:5f3fb534cde6bf006d79f5912473e5d2c828c707cdfc52e16972803aca9d43dd`.
 - HAProxy 3.2.6 index digest
   `sha256:7a5f2b4eac999e35d38b0c49040ec885ac2929c6b1a17fde0d1dc2fbcaf07c52`.
-- Playwright/Test 1.61.0; Cucumber 11.3.0; Saturday core 0.1.3,
+- Playwright/Test 1.61.0; original spike Cucumber 11.3.0, current
+  full-stack runner Cucumber 12.9.0; Saturday core 0.1.3,
   Playwright 0.1.1, Cucumber 0.1.1, certificate helper 0.1.0 packed locally.
 
 Initial browser package resolution failed when Docker storage reached 100%

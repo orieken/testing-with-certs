@@ -21,7 +21,7 @@
   },
   "peerDependencies": {
     "@playwright/test": "1.61.0",
-    "@cucumber/cucumber": "11.3.0",
+    "@cucumber/cucumber": "^11.3.0 || ^12.9.0",
     "@orieken/saturday-playwright-certs": "0.1.0",
     "@orieken/saturday-cucumber": "0.1.1"
   },
@@ -35,7 +35,7 @@
     "@types/node": "24.10.0",
     "typescript": "5.9.3",
     "@playwright/test": "1.61.0",
-    "@cucumber/cucumber": "11.3.0",
+    "@cucumber/cucumber": "12.9.0",
     "@orieken/saturday-playwright-certs": "file:../../spikes/certificate-login/vendor/orieken-saturday-playwright-certs-0.1.0.tgz",
     "@orieken/saturday-cucumber": "0.1.1"
   }

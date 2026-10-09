@@ -7,6 +7,6 @@ COPY --from=packed /tmp/saturday-keycloak-prototype-0.1.0.tgz /tmp/local-package
 COPY spikes/certificate-login/vendor/orieken-saturday-playwright-certs-0.1.0.tgz /tmp/certificate-helper.tgz
 RUN npm install --ignore-scripts --no-audit --no-fund --fetch-timeout=30000 --fetch-retries=1 --save-exact \
     /tmp/local-package.tgz /tmp/certificate-helper.tgz \
-    @playwright/test@1.61.0 @cucumber/cucumber@11.3.0 @orieken/saturday-cucumber@0.1.1
+    @playwright/test@1.61.0 @cucumber/cucumber@12.9.0 @orieken/saturday-cucumber@0.1.1
 COPY packages/saturday-keycloak/examples/consumer.mjs ./consumer.mjs
 RUN node consumer.mjs

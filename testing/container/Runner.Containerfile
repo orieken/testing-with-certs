@@ -1,4 +1,4 @@
-FROM node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9 AS dependencies
+FROM node:24.19.0-bookworm-slim@sha256:a9f5f7c91a432850b2a8a7797adf5eadb6c733ceed61167806cee7ea7fbc29df AS dependencies
 WORKDIR /work
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 RUN npm install --global pnpm@12.9.1 --fetch-timeout=30000 --fetch-retries=1
@@ -11,7 +11,7 @@ COPY contracts/package.json contracts/package.json
 COPY spikes/certificate-login/vendor/orieken-saturday-playwright-certs-0.1.0.tgz spikes/certificate-login/vendor/orieken-saturday-playwright-certs-0.1.0.tgz
 RUN pnpm install --frozen-lockfile --fetch-timeout=30000
 
-FROM node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+FROM node:24.19.0-bookworm-slim@sha256:a9f5f7c91a432850b2a8a7797adf5eadb6c733ceed61167806cee7ea7fbc29df
 WORKDIR /work
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 HOME=/home/runner
 COPY testing/container/apt.lock testing/container/google.asc testing/container/microsoft.asc testing/container/install-packages.sh testing/container/

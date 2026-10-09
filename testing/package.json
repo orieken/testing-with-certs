@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "saturday-keycloak-prototype": "workspace:*",
-    "@cucumber/cucumber": "11.3.0",
+    "@cucumber/cucumber": "12.9.0",
     "@orieken/saturday-cucumber": "0.1.1",
     "@orieken/saturday-core": "0.1.3",
     "@playwright/test": "1.61.0"

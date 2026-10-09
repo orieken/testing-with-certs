@@ -66,6 +66,19 @@ upload failed on a Cucumber file permission unrelated to package resolution.
 The isolated spike lock and its historical result are unchanged. See
 [native CI continuation](completion/12-native-linux-ci.md).
 
+The third GitHub run reached Cucumber but a Node 24.10.0 HTTP/2/TLS assertion
+aborted its Chrome/admin process. The full-stack browser runner now pins
+Node 24.19.0 Bookworm slim at index digest
+`sha256:a9f5f7c91a432850b2a8a7797adf5eadb6c733ceed61167806cee7ea7fbc29df`
+and Cucumber 12.9.0, whose published `enginesTested` includes Node 24. The
+private certificate adapter's peer range accepts both the historical 11.3
+and current 12.9 majors; its dev and independent packed-consumer checks use
+12.9.0. The signed browser apt closure and Playwright 1.61.0 are unchanged.
+Local Chrome/admin and Edge/customer Cucumber journeys, frozen workspace
+build and independent package consumption passed. This is a candidate until
+the native Linux workflow and artifact upload pass; the Node assertion's exact
+race has not been proven fixed by the patch release.
+
 Resolution is an explicit maintenance task (`container/resolve-metadata.*`), not a
 build-time upgrade. Repository retention can make an old pinned version unavailable;
 a build must fail in that case. Before long-lived CI adoption, archive the signed

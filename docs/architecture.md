@@ -1,6 +1,6 @@
 # Architecture and implementation decisions
 
-Status: Prompts 01–10 run PKI, PostgreSQL, HAProxy, an integrated Vue UI, live Go catalog, Node customer and Python insights providers, real Chrome/Edge runner profiles including the selected-user manual desktop, a certificate-only Keycloak realm with six seed users, and a private local package exercised by both test runners. The Vue UI uses Keycloak Authorization Code + PKCE and memory-held tokens. Customer checkout/widgets and administrator regional reporting/follow-ups passed in both real Chrome and Edge on Apple Silicon emulation. All three providers validate signed user requests; Go and Node pair scoped service requests with caller certificates. GitHub Linux contracts, security and the real-browser matrix passed; artifact upload awaits a permission fix.
+Status: Prompts 01–10 run PKI, PostgreSQL, HAProxy, an integrated Vue UI, live Go catalog, Node customer and Python insights providers, real Chrome/Edge runner profiles including the selected-user manual desktop, a certificate-only Keycloak realm with six seed users, and a private local package exercised by both test runners. The Vue UI uses Keycloak Authorization Code + PKCE and memory-held tokens. Customer checkout/widgets and administrator regional reporting/follow-ups passed in both real Chrome and Edge on Apple Silicon emulation. All three providers validate signed user requests; Go and Node pair scoped service requests with caller certificates. A GitHub Linux run passed contracts, security and the full real-browser matrix but failed report upload; the next run hit a Node HTTP/2 assertion during Cucumber. The pinned Node/Cucumber runner update awaits native CI validation.
 
 The Prompt 11 teaching slice now shares Saturday page/element/login flow models between Playwright Test and Cucumber. Both runners passed customer and admin examples in both branded browsers. Separate customer Chrome and admin Edge jobs also passed concurrently with two Playwright workers each and distinct local reports. Isolated signing-key rotation and signed JWT-01 negative-claim checks passed live against all three long-running APIs. Prompt 12 defines a Linux CI gate and passed its containerized static, contract, security and eight browser/runner/identity selections locally on Apple Silicon emulation. The second GitHub Linux run also passed those test gates and cleanup, but its artifact upload failed because one scanned telemetry file was unreadable by the host runner. Both current Compose viewer identities were human-confirmed on Apple Silicon.
 
@@ -10,7 +10,7 @@ Prompt 13 adds a host Go operator built in a pinned container with Bubble Tea, B
 
 ```mermaid
 flowchart TB
-  CI["Observed GitHub Linux host: test matrix passed; artifact upload pending"] -->|"isolated LAB_PROJECT, static and live gates"| Lab
+  CI["Observed GitHub Linux host: previous matrix passed; current runner rerun pending"] -->|"isolated LAB_PROJECT, static and live gates"| Lab
   Operator["Observed host Go operator CLI/TUI; Docker privilege"] -->|"bounded Compose healthcheck and lab actions"| Lab
   subgraph Lab["Observed Compose lab on Apple Silicon amd64 emulation"]
     PKI["One-shot UBI9 PKI, no network"] --> CA[("CA signing state: PKI only")]
@@ -42,7 +42,7 @@ flowchart TB
     Leaves -.-> Node
     Leaves -.-> Python
     Leaves -.-> DB
-    Tests["Playwright contracts/security and both browser runners"] --> HA
+    Tests["Playwright contracts/security and both browser runners; Node 24.19/Cucumber 12.9 candidate"] --> HA
     Tests -->|"scanned local reports; text-only CI upload planned"| Reports[("Teaching and coverage reports")]
   end
   Host["Host: optional protected loopback viewer only"] --> Browser
@@ -50,7 +50,7 @@ flowchart TB
 
 Diagram omits several per-service credential mounts and token/JWKS calls for readability. The authentication document defines those boundaries. See [infrastructure and workflow diagrams](workflows.md) for the expanded topology, startup, authentication, business requests and runner lifecycle.
 
-The observed GitHub CI host invoked Docker without receiving a certificate or signing key. Its isolated project created certificate volumes and bootstrapped the realm. After an exact Chrome pin refresh, the second run passed static OpenAPI checks, live contracts/security, all eight browser selections, the credential scan and cleanup. The text-only upload failed because a Cucumber telemetry file had mode `0600`, unreadable by the GitHub host runner. That public, scanned metadata file now has mode `0644`, and CI checks host readability before upload. WebM and HTML/video bundles remain local; successful artifact upload remains unverified pending rerun.
+The observed GitHub CI host invoked Docker without receiving a certificate or signing key. Its isolated project created certificate volumes and bootstrapped the realm. After an exact Chrome pin refresh, the second run passed static OpenAPI checks, live contracts/security, all eight browser selections, the credential scan and cleanup. The text-only upload failed because a Cucumber telemetry file had mode `0600`, unreadable by the GitHub host runner. A third run reached Cucumber and crashed in Node HTTP/2. That public, scanned metadata file now has mode `0644`, and CI checks host readability before upload. The Node/Cucumber runner update passed local browser checks but not yet Linux CI. WebM and HTML/video bundles remain local; successful artifact upload remains unverified pending rerun.
 
 The Vue UI serves behind verified gateway mTLS, starts certificate-only Keycloak PKCE, shows the selected identity and role, and keeps tokens in memory. Its catalog, profile/orders/widgets, checkout and admin paths reach all three live providers. Customer, shopkeeper inventory and administrator journeys passed in both real Chrome and Edge with local video recordings, including persisted widgets/notes, synced regional reporting, item details and offline map. Native NSS certificate stores and both runner adapters were proved earlier.
 
@@ -62,7 +62,7 @@ The Vue UI serves behind verified gateway mTLS, starts certificate-only Keycloak
 | `catalog-api` | Observed seeded browse/detail, item maintenance, private quotes, JWT/certificate pairing and authenticated spec | Pinned Go 1.25.3 Bookworm build, UBI9 runtime; pgx 5.11.0, golang-jwt 5.3.1 |
 | `insights-api` | Observed admin-only regional sales, GeoJSON, customer/order summaries and local follow-up persistence through Node's bounded feed | Pinned UBI9 Python 3.12; PyJWT 2.15.1, psycopg 3.2.13 |
 | `gateway` | Shop mTLS, private backend mTLS and auth passthrough | Pinned HAProxy 3.2.6 image |
-| `runner-test` / `runner-manual` | Same image; real Chrome/Edge, one selected-user mount; shared Saturday Playwright Test and Cucumber customer/admin journeys, plus Playwright shopkeeper inventory, observed | Pinned Node 24.10 Bookworm linux/amd64; signed browser packages; Playwright FFmpeg 1011 for local video |
+| `runner-test` / `runner-manual` | Same image; real Chrome/Edge, one selected-user mount; shared Saturday Playwright Test and Cucumber customer/admin journeys, plus Playwright shopkeeper inventory, observed | Pinned Node 24.19 Bookworm linux/amd64; signed browser packages; Playwright FFmpeg 1011 for local video |
 | `runner-contracts` / `runner-security` | Browserless OpenAPI gate with scoped service callers; separate security job with customer, second-customer and shopkeeper user leaves only | Same pinned runner image; no host certificate or signing-key mounts |
 | `runner-service-revocation` / `runner-user-validity` | Isolated negative-fixture jobs for revoked/dated service leaves and dated user leaves; each receives public trust plus only its named leaf and required catalog secret | Same pinned runner image; fixture keys remain in Docker volumes and issuer key remains PKI-only |
 | `runner-reporting-scope` / `scope-fixture-admin` | Isolated reporting-scope check with only the Python caller leaf, reporting client secret and public trust; the catalog check reuses `runner-service-revocation` with its Node caller leaf. A separate admin-only job removes one default grant in a disposable realm | Runner uses the pinned amd64 browser image; the scope fixture uses the pinned Node bootstrap image with only public trust and the admin secret |
