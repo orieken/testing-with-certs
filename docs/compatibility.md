@@ -1,29 +1,31 @@
 # Certificate-login feasibility
 
 Status: Apple Silicon emulation passed the browser/authentication thin slice,
-including a human viewer login. The user chose to skip native Linux amd64 on
-2026-10-09; it remains unverified and the cross-platform exit gate is incomplete.
+including a human viewer login. The user later authorized GitHub Actions
+native Linux verification. Its first run passed static jobs and isolated
+stack startup, then stopped at an unavailable Chrome package; the full
+cross-platform exit gate remains incomplete pending a rerun.
 
-## Full-stack Prompt 12 platform update (2026-10-08)
+## Full-stack Prompt 12 platform update (2026-10-08 baseline; 2026-10-09 CI continuation)
 
 | Check | Apple Silicon Docker Desktop, linux/amd64 emulation | Native Linux amd64 GitHub CI |
 | --- | --- | --- |
-| Static container build, strict types, package/unit checks, OpenAPI lint and generated drift | Passed in pinned Node 24.10.0 Bookworm CI image | Workflow written; unverified |
-| Three live OpenAPI providers and 23-operation/92-status inventory | 17 live Playwright tests and full coverage gate passed in disposable `magic-shop-ci-local-12` | Unverified |
-| Security and eight browser/runner/identity selections | 12 security tests; real Chrome/Edge × Playwright Test/Cucumber × customer/admin passed | Unverified |
-| Browser binaries in the runner | Chrome 154.0.8037.97; Edge 154.0.4258.62 | Version-recording step written; unverified |
-| Clean new-volume and repeated startup | Disposable `magic-shop-repeat-12` created then retained realm and database marker on repeat; DB TLS/isolation and PKI/CRLs re-verified | Unverified |
+| Static container build, strict types, package/unit checks, OpenAPI lint and generated drift | Passed in pinned Node 24.10.0 Bookworm CI image | Initial push passed static, spike, service-build and Compose architecture jobs |
+| Three live OpenAPI providers and 23-operation/92-status inventory | 17 live Playwright tests and full coverage gate passed in disposable `magic-shop-ci-local-12` | Full contract gate not reached in first run; rerun pending |
+| Security and eight browser/runner/identity selections | 12 security tests; real Chrome/Edge × Playwright Test/Cucumber × customer/admin passed | Not reached in first run; rerun pending |
+| Browser binaries in the runner | Historical Chrome 154.0.8037.97 and Edge 154.0.4258.62; refreshed Chrome 155.0.8059.39 and Edge 154.0.4258.62 passed local real-browser teaching smoke | First run could not install removed Chrome 154; refreshed pin pending rerun |
+| Clean new-volume and repeated startup | Disposable `magic-shop-repeat-12` created then retained realm and database marker on repeat; DB TLS/isolation and PKI/CRLs re-verified | Isolated stack startup and realm bootstrap passed; repeat startup unverified |
 | Report boundary | Local credential scan passed; CI upload is limited to text JUnit/Cucumber/coverage data | Upload unverified |
 
-The initial source commit establishes a baseline, but a literal clean-clone test, PR base-contract comparison and GitHub workflow run have not been performed. The current Compose viewer click-through subsequently passed for admin Edge and customer Chrome. The runner uses pinned amd64 Bookworm for actual branded browsers; UBI9 remains the PKI, Go runtime and Python base. Full-stack details and exact commands are in [completion note 12](completion/12-ci-handoff.md) and the [manual continuation](completion/10-manual-browser.md).
+The initial source commit establishes a baseline. An actual PR base-contract comparison has not run because the trigger was a push, and a literal clean-clone/repeat-startup check remains open. The current Compose viewer click-through passed for admin Edge and customer Chrome. The runner uses pinned amd64 Bookworm for actual branded browsers; UBI9 remains the PKI, Go runtime and Python base. The [native CI continuation](completion/12-native-linux-ci.md) records the first GitHub run and refresh; earlier full-stack commands are in [completion note 12](completion/12-ci-handoff.md).
 
 ## Environment and candidates
 
 Observed host: macOS arm64, Docker Desktop Engine 29.8.0, Compose 5.5.1;
 Docker server reports aarch64. Only local desktop/default contexts are configured.
-Native Linux amd64 was unavailable and the user chose to skip it; it remains unverified.
+No separate native Linux amd64 Docker context exists locally. GitHub Actions is now the native Linux verification path; its first run is partial.
 
-The 2026-10-09 context recheck found only `default` and `desktop-linux`; both `docker info` and `docker --context default info` report `linux aarch64 docker-desktop`. No native amd64 engine was available for the remaining CI or operator platform boxes. The two current Compose manual-viewer selections were human-confirmed on Apple Silicon emulation after this table's original Prompt 12 run.
+The 2026-10-09 context recheck found only `default` and `desktop-linux`; both `docker info` and `docker --context default info` report `linux aarch64 docker-desktop`. No native amd64 engine was available locally. The two current Compose manual-viewer selections were human-confirmed on Apple Silicon emulation after this table's original Prompt 12 run.
 
 - UBI9 9.6 digest `sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc`;
   base provides OpenSSL 3.2.2-6.el9_5.1. Verified UBI repositories cannot resolve

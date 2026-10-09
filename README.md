@@ -1,6 +1,6 @@
 # Magic Shop certificate prototype
 
-This repository is a local teaching prototype. Start with the [teaching guide](docs/teaching-guide.md) for container-only startup, selected-user certificate login, tests, troubleshooting and reset. The [implementation guide](docs/README.md) tracks the three-language, OpenAPI-backed shop and acceptance evidence. The [agent adoption prompts](docs/agent-adoption-prompts.md) explain how another project can adapt the certificate tests. The [certificate-login spike](spikes/certificate-login/README.md) and all three live business providers passed on Apple Silicon using amd64 emulation; native Linux amd64 was skipped at the user's request and remains unverified.
+This repository is a local teaching prototype. Start with the [teaching guide](docs/teaching-guide.md) for container-only startup, selected-user certificate login, tests, troubleshooting and reset. The [implementation guide](docs/README.md) tracks the three-language, OpenAPI-backed shop and acceptance evidence. The [agent adoption prompts](docs/agent-adoption-prompts.md) explain how another project can adapt the certificate tests. The [certificate-login spike](spikes/certificate-login/README.md) and all three live business providers passed on Apple Silicon using amd64 emulation; native Linux GitHub Actions verification has begun and remains incomplete.
 
 The root pnpm workspace contains the certificate-authenticated Vue shop, a
 private local Keycloak package, Go catalog, Node customer and Python insights
@@ -20,9 +20,9 @@ Package installation, builds, database setup, certificate operations and tests r
 
 ## Continuous integration
 
-The GitHub Actions workflow is configured for pushes, pull requests and manual dispatch on Linux amd64. It uses read-only repository permissions and pinned actions. All dependency installation, builds and tests run in containers with pinned images. No GitHub run has occurred; the user chose to skip native Linux verification, so its behavior remains unverified.
+The GitHub Actions workflow runs on pushes, pull requests and manual dispatch on Linux amd64. It uses read-only repository permissions and pinned actions. All dependency installation, builds and tests run in containers with pinned images. The [first native run](https://github.com/orieken/testing-with-certs/actions/runs/37976084152) passed static/service checks and isolated stack startup, then stopped before contracts and browsers because Google removed the old pinned Chrome version from its signed apt index. The browser pin has been refreshed and the full rerun is pending.
 
-The workflow gates on static builds, OpenAPI lint/generated drift and a PR base comparison, then starts an isolated healthy Compose project. It runs live Playwright contracts and security checks before the real Chrome/Edge × Playwright Test/Cucumber × customer/admin matrix, scans artifacts and uploads text-only JUnit/Cucumber/coverage results. Local WebM videos remain on the developer machine. The equivalent static and live matrix passed on Apple Silicon amd64 emulation; the GitHub workflow itself has not been executed.
+The workflow gates on static builds, OpenAPI lint/generated drift and a PR base comparison, then starts an isolated healthy Compose project. It runs live Playwright contracts and security checks before the real Chrome/Edge × Playwright Test/Cucumber × customer/admin matrix, scans artifacts and uploads text-only JUnit/Cucumber/coverage results. Local WebM videos remain on the developer machine. The equivalent static and live matrix passed on Apple Silicon amd64 emulation; the GitHub integration matrix has not yet completed.
 
 Run the same checks locally from the repository root:
 
@@ -34,4 +34,4 @@ docker build --platform linux/amd64 -f services/insights-api/Containerfile .
 docker compose -f infra/compose.yaml --profile '*' config --quiet
 ```
 
-No repository secrets are required by the CI workflow. The initial commit establishes a source baseline, but the native Linux workflow remains unexecuted by user choice. An actual pull-request base comparison has not been run.
+No repository secrets are required by the CI workflow. The initial commit establishes a source baseline. The actual pull-request base comparison has not been run because this was a push, not a pull request.

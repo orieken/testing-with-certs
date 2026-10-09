@@ -1,8 +1,8 @@
 # System and infrastructure workflows
 
-Status: the nine main workflows describe the full-stack design. Prompts 03–10 infrastructure, Keycloak provisioning, local package adapters, all three business providers, the integrated Vue UI and selected-user manual desktop are observed on Apple Silicon amd64 emulation. Prompt 11 shared Saturday customer/admin teaching examples pass in Playwright Test and Cucumber under both real Chrome and Edge; a shopkeeper inventory example passes in Playwright Test under both browsers. Concurrent two-worker customer/admin runs, isolated service-scope and signing-key rotation checks, and the live signed JWT-01 failure matrix passed. Prompt 12's static, live contract, security and eight browser/runner/identity CI-equivalent selections passed locally; the user chose to skip native GitHub Linux execution, which remains unverified. See [architecture](architecture.md), [authentication](authentication.md), and the [test matrix](test-plan.md) for detailed rules.
+Status: the nine main workflows describe the full-stack design. Prompts 03–10 infrastructure, Keycloak provisioning, local package adapters, all three business providers, the integrated Vue UI and selected-user manual desktop are observed on Apple Silicon amd64 emulation. Prompt 11 shared Saturday customer/admin teaching examples pass in Playwright Test and Cucumber under both real Chrome and Edge; a shopkeeper inventory example passes in Playwright Test under both browsers. Concurrent two-worker customer/admin runs, isolated service-scope and signing-key rotation checks, and the live signed JWT-01 failure matrix passed. Prompt 12's static, live contract, security and eight browser/runner/identity CI-equivalent selections passed locally. The first native GitHub Linux run passed static jobs and stack startup, then stopped before live contracts and browsers at an unavailable old Chrome pin; the refreshed-pin rerun is pending. See [architecture](architecture.md), [authentication](authentication.md), and the [test matrix](test-plan.md) for detailed rules.
 
-Solid arrows describe requests or ordered actions. Dotted arrows in the infrastructure diagram describe credential provisioning/mounts. A box inside a container group is a component or logical database, not an additional container. The shop/auth ports shown are the observed Compose values; the configured GitHub Linux workflow was skipped and has not run.
+Solid arrows describe requests or ordered actions. Dotted arrows in the infrastructure diagram describe credential provisioning/mounts. A box inside a container group is a component or logical database, not an additional container. The shop/auth ports shown are the observed Compose values; the first GitHub Linux workflow ran only through stack startup.
 
 ## 1. Containers, routing and persistent storage
 
@@ -324,15 +324,15 @@ The request contexts use the real providers and exact-origin client certificates
 
 ## 9. Isolated CI gate and report boundary
 
-The workflow is implemented in `.github/workflows/ci.yml`. Its static checks, live contracts/security suite and all eight customer/admin combinations passed in a disposable Compose project on Apple Silicon amd64 emulation. The user chose to skip the native Linux GitHub run; the actual pull-request base comparison and artifact upload also remain unobserved. The configured CI host would control Docker while signing keys, user leaves and service credentials stay in project-scoped volumes and scoped containers. The report scanner precedes upload.
+The workflow is implemented in `.github/workflows/ci.yml`. Its static checks, live contracts/security suite and all eight customer/admin combinations passed in a disposable Compose project on Apple Silicon amd64 emulation. The first GitHub Linux push passed static jobs and isolated stack/realm startup. Its runner build failed on the removed Chrome 154 apt package, so native contracts, security, browsers and artifact upload remain unobserved pending the refreshed-pin rerun. The actual pull-request base comparison remains unobserved because this was a push. The CI host controls Docker while signing keys, user leaves and service credentials stay in project-scoped volumes and scoped containers. The report scanner precedes upload.
 
 ```mermaid
 flowchart TD
-  Trigger["Configured GitHub Linux trigger; run skipped and unverified"] --> Static["Observed locally: pinned builds, types, units, OpenAPI drift, architecture and complexity gates"]
+  Trigger["Observed GitHub Linux push; full integration pending"] --> Static["Observed on Linux: pinned builds, types, units, OpenAPI drift, architecture and complexity gates"]
   Static --> Base{"Pull request with existing base bundles?"}
   Base -->|"Yes: planned live PR check"| Compare["Conservative existing-operation, schema, origin and auth comparator"]
   Base -->|"No first baseline"| Compose
-  Compare --> Compose["Observed locally: unique LAB_PROJECT, one-shot PKI/secrets/DB/realm jobs, healthy stack"]
+  Compare --> Compose["Observed on Linux: unique LAB_PROJECT, one-shot PKI/secrets/DB/realm jobs, healthy stack"]
   Compose --> Certs[("Isolated Docker volumes: CA key PKI-only; per-runner leaves and scoped secrets")]
   Compose --> Contracts["Observed locally: browserless Playwright live contracts, 23 operations and status gate"]
   Contracts --> Security["Observed locally: TLS, token, ownership and identity checks"]
@@ -470,7 +470,7 @@ The Prompt 03 revocation experiment used a disposable Compose project and remove
 ## Prompt 03 runner profile overlay (observed on Apple Silicon Docker)
 
 The `test` and `manual` profiles use the same pinned Bookworm amd64 image with
-Chrome 154.0.8037.97-1, Edge 154.0.4258.62-1 and Playwright 1.61.0. The
+Chrome 155.0.8059.39-1, Edge 154.0.4258.62-1 and Playwright 1.61.0. The
 browser image runs as UID 1000. Its signed package dependency closure is pinned
 in `testing/container/apt.lock`; the public server CA enters its NSS database,
 and Node's Playwright request client uses the same CA through

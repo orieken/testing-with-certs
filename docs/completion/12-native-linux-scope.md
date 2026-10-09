@@ -27,3 +27,5 @@ The digest-pinned Mermaid container extracted and rendered all 21 architecture/w
 ## Decision, limits and next dependency
 
 The written GitHub workflow stays in the repository as an unexecuted reference. Its actual Linux behavior, report upload and PR-base contract comparison are unverified. This repository also has no initial commit, and the user prohibited committing as a side effect, so a literal clean clone or real pull-request base comparison was not run. No further native Linux work is scheduled under the current request. The local prototype and its completion evidence are the delivered scope; platform claims must continue to say **unverified** unless the user later reopens native Linux testing.
+
+The user later authorized an initial commit, push and native Linux verification through GitHub Actions. This historical scope decision is superseded for CI work by the [native Linux continuation](12-native-linux-ci.md); the original skipped result remains accurate for this note's date and does not become a passing result retroactively.
