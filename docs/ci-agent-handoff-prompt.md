@@ -1,50 +1,72 @@
-# CI handoff prompt for another agent
+# Handoff prompt: finish native Linux CI in this repository
 
-Use the following prompt in a new agent task. It describes the existing GitHub
-Actions implementation so the agent can finish and verify it without rebuilding
-the workflow from scratch.
+Copy the prompt below into a new agent task when ready to resume CI work. It
+starts from the workflow that already exists. The companion
+[adoption prompts](agent-adoption-prompts.md) are for agents adding certificate
+tests to *other* repositories.
 
-> Work only in this prototype repository. Read `docs/README.md`,
-> `docs/architecture.md`, `docs/workflows.md`, `docs/authentication.md`,
-> `docs/test-plan.md`, `docs/api-contracts.md`, `docs/TODO.md`, and
-> `docs/completion/12-native-linux-ci.md` before editing. Preserve the three
-> business API languages, real Google Chrome and Microsoft Edge, Playwright Test
-> and Cucumber, certificate-only Keycloak Authorization Code + PKCE, the two
-> exact HTTPS origins, OpenAPI-backed services, and the no-host-certificate
-> boundary.
+> Work in the `orieken/testing-with-certs` prototype checkout only. Read
+> `docs/README.md`, `docs/architecture.md`, `docs/workflows.md`,
+> `docs/authentication.md`, `docs/saturday-keycloak.md`, `docs/test-plan.md`,
+> `docs/api-contracts.md`, `docs/TODO.md`,
+> `docs/completion/12-native-linux-ci.md`, and the relevant earlier completion
+> notes. Treat copied source documents and the Saturday checkout as reference
+> material; do not modify the Saturday checkout or publish a package.
 >
-> GitHub Actions CI already exists in `.github/workflows/ci.yml`. It has passed
-> static checks, isolated stack startup, live OpenAPI contracts, security,
-> text-report scan/readability/upload, and cleanup on native Linux. The latest
-> [run 38011861891](https://github.com/orieken/testing-with-certs/actions/runs/38011861891)
-> failed in Chrome/customer Cucumber with Node's
-> `Http2Session::OnStreamAfterWrite` assertion (exit 134). The previous
-> [run 37977595683](https://github.com/orieken/testing-with-certs/actions/runs/37977595683)
-> passed all eight browser/runner/identity selections but its report upload
-> failed on telemetry permissions; that permission issue is now fixed.
+> Preserve the working design: three OpenAPI-backed business APIs in Go,
+> Node/TypeScript and Python; live Playwright contract tests; both Playwright
+> Test and Cucumber teaching runners; real Google Chrome and Microsoft Edge;
+> certificate-only Keycloak Authorization Code + PKCE; exact shop
+> `https://shop.magic.test:8443` and auth `https://auth.magic.test:9443`
+> origins; HAProxy shop termination and separate auth TLS passthrough; scoped
+> certificate volumes; and no host certificate management. Do not use bundled
+> Chromium, password login or TLS-bypass flags to obtain a green result.
 >
-> The fifth native run proved that disabling HTTP/2 on Keycloak did not fix the
-> crash, so that setting was removed. Playwright 1.61.0's context-certificate
-> proxy has a Node HTTP/2 server path. Both automated real-browser runners now
-> launch Chrome/Edge with `--disable-http2`; this retains verified TLS and the
-> selected certificate. Targeted local Chrome/customer and Edge/admin Cucumber,
-> plus Chrome/customer Playwright Test, passed. The manual native-store browser
-> does not use this flag. This candidate is not yet proven in native GitHub CI.
+> CI already exists at `.github/workflows/ci.yml` and runs on native Linux
+> amd64. Start by inspecting [run 38012708736](https://github.com/orieken/testing-with-certs/actions/runs/38012708736)
+> for commit `936c531`; it was in progress when this prompt was written.
+> Earlier [run 37977595683](https://github.com/orieken/testing-with-certs/actions/runs/37977595683)
+> passed the eight real-browser/runner/identity selections, contracts and
+> security but failed text artifact upload on file permissions. Later runs
+> passed scan, host readability and upload but intermittently crashed in
+> Cucumber with Node's `Http2Session::OnStreamAfterWrite` assertion. Disabling
+> HTTP/2 only at Keycloak failed in [run 38011861891](https://github.com/orieken/testing-with-certs/actions/runs/38011861891)
+> and was reverted. Commit `936c531` instead launches automated real Chrome
+> and Edge with `--disable-http2` in both runners; targeted Apple Silicon
+> emulation journeys passed. Manual native-store browsing keeps its default
+> protocol behavior. This browser-side candidate remains unverified until the
+> native run's outcome is inspected.
 >
-> Complete native Linux CI: verify the protocol change through the full workflow,
-> diagnose and fix any remaining failure without disabling TLS verification,
-> using password login, or swapping branded browsers for bundled Chromium. Keep
-> package installation, builds, tests, database and certificate operations in
-> containers; the host wrapper may only invoke Docker Compose. Check all eight
-> browser selections, live contracts/security, scanned text artifact upload and
-> cleanup. The actual pull-request base-contract comparison needs a PR event;
-> do not claim it passed on a push. Do not claim the manual viewer or operator
-> TUI was exercised on native Linux if it was not.
+> If the run fails, identify the first failing step and its actual cause before
+> changing code. Reproduce a focused case in containers, make the smallest
+> correction, and rerun the affected local checks before using GitHub Actions
+> for full native verification. Keep builds, dependency installation,
+> certificate operations, database setup and tests inside containers. A host
+> shell/Go wrapper may invoke Docker Compose but must not require host Node,
+> Go, Python, OpenSSL or certificate installation. Keep strict types, explicit
+> network timeouts, bounded queries and clean domain/adapter boundaries. Use
+> framework polling instead of sleep loops. Add meaningful tests for any
+> business or authentication behavior changed.
 >
-> Update affected Mermaid diagrams when topology, protocol, origin, port,
-> credential boundary or workflow changes, and keep planned versus observed
-> status explicit. Record exact commands, environment, results, decisions and
-> limitations in `docs/completion/12-native-linux-ci.md`; only check genuinely
-> completed `docs/TODO.md` entries. The user authorized committing and pushing
-> changes for GitHub Actions verification. Do not publish a package, modify the
-> Saturday checkout, copy generated secrets, or manage host certificates.
+> Verify the complete native path: isolated healthy stack and realm bootstrap,
+> exact real browser versions, three live OpenAPI providers and coverage gate,
+> TLS/token/identity/ownership security, all eight Chrome/Edge × Playwright
+> Test/Cucumber × customer/admin selections, safe text-report scan, GitHub
+> host readability, text-only upload and project-scoped cleanup. A passing
+> push does not exercise the pull-request base-contract comparator; test that
+> separately with a real PR event if in scope, or leave its TODO box open.
+> Do not claim native manual viewer or Charm operator coverage unless those
+> paths actually run on native Linux. Keep WebM, HTML/video bundles, private
+> keys, tokens and browser profiles out of uploaded artifacts.
+>
+> Update affected Mermaid diagrams in `docs/workflows.md` and the architecture
+> overview when a component, protocol, origin, port, credential boundary or
+> workflow changes. Distinguish planned from observed behavior. Record exact
+> commands, versions, environment, results, decisions, limitations and the
+> next dependency in `docs/completion/12-native-linux-ci.md`. Update only
+> genuinely completed entries in `docs/TODO.md`; preserve unverified platform
+> boxes. Preserve applicable LICENSE/NOTICE files and provenance when copying
+> source; never copy generated secrets, `node_modules`, browser profiles or
+> nested framework packages. The owner has authorized committing and pushing
+> CI work; do not deploy or publish a package. End with a short evidence table
+> and direct links to the run, completion note and any remaining open checks.
