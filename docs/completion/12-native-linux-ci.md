@@ -93,3 +93,21 @@ git diff --check
 ```
 
 The retained local Apple Silicon project had accumulated enough orders from repeated teaching tests that the original security traversal (20 pages × 2 orders) failed one of 12 prior checks. Increasing only the page size to 20, within the OpenAPI maximum of 100, retains the 20-request bound while covering up to 400 orders. The complete local suite then passed 13/13, including the new ALPN check, no-cert, wrong hostname, missing trust, signed-token negatives and ownership. Compose configuration, `git diff --check` and rendering all 21 updated Mermaid blocks passed. The isolated GitHub security suite on the previous configuration passed; the changed configuration awaits a new isolated run. A [new-agent CI handoff prompt](../ci-agent-handoff-prompt.md) records the current setup and evidence. The next dependency is the full native Linux CI matrix and artifact path, with the pull-request base comparison and native manual viewer/operator still separate.
+
+## Fifth GitHub run and automated-browser protocol candidate
+
+[GitHub Actions run 38011861891](https://github.com/orieken/testing-with-certs/actions/runs/38011861891) used commit `7395693`. All five static/build jobs, isolated stack bootstrap, exact branded-browser version check, live OpenAPI contracts, and the security suite including `AUTH-ALPN` passed. Chrome/customer Cucumber then aborted with the same Node HTTP/2 assertion. Credential scan, host readability, text artifact upload and scoped cleanup passed. Keycloak's verified HTTP/1.1 fallback therefore did **not** prevent the crash; the Keycloak override and its temporary ALPN test were removed. The underlying race has not been conclusively diagnosed.
+
+Inspection of the installed Playwright 1.61.0 `socksClientCertificatesInterceptor` found that its context-certificate proxy parses browser ALPN and may start a Node HTTP/2 server for a browser-facing upstream error. The next bounded candidate passes Chromium's `--disable-http2` launch option to the real Chrome/Edge automated browser in both Playwright Test and Cucumber. This asks the browser to use HTTP/1.1 on the TLS connection handled by Playwright's certificate proxy; it does not disable certificate verification or change the two exact origins, selected identity, Keycloak flow or manual native-store browser. [Chromium documents the switch](https://chromium.googlesource.com/chromium/src/+/8f718e9a/components/network_session_configurator/switches.cc). The fifth failure makes the Keycloak-side change an observed unsuccessful attempt, not evidence for the new browser-side candidate.
+
+```sh
+gh run view 38011861891 --json status,conclusion,jobs,url
+./lab test --runner cucumber --browser chrome --user customer-waterdeep
+./lab test --runner cucumber --browser msedge --user shop-admin
+./lab test --runner playwright --browser chrome --user customer-waterdeep
+docker compose -f infra/compose.yaml --profile '*' config --quiet
+./infra/render-diagrams.sh
+git diff --check
+```
+
+On local Apple Silicon amd64 emulation, real Chrome/customer Cucumber passed 4 scenarios/14 steps, real Edge/admin Cucumber passed 3 scenarios/11 steps, and real Chrome/customer Playwright Test passed its four applicable tests (four role skips). All three safe artifact scans passed. Compose configuration and `git diff --check` passed, and all 21 Mermaid blocks rendered. The native Linux workflow rerun is the immediate next verification step. This local passing result does not prove the intermittent native race is fixed. The actual PR base comparison, native manual viewer/operator, and literal clean-clone/repeat-startup checks remain separate open dependencies.

@@ -16,19 +16,20 @@ the workflow from scratch.
 > GitHub Actions CI already exists in `.github/workflows/ci.yml`. It has passed
 > static checks, isolated stack startup, live OpenAPI contracts, security,
 > text-report scan/readability/upload, and cleanup on native Linux. The latest
-> [run 37982298695](https://github.com/orieken/testing-with-certs/actions/runs/37982298695)
-> failed only in the last Edge/admin Cucumber selection with Node's
+> [run 38011861891](https://github.com/orieken/testing-with-certs/actions/runs/38011861891)
+> failed in Chrome/customer Cucumber with Node's
 > `Http2Session::OnStreamAfterWrite` assertion (exit 134). The previous
 > [run 37977595683](https://github.com/orieken/testing-with-certs/actions/runs/37977595683)
 > passed all eight browser/runner/identity selections but its report upload
 > failed on telemetry permissions; that permission issue is now fixed.
 >
-> A local candidate sets `QUARKUS_HTTP_HTTP2=false` on Keycloak, preserving
-> the auth TLS passthrough and client certificates. A verified TLS probe before
-> this setting negotiated `h2`; afterward it negotiated no ALPN protocol and
-> still verified `auth.magic.test`. The previously crashing Edge/admin Cucumber
-> journey passed locally. `AUTH-ALPN` in the security suite guards that policy.
-> This candidate is not yet proven in native GitHub CI.
+> The fifth native run proved that disabling HTTP/2 on Keycloak did not fix the
+> crash, so that setting was removed. Playwright 1.61.0's context-certificate
+> proxy has a Node HTTP/2 server path. Both automated real-browser runners now
+> launch Chrome/Edge with `--disable-http2`; this retains verified TLS and the
+> selected certificate. Targeted local Chrome/customer and Edge/admin Cucumber,
+> plus Chrome/customer Playwright Test, passed. The manual native-store browser
+> does not use this flag. This candidate is not yet proven in native GitHub CI.
 >
 > Complete native Linux CI: verify the protocol change through the full workflow,
 > diagnose and fix any remaining failure without disabling TLS verification,

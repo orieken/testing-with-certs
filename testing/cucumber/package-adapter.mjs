@@ -11,7 +11,7 @@ setDefaultTimeout(20_000);
 const provider = new FileCertificateProvider('/identity', { [`lab/${selected}`]: { cert: 'cert.pem', key: 'key.pem' } });
 let browser;
 installSaturdayWorld();
-BeforeAll(async () => { browser = await chromium.launch({ channel, headless: true, timeout: 30_000 }); });
+BeforeAll(async () => { browser = await chromium.launch({ channel, headless: true, args: ['--disable-http2'], timeout: 30_000 }); });
 AfterAll(async () => { await browser?.close(); });
 installCertificateCucumberHooks({
   browser: () => { if (!browser) throw new Error('Browser not started'); return browser; },

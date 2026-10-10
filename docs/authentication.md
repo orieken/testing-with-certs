@@ -30,13 +30,13 @@ Use a short, configurable lab validity period (initial proposal: seven days); fi
 5. The Vue shell now exchanges the authorization code using PKCE through pinned `keycloak-js` 26.2.4. It initializes the adapter before the router, holds access/refresh tokens in memory and clears the callback URL; the old localStorage bearer-token implementation is gone. [Adapter guidance](https://www.keycloak.org/securing-apps/javascript-adapter)
 6. Signed-in catalog, customer and insights requests carry the selected user's access token. Each provider verifies its signature, issuer, own audience, lifetime, role and pairing with the gateway's certificate identity before returning business data. The UI clears identity and previously loaded item data on refresh failure/expiry, and returns to a signed-out shop shell after Keycloak logout using the exact registered post-logout redirect.
 
-The full-stack Keycloak listener locally uses `QUARKUS_HTTP_HTTP2=false` after two
-native CI Cucumber processes hit a Node HTTP/2/TLS assertion. The browser still
-connects over verified HTTPS with its selected client certificate through the
-same passthrough listener. A container TLS probe observed `h2` ALPN before this
-setting and no ALPN selection afterward, which falls back to HTTP/1.1; the
-focused `AUTH-ALPN` security test guards this boundary. Native CI confirmation
-of the setting is pending. [Quarkus documents the HTTP/2 setting](https://quarkus.io/version/3.27/guides/http-reference/#http2-support).
+Automated Playwright Test and Cucumber browser launches now ask real Chrome and
+Edge to use HTTP/1.1 via `--disable-http2`. Playwright 1.61.0's context-certificate
+proxy contains a Node HTTP/2 server path, and native CI twice crashed in that
+path. This is a candidate for the intermittent crash, pending a full native
+rerun. It changes neither HTTPS validation nor the selected client certificate.
+Manual native-store Chrome and Edge do not use this launch option. A prior
+Keycloak-side HTTP/2 change did not prevent the crash and was removed.
 
 Keycloak's HTTPS listener may request rather than universally require a client certificate so discovery/JWKS and confidential-client flows work. Its listener may trust both user and service client CAs, but the shop's login flow must additionally require the user CA and a valid user mapping. A service certificate with a colliding CN must never map to a human user. Verify the chosen listener trust configuration and all flow paths in prompt 01.
 

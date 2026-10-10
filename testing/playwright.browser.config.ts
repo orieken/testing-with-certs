@@ -27,6 +27,7 @@ export default defineConfig({
     browserName: 'chromium',
     channel: browser,
     headless: true,
+    launchOptions: { args: ['--disable-http2'] },
     ignoreHTTPSErrors: false,
     clientCertificates: [
       { origin: 'https://shop.magic.test:8443', ...cert },

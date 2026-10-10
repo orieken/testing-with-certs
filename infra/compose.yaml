@@ -104,7 +104,6 @@ services:
     environment:
       KC_HOSTNAME: https://auth.magic.test:9443
       KC_HTTP_ENABLED: "false"
-      QUARKUS_HTTP_HTTP2: "false"
       KC_HTTP_MANAGEMENT_SCHEME: http
       KC_HTTP_MANAGEMENT_HOST: 127.0.0.1
       KC_HTTPS_CERTIFICATE_FILE: /credentials/cert.pem

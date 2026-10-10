@@ -79,10 +79,14 @@ build and independent package consumption passed. The fourth native Linux
 run confirmed that this Node/Cucumber update alone did **not** remove the
 HTTP/2 assertion: the last Edge/admin Cucumber process still aborted.
 The report scan, host readability and text upload did pass in that run.
-Keycloak now has a locally verified `QUARKUS_HTTP_HTTP2=false` setting so the
-auth passthrough remains TLS while its upstream endpoint no longer negotiates
-HTTP/2. The focused `AUTH-ALPN` security test guards this behavior. Native
-workflow verification of that protocol candidate is pending.
+The fifth native run proved that `QUARKUS_HTTP_HTTP2=false` in Keycloak was
+insufficient: Chrome/customer Cucumber still crashed after contracts, security,
+scan, text upload and cleanup passed. That setting and its temporary ALPN test
+were removed. Pinned Playwright 1.61.0 implements context certificates through
+a Node TLS proxy that can start an HTTP/2 server on browser-side upstream errors.
+Both automated browser runners now launch real Chrome/Edge with
+`--disable-http2`, retaining verified HTTPS and selected client certificates;
+native Linux verification is pending. Manual native-store browsers remain unchanged.
 
 Resolution is an explicit maintenance task (`container/resolve-metadata.*`), not a
 build-time upgrade. Repository retention can make an old pinned version unavailable;

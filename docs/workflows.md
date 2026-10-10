@@ -1,6 +1,6 @@
 # System and infrastructure workflows
 
-Status: the nine main workflows describe the full-stack design. Prompts 03–10 infrastructure, Keycloak provisioning, local package adapters, all three business providers, the integrated Vue UI and selected-user manual desktop are observed on Apple Silicon amd64 emulation. Prompt 11 shared Saturday customer/admin teaching examples pass in Playwright Test and Cucumber under both real Chrome and Edge; a shopkeeper inventory example passes in Playwright Test under both browsers. Concurrent two-worker customer/admin runs, isolated service-scope and signing-key rotation checks, and the live signed JWT-01 failure matrix passed. Prompt 12's static, live contract, security and eight browser/runner/identity CI-equivalent selections passed locally and in one native GitHub Linux run; a later native run passed report upload but crashed in Node HTTP/2 during the last Cucumber selection. The local Keycloak HTTP/1 candidate awaits native verification. See [architecture](architecture.md), [authentication](authentication.md), and the [test matrix](test-plan.md) for detailed rules.
+Status: the nine main workflows describe the full-stack design. Prompts 03–10 infrastructure, Keycloak provisioning, local package adapters, all three business providers, the integrated Vue UI and selected-user manual desktop are observed on Apple Silicon amd64 emulation. Prompt 11 shared Saturday customer/admin teaching examples pass in Playwright Test and Cucumber under both real Chrome and Edge; a shopkeeper inventory example passes in Playwright Test under both browsers. Concurrent two-worker customer/admin runs, isolated service-scope and signing-key rotation checks, and the live signed JWT-01 failure matrix passed. Prompt 12's static, live contract, security and eight browser/runner/identity CI-equivalent selections passed locally and in one native GitHub Linux run; later native runs passed report upload but crashed in Node HTTP/2 during Cucumber. Disabling Keycloak HTTP/2 did not fix this; an automated-browser HTTP/1.1 candidate awaits native verification. See [architecture](architecture.md), [authentication](authentication.md), and the [test matrix](test-plan.md) for detailed rules.
 
 Solid arrows describe requests or ordered actions. Dotted arrows in the infrastructure diagram describe credential provisioning/mounts. A box inside a container group is a component or logical database, not an additional container. The shop/auth ports shown are the observed Compose values; the matrix and artifact upload have passed in separate native GitHub runs, but not yet together.
 
@@ -13,12 +13,12 @@ flowchart TB
   Host["Host: Docker Compose, Go operator and optional loopback viewer"] --> Runner
   Host -->|"trusted Docker control; no service socket mount"| Shop
   subgraph Front["Front network"]
-    Runner["Real Chrome or Edge; one selected user in test or manual profile"] -->|"user mTLS shop:8443"| Shop["HAProxy shop termination"]
+    Runner["Real Chrome or Edge; selected user; automated HTTP/1.1 candidate, manual native store unchanged"] -->|"user mTLS shop:8443"| Shop["HAProxy shop termination"]
     Runner -->|"certificate PKCE auth:9443"| Auth["HAProxy auth TLS passthrough"]
     Contracts["Browserless Playwright contracts and security"] --> Shop
   end
   subgraph Private["Private backend and auth networks"]
-    Auth --> KC["Certificate-only Keycloak realm; HTTP/1 candidate after TLS passthrough"]
+    Auth --> KC["Certificate-only Keycloak realm; TLS passthrough"]
     Shop -->|"service mTLS"| UI["Vue shop/admin UI"]
     Shop -->|"paired user token and gateway leaf"| Go["Go catalog API"]
     Shop -->|"paired user token and gateway leaf"| Node["Node customer API"]
@@ -324,7 +324,7 @@ The request contexts use the real providers and exact-origin client certificates
 
 ## 9. Isolated CI gate and report boundary
 
-The workflow is implemented in `.github/workflows/ci.yml`. Its static checks, live contracts/security suite and all eight customer/admin combinations passed in a disposable Compose project on Apple Silicon amd64 emulation and in the second GitHub Linux push. That run's upload failed on telemetry mode `0600`. The third run hit a Node HTTP/2 assertion in Cucumber; the fourth run passed scanned text upload but hit the same assertion on the final Edge/admin Cucumber selection. The file now uses mode `0644` and an explicit host-readability gate. A local Keycloak setting removes HTTP/2 ALPN from the certificate auth endpoint while retaining verified TLS, client certificates and passthrough; the native rerun is pending. The actual pull-request base comparison remains unobserved because these were pushes. The CI host controls Docker while signing keys, user leaves and service credentials stay in project-scoped volumes and scoped containers.
+The workflow is implemented in `.github/workflows/ci.yml`. Its static checks, live contracts/security suite and all eight customer/admin combinations passed in a disposable Compose project on Apple Silicon amd64 emulation and in the second GitHub Linux push. That run's upload failed on telemetry mode `0600`. The third and fourth runs hit a Node HTTP/2 assertion in Cucumber; the fourth passed scanned text upload. The fifth run passed security and report upload but still crashed during Chrome/customer Cucumber with Keycloak HTTP/2 disabled, so that setting was removed. Automated browser launches in both runners now request HTTP/1.1; local Chrome/customer Cucumber, Edge/admin Cucumber and Chrome/customer Playwright Test passed with it. Native rerun is pending. The actual pull-request base comparison remains unobserved because these were pushes. The CI host controls Docker while signing keys, user leaves and service credentials stay in project-scoped volumes and scoped containers.
 
 ```mermaid
 flowchart TD
@@ -336,7 +336,7 @@ flowchart TD
   Compose --> Certs[("Isolated Docker volumes: CA key PKI-only; per-runner leaves and scoped secrets")]
   Compose --> Contracts["Observed on Linux: browserless Playwright live contracts, 23 operations and status gate"]
   Contracts --> Security["Observed on Linux: TLS, token, ownership and identity checks"]
-  Security --> Candidate["Local candidate: Keycloak HTTP/2 disabled; HTTP/1 fallback over verified TLS; native rerun pending"]
+  Security --> Candidate["Local candidate: automated Chrome/Edge HTTP/1.1 through Playwright certificate proxy; native rerun pending"]
   Candidate --> Matrix["Previously observed on Linux: real Chrome and Edge; both runners; customer and admin"]
   Certs -.->|"selected mounts only"| Contracts
   Certs -.->|"selected mounts only"| Security
