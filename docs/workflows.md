@@ -324,11 +324,29 @@ The request contexts use the real providers and exact-origin client certificates
 
 ## 9. Isolated CI gate and report boundary
 
-The workflow is implemented in `.github/workflows/ci.yml`. Its static checks, live contracts/security suite and all eight customer/admin combinations passed in a disposable Compose project on Apple Silicon amd64 emulation and in the second GitHub Linux push. That run's upload failed on telemetry mode `0600`. The third and fourth runs hit a Node HTTP/2 assertion in Cucumber; the fourth passed scanned text upload. The fifth run passed security and report upload but still crashed during Chrome/customer Cucumber with Keycloak HTTP/2 disabled, so that setting was removed. Automated browser launches in both runners now request HTTP/1.1; local Chrome/customer Cucumber, Edge/admin Cucumber and Chrome/customer Playwright Test passed with it. Native rerun is pending. The actual pull-request base comparison remains unobserved because these were pushes. The CI host controls Docker while signing keys, user leaves and service credentials stay in project-scoped volumes and scoped containers.
+The workflow is implemented in `.github/workflows/ci.yml`. The complete prior
+native contracts/security/customer-admin browser workflow passed in run
+38012708736 and again at the mock-example revision in run 38026456294. Historical
+HTTP/2 failures and report-permission corrections remain in completion 12. A
+separate certificate-password job now adds nine live cases in each Chrome/Edge
+and Playwright/Cucumber selection, safe text reports and a deliberate runner
+failure cleanup control. Its new native acceptance is tracked in
+[completion 18](completion/18-native-certificate-password-ci.md); do not infer it
+from the earlier runs. The host controls Docker; signing keys, credentials and
+browser profiles remain in project volumes. PR-base checks remain a separate
+unobserved acceptance item.
 
 ```mermaid
 flowchart TD
-  Trigger["Observed GitHub Linux pushes; one full green workflow pending"] --> Static["Observed on Linux: pinned builds, types, units, OpenAPI drift, architecture and complexity gates"]
+  Trigger["Observed GitHub Linux pushes; prior complete workflow passed"] --> Static["Observed on Linux: pinned builds, types, units, OpenAPI drift, architecture and complexity gates"]
+  Static --> Lesson["New separate job: disposable certificate/password stack"]
+  Lesson --> LessonMatrix["New native acceptance: 36 live cases; Chrome/Edge and both runners"]
+  LessonMatrix --> LessonReports["Allowlisted JUnit/JSON; completeness, scan, readability, upload"]
+  LessonReports --> LessonClean["Always: verify project containers/networks/volumes removed"]
+  LessonClean --> Failure["Second disposable stack: intentional runner failure"]
+  Failure --> Fixture["Verify temporary passwords and sessions removed"]
+  Fixture --> FinalClean["Always: verify both project resource sets absent"]
+  Lesson --> FinalClean
   Static --> Base{"Pull request with existing base bundles?"}
   Base -->|"Yes: planned live PR check"| Compare["Conservative existing-operation, schema, origin and auth comparator"]
   Base -->|"No first baseline"| Compose
@@ -336,7 +354,7 @@ flowchart TD
   Compose --> Certs[("Isolated Docker volumes: CA key PKI-only; per-runner leaves and scoped secrets")]
   Compose --> Contracts["Observed on Linux: browserless Playwright live contracts, 23 operations and status gate"]
   Contracts --> Security["Observed on Linux: TLS, token, ownership and identity checks"]
-  Security --> Candidate["Local candidate: automated Chrome/Edge HTTP/1.1 through Playwright certificate proxy; native rerun pending"]
+  Security --> Candidate["Observed on Linux: automated Chrome/Edge HTTP/1.1 through Playwright certificate proxy"]
   Candidate --> Matrix["Previously observed on Linux: real Chrome and Edge; both runners; customer and admin"]
   Certs -.->|"selected mounts only"| Contracts
   Certs -.->|"selected mounts only"| Security

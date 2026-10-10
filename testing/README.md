@@ -31,8 +31,8 @@ Run the full matrix in a disposable project, from the repository root:
 
 ```sh
 LAB_PROJECT=magic-shop-password-check ./lab up
-LAB_PROJECT=magic-shop-password-check sh testing/run-certificate-password.sh
-LAB_PROJECT=magic-shop-password-check docker compose -f infra/compose.yaml -f infra/teaching.compose.yaml --profile '*' down --volumes --remove-orphans
+LAB_PROJECT=magic-shop-password-check LAB_PASSWORD_REPORTS=1 sh testing/run-certificate-password.sh
+LAB_PROJECT=magic-shop-password-check sh testing/cleanup-certificate-password.sh
 ```
 
 The wrapper runs nine shared checks under Playwright Test and Cucumber in both
@@ -49,7 +49,20 @@ LAB_PROJECT=magic-shop-password-check docker compose -f infra/compose.yaml -f in
 ```
 
 The full matrix records no video, screenshots, traces, HAR or storageState and
-exports no secrets/profiles. Its results are terminal assertions. For an opt-in
+exports no secrets/profiles. With `LAB_PASSWORD_REPORTS=1`, each browser/runner
+exports allowlisted case names and pass/fail status in JUnit and JSON at
+`artifacts/certificate-password-ci/<project>/<browser>-<runner>/`. Raw assertion
+messages, attachments, stdout/stderr, tokens and passwords are omitted. CI requires
+all nine cases in all four selections, scans the reports and checks host readability
+before text-only upload. Every selection gets fresh Docker-volume HOME/tmp; the
+exit trap removes temporary passwords/sessions and verifies credentials are gone.
+`cleanup-certificate-password.sh` removes and verifies only the named project's
+containers, networks and volumes. GitHub uses `always()` cleanup for failures and
+cancellation; forced runner termination or host loss can prevent traps, so retain
+the explicit cleanup command. The CI job also starts a second disposable stack,
+injects a runner failure after provisioning, and verifies credential/resource
+cleanup. See [completion 18](../docs/completion/18-native-certificate-password-ci.md)
+for observed native results and limits. For an opt-in
 **new passing login recording**, use a separate disposable project:
 
 ```sh

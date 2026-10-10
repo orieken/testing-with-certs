@@ -26,6 +26,10 @@ services:
       - cert-unknown-user:/identity-unknown:ro
       - cert-customer-client:/identity-service:ro
       - teaching-passwords:/test-secrets:ro
+      - teaching-home:/home/runner
+      - teaching-tmp:/tmp
     networks: [front]
 volumes:
   teaching-passwords: {}
+  teaching-home: {}
+  teaching-tmp: {}

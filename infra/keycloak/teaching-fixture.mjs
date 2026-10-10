@@ -5,7 +5,7 @@ import { randomBytes } from 'node:crypto';
 const origin = 'https://auth.magic.test:9443';
 const statePath = '/test-secrets/passwords.json';
 const action = process.argv[2];
-if (!['start', 'finish'].includes(action)) throw new Error('Expected start or finish');
+if (!['start', 'finish', 'verify'].includes(action)) throw new Error('Expected start, finish or verify');
 async function responseJson(response, expected) {
   if (response.status !== expected) throw new Error(`Fixture API returned ${response.status}`);
   const text = await response.text();
@@ -36,6 +36,15 @@ if (action === 'start') {
   writeFileSync(statePath, JSON.stringify(entries), { mode: 0o600, flag: 'wx' });
   for (const entry of entries) await admin('PUT', `/users/${entry.id}/reset-password`, { type: 'password', temporary: false, value: entry.password }, 204);
   console.log('Transient random test passwords created in Docker volume; no values logged.');
+} else if (action === 'verify') {
+  if (existsSync(statePath)) throw new Error('Transient password file remains');
+  for (const username of ['customer-waterdeep', 'shopkeeper', 'disabled-customer']) {
+    const users = await admin('GET', `/users?username=${username}&exact=true&max=2`);
+    if (users.length !== 1) throw new Error('Fixture user missing or ambiguous');
+    const credentials = await admin('GET', `/users/${users[0].id}/credentials`);
+    if (credentials.some(value => value.type === 'password')) throw new Error('Transient account password remains');
+  }
+  console.log('Transient password file and account credentials verified absent.');
 } else {
   const entries = JSON.parse(readFileSync(statePath, 'utf8'));
   for (const entry of entries) {

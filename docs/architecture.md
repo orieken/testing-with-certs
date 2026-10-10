@@ -6,6 +6,12 @@ The Prompt 11 teaching slice now shares Saturday page/element/login flow models 
 
 Prompt 13 adds a host Go operator built in a pinned container with Bubble Tea, Bubbles and Lip Gloss. Its Apple Silicon status, healthcheck and certificate metadata paths are observed. The healthcheck requires all seven core services healthy and checks the optional manual viewer when present; ephemeral test runners are judged by their exit status. The trusted host process invokes Docker Compose and the existing `lab` test commands; no application or runner receives a Docker socket. Native Linux remains unverified.
 
+A separate native CI job now runs the real certificate-plus-password teaching
+matrix with allowlisted text reports, volume-held profiles and scoped
+success/failure/cancellation cleanup. Its acceptance evidence is tracked in
+[completion 18](completion/18-native-certificate-password-ci.md); production
+authentication and API boundaries are unchanged.
+
 ## Topology
 
 ```mermaid

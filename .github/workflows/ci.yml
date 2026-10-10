@@ -155,3 +155,89 @@ jobs:
       - name: Remove only this CI project's containers and volumes
         if: always()
         run: ./lab reset --project "$LAB_PROJECT"
+
+  certificate-password:
+    name: Native certificate and password teaching matrix
+    needs: [javascript, services, compose]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      LAB_PROJECT: magic-shop-password-ci-${{ github.run_id }}-${{ github.run_attempt }}
+      LAB_PASSWORD_REPORTS: "1"
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Start disposable live teaching stack
+        run: ./lab up
+      - name: Run all 36 live certificate-password cases
+        run: sh testing/run-certificate-password.sh
+      - name: Require all 36 live cases without omissions
+        id: password_matrix
+        if: always()
+        run: |
+          set -eu
+          report_dir="$PWD/artifacts/certificate-password-ci/$LAB_PROJECT"
+          docker run --rm --platform linux/amd64 --entrypoint node \
+            -v "$report_dir:/work/artifacts/certificate-password-ci:ro" magic-shop-runner:03 \
+            /work/testing/reporting/check-password-matrix.mjs
+      - name: Scan safe reports and verify CI host readability
+        id: password_scan
+        if: always()
+        run: |
+          set -eu
+          report_dir="$PWD/artifacts/certificate-password-ci/$LAB_PROJECT"
+          test -d "$report_dir"
+          docker run --rm --platform linux/amd64 --entrypoint node \
+            -v "$report_dir:/work/artifacts/certificate-password-ci:ro" magic-shop-runner:03 \
+            /work/testing/container/check-artifacts.mjs /work/artifacts/certificate-password-ci
+          readable=0
+          for selection in chrome-playwright chrome-cucumber msedge-playwright msedge-cucumber; do
+            if [ -d "$report_dir/$selection" ]; then
+              test -r "$report_dir/$selection/junit.xml"
+              test -r "$report_dir/$selection/results.json"
+              readable=$((readable + 1))
+            fi
+          done
+          test "$readable" -gt 0
+      - name: Upload scanned readable teaching text reports
+        if: always() && steps.password_scan.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: certificate-password-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            artifacts/certificate-password-ci/${{ env.LAB_PROJECT }}/*/junit.xml
+            artifacts/certificate-password-ci/${{ env.LAB_PROJECT }}/*/results.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Remove and verify successful matrix resources
+        if: always()
+        timeout-minutes: 5
+        run: sh testing/cleanup-certificate-password.sh
+      - name: Prove fixture cleanup after an intentional runner failure
+        env:
+          LAB_PROJECT: magic-shop-password-failure-${{ github.run_id }}-${{ github.run_attempt }}
+          LAB_PASSWORD_REPORTS: "0"
+        run: |
+          set -eu
+          ./lab up
+          set +e
+          LAB_PASSWORD_FORCE_FAILURE=1 sh testing/run-certificate-password.sh > "$RUNNER_TEMP/teaching-failure.txt" 2>&1
+          result=$?
+          set -e
+          cat "$RUNNER_TEMP/teaching-failure.txt"
+          test "$result" -eq 1
+          grep -Fx "Intentional teaching runner failure observed" "$RUNNER_TEMP/teaching-failure.txt"
+          docker compose -f infra/compose.yaml -f infra/teaching.compose.yaml \
+            run --rm --no-deps teaching-fixture verify
+      - name: Always remove and verify both disposable teaching projects
+        if: always()
+        timeout-minutes: 5
+        run: |
+          set +e
+          sh testing/cleanup-certificate-password.sh
+          main_result=$?
+          LAB_PROJECT="magic-shop-password-failure-${{ github.run_id }}-${{ github.run_attempt }}" \
+            sh testing/cleanup-certificate-password.sh
+          failure_result=$?
+          test "$main_result" -eq 0 && test "$failure_result" -eq 0
