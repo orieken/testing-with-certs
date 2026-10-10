@@ -17,7 +17,7 @@ Usage: ./lab pki init|verify|renew USER|revoke USER [previous]|retire USER|migra
        ./lab manual --user SEED_USER --browser chrome|msedge
        ./lab manual stop
        ./lab viewer-password
-       ./lab user provision|inspect|disable|enable SEED_USER
+       ./lab user provision|inspect|disable|enable|set-password SEED_USER
        ./lab status|down
        ./lab reset --project PROJECT
        ./lab operator [status|healthcheck|health|telemetry|certs|logs SERVICE|diagnose|test RUNNER BROWSER USER|start SERVICE|stop SERVICE --yes|reset PROJECT --yes]
@@ -238,11 +238,14 @@ case "${1:-}" in
     ;;
   user)
     [ "$#" -eq 3 ] || usage
-    case "$2" in provision|inspect|disable|enable) ;; *) usage;; esac
+    case "$2" in provision|inspect|disable|enable|set-password) ;; *) usage;; esac
     valid_user "$3"
     [ "$3" != unknown-user ] || { echo 'Unknown-user is a negative fixture, not a Keycloak user' >&2; exit 2; }
     LAB_USER=$3
     export LAB_USER
+    if [ "$2" = set-password ]; then
+      exec docker compose -f "$compose_file" --profile operator run --rm --no-deps realm-user "$2" "$3"
+    fi
     exec docker compose -f "$compose_file" --profile operator run --rm realm-user "$2" "$3"
     ;;
   status)

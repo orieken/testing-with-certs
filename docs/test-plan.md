@@ -93,3 +93,19 @@ The implementation is complete only after all required matrix cases pass at the 
 All three live APIs must also pass the browserless Playwright contract suite against their canonical OpenAPI artifacts, with every business operation covered and no unexplained specification drift.
 
 The test report records any fallback base image, actual browser versions, and the environment on which each result was observed. Apply inherited coverage/complexity checks to authored source with a documented denominator; exclude vendored assets/generated files rather than inventing low-value tests for them.
+
+## Separate certificate + password matrix
+
+`LAB_PROJECT=magic-shop-password-15 sh testing/run-certificate-password.sh` runs nine shared checks under Playwright
+Test and Cucumber in real Chrome and Edge: signed token identity after both
+factors, wrong password, missing certificate, wrong-CA service certificate,
+disabled user, trusted unmapped user, account without a password, saved-cookie/replaced-certificate attempts,
+and certificate-only shop login/logout. TLS verification is enabled everywhere.
+Temporary random test passwords remain in a Docker volume, refuse existing
+operator passwords and are removed with fixture sessions on completion. Start that disposable project with `LAB_PROJECT=magic-shop-password-15 ./lab up`
+first. The wrapper refuses the retained default project; existing operator
+passwords also cause the fixture to fail safely.
+The full matrix has no video, screenshot, trace or storageState export; test
+output is status/assertions only. A separate opt-in recorder saves only a new
+passing login’s viewport video with password input masked; it reuses the
+successful identity checks. See [recording instructions](../testing/README.md#certificate--password-lesson). Completion 15 distinguishes runtime results.

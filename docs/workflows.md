@@ -1,8 +1,8 @@
 # System and infrastructure workflows
 
-Status: the nine main workflows describe the full-stack design. Prompts 03–10 infrastructure, Keycloak provisioning, local package adapters, all three business providers, the integrated Vue UI and selected-user manual desktop are observed on Apple Silicon amd64 emulation. Prompt 11 shared Saturday customer/admin teaching examples pass in Playwright Test and Cucumber under both real Chrome and Edge; a shopkeeper inventory example passes in Playwright Test under both browsers. Concurrent two-worker customer/admin runs, isolated service-scope and signing-key rotation checks, and the live signed JWT-01 failure matrix passed. Prompt 12's static, live contract, security and eight browser/runner/identity CI-equivalent selections passed locally and in one native GitHub Linux run; later native runs passed report upload but crashed in Node HTTP/2 during Cucumber. Disabling Keycloak HTTP/2 did not fix this; an automated-browser HTTP/1.1 candidate awaits native verification. See [architecture](architecture.md), [authentication](authentication.md), and the [test matrix](test-plan.md) for detailed rules.
+Status: the nine main workflows describe the full-stack design. Prompts 03–10 infrastructure, Keycloak provisioning, local package adapters, all three business providers, the integrated Vue UI and selected-user manual desktop are observed on Apple Silicon amd64 emulation. Prompt 11 shared Saturday customer/admin teaching examples pass in Playwright Test and Cucumber under both real Chrome and Edge; a shopkeeper inventory example passes in Playwright Test under both browsers. Concurrent two-worker customer/admin runs, isolated service-scope and signing-key rotation checks, and the live signed JWT-01 failure matrix passed. Prompt 12's static, live contract, security and eight browser/runner/identity CI-equivalent selections passed locally and in one native GitHub Linux run; later native runs passed report upload but crashed in Node HTTP/2 during Cucumber. Disabling Keycloak HTTP/2 did not fix this; the sixth run passed the complete prior native workflow with automated-browser HTTP/1.1. The new lesson has separate local evidence. See [architecture](architecture.md), [authentication](authentication.md), and the [test matrix](test-plan.md) for detailed rules.
 
-Solid arrows describe requests or ordered actions. Dotted arrows in the infrastructure diagram describe credential provisioning/mounts. A box inside a container group is a component or logical database, not an additional container. The shop/auth ports shown are the observed Compose values; the matrix and artifact upload have passed in separate native GitHub runs, but not yet together.
+Solid arrows describe requests or ordered actions. Dotted arrows in the infrastructure diagram describe credential provisioning/mounts. A box inside a container group is a component or logical database, not an additional container. The shop/auth ports shown are the observed Compose values; the prior matrix and artifact upload passed together in native GitHub run 38012708736; the new lesson has no native run yet.
 
 ## 1. Containers, routing and persistent storage
 
@@ -18,7 +18,7 @@ flowchart TB
     Contracts["Browserless Playwright contracts and security"] --> Shop
   end
   subgraph Private["Private backend and auth networks"]
-    Auth --> KC["Certificate-only Keycloak realm; TLS passthrough"]
+    Auth --> KC["Keycloak certificate-only shop + separate certificate/password lesson; TLS passthrough"]
     Shop -->|"service mTLS"| UI["Vue shop/admin UI"]
     Shop -->|"paired user token and gateway leaf"| Go["Go catalog API"]
     Shop -->|"paired user token and gateway leaf"| Node["Node customer API"]
@@ -597,4 +597,34 @@ flowchart LR
   Vue -->|"Observed: strict typecheck + Vite build in Docker"| Dist["Static preview artifact"]
   Vue -.->|"Planned at Prompt 02: same-origin bounded catalog request"| Go["Go OpenAPI catalog API; implemented at Prompt 06"]
   Vue -.->|"Planned: Keycloak login and server checkout"| Future["Authenticated full-stack UI; not implemented"]
+```
+
+## Certificate + password lesson
+
+The lesson uses a separate client and callback; the shop certificate-only sequence
+above still applies. Keycloak receives the password directly over verified TLS.
+
+```mermaid
+sequenceDiagram
+  participant O as Operator container terminal
+  participant B as Chrome or Edge
+  participant V as Vue lesson adapter
+  participant T as HAProxy auth TLS tunnel
+  participant K as Keycloak 26.4.0
+  O->>K: Set selected account password with hidden input over verified TLS
+  B->>V: Open lesson through shop mTLS :8443
+  V->>B: Start separate client Code + PKCE S256
+  B->>T: Auth :9443 with selected certificate
+  T->>K: Tunnel browser TLS
+  K->>K: REQUIRED certificate validation and enabled user mapping
+  K-->>B: Password form for certificate-selected account
+  B->>T: Submit password directly to Keycloak
+  T->>K: Tunnel password form submission
+  K->>K: REQUIRED verification of selected account password
+  K-->>B: Exact lesson callback with authorization code
+  V->>T: Exchange code with PKCE verifier
+  T->>K: Tunnel token request
+  K-->>V: Issued access token claims held in adapter memory only
+  Note over B,K: No cookie authenticator or password-only alternative
+  Note over V,K: Shop adapter never initializes on lesson callback
 ```

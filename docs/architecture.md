@@ -10,19 +10,19 @@ Prompt 13 adds a host Go operator built in a pinned container with Bubble Tea, B
 
 ```mermaid
 flowchart TB
-  CI["Observed GitHub Linux host: matrix and upload passed separately; full gate pending"] -->|"isolated LAB_PROJECT, static and live gates"| Lab
+  CI["Observed GitHub Linux host: full prior automated workflow passed"] -->|"isolated LAB_PROJECT, static and live gates"| Lab
   Operator["Observed host Go operator CLI/TUI; Docker privilege"] -->|"bounded Compose healthcheck and lab actions"| Lab
   subgraph Lab["Observed Compose lab on Apple Silicon amd64 emulation"]
     PKI["One-shot UBI9 PKI, no network"] --> CA[("CA signing state: PKI only")]
     PKI -.-> Trust[("Public roots and CRLs")]
     PKI -.-> Leaves[("Separate server, service and user leaves")]
-    Secrets["One-shot scoped secret jobs"] -.-> KC["Keycloak certificate-only realm; TLS passthrough"]
+    Secrets["One-shot scoped secret jobs"] -.-> KC["Keycloak: certificate-only shop and separate certificate + password lesson; TLS passthrough"]
     Secrets -.-> Node["Node customer API"]
     Secrets -.-> Python["Python insights API"]
     Browser["Real Chrome or Edge, selected user"] -->|"user mTLS; shop.magic.test:8443"| HA["HAProxy shop TLS termination"]
     Browser -->|"certificate PKCE; auth.magic.test:9443"| Tunnel["HAProxy auth passthrough"]
     Tunnel --> KC
-    HA -->|"gateway service mTLS"| UI["Vue shop and admin UI"]
+    HA -->|"gateway service mTLS"| UI["Vue shop/admin and isolated lesson entry point"]
     HA -->|"gateway mTLS plus paired user token"| Go["Go catalog API"]
     HA -->|"gateway mTLS plus paired user token"| Node
     HA -->|"gateway mTLS plus paired admin token"| Python
@@ -43,14 +43,14 @@ flowchart TB
     Leaves -.-> Python
     Leaves -.-> DB
     Tests["Browserless contracts/security; automated Chrome/Edge HTTP/1.1 candidate; Node 24.19/Cucumber 12.9"] --> HA
-    Tests -->|"scanned local reports; text-only CI upload planned"| Reports[("Teaching and coverage reports")]
+    Tests -->|"scanned local reports; scanned text-only CI upload passed"| Reports[("Teaching and coverage reports")]
   end
   Host["Host: optional protected loopback viewer only"] --> Browser
 ```
 
 Diagram omits several per-service credential mounts and token/JWKS calls for readability. The authentication document defines those boundaries. See [infrastructure and workflow diagrams](workflows.md) for the expanded topology, startup, authentication, business requests and runner lifecycle.
 
-The observed GitHub CI host invoked Docker without receiving a certificate or signing key. Its isolated project created certificate volumes and bootstrapped the realm. After an exact Chrome pin refresh, the second run passed static OpenAPI checks, live contracts/security, all eight browser selections, the credential scan and cleanup; its text-only upload failed because a Cucumber telemetry file had mode `0600`. The third run reached Cucumber and crashed in Node HTTP/2. The fourth run, with Node 24.19/Cucumber 12.9 and corrected telemetry permissions, passed text-only upload but crashed in Node HTTP/2 on the last Edge/admin Cucumber selection. The fifth run crashed in Chrome/customer Cucumber despite Keycloak HTTP/2 being disabled. That Keycloak setting was removed; limiting only the automated branded browsers to HTTP/1.1 is the next Linux candidate. Verified TLS, selected client certificates, auth passthrough and manual native-store browsers remain intact. WebM and HTML/video bundles remain local.
+The observed GitHub CI host invoked Docker without receiving a certificate or signing key. Its isolated project created certificate volumes and bootstrapped the realm. After an exact Chrome pin refresh, the second run passed static OpenAPI checks, live contracts/security, all eight browser selections, the credential scan and cleanup; its text-only upload failed because a Cucumber telemetry file had mode `0600`. The third run reached Cucumber and crashed in Node HTTP/2. The fourth run, with Node 24.19/Cucumber 12.9 and corrected telemetry permissions, passed text-only upload but crashed in Node HTTP/2 on the last Edge/admin Cucumber selection. The fifth run crashed in Chrome/customer Cucumber despite Keycloak HTTP/2 being disabled. That Keycloak setting was removed; the sixth run passed the complete native workflow with automated branded browsers limited to HTTP/1.1. This does not conclusively identify the runtime race. Verified TLS, selected client certificates, auth passthrough and manual native-store browsers remain intact. WebM and HTML/video bundles remain local.
 
 The Vue UI serves behind verified gateway mTLS, starts certificate-only Keycloak PKCE, shows the selected identity and role, and keeps tokens in memory. Its catalog, profile/orders/widgets, checkout and admin paths reach all three live providers. Customer, shopkeeper inventory and administrator journeys passed in both real Chrome and Edge with local video recordings, including persisted widgets/notes, synced regional reporting, item details and offline map. Native NSS certificate stores and both runner adapters were proved earlier.
 
@@ -291,3 +291,29 @@ customer certificate in Chrome, then recreated its HOME with only the admin
 certificate in Edge. A disposable project proved fresh-connection service-CRL
 rejection at all three APIs while a valid gateway caller still connected. The
 full-stack business topology above remains a target.
+
+## Certificate + password teaching boundary
+
+The separate `certificate-password-spa` public client binds to a two-execution
+REQUIRED certificate/password browser flow. Its adapter owns only the lesson path
+and exact callback, with Code + PKCE S256. Keycloak owns the password form and
+credential verification. `shop-spa` retains its single REQUIRED certificate flow;
+all three business APIs retain their client allowlist and gateway/token comparison.
+The lesson shows account, subject and certificate identity from the issued token.
+`testing/run-certificate-password.sh` supplies behavioral checks shared by both runners.
+No password value or browser profile is written to the host. Operator setup uses
+hidden terminal input inside a container; bootstrap preserves existing credentials.
+
+```mermaid
+flowchart LR
+  B["Chrome or Edge with selected certificate"] --> H["Shop mTLS :8443"]
+  H --> S["Shop adapter: shop-spa /callback"]
+  H --> L["Lesson adapter: certificate-password-spa /teaching/certificate-password/callback"]
+  S --> X["Keycloak REQUIRED X509 only"]
+  L --> T["Auth TLS passthrough :9443"]
+  T --> XP["Keycloak REQUIRED X509 then password form"]
+  Operator["Hidden interactive input inside container"] --> KC["Keycloak account password credential"]
+  KC --> XP
+  XP --> M["Lesson token in memory; identity display"]
+  X --> APIs["Shop token and gateway certificate identity comparison"]
+```

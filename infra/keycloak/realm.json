@@ -24,6 +24,30 @@
       "authenticatorFlow": false,
       "userSetupAllowed": false
     }]
+  },
+  {
+    "id": "certificate-password-browser",
+    "alias": "certificate-password-browser",
+    "providerId": "basic-flow",
+    "topLevel": true,
+    "builtIn": false,
+    "authenticationExecutions": [
+      {
+        "authenticator": "auth-x509-client-username-form",
+        "authenticatorConfig": "certificate-config",
+        "requirement": "REQUIRED",
+        "priority": 10,
+        "authenticatorFlow": false,
+        "userSetupAllowed": false
+      },
+      {
+        "authenticator": "auth-password-form",
+        "requirement": "REQUIRED",
+        "priority": 20,
+        "authenticatorFlow": false,
+        "userSetupAllowed": false
+      }
+    ]
   }],
   "browserFlow": "certificate-browser",
   "authenticatorConfig": [{"alias":"certificate-config","config":{
@@ -61,6 +85,72 @@
       {"name":"catalog-audience","protocol":"openid-connect","protocolMapper":"oidc-audience-mapper","config":{"included.custom.audience":"catalog-api","access.token.claim":"true","id.token.claim":"false"}},
       {"name":"customer-audience","protocol":"openid-connect","protocolMapper":"oidc-audience-mapper","config":{"included.custom.audience":"customer-api","access.token.claim":"true","id.token.claim":"false"}},
       {"name":"insights-audience","protocol":"openid-connect","protocolMapper":"oidc-audience-mapper","config":{"included.custom.audience":"insights-api","access.token.claim":"true","id.token.claim":"false"}}
+    ]
+  },
+  {
+    "clientId": "certificate-password-spa",
+    "publicClient": true,
+    "standardFlowEnabled": true,
+    "directAccessGrantsEnabled": false,
+    "implicitFlowEnabled": false,
+    "serviceAccountsEnabled": false,
+    "redirectUris": [
+      "https://shop.magic.test:8443/teaching/certificate-password/callback"
+    ],
+    "webOrigins": [
+      "https://shop.magic.test:8443"
+    ],
+    "attributes": {
+      "pkce.code.challenge.method": "S256",
+      "post.logout.redirect.uris": "https://shop.magic.test:8443/teaching/certificate-password"
+    },
+    "authenticationFlowBindingOverrides": {
+      "browser": "certificate-password-browser"
+    },
+    "protocolMappers": [
+      {
+        "name": "certificate-identity",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usermodel-attribute-mapper",
+        "config": {
+          "user.attribute": "cert_identity",
+          "claim.name": "cert_identity",
+          "jsonType.label": "String",
+          "multivalued": "false",
+          "access.token.claim": "true",
+          "id.token.claim": "false"
+        }
+      },
+      {
+        "name": "catalog-audience",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-audience-mapper",
+        "config": {
+          "included.custom.audience": "catalog-api",
+          "access.token.claim": "true",
+          "id.token.claim": "false"
+        }
+      },
+      {
+        "name": "customer-audience",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-audience-mapper",
+        "config": {
+          "included.custom.audience": "customer-api",
+          "access.token.claim": "true",
+          "id.token.claim": "false"
+        }
+      },
+      {
+        "name": "insights-audience",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-audience-mapper",
+        "config": {
+          "included.custom.audience": "insights-api",
+          "access.token.claim": "true",
+          "id.token.claim": "false"
+        }
+      }
     ]
   }]
 }

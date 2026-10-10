@@ -8,6 +8,7 @@
         </router-link>
         <nav aria-label="Shop" class="flex flex-wrap gap-4 text-dnd-parchment font-magical items-center">
           <router-link to="/" class="hover:text-dnd-gold transition-colors text-lg" data-testid="shop-link">Shop</router-link>
+          <a href="/teaching/certificate-password" class="hover:text-dnd-gold">Certificate + password lesson</a>
           <router-link to="/locations" class="hover:text-dnd-gold transition-colors text-lg" data-testid="locations-link">Locations</router-link>
           <router-link to="/cart" class="hover:text-dnd-gold transition-colors text-lg flex items-center gap-2" data-testid="cart-link">
             <span>Cart</span>

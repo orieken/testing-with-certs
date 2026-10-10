@@ -1,6 +1,6 @@
 # Teaching guide: certificate-authenticated Magic Shop
 
-This prototype keeps the browser, certificate authority, user certificates, PostgreSQL and Keycloak inside Docker. The host needs Docker Compose and a shell; it does not need Node, Go, Python, OpenSSL, a trusted lab CA or a client certificate. The shop and auth origins exist on the Compose front network as `https://shop.magic.test:8443` and `https://auth.magic.test:9443`. Only the optional protected desktop viewer is forwarded to host loopback. Native Linux amd64 execution is still unverified; the results below are from Apple Silicon running amd64 containers under Docker Desktop emulation.
+This prototype keeps the browser, certificate authority, user certificates, PostgreSQL and Keycloak inside Docker. The host needs Docker Compose and a shell; it does not need Node, Go, Python, OpenSSL, a trusted lab CA or a client certificate. The shop and auth origins exist on the Compose front network as `https://shop.magic.test:8443` and `https://auth.magic.test:9443`. Only the optional protected desktop viewer is forwarded to host loopback. The prior automated workflow passed on native Linux amd64 in run 38012708736. The new certificate/password lesson and manual viewer/operator retain separate platform limits; the local lesson results below use Apple Silicon amd64 emulation.
 
 ## Start and choose an identity
 
@@ -20,6 +20,38 @@ Run `./lab test --runner playwright --suite contracts` first. It opens no browse
 ```
 
 Use `./lab test --runner playwright --browser chrome --user shopkeeper` for the inventory example. Playwright Test teaching runs save local HTML, JUnit and WebM under `artifacts/teaching/<run-id>/`; Cucumber saves JSON, JUnit and scenario telemetry there. `./lab record chrome customer-waterdeep` is a separate local video-focused UI run. The local reports passed a credential-file/text scan, but browser video and HTML/video bundles are intentionally excluded from CI uploads because they show the login flow. The [test matrix](test-plan.md) and [per-ID evidence](teaching-coverage.md) separate observed checks from partial ones.
+
+## Teach certificate + password authentication
+
+The separate lesson is at `/teaching/certificate-password` on the shop origin.
+Keycloak first maps the valid client certificate, then asks for that account's
+password. Both are required; there is no password-only alternative. Its separate
+client/callback prevents the shop adapter from consuming the lesson's code. The
+lesson displays the issued identity; the existing shop remains certificate-only.
+
+For manual use, run `./lab user set-password customer-waterdeep` in an interactive
+terminal, enter/confirm the password in the hidden container prompt, and open the
+lesson in that user's remote Chrome/Edge browser. Supply the password only on
+Keycloak's page. Setting it ends that account's existing Keycloak sessions.
+
+For automated verification, use a disposable project:
+
+```sh
+LAB_PROJECT=magic-shop-password-check ./lab up
+LAB_PROJECT=magic-shop-password-check sh testing/run-certificate-password.sh
+LAB_PROJECT=magic-shop-password-check docker compose -f infra/compose.yaml -f infra/teaching.compose.yaml --profile '*' down --volumes --remove-orphans
+```
+
+This runs all nine positive/negative/cookie/shop checks under both runners and
+both browsers, with temporary random passwords in Docker volumes and automatic
+password/session cleanup. The matrix does not record video. To record a fresh
+passing login, start another disposable project and run
+`LAB_PROJECT=magic-shop-password-video sh testing/record-certificate-password.sh chrome`
+after `LAB_PROJECT=magic-shop-password-video ./lab up`; use `msedge` for Edge.
+The output is a local viewport-only WebM with masked password input. Use the same
+explicit project cleanup afterward. [Testing instructions](../testing/README.md#certificate--password-lesson)
+explain recording, interrupted-fixture recovery and artifact boundaries;
+[completion 15](completion/15-certificate-password-view.md) records observed results.
 
 ## Follow a request across the boundaries
 

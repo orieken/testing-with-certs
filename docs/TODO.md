@@ -1,6 +1,6 @@
 # Implementation todo list
 
-Status: Prompts 01–11 have observed Apple Silicon amd64-emulation evidence, including all three live business APIs, the 23-operation Playwright OpenAPI coverage gate, integrated customer/admin UI, both teaching runners in Chrome and Edge, and the signed JWT-01 matrix. Prompt 12's static and isolated live CI-equivalent checks, new-volume/repeat startup, teaching guide, diagrams and local host-trust before/after audit passed. Prompt 13's Go operator passed local CLI/TUI, diagnostic and runner checks. The second GitHub Linux push passed static checks, stack startup, live contracts/security, all eight browser selections, credential scan and cleanup, but report upload failed on permissions. Later runs passed upload but hit an intermittent Node HTTP/2 crash in Cucumber. An automated-browser HTTP/1.1 candidate awaits native verification. Native manual viewer/operator, a literal clean-clone test and an actual PR-base comparison remain unverified. See [native CI continuation](completion/12-native-linux-ci.md) and [implementation prompts](implementation-prompts.md).
+Status: Prompts 01–11 have observed Apple Silicon amd64-emulation evidence, including all three live business APIs, the 23-operation Playwright OpenAPI coverage gate, integrated customer/admin UI, both teaching runners in Chrome and Edge, and the signed JWT-01 matrix. Prompt 12's static and isolated live CI-equivalent checks, new-volume/repeat startup, teaching guide, diagrams and local host-trust before/after audit passed. Prompt 13's Go operator passed local CLI/TUI, diagnostic and runner checks. The second GitHub Linux push passed static checks, stack startup, live contracts/security, all eight browser selections, credential scan and cleanup, but report upload failed on permissions. Later runs passed upload but hit an intermittent Node HTTP/2 crash in Cucumber. The sixth run 38012708736 passed the complete prior native automated workflow with browser HTTP/1.1; the new lesson still has no native CI evidence. Native manual viewer/operator, a literal clean-clone test and an actual PR-base comparison remain unverified. See [native CI continuation](completion/12-native-linux-ci.md) and [implementation prompts](implementation-prompts.md).
 
 ## Planning baseline
 
@@ -165,3 +165,12 @@ Observed partial work (does not close the runtime checks above):
 - Real payments, atomic inventory reservation, external customer messages.
 - Certificate-bound OAuth tokens and automated CA rotation.
 - Moving/publishing `saturday-keycloak` into the upstream Saturday repository.
+
+## 15 — Separate certificate + password teaching view
+
+- [x] Confirm both factors and interactive container password provisioning with the user.
+- [x] Add a separate client, REQUIRED X.509/password flow and isolated Vue callback entry.
+- [x] Keep passwords on Keycloak pages and preserve the certificate-only shop/API boundaries.
+- [x] Complete Chrome/Edge × Playwright/Cucumber positive, negative and cookie matrix; record completion 15.
+- [ ] Set the user's demo password interactively inside the container and demonstrate the lesson manually.
+- [ ] Verify the new feature in native Linux CI; prior run 38012708736 does not cover it.

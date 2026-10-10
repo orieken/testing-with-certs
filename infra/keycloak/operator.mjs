@@ -1,12 +1,13 @@
 import { X509Certificate } from 'node:crypto';
 import { readFileSync } from 'node:fs';
+import { readPassword } from './password-input.mjs';
 
 const action = process.argv[2];
 const name = process.argv[3];
 const identities = JSON.parse(readFileSync('/app/identities.json', 'utf8'));
 const selected = identities.find(value => value.username === name);
-if (!['provision', 'inspect', 'disable', 'enable'].includes(action) || !selected) {
-  throw new Error('Usage: operator.mjs provision|inspect|disable|enable SEED_USER');
+if (!['provision', 'inspect', 'disable', 'enable', 'set-password'].includes(action) || !selected) {
+  throw new Error('Usage: operator.mjs provision|inspect|disable|enable|set-password SEED_USER');
 }
 const origin = 'https://auth.magic.test:9443';
 const realm = 'magic-shop';
@@ -42,7 +43,14 @@ const user = await admin('GET', `/users/${encodeURIComponent(found[0].id)}`, und
 if (user.id !== selected.sub || user.attributes?.cert_identity?.[0] !== selected.certIdentity) {
   throw new Error('Certificate identity does not match selected Keycloak user');
 }
-if (action === 'provision') {
+if (action === 'set-password') {
+  const password = await readPassword('New teaching account password: ');
+  const confirmation = await readPassword('Confirm password: ');
+  if (password !== confirmation || password.length < 12) throw new Error('Passwords must match and contain at least 12 characters');
+  await admin('PUT', `/users/${encodeURIComponent(user.id)}/reset-password`, { type: 'password', temporary: false, value: password }, [204]);
+  await admin('POST', `/users/${encodeURIComponent(user.id)}/logout`, undefined, [204]);
+  console.log(`${name}: password set inside container; sessions terminated`);
+} else if (action === 'provision') {
   const cert = new X509Certificate(readFileSync('/identity/cert.pem'));
   if (cert.subject !== `CN=${selected.certIdentity}`) throw new Error('Issued certificate CN does not match Keycloak identity');
   const now = Date.now();

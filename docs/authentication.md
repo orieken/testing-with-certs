@@ -44,6 +44,39 @@ A trusted but unmapped user certificate can pass the shop's TLS gate and load a 
 
 Logout ends tokens/session but does not uninstall a certificate. Returning to login can authenticate again using the installed certificate. Changing user therefore creates a fresh browser profile/container rather than merely calling logout. No cookie or storageState may turn user A's certificate session into user B's session. The preview cart is now keyed by signed-in subject and cleared from view on logout; it is not an authentication store.
 
+## Separate certificate + password teaching view
+
+`https://shop.magic.test:8443/teaching/certificate-password` uses the separate public
+`certificate-password-spa` client and exact `/teaching/certificate-password/callback`.
+The `certificate-password-browser` flow has REQUIRED X.509 followed by REQUIRED
+`auth-password-form`; it has no cookie execution, username form or alternative.
+Keycloak selects the protected certificate-mapped account, then collects and verifies
+that account's password on the auth origin. Vue never collects or submits passwords.
+PKCE S256, auth TLS passthrough, both exact origins and memory-held tokens remain.
+The entry point chooses only the lesson adapter on lesson/callback paths, before
+initializing an adapter, so `shop-spa` cannot consume the other client's callback.
+Business APIs retain their `shop-spa` allowlist and certificate/token identity comparison;
+the lesson displays verified token identity and does not enable business access.
+
+The user chose interactive container setup, with no documented fixture password:
+
+```sh
+docker compose -f infra/compose.yaml build realm-bootstrap
+./lab user set-password customer-waterdeep
+```
+
+Enter and confirm a password of at least 12 characters in the container terminal.
+Input is hidden, never passed in arguments or stored on the host. Keycloak stores
+its password credential; this operation terminates that user's existing sessions.
+Normal bootstrap does not add, overwrite or remove account passwords. The shop
+remains certificate-only even for an account with a password. Account password
+provisioning is separate from certificate issuance/renewal/revocation.
+
+Pinned behavior was inspected in [Keycloak 26.4.0 PasswordForm](https://github.com/keycloak/keycloak/blob/26.4.0/services/src/main/java/org/keycloak/authentication/authenticators/browser/PasswordForm.java)
+and [its factory](https://github.com/keycloak/keycloak/blob/26.4.0/services/src/main/java/org/keycloak/authentication/authenticators/browser/PasswordFormFactory.java),
+then tested live; the newer administration guide is context, not pinned-version evidence.
+See [completion 15](completion/15-certificate-password-view.md) for observed results and limits.
+
 ## User tokens and service identities
 
 - Each API validates JWT signature against cached JWKS, exact issuer, its own expected audience, expiry/not-before, permitted algorithm, and required roles/scopes. Reject ID tokens used as API tokens. Bounded timeouts apply to JWKS refresh and network calls; unknown keys fail closed if refresh fails.

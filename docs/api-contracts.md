@@ -72,3 +72,8 @@ Target command to implement: `./lab test --runner playwright --suite contracts`.
 CI order: lint/bundle specs and check generated output, detect breaking changes, start healthy services, verify deployed contract digests, run Playwright contracts, then run browser acceptance suites. A contract failure blocks a passing build. Export safe Playwright HTML/JUnit and an operation/status coverage report with service/spec versions; exclude tokens, private keys and unfiltered request dumps.
 
 Acceptance: all three APIs have reviewed specs, their deployed contract artifacts match the expected versions, each operation has required coverage, and deliberate schema violations cause the harness to fail. Add service-specific contract tests during prompts 06–08 rather than deferring all contract testing to prompt 11.
+
+The certificate + password lesson adds no business operation or password endpoint.
+Keycloak owns its form. Business providers retain the `shop-spa` authorized-party
+allowlist and existing certificate/token identity comparison. Lesson tokens are
+not accepted as business API credentials; completion 15 records that boundary.

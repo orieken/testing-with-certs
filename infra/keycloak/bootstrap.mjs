@@ -160,6 +160,54 @@ async function ensureUsers(token) {
   console.log('Seed user IDs, unique certificate mappings and roles verified.');
 }
 
+async function ensureTeachingClient(token) {
+  const root = `/admin/realms/${realmName}`;
+  const spec = template.authenticationFlows.find(flow => flow.alias === 'certificate-password-browser');
+  let flows = (await call('GET', `${root}/authentication/flows`, token)).data;
+  if (!flows.some(flow => flow.alias === spec.alias)) {
+    await call('POST', `${root}/authentication/flows`, token, {
+      alias: spec.alias, providerId: 'basic-flow', topLevel: true, builtIn: false,
+    }, [201]);
+    for (const execution of spec.authenticationExecutions) {
+      await call('POST', `${root}/authentication/flows/${spec.alias}/executions/execution`, token,
+        { provider: execution.authenticator }, [201]);
+    }
+    const executions = (await call('GET', `${root}/authentication/flows/${spec.alias}/executions`, token)).data;
+    for (const execution of executions) {
+      await call('PUT', `${root}/authentication/flows/${spec.alias}/executions`, token,
+        { ...execution, requirement: 'REQUIRED' }, [204]);
+      if (execution.providerId === 'auth-x509-client-username-form') {
+        const config = template.authenticatorConfig[0];
+        await call('POST', `${root}/authentication/executions/${execution.id}/config`, token,
+          { ...config, alias: 'certificate-password-config' }, [201]);
+      }
+    }
+    flows = (await call('GET', `${root}/authentication/flows`, token)).data;
+  }
+  const flow = flows.find(value => value.alias === spec.alias);
+  const executions = (await call('GET', `${root}/authentication/flows/${spec.alias}/executions`, token)).data;
+  assert(executions.length === 2 && executions.every(value => value.requirement === 'REQUIRED') &&
+    executions[0].providerId === 'auth-x509-client-username-form' && executions[1].providerId === 'auth-password-form',
+    'Teaching flow must require X.509 then password, without cookie or alternative executions');
+  const config = (await call('GET', `${root}/authentication/config/${executions[0].authenticationConfig}`, token)).data;
+  assert(JSON.stringify(Object.entries(config.config).sort()) === JSON.stringify(Object.entries(template.authenticatorConfig[0].config).sort()), 'Teaching certificate validation drift');
+  const client = template.clients.find(value => value.clientId === 'certificate-password-spa');
+  const listing = (await call('GET', `${root}/clients?clientId=${client.clientId}&max=2`, token)).data;
+  assert(listing.length <= 1, 'Teaching client ambiguous');
+  if (listing.length === 0) {
+    await call('POST', `${root}/clients`, token, { ...client, authenticationFlowBindingOverrides: { browser: flow.id } }, [201]);
+  } else {
+    const current = (await call('GET', `${root}/clients/${listing[0].id}`, token)).data;
+    assert(current.authenticationFlowBindingOverrides?.browser === flow.id && current.publicClient === true &&
+      current.standardFlowEnabled === true && current.directAccessGrantsEnabled === false &&
+      current.implicitFlowEnabled === false && current.serviceAccountsEnabled === false &&
+      current.attributes?.['pkce.code.challenge.method'] === 'S256' &&
+      JSON.stringify(current.redirectUris) === JSON.stringify(client.redirectUris) &&
+      JSON.stringify(current.webOrigins) === JSON.stringify(client.webOrigins), 'Teaching client drift');
+  }
+  console.log('Separate certificate-plus-password browser client verified; passwords are operator-provisioned.');
+}
+
 async function ensureScopesAndClients(token) {
   const root = `/admin/realms/${realmName}`;
   const scopes = (await call('GET', `${root}/client-scopes`, token)).data;
@@ -191,6 +239,12 @@ async function ensureScopesAndClients(token) {
   const spa = (await call('GET', `${root}/clients?clientId=shop-spa&max=2`, token)).data;
   assert(spa?.length === 1 && spa[0].publicClient === true && spa[0].directAccessGrantsEnabled === false, 'SPA client drift');
   const spaDetail = (await call('GET', `${root}/clients/${spa[0].id}`, token)).data;
+  const flows = (await call('GET', `${root}/authentication/flows`, token)).data;
+  const shopFlow = flows.find(value => value.alias === 'certificate-browser');
+  const shopExecutions = (await call('GET', `${root}/authentication/flows/certificate-browser/executions`, token)).data;
+  assert(shopFlow && spaDetail.authenticationFlowBindingOverrides?.browser === shopFlow.id &&
+    shopExecutions.length === 1 && shopExecutions[0].requirement === 'REQUIRED' &&
+    shopExecutions[0].providerId === 'auth-x509-client-username-form', 'Shop must remain certificate-only');
   assert(spaDetail.attributes?.['pkce.code.challenge.method'] === 'S256' &&
     spaDetail.redirectUris?.length === 1 && spaDetail.redirectUris[0] === 'https://shop.magic.test:8443/callback' &&
     spaDetail.webOrigins?.length === 1 && spaDetail.webOrigins[0] === 'https://shop.magic.test:8443', 'SPA PKCE or exact origin drift');
@@ -207,5 +261,6 @@ validateManifest();
 const token = await adminToken();
 await ensureRealm(token);
 await ensureUsers(token);
+await ensureTeachingClient(token);
 await ensureScopesAndClients(token);
 console.log('Keycloak bootstrap complete.');

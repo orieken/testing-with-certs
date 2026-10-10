@@ -87,3 +87,10 @@ Provide typed exports for the core, `/playwright`, `/cucumber`, and `/cli`. Load
 ## Deferred upstream work
 
 Keep a short upstream proposal identifying generic certificate improvements versus Keycloak-specific adapters. Do not fork the complete certificate package or request upstream changes merely to unblock the prototype. Publishing, moving code into Saturday, and changing its release workflow are separate future actions.
+
+The separate certificate + password lesson keeps its page and password form
+interactions in `testing/teaching/certificate-password.mjs`, shared by Playwright
+and Cucumber. Keycloak verifies the password; the portable certificate package
+and Saturday checkout are unchanged. No password submission belongs in Vue or a
+new package token helper. See completion 15 for the separate-client callback and
+interactive provisioning decisions.

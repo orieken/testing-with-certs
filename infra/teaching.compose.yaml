@@ -1,0 +1,31 @@
+services:
+  teaching-fixture:
+    image: magic-shop-realm-bootstrap:04
+    user: "1000:1000"
+    entrypoint: [node, /app/teaching-fixture.mjs]
+    environment:
+      NODE_EXTRA_CA_CERTS: /trust/server-ca.pem
+    volumes:
+      - public-trust:/trust:ro
+      - auth-secret-admin:/secrets/admin:ro
+      - teaching-passwords:/test-secrets
+    networks: [front]
+  teaching-tests:
+    image: magic-shop-runner:03
+    platform: linux/amd64
+    user: "1000:1000"
+    environment:
+      LAB_BROWSER: ${LAB_BROWSER:-chrome}
+      NODE_EXTRA_CA_CERTS: /public/server-ca.pem
+    volumes:
+      - public-trust:/public:ro
+      - cert-customer-waterdeep:/identity-customer:ro
+      - cert-shopkeeper:/identity-shopkeeper:ro
+      - cert-customer-baldur:/identity-second-customer:ro
+      - cert-disabled-customer:/identity-disabled:ro
+      - cert-unknown-user:/identity-unknown:ro
+      - cert-customer-client:/identity-service:ro
+      - teaching-passwords:/test-secrets:ro
+    networks: [front]
+volumes:
+  teaching-passwords: {}

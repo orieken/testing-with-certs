@@ -111,3 +111,23 @@ git diff --check
 ```
 
 On local Apple Silicon amd64 emulation, real Chrome/customer Cucumber passed 4 scenarios/14 steps, real Edge/admin Cucumber passed 3 scenarios/11 steps, and real Chrome/customer Playwright Test passed its four applicable tests (four role skips). All three safe artifact scans passed. Compose configuration and `git diff --check` passed, and all 21 Mermaid blocks rendered. The native Linux workflow rerun is the immediate next verification step. This local passing result does not prove the intermittent native race is fixed. The actual PR base comparison, native manual viewer/operator, and literal clean-clone/repeat-startup checks remain separate open dependencies.
+
+## Sixth run: full native workflow passed
+
+Inspected 2026-10-09 America/Chicago using:
+
+```sh
+gh run view 38012708736 --repo orieken/testing-with-certs --json status,conclusion,jobs,url
+```
+
+[Run 38012708736](https://github.com/orieken/testing-with-certs/actions/runs/38012708736)
+completed with `success`: all five static/build jobs and the isolated native
+Linux integration job passed. Integration passed startup/realm bootstrap,
+branded-browser version recording, live contracts/coverage, security, all eight
+Chrome/Edge × Playwright/Cucumber × customer/admin selections, credential scan,
+host readability, text-only upload and scoped cleanup. This is the first observed
+single green workflow after the browser-side HTTP/1.1 change. It is passing
+regression evidence, not a conclusive diagnosis of the intermittent HTTP/2 race.
+The PR-base comparison was skipped on this push run. Native manual viewer/operator,
+a literal clean-clone exercise, and the new certificate/password feature remain
+separate unverified Linux paths. Completion 15 records local feature verification.
