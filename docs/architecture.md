@@ -1,6 +1,6 @@
 # Architecture and implementation decisions
 
-Status: Prompts 01–10 run PKI, PostgreSQL, HAProxy, an integrated Vue UI, live Go catalog, Node customer and Python insights providers, real Chrome/Edge runner profiles including the selected-user manual desktop, a certificate-only Keycloak realm with six seed users, and a private local package exercised by both test runners. The Vue UI uses Keycloak Authorization Code + PKCE and memory-held tokens. Customer checkout/widgets and administrator regional reporting/follow-ups passed in both real Chrome and Edge on Apple Silicon emulation. All three providers validate signed user requests; Go and Node pair scoped service requests with caller certificates. A GitHub Linux run passed contracts, security and the full real-browser matrix but failed report upload; the next run hit a Node HTTP/2 assertion during Cucumber. The pinned Node/Cucumber runner update awaits native CI validation.
+Status: Prompts 01–10 run PKI, PostgreSQL, HAProxy, an integrated Vue UI, live Go catalog, Node customer and Python insights providers, real Chrome/Edge runner profiles including the selected-user manual desktop, a certificate-only Keycloak realm with six seed users, and a private local package exercised by both test runners. The Vue UI uses Keycloak Authorization Code + PKCE and memory-held tokens. Customer checkout/widgets and administrator regional reporting/follow-ups passed in both real Chrome and Edge on Apple Silicon emulation. All three providers validate signed user requests; Go and Node pair scoped service requests with caller certificates. One GitHub Linux run passed contracts, security and the full real-browser matrix but failed report upload; the latest run passed upload but hit a Node HTTP/2 assertion during the last Cucumber selection. A local Keycloak HTTP/1 candidate awaits native CI validation.
 
 The Prompt 11 teaching slice now shares Saturday page/element/login flow models between Playwright Test and Cucumber. Both runners passed customer and admin examples in both branded browsers. Separate customer Chrome and admin Edge jobs also passed concurrently with two Playwright workers each and distinct local reports. Isolated signing-key rotation and signed JWT-01 negative-claim checks passed live against all three long-running APIs. Prompt 12 defines a Linux CI gate and passed its containerized static, contract, security and eight browser/runner/identity selections locally on Apple Silicon emulation. The second GitHub Linux run also passed those test gates and cleanup, but its artifact upload failed because one scanned telemetry file was unreadable by the host runner. Both current Compose viewer identities were human-confirmed on Apple Silicon.
 
@@ -10,13 +10,13 @@ Prompt 13 adds a host Go operator built in a pinned container with Bubble Tea, B
 
 ```mermaid
 flowchart TB
-  CI["Observed GitHub Linux host: previous matrix passed; current runner rerun pending"] -->|"isolated LAB_PROJECT, static and live gates"| Lab
+  CI["Observed GitHub Linux host: matrix and upload passed separately; full gate pending"] -->|"isolated LAB_PROJECT, static and live gates"| Lab
   Operator["Observed host Go operator CLI/TUI; Docker privilege"] -->|"bounded Compose healthcheck and lab actions"| Lab
   subgraph Lab["Observed Compose lab on Apple Silicon amd64 emulation"]
     PKI["One-shot UBI9 PKI, no network"] --> CA[("CA signing state: PKI only")]
     PKI -.-> Trust[("Public roots and CRLs")]
     PKI -.-> Leaves[("Separate server, service and user leaves")]
-    Secrets["One-shot scoped secret jobs"] -.-> KC["Keycloak certificate-only realm"]
+    Secrets["One-shot scoped secret jobs"] -.-> KC["Keycloak certificate-only realm; HTTP/1 candidate locally verified"]
     Secrets -.-> Node["Node customer API"]
     Secrets -.-> Python["Python insights API"]
     Browser["Real Chrome or Edge, selected user"] -->|"user mTLS; shop.magic.test:8443"| HA["HAProxy shop TLS termination"]
@@ -42,7 +42,7 @@ flowchart TB
     Leaves -.-> Node
     Leaves -.-> Python
     Leaves -.-> DB
-    Tests["Playwright contracts/security and both browser runners; Node 24.19/Cucumber 12.9 candidate"] --> HA
+    Tests["Playwright contracts/security and both browser runners; Node 24.19/Cucumber 12.9"] --> HA
     Tests -->|"scanned local reports; text-only CI upload planned"| Reports[("Teaching and coverage reports")]
   end
   Host["Host: optional protected loopback viewer only"] --> Browser
@@ -50,7 +50,7 @@ flowchart TB
 
 Diagram omits several per-service credential mounts and token/JWKS calls for readability. The authentication document defines those boundaries. See [infrastructure and workflow diagrams](workflows.md) for the expanded topology, startup, authentication, business requests and runner lifecycle.
 
-The observed GitHub CI host invoked Docker without receiving a certificate or signing key. Its isolated project created certificate volumes and bootstrapped the realm. After an exact Chrome pin refresh, the second run passed static OpenAPI checks, live contracts/security, all eight browser selections, the credential scan and cleanup. The text-only upload failed because a Cucumber telemetry file had mode `0600`, unreadable by the GitHub host runner. A third run reached Cucumber and crashed in Node HTTP/2. That public, scanned metadata file now has mode `0644`, and CI checks host readability before upload. The Node/Cucumber runner update passed local browser checks but not yet Linux CI. WebM and HTML/video bundles remain local; successful artifact upload remains unverified pending rerun.
+The observed GitHub CI host invoked Docker without receiving a certificate or signing key. Its isolated project created certificate volumes and bootstrapped the realm. After an exact Chrome pin refresh, the second run passed static OpenAPI checks, live contracts/security, all eight browser selections, the credential scan and cleanup; its text-only upload failed because a Cucumber telemetry file had mode `0600`. The third run reached Cucumber and crashed in Node HTTP/2. The fourth run, with Node 24.19/Cucumber 12.9 and corrected telemetry permissions, passed text-only upload but crashed in Node HTTP/2 on the last Edge/admin Cucumber selection. The local Keycloak HTTP/1 candidate retains verified TLS, client certificates and auth passthrough, and awaits Linux CI verification. WebM and HTML/video bundles remain local.
 
 The Vue UI serves behind verified gateway mTLS, starts certificate-only Keycloak PKCE, shows the selected identity and role, and keeps tokens in memory. Its catalog, profile/orders/widgets, checkout and admin paths reach all three live providers. Customer, shopkeeper inventory and administrator journeys passed in both real Chrome and Edge with local video recordings, including persisted widgets/notes, synced regional reporting, item details and offline map. Native NSS certificate stores and both runner adapters were proved earlier.
 

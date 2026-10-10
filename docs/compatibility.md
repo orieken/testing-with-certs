@@ -4,22 +4,23 @@ Status: Apple Silicon emulation passed the browser/authentication thin slice,
 including a human viewer login. GitHub Actions passed native Linux static,
 contract, security and real-browser matrix checks on its second run. The
 workflow remained red because report upload could not read one Cucumber
-telemetry file; a permission fix was made. A third run crashed in Node HTTP/2
-during Cucumber, so the pinned runner update awaits a native rerun. Manual viewer/operator native
+telemetry file; a permission fix was made. The fourth run uploaded reports but
+crashed in Node HTTP/2 during the last Cucumber selection. A locally verified
+Keycloak HTTP/1 candidate awaits a native rerun. Manual viewer/operator native
 paths are separate and remain unverified.
 
 ## Full-stack Prompt 12 platform update (2026-10-08 baseline; 2026-10-09 CI continuation)
 
 | Check | Apple Silicon Docker Desktop, linux/amd64 emulation | Native Linux amd64 GitHub CI |
 | --- | --- | --- |
-| Static container build, strict types, package/unit checks, OpenAPI lint and generated drift | Passed in pinned Node 24.10.0 Bookworm CI image | First three pushes passed static, spike, service-build and Compose architecture jobs |
+| Static container build, strict types, package/unit checks, OpenAPI lint and generated drift | Passed in pinned Node 24.10.0 Bookworm CI image | First four pushes passed static, spike, service-build and Compose architecture jobs |
 | Three live OpenAPI providers and 23-operation/92-status inventory | 17 live Playwright tests and full coverage gate passed in disposable `magic-shop-ci-local-12` | Second run passed live Playwright contract/coverage gate |
 | Security and eight browser/runner/identity selections | 12 security tests; real Chrome/Edge × Playwright Test/Cucumber × customer/admin passed | Second run passed live security and all eight real-browser selections |
 | Browser binaries in the runner | Historical Chrome 154.0.8037.97 and Edge 154.0.4258.62; refreshed Chrome 155.0.8059.39 and Edge 154.0.4258.62 passed local real-browser teaching smoke | Second run built and recorded refreshed real Chrome and Edge |
 | Clean new-volume and repeated startup | Disposable `magic-shop-repeat-12` created then retained realm and database marker on repeat; DB TLS/isolation and PKI/CRLs re-verified | Isolated stack startup and realm bootstrap passed; repeat startup unverified |
-| Report boundary | Local credential scan passed; CI upload is limited to text JUnit/Cucumber/coverage data | Second run scan passed but upload failed on mode `0600` Cucumber telemetry; third run crashed during browser matrix before upload |
+| Report boundary | Local credential scan passed; CI upload is limited to text JUnit/Cucumber/coverage data | Fourth run passed scan, host readability and text upload, but the last Cucumber selection crashed; the full workflow remains red |
 
-The initial source commit establishes a baseline. An actual PR base-contract comparison has not run because the triggers were pushes, and a literal clean-clone/repeat-startup check remains open. The current Compose viewer click-through passed for admin Edge and customer Chrome on Apple Silicon. The runner uses pinned amd64 Bookworm for actual branded browsers; UBI9 remains the PKI, Go runtime and Python base. The [native CI continuation](completion/12-native-linux-ci.md) records both GitHub runs and fixes; earlier full-stack commands are in [completion note 12](completion/12-ci-handoff.md).
+The initial source commit establishes a baseline. An actual PR base-contract comparison has not run because the triggers were pushes, and a literal clean-clone/repeat-startup check remains open. The current Compose viewer click-through passed for admin Edge and customer Chrome on Apple Silicon. The runner uses pinned amd64 Bookworm for actual branded browsers; UBI9 remains the PKI, Go runtime and Python base. The [native CI continuation](completion/12-native-linux-ci.md) records the GitHub runs and fixes; earlier full-stack commands are in [completion note 12](completion/12-ci-handoff.md).
 
 ## Environment and candidates
 

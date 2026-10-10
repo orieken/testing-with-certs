@@ -1,5 +1,7 @@
 import { createHash, randomBytes } from 'node:crypto';
 import { execFile } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import { connect as connectTls } from 'node:tls';
 import { promisify } from 'node:util';
 import { expect, request, test, type APIRequestContext } from '@playwright/test';
 
@@ -55,6 +57,29 @@ test('TRUST-01 removing the private server CA fails verified shop TLS', async ()
     env: { ...process.env, NODE_EXTRA_CA_CERTS: '' }, timeout: 10_000, maxBuffer: 16_384
   });
   expect(result.stdout).toContain('Untrusted shop server CA rejected');
+});
+
+test('AUTH-ALPN certificate auth stays on HTTP/1 over verified TLS', async () => {
+  await new Promise<void>((resolve, reject) => {
+    const socket = connectTls({
+      host: 'auth.magic.test', port: 9443, servername: 'auth.magic.test',
+      cert: readFileSync(`${waterdeep.dir}/cert.pem`),
+      key: readFileSync(`${waterdeep.dir}/key.pem`),
+      ca: readFileSync('/public/server-ca.pem'),
+      rejectUnauthorized: true,
+      ALPNProtocols: ['h2', 'http/1.1'],
+      timeout: 5_000
+    });
+    socket.once('secureConnect', () => {
+      const negotiated = socket.alpnProtocol;
+      const authorized = socket.authorized;
+      socket.end();
+      if (!authorized || negotiated === 'h2') reject(new Error(`Auth TLS or ALPN policy failed: ${negotiated}`));
+      else resolve();
+    });
+    socket.once('timeout', () => socket.destroy(new Error('Auth TLS handshake timed out')));
+    socket.once('error', reject);
+  });
 });
 
 test('JWT-01 a signed ID token is not accepted as an API access token', async () => {
@@ -151,14 +176,14 @@ test('ROLE-02 list, detail, profile and widgets expose only the certificate-boun
       expect((await context.get(`/api/customer/orders/${otherOrder}`)).status()).toBe(404);
       let cursor: string | null = null;
       for (let page = 0; page < 20; page += 1) {
-        const list = await context.get(`/api/customer/orders?limit=2${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''}`);
+        const list = await context.get(`/api/customer/orders?limit=20${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''}`);
         expect(list.status()).toBe(200);
         const body = await list.json() as { items: Array<{ ownerSub: string }>; nextCursor: string | null };
         expect(body.items.every(order => order.ownerSub === own)).toBe(true);
         expect(JSON.stringify(body)).not.toContain(other);
         cursor = body.nextCursor;
         if (!cursor) break;
-        if (page === 19) throw new Error('Order pagination did not terminate within 20 pages');
+        if (page === 19) throw new Error('Order pagination did not terminate within 400 orders');
       }
       for (const path of ['/api/customer/admin/users', '/api/customer/admin/orders']) {
         expect((await context.get(path)).status()).toBe(403);

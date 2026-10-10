@@ -75,9 +75,14 @@ private certificate adapter's peer range accepts both the historical 11.3
 and current 12.9 majors; its dev and independent packed-consumer checks use
 12.9.0. The signed browser apt closure and Playwright 1.61.0 are unchanged.
 Local Chrome/admin and Edge/customer Cucumber journeys, frozen workspace
-build and independent package consumption passed. This is a candidate until
-the native Linux workflow and artifact upload pass; the Node assertion's exact
-race has not been proven fixed by the patch release.
+build and independent package consumption passed. The fourth native Linux
+run confirmed that this Node/Cucumber update alone did **not** remove the
+HTTP/2 assertion: the last Edge/admin Cucumber process still aborted.
+The report scan, host readability and text upload did pass in that run.
+Keycloak now has a locally verified `QUARKUS_HTTP_HTTP2=false` setting so the
+auth passthrough remains TLS while its upstream endpoint no longer negotiates
+HTTP/2. The focused `AUTH-ALPN` security test guards this behavior. Native
+workflow verification of that protocol candidate is pending.
 
 Resolution is an explicit maintenance task (`container/resolve-metadata.*`), not a
 build-time upgrade. Repository retention can make an old pinned version unavailable;

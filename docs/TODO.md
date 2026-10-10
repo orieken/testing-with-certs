@@ -128,7 +128,7 @@ Observed partial work (does not close the runtime checks above):
 ## 12 — CI and handoff
 
 - [x] Build/run isolated Compose stack in Linux amd64 CI; the second GitHub push passed startup, live contracts/security and all eight real-browser selections, plus cleanup.
-- [ ] Gate CI on OpenAPI validity, generated/spec drift, breaking changes and Playwright contract coverage before browser suites (native static, contracts and browser ordering passed; artifact upload fix and actual PR-base comparison remain unverified).
+- [ ] Gate CI on OpenAPI validity, generated/spec drift, breaking changes and Playwright contract coverage before browser suites (native static, contracts and browser ordering passed; text upload passed in the fourth run, but the matrix crashed and actual PR-base comparison remains unverified).
 - [x] Implement the conservative OpenAPI base-bundle comparison and test its unchanged, additive and changed cases in a pinned container; the actual PR base comparison awaits a pull request and CI run.
 - [x] Pass a disposable Apple Silicon CI-equivalent stack through live contracts, security, and all Chrome/Edge × Playwright/Cucumber × customer/admin selections; scan reports and remove only that project's volumes.
 - [x] Add architecture/mount/TLS checks, the 23-operation/92-status contract coverage gate, and a measured Go/TypeScript/Python complexity cap over authored source; two existing transport handlers have explicit non-increasing baselines.
