@@ -217,4 +217,4 @@ FEATURE-04–06 propose app behavior changes. They remain separate future scope 
 - [x] Keep passwords on Keycloak pages and preserve the certificate-only shop/API boundaries.
 - [x] Complete Chrome/Edge × Playwright/Cucumber positive, negative and cookie matrix; record completion 15.
 - [ ] Set the user's demo password interactively inside the container and demonstrate the lesson manually.
-- [ ] Verify the new feature in native Linux CI; prior run 38012708736 does not cover it.
+- [x] Verify the new feature in native Linux CI: 36/36 in run 38027680587 with scanned/readable uploaded reports and success/failure/cancellation cleanup evidence; see [completion 18](completion/18-native-certificate-password-ci.md). Prior run 38012708736 remains unrelated to this feature.

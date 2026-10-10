@@ -59,3 +59,7 @@ The historical audit above remains a source review. [Completion 16](completion/1
 ## Subsequent browser mock consumer evidence
 
 [Completion 17](completion/17-browser-mock-consumers.md) records 56 passing isolated browser executions across Chrome/Edge and Playwright/Cucumber, with actual recordings. The unchanged Vue build uses intercepted authentication/API responses; a separate OIDC browser consumer uses the pinned NAV mock with verified TLS and JWKS validation. This adds consumer/UI evidence only. Live login, production certificate/account pairing, API authorization and native Linux-host criteria remain open.
+
+## Subsequent native certificate-password CI evidence
+
+TEST-02 is complete in [completion 18](completion/18-native-certificate-password-ci.md): native run 38027680587 passed all 36 real authentication cases, safe-report completeness/scanning/readability/upload, and successful/intentional-failure cleanup. Deliberately cancelled run 38028333657 passed resource cleanup after healthy startup during runner build. This closes the historical CI-wiring gap above without claiming the remaining live-provider, mock/fault or PR-base criteria.

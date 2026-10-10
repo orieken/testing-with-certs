@@ -8,8 +8,9 @@ Prompt 13 adds a host Go operator built in a pinned container with Bubble Tea, B
 
 A separate native CI job now runs the real certificate-plus-password teaching
 matrix with allowlisted text reports, volume-held profiles and scoped
-success/failure/cancellation cleanup. Its acceptance evidence is tracked in
-[completion 18](completion/18-native-certificate-password-ci.md); production
+success/failure/cancellation cleanup. Its 36-case matrix, scanned upload and success/failure cleanup passed in native
+run 38027680587; cancellation cleanup passed separately in run 38028333657. See
+[completion 18](completion/18-native-certificate-password-ci.md). Production
 authentication and API boundaries are unchanged.
 
 ## Topology

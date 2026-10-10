@@ -8,6 +8,8 @@ Planning baseline: 2026-10-05. Prompt 01 proved certificate login in a bounded s
 
 Use [M00–M05 agent adoption prompts](mock-testing-adoption-prompts.md) to build the JWT, OIDC, API and recorded browser mock patterns in another app while preserving its existing authentication. The [real certificate-authentication adoption sequence](agent-adoption-prompts.md) remains a separate track.
 
+TEST-02 now has [native certificate-password evidence](completion/18-native-certificate-password-ci.md): all 36 live cases, scanned/readable text upload, successful/intentional-failure cleanup and a separate cancellation cleanup probe. The human demo password remains an open interactive task.
+
 ## Read and execute
 
 1. [Decisions and architecture](architecture.md)

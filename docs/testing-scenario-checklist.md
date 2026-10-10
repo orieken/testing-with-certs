@@ -1,6 +1,6 @@
 # Prioritized testing work and agent handoffs
 
-Implementation backlog from the [scenario audit](testing-scenario-audit.md). TEST-01–11 remain unchecked. The user prioritized the separate FEATURE-01–03 learning examples ahead of these items; their acceptance evidence is recorded below. Follow each testing item's dependencies when resuming this backlog. Checking a box requires recorded acceptance evidence, not merely code or a successful mock response.
+Implementation backlog from the [scenario audit](testing-scenario-audit.md). TEST-02 is completed with native evidence; TEST-01 and TEST-03–11 remain unchecked. The user prioritized the separate FEATURE-01–03 learning examples ahead of these items; their acceptance evidence is recorded below. Follow each testing item's dependencies when resuming this backlog. Checking a box requires recorded acceptance evidence, not merely code or a successful mock response.
 
 ## Shared instructions for every handoff
 
@@ -18,7 +18,7 @@ Append these instructions to each prompt below:
 
   **Done when:** Removing an existing 409 or 422 observation fails a meaningful gate test; all operations retain coverage; uncovered statuses or exclusions are visible; the live suite passes with its recorded exclusions.
 
-- [ ] **TEST-02 — Put certificate-plus-password coverage into native CI.** Dependencies: none; coordinates with the existing unchecked native-CI item in TODO section 15.
+- [x] **TEST-02 — Put certificate-plus-password coverage into native CI.** Dependencies: none; closes the corresponding native-CI item in TODO section 15.
 
   **Handoff prompt:** Wire the existing certificate-password runner into native Linux CI using disposable resources. Run all nine scenarios in Chrome/Edge and Playwright/Cucumber, including the certificate-only shop regression. Preserve interactive provisioning for the human demo; CI credentials stay temporary and container-held. Integrate scanned text reports and reliable cleanup on success, failure and cancellation.
 
@@ -35,6 +35,8 @@ Append these instructions to each prompt below:
   **Handoff prompt:** Reconcile stale coverage/TODO statements against completion notes and actual CI results, preserving historical context. Exercise the real pull-request base comparison for unchanged, additive and breaking contracts. Use a draft PR or authorized test branch without merging; attach any created PR to this task. Keep temporary mutations out of the final implementation.
 
   **Done when:** Actual PR-event results demonstrate acceptance/rejection against the committed base, documentation cites the evidence, and deferred checks remain unchecked. Mutation unit tests alone do not satisfy this item.
+
+TEST-02 evidence: [completion 18](completion/18-native-certificate-password-ci.md), [passing native run 38027680587](https://github.com/orieken/testing-with-certs/actions/runs/38027680587), and [deliberately cancelled cleanup probe 38028333657](https://github.com/orieken/testing-with-certs/actions/runs/38028333657). All 36 cases and text upload passed; credential/resource cleanup passed after success, intentional failure and the recorded cancellation boundary.
 
 ## Medium priority — establish tool compatibility, then scenarios
 
@@ -90,7 +92,7 @@ See [completion 16](completion/16-mocking-examples.md) and [commands and boundar
 - [x] FEATURE-03: Prism mock-only consumer uses canonical/Ajv-checked fixtures; structured errors, bounded delay, labelled invalid data and recovery observed; verified TLS to the test adapter.
 - [x] Shared example isolation: no published ports or live-app network, credential volumes removed after successful and deliberately failing runs; text reports scanned.
 
-This does **not** complete TEST-05: the bounded Prism experiment established selected mock-only response/request behavior and the TLS adapter boundary. Prism tuple/date generation, validation-proxy enforcement, upstream 501 and authenticated client-certificate forwarding were not exercised. TEST-01–11, native CI and browser/provider criteria remain open.
+This does **not** complete TEST-05: the bounded Prism experiment established selected mock-only response/request behavior and the TLS adapter boundary. Prism tuple/date generation, validation-proxy enforcement, upstream 501 and authenticated client-certificate forwarding were not exercised. The broader TEST-01 and TEST-03–11 criteria remain open; TEST-02 now has its separate native evidence.
 
 ## Completed isolated browser mock consumers
 
@@ -101,7 +103,7 @@ See [completion 17](completion/17-browser-mock-consumers.md) and [copyable comma
 - [x] Fourteen shared scenarios pass in Chrome and Edge under both Playwright and Cucumber (56 executions); each has an actual browser recording labelled as mock evidence.
 - [x] Verified TLS/mTLS test boundary, canonical Ajv fixture validation, private network, volume-held credentials/profiles, fresh contexts, exported artifact scan and successful/failing cleanup observed.
 
-These completed mock-consumer criteria do not close TEST-01–11, live login/provider requirements, production certificate identity pairing, provider PKCE enforcement or native Linux-host evidence.
+These mock-consumer criteria do not close live login/provider requirements, production certificate identity pairing, provider PKCE enforcement or native Linux-host evidence. TEST-02 is closed by its separate live native CI run; TEST-01 and TEST-03–11 remain open.
 
 ## Handoff tracking
 

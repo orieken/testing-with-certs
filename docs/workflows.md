@@ -1,6 +1,6 @@
 # System and infrastructure workflows
 
-Status: the nine main workflows describe the full-stack design. Prompts 03–10 infrastructure, Keycloak provisioning, local package adapters, all three business providers, the integrated Vue UI and selected-user manual desktop are observed on Apple Silicon amd64 emulation. Prompt 11 shared Saturday customer/admin teaching examples pass in Playwright Test and Cucumber under both real Chrome and Edge; a shopkeeper inventory example passes in Playwright Test under both browsers. Concurrent two-worker customer/admin runs, isolated service-scope and signing-key rotation checks, and the live signed JWT-01 failure matrix passed. Prompt 12's static, live contract, security and eight browser/runner/identity CI-equivalent selections passed locally and in one native GitHub Linux run; later native runs passed report upload but crashed in Node HTTP/2 during Cucumber. Disabling Keycloak HTTP/2 did not fix this; the sixth run passed the complete prior native workflow with automated-browser HTTP/1.1. The new lesson has separate local evidence. See [architecture](architecture.md), [authentication](authentication.md), and the [test matrix](test-plan.md) for detailed rules.
+Status: the nine main workflows describe the full-stack design. Prompts 03–10 infrastructure, Keycloak provisioning, local package adapters, all three business providers, the integrated Vue UI and selected-user manual desktop are observed on Apple Silicon amd64 emulation. Prompt 11 shared Saturday customer/admin teaching examples pass in Playwright Test and Cucumber under both real Chrome and Edge; a shopkeeper inventory example passes in Playwright Test under both browsers. Concurrent two-worker customer/admin runs, isolated service-scope and signing-key rotation checks, and the live signed JWT-01 failure matrix passed. Prompt 12's static, live contract, security and eight browser/runner/identity CI-equivalent selections passed locally and in one native GitHub Linux run; later native runs passed report upload but crashed in Node HTTP/2 during Cucumber. Disabling Keycloak HTTP/2 did not fix this; the sixth run passed the complete prior native workflow with automated-browser HTTP/1.1. The new lesson has separate local and 36-case native evidence in completion 18. See [architecture](architecture.md), [authentication](authentication.md), and the [test matrix](test-plan.md) for detailed rules.
 
 Solid arrows describe requests or ordered actions. Dotted arrows in the infrastructure diagram describe credential provisioning/mounts. A box inside a container group is a component or logical database, not an additional container. The shop/auth ports shown are the observed Compose values; the prior matrix and artifact upload passed together in native GitHub run 38012708736; the new lesson has no native run yet.
 
@@ -330,17 +330,17 @@ native contracts/security/customer-admin browser workflow passed in run
 HTTP/2 failures and report-permission corrections remain in completion 12. A
 separate certificate-password job now adds nine live cases in each Chrome/Edge
 and Playwright/Cucumber selection, safe text reports and a deliberate runner
-failure cleanup control. Its new native acceptance is tracked in
-[completion 18](completion/18-native-certificate-password-ci.md); do not infer it
-from the earlier runs. The host controls Docker; signing keys, credentials and
+failure cleanup control. Its 36-case matrix, upload and success/failure cleanup passed in native run
+38027680587; cancellation cleanup passed in the deliberate probe 38028333657.
+See [completion 18](completion/18-native-certificate-password-ci.md). The host controls Docker; signing keys, credentials and
 browser profiles remain in project volumes. PR-base checks remain a separate
 unobserved acceptance item.
 
 ```mermaid
 flowchart TD
   Trigger["Observed GitHub Linux pushes; prior complete workflow passed"] --> Static["Observed on Linux: pinned builds, types, units, OpenAPI drift, architecture and complexity gates"]
-  Static --> Lesson["New separate job: disposable certificate/password stack"]
-  Lesson --> LessonMatrix["New native acceptance: 36 live cases; Chrome/Edge and both runners"]
+  Static --> Lesson["Observed native job: disposable certificate/password stack"]
+  Lesson --> LessonMatrix["Observed on Linux: 36 live cases; Chrome/Edge and both runners"]
   LessonMatrix --> LessonReports["Allowlisted JUnit/JSON; completeness, scan, readability, upload"]
   LessonReports --> LessonClean["Always: verify project containers/networks/volumes removed"]
   LessonClean --> Failure["Second disposable stack: intentional runner failure"]
