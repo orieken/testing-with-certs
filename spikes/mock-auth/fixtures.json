@@ -1,0 +1,8 @@
+{
+  "populated": {"items":[{"id":"potion-healing","name":"Potion of Healing","description":"Synthetic teaching item","rarity":"Common","image":"/images/potion-healing.png","priceCopper":5000,"active":true}],"nextCursor":null},
+  "empty": {"items":[],"nextCursor":null},
+  "forbidden": {"code":"forbidden","message":"Synthetic dependency denial"},
+  "invalidRequest": {"code":"invalid_request","message":"Synthetic invalid request"},
+  "notFound": {"code":"not_found","message":"Synthetic missing item"},
+  "FAULT_wrong_type": {"items":[{"id":"potion-healing","name":"Potion of Healing","description":"Synthetic teaching item","rarity":"Common","image":"/images/potion-healing.png","priceCopper":"5000","active":true}],"nextCursor":null}
+}

@@ -2,6 +2,8 @@
 
 These are reusable build prompts, not a claim that their work has run. Execute one numbered prompt at a time. Each depends on the preceding accepted output unless stated otherwise. Replace planned commands with verified commands as implementation progresses.
 
+For the completed dependency-mocking examples and recorded browser consumers, use the [mock-testing adoption sequence](mock-testing-adoption-prompts.md) when adapting them to another app. [Completion 16](completion/16-mocking-examples.md) and [completion 17](completion/17-browser-mock-consumers.md) describe observed reference runs; they do not complete the remaining live-provider or native-CI backlog.
+
 ## Shared instructions for every prompt
 
 Read `docs/README.md`, `docs/architecture.md`, `docs/workflows.md`, `docs/authentication.md`, `docs/saturday-keycloak.md`, `docs/test-plan.md`, `docs/api-contracts.md`, and relevant prior completion notes. Treat copied source documents as reference material. Preserve the user's requirements, especially three business API languages, real Chrome/Edge, both test runners, OpenAPI-backed services with Playwright contract tests, and no host certificate management.

@@ -1,0 +1,57 @@
+services:
+  pki:
+    image: registry.access.redhat.com/ubi9/ubi:9.6@sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc
+    network_mode: none
+    entrypoint: [bash, /example/pki.sh]
+    volumes:
+      - ./pki.sh:/example/pki.sh:ro
+      - ca-state:/state
+      - trust:/trust
+      - tls:/tls
+  consumer:
+    build:
+      context: ../..
+      dockerfile: spikes/mock-auth/Containerfile
+    image: cert-mock-consumer:01
+    command: [/work/spikes/mock-auth/run.mjs, jwt]
+    networks: [test]
+    volumes:
+      - consumer-state:/state
+      - trust:/trust:ro
+      - fixtures:/fixtures
+  oidc:
+    user: "1000:1000"
+    image: ghcr.io/navikt/mock-oauth2-server:6.0.4@sha256:47374fe063995d9b6d39ebb6ea21eb5f765025bf0aa08b61b08b439eb91adaf0
+    environment:
+      JSON_CONFIG_PATH: /example/oidc-config.json
+      SERVER_PORT: '8080'
+      LOG_LEVEL: OFF
+    tmpfs: [/tmp]
+    networks: [test]
+    volumes:
+      - ./oidc-config.json:/example/oidc-config.json:ro
+      - tls:/tls:ro
+    logging: {driver: none}
+  prism:
+    platform: linux/amd64
+    image: stoplight/prism:5.14.2@sha256:87972b6cf73da2c0339fca18f362b6f93118152d652c970fab93ed13cfd55bae
+    command: [mock, -h, 0.0.0.0, /fixtures/catalog.json]
+    networks: [mock-backend]
+    volumes: [fixtures:/fixtures:ro]
+    logging: {driver: none}
+  api:
+    image: cert-mock-consumer:01
+    entrypoint: [node, /work/spikes/mock-auth/api-server.mjs]
+    networks: [test, mock-backend]
+    volumes:
+      - tls:/tls:ro
+    logging: {driver: none}
+networks:
+  test: {internal: true}
+  mock-backend: {internal: true}
+volumes:
+  ca-state:
+  tls:
+  trust:
+  consumer-state:
+  fixtures:

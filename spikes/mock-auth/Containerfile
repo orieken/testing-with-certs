@@ -1,0 +1,24 @@
+FROM node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+WORKDIR /work
+ENV CI=true PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+RUN npm install --global --ignore-scripts --no-audit --no-fund pnpm@12.9.1 --fetch-timeout=30000
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY contracts/package.json contracts/package.json
+COPY testing/package.json testing/package.json
+COPY packages/saturday-keycloak/package.json packages/saturday-keycloak/package.json
+RUN pnpm install --frozen-lockfile --filter @magic-shop/testing --filter @magic-shop/contracts --fetch-timeout=30000
+COPY contracts contracts
+COPY testing/api/contracts testing/api/contracts
+COPY testing/playwright.config.ts testing/playwright.config.ts
+COPY seed/reporting-oracle.json seed/reporting-oracle.json
+COPY infra/contracts-tooling.mjs infra/contracts-tooling.mjs
+COPY spikes/mock-auth spikes/mock-auth
+RUN contracts/node_modules/.bin/redocly lint contracts/openapi/catalog.yaml contracts/openapi/customer.yaml contracts/openapi/insights.yaml --extends spec \
+    && PATH="/work/contracts/node_modules/.bin:$PATH" node infra/contracts-tooling.mjs check \
+    && contracts/node_modules/.bin/tsc --noEmit -p contracts/tsconfig.json \
+    && LAB_SECURITY_RUN=1 testing/node_modules/.bin/playwright test -c testing/playwright.config.ts --project=contracts-validator \
+    && /bin/sh -n spikes/mock-auth/run.sh \
+    && for source in spikes/mock-auth/*.mjs; do node --check "$source"; done
+RUN mkdir /state /trust /tls /fixtures && chown -R node:node /state /trust /tls /fixtures
+USER node
+ENTRYPOINT ["node"]

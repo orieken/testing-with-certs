@@ -1,0 +1,23 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Standalone mock OIDC consumer</title><style>
+body{font:20px/1.6 Arial;background:#132035;color:#eff5ff;max-width:850px;margin:60px auto}button{font:inherit;padding:12px 24px;background:#b6dcff;color:#102038;border:0;border-radius:8px}#result{padding:24px;background:#203550;margin-top:30px}aside{color:#ffdc8c}
+</style></head><body><h1>Standalone mock OIDC browser consumer</h1><aside>MOCK ISSUER · SYNTHETIC IDENTITY · NO REAL LOGIN</aside><p>This dedicated consumer uses discovery, an authorization redirect, S256 PKCE, and JWKS signature verification. It never calls shop APIs.</p><button id="begin">Begin mock OIDC</button><p id="result" role="status">Signed out</p><script type="module">
+const issuer='https://oidc:8080/default', clientId='teaching-consumer', callback='https://shop.magic.test:8443/oidc-consumer';
+const result=document.getElementById('result');
+const b64=bytes=>btoa(String.fromCharCode(...new Uint8Array(bytes))).replaceAll('+','-').replaceAll('/','_').replaceAll('=','');
+const bytes=text=>Uint8Array.from(atob(text.replaceAll('-','+').replaceAll('_','/')),c=>c.charCodeAt(0));
+const random=()=>b64(crypto.getRandomValues(new Uint8Array(32)));
+async function getJson(url,options){const response=await fetch(url,{...options,signal:AbortSignal.timeout(3000)});if(!response.ok)throw new Error('Dependency failure');return response.json();}
+async function discovery(){const doc=await getJson(`${issuer}/.well-known/openid-configuration`);if(doc.issuer!==issuer)throw new Error('Issuer mismatch');for(const name of ['authorization_endpoint','token_endpoint','jwks_uri'])if(new URL(doc[name]).origin!==new URL(issuer).origin)throw new Error('Endpoint mismatch');return doc;}
+document.getElementById('begin').onclick=async()=>{result.textContent='Loading mock discovery…';try{const doc=await discovery();const verifier=random(),state=random(),nonce=random();sessionStorage.setItem('mock_oidc_tx',JSON.stringify({verifier,state,nonce}));const url=new URL(doc.authorization_endpoint);url.search=new URLSearchParams({client_id:clientId,response_type:'code',redirect_uri:callback,scope:'openid',state,nonce,code_challenge_method:'S256',code_challenge:b64(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier)))}).toString();location.assign(url);}catch{sessionStorage.removeItem('mock_oidc_tx');result.textContent='Mock OIDC dependency failed. Retry.';}};
+const params=new URLSearchParams(location.search);
+if(params.has('code')||params.has('error')){const tx=JSON.parse(sessionStorage.getItem('mock_oidc_tx')??'null');sessionStorage.removeItem('mock_oidc_tx');history.replaceState({},'',callback);try{
+  if(!tx||params.get('state')!==tx.state||params.has('error'))throw new Error('Callback rejected');
+  const doc=await discovery();const token=await getJson(doc.token_endpoint,{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'authorization_code',client_id:clientId,redirect_uri:callback,code:params.get('code'),code_verifier:tx.verifier})});
+  const [header,payload,signature]=token.id_token.split('.'),h=JSON.parse(new TextDecoder().decode(bytes(header))),p=JSON.parse(new TextDecoder().decode(bytes(payload)));
+  if(h.alg!=='RS256')throw new Error('Algorithm rejected');const jwks=await getJson(doc.jwks_uri);const jwk=jwks.keys.find(key=>key.kid===h.kid);if(!jwk)throw new Error('Unknown key');
+  const key=await crypto.subtle.importKey('jwk',jwk,{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['verify']);
+  if(!await crypto.subtle.verify('RSASSA-PKCS1-v1_5',key,bytes(signature),new TextEncoder().encode(`${header}.${payload}`)))throw new Error('Signature rejected');
+  if(p.iss!==issuer||![p.aud].flat().includes(clientId)||p.exp<=Date.now()/1000||p.nonce!==tx.nonce||typeof p.sub!=='string')throw new Error('Claims rejected');
+  result.textContent=`Verified mock identity: ${p.sub}`;
+}catch{result.textContent='Mock OIDC callback or token rejected. Retry.';}}
+</script></body></html>

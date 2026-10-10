@@ -10,6 +10,10 @@ Automated Playwright contexts map the selected client certificate to **both exac
 
 The reference's three-language shop, synthetic users, domains, ports and Keycloak realm are **examples**. A target project should keep its existing service ownership and authentication provider unless its own requirements call for a change. If it does not use Keycloak, map the certificate-to-user and PKCE checks to its actual identity provider. If its provider cannot perform certificate login, report that feasibility gap rather than substituting password login or a mocked token. Do not claim a certificate test passed merely because a request with a prebuilt bearer token succeeded.
 
+## Optional dependency-mocking track
+
+For signed JWT, standalone OIDC/API mocks and recorded browser tests against an unchanged app, use the separate [mock-testing adoption prompts](mock-testing-adoption-prompts.md), M00–M05. These do not depend on completing this real certificate-login sequence and do not satisfy its login/provider acceptance gates. Keep the target's existing authentication architecture; adapt the mock seams and contracts to it.
+
 ## Dispatch contract
 
 Before sending prompt 00, fill in these values for the receiving agent:

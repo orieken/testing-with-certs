@@ -1,0 +1,7 @@
+{
+  "httpServer": {"type":"NettyWrapper","ssl":{"keyPassword":"","keystoreFile":"/tls/oidc.p12","keystoreType":"PKCS12","keystorePassword":""}},
+  "tokenCallbacks": [
+    {"issuerId":"default","tokenExpiry":120,"requestMappings":[{"requestParam":"client_id","match":"teaching-consumer","claims":{"sub":"synthetic-client","aud":["teaching-consumer"]}}]},
+    {"issuerId":"expired","tokenExpiry":-60,"requestMappings":[{"requestParam":"client_id","match":"teaching-consumer","claims":{"sub":"synthetic-client","aud":["teaching-consumer"]}}]}
+  ]
+}

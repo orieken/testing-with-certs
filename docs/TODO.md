@@ -158,6 +158,10 @@ Observed partial work (does not close the runtime checks above):
 - [x] Provide ordered copyable prompts for other agents to inventory, prove, implement and test certificate paths in their own repositories without copying this lab's secrets or assumptions.
 - [x] Link the handoff from the root and documentation entry points and record the first source-commit decision and remaining CI/platform limits.
 
+## Testing expansion — prioritized agent checklist
+
+See the [prioritized testing checklist](testing-scenario-checklist.md) for TEST-01–11, ordered by priority with handoff prompts, dependencies and acceptance criteria. All implementation items are open. Start with status coverage, native certificate/password CI, checkout dependency failures and PR-base evidence.
+
 ## Deferred scope
 
 - Stock Firefox or Playwright Firefox.
@@ -165,6 +169,46 @@ Observed partial work (does not close the runtime checks above):
 - Real payments, atomic inventory reservation, external customer messages.
 - Certificate-bound OAuth tokens and automated CA rotation.
 - Moving/publishing `saturday-keycloak` into the upstream Saturday repository.
+
+### Learning examples — mocking for tests
+
+FEATURE-01–03 are isolated examples of mocking dependencies for tests. They must not change app behavior, replace the lab's Keycloak, reroute the normal HAProxy listeners, weaken API verification, or add a login fallback. Follow the shared container, TLS, secrets and evidence instructions in the [agent checklist](testing-scenario-checklist.md). Keep mock results explicitly separate from real authentication/provider evidence. User-directed priority: complete FEATURE-01–03 before the other backlog items. These isolated examples are now observed; see [completion 16](completion/16-mocking-examples.md) and [copyable commands](../spikes/mock-auth/README.md).
+
+- [x] **FEATURE-01 — Signed-token mocking example. Priority: medium.**
+
+  **Handoff prompt:** Create a container-only example in `spikes/mock-auth/` that generates an ephemeral test signing key and demonstrates JWT verification in an isolated test consumer. Use synthetic claims shaped like the lab's claims, without reusing real credentials or trusted realm keys. Demonstrate valid, expired, wrong-audience and altered-signature tokens. Document that this tests token handling and does not authenticate a user or bypass Keycloak in the app.
+
+  **Done when:** The isolated consumer accepts the valid fixture and rejects each negative fixture; keys/tokens stay container-held; no app verifier, trusted JWKS, realm or routing changes are required.
+
+- [x] **FEATURE-02 — OIDC dependency mocking example. Priority: medium.**
+
+  **Handoff prompt:** Build a standalone disposable container example with a pinned OIDC mock server and a dedicated test consumer. Demonstrate discovery, JWKS, token handling and supported failure scenarios. Verify the tool's actual protocol support before choosing scenarios. Use a private test network and test-local configuration; leave Vue, Keycloak and HAProxy unchanged. Explain which protocol behaviors are mocked and which authentication guarantees remain untested.
+
+  **Done when:** The test consumer exercises documented success/failure cases against the mock with verified TLS, repeatable reset and cleanup. The example requires no changes to the app's issuer, clients, routes or login flows.
+
+- [x] **FEATURE-03 — API dependency mocking example. Priority: medium; requires a bounded tool compatibility experiment (completed for mock-only Prism use); full TEST-05/06 are not prerequisites for this isolated example.**
+
+  **Handoff prompt:** Build a standalone test-consumer example using Prism or Mokapi and canonical contract fixtures for success, structured errors and delayed responses. Demonstrate how tests replace an API dependency without replacing app authentication. Validate normal fixtures with existing Ajv tooling and label intentionally invalid fault fixtures. Do not create a proxy that injects authentication into real services or requires weakening their certificate/token checks.
+
+  **Done when:** The isolated consumer demonstrates deterministic response and recovery assertions, valid fixtures pass contract validation, and no real API, gateway, certificate policy or app behavior changes are needed.
+
+For adoption into another application, use [M00–M05](mock-testing-adoption-prompts.md). The completed [browser mock suite](../spikes/mock-auth/browser/README.md) and [completion 17](completion/17-browser-mock-consumers.md) extend the examples with recorded consumer/UI evidence; they do not close the live-provider or native-CI backlog.
+
+### Product expansion ideas — separate from mock examples
+
+FEATURE-04–06 propose app behavior changes. They remain separate future scope and are not authorized for implementation by the mocking examples above.
+
+- [ ] **FEATURE-04 — Inventory Deduction (Go + Node)**
+  **Handoff prompt:** Update the simulated checkout process in the Node Customer API to make an atomic inventory deduction request to the Go Catalog API. If the Go API returns a 409 (Out of Stock), the checkout should fail.
+  **Done when:** A successful checkout reduces the stock count in the Go database, and attempting to buy more items than available results in a clean error without creating an order.
+
+- [ ] **FEATURE-05 — Product Reviews & Ratings**
+  **Handoff prompt:** Add a new domain for product reviews. Customers should be able to leave a 1-5 star rating and text review on items they have purchased. Update the Vue UI to display aggregate ratings on the catalog items.
+  **Done when:** The API successfully persists reviews, enforces that the user has bought the item, and the UI displays the average rating.
+
+- [ ] **FEATURE-06 — "Manager" Persona**
+  **Handoff prompt:** Add a new Keycloak role (`shop-manager`) that is allowed to read the insights and reporting endpoints but cannot modify the catalog or manage users. Update the JWT scope verification in the APIs.
+  **Done when:** A user with the manager role can view the admin dashboard map but receives a 403 Forbidden when attempting to edit an item.
 
 ## 15 — Separate certificate + password teaching view
 

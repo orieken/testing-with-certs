@@ -1,0 +1,52 @@
+services:
+  browser-pki:
+    image: registry.access.redhat.com/ubi9/ubi:9.6@sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc
+    network_mode: none
+    entrypoint: [bash, /example/pki.sh]
+    volumes:
+      - ./browser/pki.sh:/example/pki.sh:ro
+      - browser-ca:/state
+      - browser-public:/public
+      - browser-server:/server
+      - browser-identity:/identity
+  browser-ui:
+    image: cert-mock-browser-ui:01
+    build:
+      context: ../..
+      dockerfile: spikes/mock-auth/browser/Ui.Containerfile
+    networks:
+      test:
+        aliases: [shop.magic.test, auth.magic.test]
+    volumes:
+      - browser-public:/public:ro
+      - browser-server:/server:ro
+    logging: {driver: none}
+  browser-runner:
+    image: cert-mock-browser-runner:01
+    platform: linux/amd64
+    build:
+      context: ../..
+      dockerfile: spikes/mock-auth/browser/Runner.Containerfile
+      args:
+        RUNNER_IMAGE: ${MOCK_RUNNER_BASE:-magic-shop-runner:03}
+    environment:
+      HOME: /home/runner
+      LAB_BROWSER: ${LAB_BROWSER:-chrome}
+      MOCK_SCENARIO: ${MOCK_SCENARIO:-}
+    networks: [test]
+    volumes:
+      - browser-public:/public:ro
+      - trust:/oidc-trust:ro
+      - browser-identity:/identity:ro
+      - browser-home:/home/runner
+      - browser-tmp:/tmp
+      - browser-state:/state
+      - ${MOCK_BROWSER_REPORT_DIR:?Set report directory}:/reports
+volumes:
+  browser-ca:
+  browser-public:
+  browser-server:
+  browser-identity:
+  browser-home:
+  browser-tmp:
+  browser-state:
