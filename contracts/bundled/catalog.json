@@ -942,6 +942,19 @@
           }
         }
       },
+      "Test04AdditiveProbe": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "label"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "maxLength": 40
+          }
+        }
+      },
       "Cursor": {
         "type": "string",
         "minLength": 1,
