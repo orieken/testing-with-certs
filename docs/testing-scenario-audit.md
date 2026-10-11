@@ -86,6 +86,10 @@ GitHub updates are deferred until local work is complete.
 
 ## TEST-06/09 local follow-up
 
-[Completion 23](completion/23-mokapi-reporting-sequences.md) records pinned Mokapi reporting sequences and two independent 19-case real insights consumer runs. Revision conflicts, outages, repeated cursors, empty-page continuation, exact record caps and page termination now have whole-HTTP-path evidence. The independent fault gate cannot credit a real provider or native execution. Remaining checklist items are TEST-04 and TEST-11.
+[Completion 23](completion/23-mokapi-reporting-sequences.md) records pinned Mokapi reporting sequences and two independent 19-case real insights consumer runs. Revision conflicts, outages, repeated cursors, empty-page continuation, exact record caps and page termination now have whole-HTTP-path evidence. The independent fault gate cannot credit a real provider or native execution. At that historical point, TEST-04 and TEST-11 remained.
 
 [Completion 24](completion/24-regional-reporting-boundaries.md) closes the targeted REGION-02 matrix with real provider boundaries, profile/history distinction, exhaustive pagination and recorded map/table journeys. Mixed-precision endpoint rejection is retained as a separate explicit production follow-up; UI order rows are bounded to its existing first 25.
+
+## TEST-04 evidence reconciliation
+
+[Completion 25](completion/25-pr-base-contract-evidence.md) records actual PR-event unchanged/additive acceptance and breaking-schema rejection against committed main, plus reversion/closure of both disposable controls. The original audit findings above are historical, not current missing coverage. Native workflow 38097316475 passed the existing live/security/browser/lesson jobs; new standalone fault, consumer and regional suites retain their local provenance. Current remaining checklist item is TEST-11. Native manual viewer/operator, literal clean-checkout/repeat-startup and the timestamp precision follow-up remain separate open work.

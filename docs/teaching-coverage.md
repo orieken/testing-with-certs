@@ -1,13 +1,13 @@
 # Teaching and security matrix evidence
 
-Status after the Prompt 11 teaching increment on 2026-10-08: the shared Playwright Test/Cucumber customer and admin journeys passed in real Chrome and Edge on Apple Silicon amd64 emulation. The Playwright Test shopkeeper inventory journey also passed in both branded browsers. The browserless contract command passed 17 tests and all 23 required operation/status entries. **Observed** means the named requirement was checked at its designated level; **partial** means at least one required variant remains; **open** means this increment has no passing acceptance result. Historical spike results are identified as such rather than promoted to a full-stack pass.
+Historical Prompt 11 baseline on 2026-10-08 (current reconciliation below): the shared Playwright Test/Cucumber customer and admin journeys passed in real Chrome and Edge on Apple Silicon amd64 emulation. The Playwright Test shopkeeper inventory journey also passed in both branded browsers. The browserless contract command passed 17 tests and all 23 required operation/status entries. **Observed** means the named requirement was checked at its designated level; **partial** means at least one required variant remains; **open** means this increment has no passing acceptance result. Historical spike results are identified as such rather than promoted to a full-stack pass.
 
 | ID | Status | Evidence or missing check |
 | --- | --- | --- |
 | CONTRACT-01 | Observed | `testing/api/contracts/{catalog,customer,insights}.contract.spec.ts`; live 23-operation gate. |
 | CONTRACT-02 | Observed | Same three suites; required 400/401/403 scenarios per operation. |
-| CONTRACT-03 | Partial | All three deployed authenticated specs match expected bytes; one-byte drift rejection passes. Containerized generation/reproducibility and a conservative base comparator with mutation tests pass locally. Actual comparison against a committed PR base and Linux CI execution remain unverified. |
-| CONTRACT-04 | Observed | `infra/check-contract-coverage.mjs` requires every operation and status; 23 passed. |
+| CONTRACT-03 | Observed | Deployed-spec byte comparison/drift rejection and pinned reproducibility checks retain their prior evidence. [Completion 25](completion/25-pr-base-contract-evidence.md) adds native PR-event unchanged/additive acceptance and changed-schema rejection against committed main. This conservative comparator is not an exhaustive semantic compatibility analyzer. |
+| CONTRACT-04 | Observed | All 23 operations require named applicable status coverage with explicit exclusions; missing required 409/422 evidence fails mutation controls. [Completion 19](completion/19-checkout-dependency-faults.md) records the expanded gate. Mock evidence cannot satisfy it. |
 | CONTRACT-05 | Observed | `testing/api/contracts/validator.spec.ts` rejects malformed fields, types, status, media and date/tuple data. |
 | AUTH-01 | Observed | Shared teaching customer login/account/order passed in both runners and browsers. |
 | AUTH-02 | Observed | Shared teaching admin login/account/report/map passed in both runners and browsers. |
@@ -40,7 +40,7 @@ Status after the Prompt 11 teaching increment on 2026-10-08: the shared Playwrig
 | FOLLOW-01 | Observed | Recorded UI and insights contracts create/update persistent local follow-up; no outbound messaging. |
 | TRUST-01 | Observed | Live security suite rejects wrong hostname and, in a fresh process without the private CA, rejects verified shop TLS. |
 | PKG-01 | Observed | `./lab test --runner playwright --suite package`; independent packed consumer imports core, Playwright, Cucumber and manual exports. |
-| OPS-01 | Open | Clean volumes and repeat-start exercise belongs to Prompt 12. |
+| OPS-01 | Partial | [Completion 12](completion/12-ci-handoff.md) records fresh-volume and repeat startup preserving data. A literal clean-checkout/repeat-startup exercise remains unverified. |
 | OPS-02 | Observed | Live security suite verified distinct subjects in two concurrent customer certificate/token contexts. Separate customer Chrome and admin Edge teaching jobs each used two Playwright workers concurrently, passed, and wrote distinct scanned report directories with WebM/JUnit artifacts. |
 
-Run identifiers and exact commands are recorded in [teaching completion 11](completion/11-teaching-suite.md) and [security matrix completion 11](completion/11-security-matrix.md). Native Linux amd64 remains deferred by the user. An observed historical check does not replace a missing live variant in rows marked partial.
+Run identifiers and exact commands are recorded in [teaching completion 11](completion/11-teaching-suite.md) and [security matrix completion 11](completion/11-security-matrix.md). Native automated workflow evidence now includes run 38097316475 and the PR-base controls in [completion 25](completion/25-pr-base-contract-evidence.md). Manual Linux viewer/operator and the separate local consumer/fault/regional suites remain unverified natively. An observed historical check does not replace a missing live variant in rows marked partial.

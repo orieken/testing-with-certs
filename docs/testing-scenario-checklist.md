@@ -1,6 +1,6 @@
 # Prioritized testing work and agent handoffs
 
-Implementation backlog from the [scenario audit](testing-scenario-audit.md). TEST-01, TEST-03, TEST-05, TEST-06, TEST-07, TEST-08, TEST-09 and TEST-10 are completed with local container evidence; TEST-02 is completed with native evidence. TEST-04 and TEST-11 remain unchecked. The user prioritized the separate FEATURE-01–03 learning examples ahead of these items; their acceptance evidence is recorded below. Follow each testing item's dependencies when resuming this backlog. Checking a box requires recorded acceptance evidence, not merely code or a successful mock response.
+Implementation backlog from the [scenario audit](testing-scenario-audit.md). TEST-01, TEST-03, TEST-05, TEST-06, TEST-07, TEST-08, TEST-09 and TEST-10 are completed with local container evidence; TEST-02 is completed with native evidence. TEST-04 has actual native PR-base evidence; TEST-11 remains unchecked. The user prioritized the separate FEATURE-01–03 learning examples ahead of these items; their acceptance evidence is recorded below. Follow each testing item's dependencies when resuming this backlog. Checking a box requires recorded acceptance evidence, not merely code or a successful mock response.
 
 ## Shared instructions for every handoff
 
@@ -34,11 +34,13 @@ Append these instructions to each prompt below:
 
   **Done when:** Each fault has a deterministic passing test, measured timeout bound, database assertions and successful recovery; TLS remains verified; 503 is accounted for in the coverage gate.
 
-- [ ] **TEST-04 — Reconcile evidence and exercise PR-base contract checks.** Dependencies: none.
+- [x] **TEST-04 — Reconcile evidence and exercise PR-base contract checks.** Dependencies: none.
 
   **Handoff prompt:** Reconcile stale coverage/TODO statements against completion notes and actual CI results, preserving historical context. Exercise the real pull-request base comparison for unchanged, additive and breaking contracts. Use a draft PR or authorized test branch without merging; attach any created PR to this task. Keep temporary mutations out of the final implementation.
 
   **Done when:** Actual PR-event results demonstrate acceptance/rejection against the committed base, documentation cites the evidence, and deferred checks remain unchecked. Mutation unit tests alone do not satisfy this item.
+
+TEST-04 evidence: [completion 25](completion/25-pr-base-contract-evidence.md): actual native PR-event steps accepted unchanged and additive schemas and rejected the changed Item schema against committed main. Experimental PRs were closed unmerged and both branch trees restored; current versus historical platform claims reconciled.
 
 TEST-02 evidence: [completion 18](completion/18-native-certificate-password-ci.md), [passing native run 38027680587](https://github.com/orieken/testing-with-certs/actions/runs/38027680587), and [deliberately cancelled cleanup probe 38028333657](https://github.com/orieken/testing-with-certs/actions/runs/38028333657). All 36 cases and text upload passed; credential/resource cleanup passed after success, intentional failure and the recorded cancellation boundary.
 

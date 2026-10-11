@@ -333,8 +333,9 @@ and Playwright/Cucumber selection, safe text reports and a deliberate runner
 failure cleanup control. Its 36-case matrix, upload and success/failure cleanup passed in native run
 38027680587; cancellation cleanup passed in the deliberate probe 38028333657.
 See [completion 18](completion/18-native-certificate-password-ci.md). The host controls Docker; signing keys, credentials and
-browser profiles remain in project volumes. PR-base checks remain a separate
-unobserved acceptance item.
+browser profiles remain in project volumes. [Completion 25](completion/25-pr-base-contract-evidence.md) records native PR-base
+unchanged/additive acceptance and deliberate changed-schema rejection. The broader
+control runs are not credited as new full regression passes.
 
 ```mermaid
 flowchart TD
@@ -348,7 +349,7 @@ flowchart TD
   Fixture --> FinalClean["Always: verify both project resource sets absent"]
   Lesson --> FinalClean
   Static --> Base{"Pull request with existing base bundles?"}
-  Base -->|"Yes: planned live PR check"| Compare["Conservative existing-operation, schema, origin and auth comparator"]
+  Base -->|"Yes: observed PR-base controls"| Compare["Conservative existing-operation, schema, origin and auth comparator"]
   Base -->|"No first baseline"| Compose
   Compare --> Compose["Observed on Linux: unique LAB_PROJECT, one-shot PKI/secrets/DB/realm jobs, healthy stack"]
   Compose --> Certs[("Isolated Docker volumes: CA key PKI-only; per-runner leaves and scoped secrets")]
