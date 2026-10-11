@@ -134,9 +134,6 @@ export interface components {
             lines: components["schemas"]["QuotedLine"][];
             totalCopper: components["schemas"]["Copper"];
         };
-        Test04AdditiveProbe: {
-            label: string;
-        };
         Cursor: string;
         Id: string;
         /** Format: int64 */

@@ -3,7 +3,7 @@
   "generatedFrom": "contracts/openapi/*.yaml",
   "services": {
     "catalog": {
-      "sha256": "e9722945058badd84f7c1862b03ed76ddafd321809099d014f28ec467c9ddd68",
+      "sha256": "1f8116a00957099220eebee2b2c2ee25b2642e8f4becdce0ce254ad5d76964e7",
       "operations": 6
     },
     "customer": {

@@ -291,19 +291,6 @@
             "$ref": "./shared/schemas.yaml#/components/schemas/Copper"
           }
         }
-      },
-      "Test04AdditiveProbe": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "label"
-        ],
-        "properties": {
-          "label": {
-            "type": "string",
-            "maxLength": 40
-          }
-        }
       }
     }
   },
