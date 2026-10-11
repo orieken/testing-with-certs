@@ -170,3 +170,12 @@ render also passed. `git diff --check` passed and the diff over apps/packages/
 services/infra/workflows/contracts is empty. Both clean temporary worktrees were
 removed with `git worktree remove`; restored remote probe branches retain the
 recorded history. Reconciliation documentation remains local until committed.
+
+## Subsequent full baseline results
+
+Inspected during TEST-11 on 2026-10-11 America/Chicago: push run 38112269311 and
+unchanged PR run 38112441452 both completed with success at `d637aa7`.
+This supersedes their earlier in-progress observation above. The unchanged PR
+therefore also has a full existing-workflow pass; the additive control remains
+cancelled after its passing comparison, and the breaking control remains failed.
+These baseline workflows did not yet include the separately named TEST-11 jobs.

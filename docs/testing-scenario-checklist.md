@@ -1,6 +1,6 @@
 # Prioritized testing work and agent handoffs
 
-Implementation backlog from the [scenario audit](testing-scenario-audit.md). TEST-01, TEST-03, TEST-05, TEST-06, TEST-07, TEST-08, TEST-09 and TEST-10 are completed with local container evidence; TEST-02 is completed with native evidence. TEST-04 has actual native PR-base evidence; TEST-11 remains unchecked. The user prioritized the separate FEATURE-01–03 learning examples ahead of these items; their acceptance evidence is recorded below. Follow each testing item's dependencies when resuming this backlog. Checking a box requires recorded acceptance evidence, not merely code or a successful mock response.
+Implementation backlog from the [scenario audit](testing-scenario-audit.md). TEST-01, TEST-03, TEST-05, TEST-06, TEST-07, TEST-08, TEST-09 and TEST-10 are completed with local container evidence; TEST-02 is completed with native evidence. TEST-04 has actual native PR-base evidence; TEST-11 has complete native independent-suite evidence. The user prioritized the separate FEATURE-01–03 learning examples ahead of these items; their acceptance evidence is recorded below. Follow each testing item's dependencies when resuming this backlog. Checking a box requires recorded acceptance evidence, not merely code or a successful mock response.
 
 ## Shared instructions for every handoff
 
@@ -94,11 +94,13 @@ TEST-02 evidence: [completion 18](completion/18-native-certificate-password-ci.m
 
   **Evidence:** [Completion 24](completion/24-regional-reporting-boundaries.md): five live provider acceptance cases and a separately labelled timestamp limitation probe; 110 exact order identities over seven public/two private pages; genuine profile move with historical Waterdeep totals; preserved September/empty-region oracles; 16 recorded real-auth Chrome/Edge Playwright/Cucumber journeys. UI rows retain the current first-25 limit. Mixed-precision query endpoints remain an explicit production gap.
 
-- [ ] **TEST-11 — Integrate separate consumer/fault CI gates and reports.** Dependencies: TEST-05–07 and at least one completed dependency-fault scenario (TEST-03 or TEST-09).
+- [x] **TEST-11 — Integrate separate consumer/fault CI gates and reports.** Dependencies: TEST-05–07 and at least one completed dependency-fault scenario (TEST-03 or TEST-09).
 
   **Handoff prompt:** Add separately named contract-derived consumer and fault-injection CI jobs/reports while retaining the live-provider gate and its ordering. Reuse pinned containers and explicit disposable project isolation. Scan artifacts, verify readability, and prove cleanup for failing jobs. Document which job proves which boundary.
 
   **Done when:** Native CI passes the new suites and existing live/security/browser checks; reports identify evidence type; a mock pass cannot conceal a failing or missing live-provider result.
+
+TEST-11 evidence: [completion 26](completion/26-independent-ci-evidence.md): complete native push 38115515064 and PR 38115518115 passed all 13 jobs, including the existing live/security/browser and certificate/password jobs, five independent suite/probe/cleanup/report selections and the final aggregate. Deliberate-red run 38115560267 failed checkout as requested, cleaned resources, uploaded an explicit failed report and was rejected by the aggregate.
 
 ## Completed isolated learning examples
 

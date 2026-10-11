@@ -52,3 +52,14 @@ This deliberately makes that job and the final aggregate red. Use only as a
 cleanup/gating control; never credit it as a passing regression workflow. Actual
 native results belong in completion 26; until recorded, implementation alone does
 not close TEST-11.
+
+For local Linux reporting runs, set `REPORTING_MOCK_PLATFORM=linux/amd64` alongside
+`CI_EVIDENCE_ID`; the Compose overlay retains arm64 as its Apple Silicon default.
+Native CI sets amd64 explicitly and keeps the same pinned multiarch digest.
+Report staging mounts the source read-only and grants write access only to its
+fresh allowlisted output directory, whose permission allows the container UID to
+write while the GitHub host retains readable files.
+
+`failureCleanupOutcome` describes the secondary intentional-failure probe step.
+If the primary job is deliberately failed, that secondary step is skipped; the
+independent always-cleanup step and disposal receipt still record resource cleanup.

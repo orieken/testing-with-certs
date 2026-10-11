@@ -106,3 +106,5 @@ For TEST-05 → TEST-07, use the [isolated Prism compatibility and browser suite
 TEST-06/09: [Mokapi reporting sequence commands](../testing/faults/reporting/README.md) and [completion 23](../docs/completion/23-mokapi-reporting-sequences.md). The real insights consumer uses an isolated scripted dependency with verified TLS and real authorization.
 
 TEST-10: [real regional boundary commands](regional/README.md). Run `LAB_PROJECT=magic-shop-regional-example ./testing/regional/run.sh` from the repository root for isolated real-auth provider checks and 16 recorded Chrome/Edge Playwright/Cucumber journeys. Exact evidence and retained limits are in [completion 24](../docs/completion/24-regional-reporting-boundaries.md).
+
+[Independent CI suites](ci/README.md) reuse these bounded commands in separately required native jobs and publish scanned text reports with explicit provenance. [Completion 26](../docs/completion/26-independent-ci-evidence.md) records the observed green push/PR workflows and intentional-red cleanup/gating control.
