@@ -4,7 +4,7 @@ services:
     extra_hosts: ["customer-api=${REPORTING_FAULT_IP:-127.0.0.1}"]
   reporting-mock:
     image: mokapi/mokapi:0.52.0@sha256:ba936c3c88db3f95674cbb7b7c790193de1a7e5b6f638efa6adcb89fc6f19be8
-    platform: linux/arm64
+    platform: ${REPORTING_MOCK_PLATFORM:-linux/arm64}
     user: "1000:1000"
     command: [--providers-file-filenames=/fault-state/mock.json,/fault-state/sequence.js, --api-dashboard=false, --mcp-server-enabled=false, --health-enabled=false, --api-port=0, --event-store-default-size=0, --log-level=error]
     logging: {driver: none}

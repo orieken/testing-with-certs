@@ -256,6 +256,7 @@ jobs:
     timeout-minutes: 60
     env:
       CI_EVIDENCE_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+      REPORTING_MOCK_PLATFORM: linux/amd64
       CI_FORCE_FAILURE_SUITE: ${{ github.event.inputs.evidence_failure_suite || 'none' }}
       CI_SUITE: consumer
     steps:
@@ -281,8 +282,11 @@ jobs:
           CI_PROBE_OUTCOME: ${{ steps.failure_probe.outcome }}
         run: |
           set -eu
+          mkdir -p "artifacts/ci-evidence/$CI_SUITE"
+          chmod 0777 "artifacts/ci-evidence/$CI_SUITE"
           docker run --rm --platform linux/amd64 --network none --entrypoint node \
-            -e GITHUB_ACTIONS -v "$PWD:/work" magic-shop-runner:03 \
+            -e GITHUB_ACTIONS -v "$PWD:/work:ro" \
+            -v "$PWD/artifacts/ci-evidence/$CI_SUITE:/work/artifacts/ci-evidence/$CI_SUITE" magic-shop-runner:03 \
             /work/testing/ci/report.mjs "$CI_SUITE" "$CI_EVIDENCE_ID" "$CI_RUN_OUTCOME" "$CI_PROBE_OUTCOME"
           docker run --rm --platform linux/amd64 --network none --entrypoint node \
             -v "$PWD:/work:ro" magic-shop-runner:03 \
@@ -308,6 +312,7 @@ jobs:
         suite: [checkout, reporting, idempotency]
     env:
       CI_EVIDENCE_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+      REPORTING_MOCK_PLATFORM: linux/amd64
       CI_FORCE_FAILURE_SUITE: ${{ github.event.inputs.evidence_failure_suite || 'none' }}
       CI_SUITE: ${{ matrix.suite }}
     steps:
@@ -333,8 +338,11 @@ jobs:
           CI_PROBE_OUTCOME: ${{ steps.failure_probe.outcome }}
         run: |
           set -eu
+          mkdir -p "artifacts/ci-evidence/$CI_SUITE"
+          chmod 0777 "artifacts/ci-evidence/$CI_SUITE"
           docker run --rm --platform linux/amd64 --network none --entrypoint node \
-            -e GITHUB_ACTIONS -v "$PWD:/work" magic-shop-runner:03 \
+            -e GITHUB_ACTIONS -v "$PWD:/work:ro" \
+            -v "$PWD/artifacts/ci-evidence/$CI_SUITE:/work/artifacts/ci-evidence/$CI_SUITE" magic-shop-runner:03 \
             /work/testing/ci/report.mjs "$CI_SUITE" "$CI_EVIDENCE_ID" "$CI_RUN_OUTCOME" "$CI_PROBE_OUTCOME"
           docker run --rm --platform linux/amd64 --network none --entrypoint node \
             -v "$PWD:/work:ro" magic-shop-runner:03 \
@@ -356,6 +364,7 @@ jobs:
     timeout-minutes: 60
     env:
       CI_EVIDENCE_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+      REPORTING_MOCK_PLATFORM: linux/amd64
       CI_FORCE_FAILURE_SUITE: ${{ github.event.inputs.evidence_failure_suite || 'none' }}
       CI_SUITE: regional
     steps:
@@ -381,8 +390,11 @@ jobs:
           CI_PROBE_OUTCOME: ${{ steps.failure_probe.outcome }}
         run: |
           set -eu
+          mkdir -p "artifacts/ci-evidence/$CI_SUITE"
+          chmod 0777 "artifacts/ci-evidence/$CI_SUITE"
           docker run --rm --platform linux/amd64 --network none --entrypoint node \
-            -e GITHUB_ACTIONS -v "$PWD:/work" magic-shop-runner:03 \
+            -e GITHUB_ACTIONS -v "$PWD:/work:ro" \
+            -v "$PWD/artifacts/ci-evidence/$CI_SUITE:/work/artifacts/ci-evidence/$CI_SUITE" magic-shop-runner:03 \
             /work/testing/ci/report.mjs "$CI_SUITE" "$CI_EVIDENCE_ID" "$CI_RUN_OUTCOME" "$CI_PROBE_OUTCOME"
           docker run --rm --platform linux/amd64 --network none --entrypoint node \
             -v "$PWD:/work:ro" magic-shop-runner:03 \
