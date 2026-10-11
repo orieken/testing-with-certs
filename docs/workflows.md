@@ -704,3 +704,15 @@ profiles and test controls stay in volumes; reports/videos are exported safely.
 See [completion 21](completion/21-prism-compatibility.md) and
 [completion 22](completion/22-prism-browser-failures.md) for exact observed commands,
 pins, results, limitations and corrections. No GitHub/native results are implied.
+
+## Scripted reporting dependency
+
+```sh
+./testing/faults/reporting/compatibility.sh
+./testing/faults/reporting/run.sh
+./testing/faults/reporting/record.sh
+```
+
+These create fresh private projects, keep credentials/profiles in volumes and clean up on exit. Mokapi supplies only reporting page contents after the real service token is validated over verified TLS. The last command records a new run in a labelled output viewer, not an app browser journey. See [completion 23](completion/23-mokapi-reporting-sequences.md) for exact observed runs and limits.
+
+TEST-10: [real regional boundary commands](../testing/regional/README.md). Run `LAB_PROJECT=magic-shop-regional-example ./testing/regional/run.sh` from the repository root for isolated real-auth provider checks and 16 recorded Chrome/Edge Playwright/Cucumber journeys. Exact evidence and retained limits are in [completion 24](completion/24-regional-reporting-boundaries.md).

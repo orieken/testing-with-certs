@@ -1,6 +1,6 @@
 # Prioritized testing work and agent handoffs
 
-Implementation backlog from the [scenario audit](testing-scenario-audit.md). TEST-01, TEST-03, TEST-05, TEST-07 and TEST-08 are completed with local container evidence; TEST-02 is completed with native evidence. TEST-04, TEST-06 and TEST-09–11 remain unchecked. The user prioritized the separate FEATURE-01–03 learning examples ahead of these items; their acceptance evidence is recorded below. Follow each testing item's dependencies when resuming this backlog. Checking a box requires recorded acceptance evidence, not merely code or a successful mock response.
+Implementation backlog from the [scenario audit](testing-scenario-audit.md). TEST-01, TEST-03, TEST-05, TEST-06, TEST-07, TEST-08, TEST-09 and TEST-10 are completed with local container evidence; TEST-02 is completed with native evidence. TEST-04 and TEST-11 remain unchecked. The user prioritized the separate FEATURE-01–03 learning examples ahead of these items; their acceptance evidence is recorded below. Follow each testing item's dependencies when resuming this backlog. Checking a box requires recorded acceptance evidence, not merely code or a successful mock response.
 
 ## Shared instructions for every handoff
 
@@ -52,11 +52,13 @@ TEST-02 evidence: [completion 18](completion/18-native-certificate-password-ci.m
 
   **Evidence:** [Completion 21](completion/21-prism-compatibility.md): pinned Prism 5.14.2/digest, 27 observed compatibility probes, positive/error/header/204/request and tuple/date checks, proxy warning/enforcement and 501 fallback, verified synthetic TLS negatives and absent client-certificate forwarding. Explicit mock-only decision; no real route changes or native evidence.
 
-- [ ] **TEST-06 — Prove Mokapi sequence and TLS compatibility.** Dependencies: a concrete requirement from TEST-03 or TEST-09.
+- [x] **TEST-06 — Prove Mokapi sequence and TLS compatibility.** Dependencies: a concrete requirement from TEST-03 or TEST-09.
 
   **Handoff prompt:** Pin Mokapi and its image digest. Build one deterministic scripted sequence for quote outage/recovery or reporting revision change. Verify required OpenAPI schema behavior, reset isolation, TLS boundary and cleanup. Redact or disable request dashboards/logging. Use a verified TLS wrapper only if needed and explain its trust boundary.
 
   **Done when:** The selected sequence is repeatable in independent disposable projects, exact compatibility limitations are recorded, and no credentials escape volumes/artifact scanning.
+
+  **Evidence:** [Completion 23](completion/23-mokapi-reporting-sequences.md): pinned Mokapi 0.52.0/digest, 14 compatibility observations with independent Ajv checks, deterministic reporting revision/conflict sequences, verified TLS/identity and real Node token authorization before credential-free mocking, two fresh disposable 19-case consumer runs, separate fault gate and cleanup. Scripted invalid responses are explicitly invalid; no native or live-provider coverage claim.
 
 - [x] **TEST-07 — Add contract-derived consumer and UI failure scenarios.** Dependencies: TEST-05.
 
@@ -74,17 +76,21 @@ TEST-02 evidence: [completion 18](completion/18-native-certificate-password-ci.m
 
   **Evidence:** [Completion 20](completion/20-checkout-idempotency.md): two fresh 21/21 container runs; four/two database-observed insert waiters, one order/revision increment, canonical 201/409 replay and a real committed response discarded before client headers. Separate evidence gate, TLS/auth controls, recorded output and intentional failure cleanup. Local emulation only; no new native evidence.
 
-- [ ] **TEST-09 — Verify insights pagination failure without mixed totals.** Dependencies: TEST-06 for scripted dependency sequences.
+- [x] **TEST-09 — Verify insights pagination failure without mixed totals.** Dependencies: TEST-06 for scripted dependency sequences.
 
   **Handoff prompt:** Exercise the real insights consumer with page one revision r1 followed by 409, revision r2, outage, repeated cursor or an empty intermediate page. Test maximum page bounds and documented recovery. Extend existing reporting unit and provider tests; prove the whole consumer path never returns mixed or partial totals.
 
   **Done when:** Deterministic sequences prove bounded termination, correct error/recovery behavior and no partial aggregate; applicable response contracts pass and live/fault evidence remains distinguishable.
 
-- [ ] **TEST-10 — Complete regional reporting boundary scenarios.** Dependencies: none.
+  **Evidence:** [Completion 23](completion/23-mokapi-reporting-sequences.md): real insights HTTP paths for sales/customers/orders reject second-page 409/r2/outage/repeated cursors without partial results, recover explicitly, continue across an empty intermediate page, succeed at 10,000 records and stop over-record/endless-page feeds on page 101. Python boundary tests, canonical response validation, exact request counters, elapsed bounds and mutation-tested separate evidence gate passed; recorded output is labelled browserless consumer evidence.
+
+- [x] **TEST-10 — Complete regional reporting boundary scenarios.** Dependencies: none.
 
   **Handoff prompt:** Extend REGION-02 using deterministic fixtures: exact date-window boundaries, customer moves after an order, historical order region versus current profile location, and totals across multiple pages. Preserve the existing September oracle and empty-region checks. Resolve expected semantics from contracts/domain design before adding assertions.
 
   **Done when:** Each boundary has a concrete expected result and passing provider tests; applicable browser map/table journeys agree; REGION-02 is checked only when its complete requirements are observed.
+
+  **Evidence:** [Completion 24](completion/24-regional-reporting-boundaries.md): five live provider acceptance cases and a separately labelled timestamp limitation probe; 110 exact order identities over seven public/two private pages; genuine profile move with historical Waterdeep totals; preserved September/empty-region oracles; 16 recorded real-auth Chrome/Edge Playwright/Cucumber journeys. UI rows retain the current first-25 limit. Mixed-precision query endpoints remain an explicit production gap.
 
 - [ ] **TEST-11 — Integrate separate consumer/fault CI gates and reports.** Dependencies: TEST-05–07 and at least one completed dependency-fault scenario (TEST-03 or TEST-09).
 

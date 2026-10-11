@@ -83,3 +83,9 @@ GitHub updates are deferred until local work is complete.
 ## Subsequent local TEST-05/07 execution
 
 [Completion 21](completion/21-prism-compatibility.md) records 27 bounded pinned-Prism compatibility observations and an explicit mock-only decision: selected tuples/dates/headers/errors work, default warnings pass invalid responses, upstream 501 can become mocked 200, and client certificates were not forwarded. [Completion 22](completion/22-prism-browser-failures.md) records eleven real Vue mock-consumer journeys in Chrome/Edge under Playwright/Cucumber, with canonical fixtures, labelled faults, measured recovery, actual videos and independent evidence gating. These local results close TEST-05/07 without adding mock passes to real-provider coverage, changing product behavior, or claiming native execution/full checkout runtime schema enforcement. GitHub remains deferred.
+
+## TEST-06/09 local follow-up
+
+[Completion 23](completion/23-mokapi-reporting-sequences.md) records pinned Mokapi reporting sequences and two independent 19-case real insights consumer runs. Revision conflicts, outages, repeated cursors, empty-page continuation, exact record caps and page termination now have whole-HTTP-path evidence. The independent fault gate cannot credit a real provider or native execution. Remaining checklist items are TEST-04 and TEST-11.
+
+[Completion 24](completion/24-regional-reporting-boundaries.md) closes the targeted REGION-02 matrix with real provider boundaries, profile/history distinction, exhaustive pagination and recorded map/table journeys. Mixed-precision endpoint rejection is retained as a separate explicit production follow-up; UI order rows are bounded to its existing first 25.

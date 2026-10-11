@@ -35,7 +35,7 @@ Status after the Prompt 11 teaching increment on 2026-10-08: the shared Playwrig
 | SHOP-02 | Observed | Customer/catalog contracts reject client totals, invalid quantity/item and duplicate order key. |
 | WIDGET-01 | Observed | Teaching widget toggle persists after fresh sign-in and is restored; role denial in contracts. |
 | REGION-01 | Observed | Teaching September Waterdeep result/map and contract oracle agree on 570 gp, 3 orders, 2 customers. |
-| REGION-02 | Partial | Python/provider seed and date checks exist; empty region and moved-customer boundary matrix remains. |
+| REGION-02 | Observed locally | [Completion 24](completion/24-regional-reporting-boundaries.md): exact UTC midnight bounds, completed-only status, real profile move versus historical membership, exhaustive API pages, September/empty-region oracle and 16 actual browser journeys. UI first-25 limit and mixed-precision query endpoint gap remain explicit; no native CI claim. |
 | MAP-01 | Observed | Real Chrome and Edge admin runs loaded the local Locations map while the browser context was offline: three markers, both checked layers and no external requests. Allowed geolocation panned to the seeded coordinates after connectivity was restored; a fresh denied-permission context showed the fallback message and retained three markers. The regional sales map also made no external requests. |
 | FOLLOW-01 | Observed | Recorded UI and insights contracts create/update persistent local follow-up; no outbound messaging. |
 | TRUST-01 | Observed | Live security suite rejects wrong hostname and, in a fresh process without the private CA, rejects verified shop TLS. |

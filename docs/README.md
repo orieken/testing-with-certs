@@ -73,3 +73,7 @@ Any referenced source document is evidence about the existing implementation, no
 The separate [TEST-08 checkout race/lost-response suite](../testing/faults/idempotency/README.md) uses real providers and database-observed barriers. [Completion 20](completion/20-checkout-idempotency.md) records its local runs and output-viewer video; native CI and browser journey evidence remain separate.
 
 The [TEST-05 → TEST-07 Prism suite](../testing/prism/README.md) adds bounded mock-only compatibility findings and recorded failure/recovery journeys through the unchanged Vue build. [Completion 21](completion/21-prism-compatibility.md) explains proxy/TLS limits; [completion 22](completion/22-prism-browser-failures.md) records the local Chrome/Edge Playwright/Cucumber results.
+
+TEST-06/09: [Mokapi reporting sequence commands](../testing/faults/reporting/README.md) and [completion 23](completion/23-mokapi-reporting-sequences.md). The real insights consumer uses an isolated scripted dependency with verified TLS and real authorization.
+
+TEST-10: [real regional boundary commands](../testing/regional/README.md). Run `LAB_PROJECT=magic-shop-regional-example ./testing/regional/run.sh` from the repository root for isolated real-auth provider checks and 16 recorded Chrome/Edge Playwright/Cucumber journeys. Exact evidence and retained limits are in [completion 24](completion/24-regional-reporting-boundaries.md).

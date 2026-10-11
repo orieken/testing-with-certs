@@ -1,0 +1,32 @@
+services:
+  runner-regional:
+    image: magic-shop-runner:03
+    platform: linux/amd64
+    user: "1000:1000"
+    entrypoint: [sh, /work/testing/faults/checkout/trust.sh]
+    environment:
+      HOME: /home/runner
+      LAB_BROWSER: ${LAB_BROWSER:-chrome}
+      LAB_REGIONAL_REPORT_DIR: /work/artifacts/regional/${LAB_PROJECT}
+    volumes:
+      - ../testing/regional:/work/testing/regional:ro
+      - ../testing/faults/checkout/trust.sh:/work/testing/faults/checkout/trust.sh:ro
+      - ../testing/api/contracts/user-token.ts:/work/testing/api/contracts/user-token.ts:ro
+      - ../seed:/work/seed:ro
+      - ../artifacts/regional/${LAB_PROJECT}:/work/artifacts/regional/${LAB_PROJECT}
+      - public-trust:/public:ro
+      - cert-shop-admin:/identity-admin:ro
+      - cert-customer-waterdeep:/identity-customer:ro
+      - db-secret-customer:/db-secret:ro
+      - cert-insights-client:/reporting-identity:ro
+      - auth-secret-reporting:/reporting-secret:ro
+      - regional-state:/regional-state
+      - regional-home:/home/runner
+      - regional-tmp:/tmp
+    networks: [front, backend, database]
+networks:
+  front: {internal: true}
+volumes:
+  regional-state: {}
+  regional-home: {}
+  regional-tmp: {}

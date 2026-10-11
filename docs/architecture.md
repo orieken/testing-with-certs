@@ -397,3 +397,7 @@ is not placed on real authenticated routes. [Completion 21](completion/21-prism-
 and [completion 22](completion/22-prism-browser-failures.md) explain evidence limits,
 actual recordings, independent gates and project/profile cleanup. No production
 architectural property or CI gate was wired during this local-only increment.
+
+## TEST-06/09 isolated reporting sequence boundary
+
+The disposable overlay redirects only insights→customer reporting DNS to a verified mTLS wrapper. The real Python consumer and Keycloak remain unchanged. The wrapper checks the insights certificate identity and asks real Node to validate the reporting token on the same private operation, then sends a credential-free request to Mokapi on a separate internal network. Mokapi supplies scripted page contents; real Node authorization is an oracle, not an assertion that the mock cursors or dataset are real. No normal routing or application authorization is replaced. See [completion 23](completion/23-mokapi-reporting-sequences.md).

@@ -1,0 +1,56 @@
+# Only this disposable project redirects the real insights dependency.
+services:
+  insights-api:
+    extra_hosts: ["customer-api=${REPORTING_FAULT_IP:-127.0.0.1}"]
+  reporting-mock:
+    image: mokapi/mokapi:0.52.0@sha256:ba936c3c88db3f95674cbb7b7c790193de1a7e5b6f638efa6adcb89fc6f19be8
+    platform: linux/arm64
+    user: "1000:1000"
+    command: [--providers-file-filenames=/fault-state/mock.json,/fault-state/sequence.js, --api-dashboard=false, --mcp-server-enabled=false, --health-enabled=false, --api-port=0, --event-store-default-size=0, --log-level=error]
+    logging: {driver: none}
+    volumes: [reporting-fault-state:/fault-state:ro, reporting-mock-tmp:/tmp]
+    networks: [reporting-mock]
+  reporting-fault:
+    image: node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+    user: "1000:1000"
+    command: [node, /harness/proxy.mjs]
+    logging: {driver: none}
+    volumes: [../testing/faults/reporting:/harness:ro, public-trust:/trust:ro, cert-customer-api:/credentials:ro, cert-insights-client:/caller:ro, reporting-fault-state:/fault-state]
+    networks: [backend, reporting-mock]
+    healthcheck:
+      test: [CMD, node, -e, "const s=require('net').connect(8443,'127.0.0.1');s.on('connect',()=>{s.end();process.exit(0)});s.on('error',()=>process.exit(1))"]
+      interval: 2s
+      timeout: 3s
+      retries: 10
+  runner-reporting-fault:
+    platform: linux/amd64
+    image: magic-shop-runner:03
+    user: "1000:1000"
+    entrypoint: [sh, /work/testing/faults/checkout/trust.sh]
+    environment:
+      HOME: /home/runner
+      REPORTING_FAULT_IP: ${REPORTING_FAULT_IP:-127.0.0.1}
+      LAB_FAULT_REPORT_DIR: /work/artifacts/reporting-faults/${LAB_PROJECT}
+    volumes:
+      - ../testing/faults:/work/testing/faults:ro
+      - ../testing/api/contracts/user-token.ts:/work/testing/api/contracts/user-token.ts:ro
+      - ../contracts/bundled:/work/contracts/bundled:ro
+      - ../artifacts/reporting-faults/${LAB_PROJECT}:/work/artifacts/reporting-faults/${LAB_PROJECT}
+      - public-trust:/public:ro
+      - cert-shop-admin:/identity-admin:ro
+      - cert-customer-waterdeep:/identity-customer:ro
+      - cert-insights-client:/service-identity:ro
+      - cert-customer-client:/wrong-service-identity:ro
+      - auth-secret-reporting:/reporting-secret:ro
+      - reporting-fault-state:/fault-state
+      - reporting-fault-home:/home/runner
+      - reporting-fault-tmp:/tmp
+    networks: [front, backend]
+networks:
+  front: {internal: true}
+  reporting-mock: {internal: true}
+volumes:
+  reporting-fault-state: {}
+  reporting-fault-home: {}
+  reporting-fault-tmp: {}
+  reporting-mock-tmp: {}

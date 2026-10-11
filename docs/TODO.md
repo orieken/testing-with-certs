@@ -160,7 +160,7 @@ Observed partial work (does not close the runtime checks above):
 
 ## Testing expansion — prioritized agent checklist
 
-See the [prioritized testing checklist](testing-scenario-checklist.md) for TEST-01–11, ordered by priority with handoff prompts, dependencies and acceptance criteria. TEST-01/03 have local status/fault evidence in [completion 19](completion/19-checkout-dependency-faults.md); TEST-02 has native certificate/password evidence in completion 18. TEST-08 has local concurrent idempotency/lost-response evidence in [completion 20](completion/20-checkout-idempotency.md). TEST-05/07 have local Prism compatibility/UI failure evidence in [completion 21](completion/21-prism-compatibility.md) and [completion 22](completion/22-prism-browser-failures.md). TEST-04, TEST-06 and TEST-09–11 remain open. GitHub updates are deferred until the local work is complete.
+See the [prioritized testing checklist](testing-scenario-checklist.md) for TEST-01–11, ordered by priority with handoff prompts, dependencies and acceptance criteria. TEST-01/03 have local status/fault evidence in [completion 19](completion/19-checkout-dependency-faults.md); TEST-02 has native certificate/password evidence in completion 18. TEST-08 has local concurrent idempotency/lost-response evidence in [completion 20](completion/20-checkout-idempotency.md). TEST-05/07 have local Prism compatibility/UI failure evidence in [completion 21](completion/21-prism-compatibility.md) and [completion 22](completion/22-prism-browser-failures.md). TEST-06/09 have Mokapi compatibility and real insights pagination fault evidence in [completion 23](completion/23-mokapi-reporting-sequences.md). TEST-10 has real provider and browser boundary evidence in [completion 24](completion/24-regional-reporting-boundaries.md). TEST-04 and TEST-11 remain open. The preceding local work was committed and pushed as `ef3207e`; TEST-06/09/10 work is recorded separately.
 
 ## Deferred scope
 
@@ -218,3 +218,5 @@ FEATURE-04–06 propose app behavior changes. They remain separate future scope 
 - [x] Complete Chrome/Edge × Playwright/Cucumber positive, negative and cookie matrix; record completion 15.
 - [ ] Set the user's demo password interactively inside the container and demonstrate the lesson manually.
 - [x] Verify the new feature in native Linux CI: 36/36 in run 38027680587 with scanned/readable uploaded reports and success/failure/cancellation cleanup evidence; see [completion 18](completion/18-native-certificate-password-ci.md). Prior run 38012708736 remains unrelated to this feature.
+
+- [ ] **Reporting timestamp precision follow-up:** Compare reporting range endpoints chronologically rather than lexically. Completion 24 observes a valid mixed whole/fractional-second interval returning canonical 503. Preserve half-open UTC semantics and authorization; add independent regression coverage before claiming full endpoint precision support.
