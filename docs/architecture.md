@@ -324,3 +324,76 @@ flowchart LR
   XP --> M["Lesson token in memory; identity display"]
   X --> APIs["Shop token and gateway certificate identity comparison"]
 ```
+
+## TEST-03 disposable checkout fault boundary
+
+The [checkout fault overlay](../testing/faults/checkout/README.md) builds the
+unchanged real stack in a fresh private project. Only Node's test-container hosts
+entry redirects catalog quotes to a private adapter. The public HAProxy catalog
+route, both exact auth/shop origins, Vue, real Keycloak clients/flows, PKCE,
+certificate identity comparison and API verifiers retain their ordinary behavior.
+The adapter owns only that project's catalog server leaf and Node caller leaf,
+verifies service CA/CRL/CN, and forwards the original real service token to Go over
+verified server CA/hostname and mTLS. Go authorization precedes injected replies.
+The adapter is a trusted disposable test component, not a production proxy or
+end-to-end client certificate forwarding mechanism.
+
+```mermaid
+flowchart LR
+  T["Browserless test: real certificate-only PKCE user token"] --> G["Unchanged HAProxy shop mTLS and identity header"]
+  G --> N["Real Node checkout consumer"]
+  N --> K["Real Keycloak scoped service token over verified TLS"]
+  N --> F["Disposable quote adapter: verified service mTLS and caller CN"]
+  F --> C["Real Go catalog: verified upstream TLS, service certificate and signed scoped token"]
+  C --> F
+  F --> X["After authorized 200: disconnect, delay or labelled invalid payload"]
+  X --> N
+  N --> D[("Real PostgreSQL over verified TLS")]
+  T --> D
+  D --> A["Assert no failure persistence; restore then one same-key order and stable replay"]
+```
+
+The fitness checks are the five TEST-03 cases and their mandatory separate fault
+gate, plus the live operation/status gate and eight coverage/report controls. They run
+locally through the explicit wrapper; native fault CI integration remains TEST-11.
+There is no product behavior or new production architectural property to wire into
+CI during this local-only increment. Tests/exported reports do not retain tokens,
+private keys, browser state or raw failure attachments.
+
+## TEST-08 checkout concurrency and response loss
+
+The [separate test overlay](../infra/checkout-idempotency.compose.yaml) adds a private response-loss intermediary and database observer without changing any real service route or configuration. Races use the normal HAProxy → Node → Go path. A scoped test database connection holds a SHARE table lock; `pg_locks`/`pg_stat_activity` must show every real Node INSERT waiting before release. The existing owner/key unique constraint selects one persisted winner. The lost-response case alone resolves the test client socket to the intermediary while retaining the exact shop URL/SNI and verified TLS. It verifies the selected customer certificate, forwards its unchanged real token with the same disposable certificate to real HAProxy, stores only the committed canonical response in a private volume, then disconnects before sending headers. Direct gateway replay must match that response and leave the database unchanged.
+
+The four cases and mandatory independent evidence gate assert actual waiters, database counts/revisions/hash, stable 201 replay, 409 conflict and trust/auth rejections. This is two verified TLS connections, not certificate passthrough. [Completion 20](completion/20-checkout-idempotency.md) records local proof and scope; no product change, CI wiring or native result is claimed.
+
+## TEST-05/07 isolated Prism consumer architecture
+
+The [Prism project](../testing/prism/compose.yaml) is independent of real Keycloak,
+HAProxy and business APIs. Only disposable mock derivatives drop security metadata;
+canonical schemas/paths/headers stay unchanged. The unchanged Vue build receives
+synthetic auth through browser interception and normal business replies from actual
+pinned Prism through a verified synthetic-mTLS adapter. Credential headers never
+reach the private HTTP mock hop. Deliberate invalid/transport faults are applied
+outside valid Prism examples, after normal replies have been contract checked.
+
+```mermaid
+flowchart LR
+  V["Unchanged Vue build on synthetic mTLS static server"] --> A["Browser synthetic auth responses; ephemeral keys/tokens in volume"]
+  V --> I["Browser API interceptor; strips credentials from mock call"]
+  I -->|"Verified synthetic mTLS"| T["Fixed test-only TLS adapter"]
+  T -->|"Credential-free HTTP / internal mock network"| P["Pinned Prism catalog/customer/insights mocks"]
+  P --> C["Canonical Ajv check before delivery"]
+  C --> F["Selected labelled type / JSON / size / delay / disconnect fault"]
+  F --> V
+  C --> V
+  O["Read-only canonical bundles"] --> D["Ajv-checked volume-held example derivatives"]
+  D --> P
+```
+
+The compatibility experiment uses only a synthetic upstream to observe warning/
+enforcement, tuple/date/header constraints, 501 fallback and verified upstream TLS.
+Prism does not forward the selected client certificate in this experiment, so it
+is not placed on real authenticated routes. [Completion 21](completion/21-prism-compatibility.md)
+and [completion 22](completion/22-prism-browser-failures.md) explain evidence limits,
+actual recordings, independent gates and project/profile cleanup. No production
+architectural property or CI gate was wired during this local-only increment.

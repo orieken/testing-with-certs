@@ -160,7 +160,7 @@ Observed partial work (does not close the runtime checks above):
 
 ## Testing expansion — prioritized agent checklist
 
-See the [prioritized testing checklist](testing-scenario-checklist.md) for TEST-01–11, ordered by priority with handoff prompts, dependencies and acceptance criteria. All implementation items are open. Start with status coverage, native certificate/password CI, checkout dependency failures and PR-base evidence.
+See the [prioritized testing checklist](testing-scenario-checklist.md) for TEST-01–11, ordered by priority with handoff prompts, dependencies and acceptance criteria. TEST-01/03 have local status/fault evidence in [completion 19](completion/19-checkout-dependency-faults.md); TEST-02 has native certificate/password evidence in completion 18. TEST-08 has local concurrent idempotency/lost-response evidence in [completion 20](completion/20-checkout-idempotency.md). TEST-05/07 have local Prism compatibility/UI failure evidence in [completion 21](completion/21-prism-compatibility.md) and [completion 22](completion/22-prism-browser-failures.md). TEST-04, TEST-06 and TEST-09–11 remain open. GitHub updates are deferred until the local work is complete.
 
 ## Deferred scope
 

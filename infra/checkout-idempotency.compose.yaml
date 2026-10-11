@@ -1,0 +1,53 @@
+# Disposable TEST-08 overlay. Real providers and their routes remain unchanged.
+services:
+  checkout-loss:
+    image: node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+    user: "1000:1000"
+    command: [node, /harness/proxy.mjs]
+    volumes:
+      - ../testing/faults/idempotency:/harness:ro
+      - public-trust:/trust:ro
+      - cert-shop:/credentials:ro
+      - cert-customer-waterdeep:/caller:ro
+      - checkout-idempotency-state:/loss-state
+    networks: [front]
+    healthcheck:
+      test: [CMD, node, -e, "const s=require('net').connect(8443,'127.0.0.1');s.on('connect',()=>{s.end();process.exit(0)});s.on('error',()=>process.exit(1));s.setTimeout(2000,()=>process.exit(1))"]
+      interval: 2s
+      timeout: 3s
+      retries: 10
+  runner-checkout-idempotency:
+    platform: linux/amd64
+    image: magic-shop-runner:03
+    entrypoint: [sh, /work/testing/faults/checkout/trust.sh]
+    user: "1000:1000"
+    environment:
+      CHECKOUT_LOSS_HOST: checkout-loss
+      HOME: /home/runner
+      LAB_CONTRACT_REPORT_DIR: /home/runner/live-artifacts
+      LAB_FAULT_REPORT_DIR: /work/artifacts/checkout-idempotency/${LAB_PROJECT}
+    volumes:
+      - ../seed:/work/seed:ro
+      - ../testing/faults:/work/testing/faults:ro
+      - ../infra:/work/infra:ro
+      - ../testing/api/contracts/coverage-manifest.json:/work/testing/api/contracts/coverage-manifest.json:ro
+      - ../artifacts/checkout-idempotency/${LAB_PROJECT}:/work/artifacts/checkout-idempotency/${LAB_PROJECT}
+      - public-trust:/public:ro
+      - cert-customer-waterdeep:/identity-customer:ro
+      - cert-customer-baldur:/identity-second-customer:ro
+      - cert-shop-admin:/identity-admin:ro
+      - cert-customer-client:/service-identity:ro
+      - cert-insights-client:/reporting-identity:ro
+      - auth-secret-catalog:/service-secret:ro
+      - auth-secret-reporting:/reporting-secret:ro
+      - db-secret-customer:/db-secret:ro
+      - checkout-idempotency-state:/loss-state:ro
+      - checkout-idempotency-home:/home/runner
+      - checkout-idempotency-tmp:/tmp
+    networks: [front, backend, database]
+networks:
+  front: {internal: true}
+volumes:
+  checkout-idempotency-state: {}
+  checkout-idempotency-home: {}
+  checkout-idempotency-tmp: {}

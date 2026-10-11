@@ -1,0 +1,119 @@
+# Explicit isolated teaching project: no real services, credentials or external routes.
+x-prism: &prism
+  image: stoplight/prism:5.14.2@sha256:87972b6cf73da2c0339fca18f362b6f93118152d652c970fab93ed13cfd55bae
+  platform: linux/amd64
+  networks: [mock-backend]
+  volumes: [fixtures:/fixtures:ro]
+  logging: {driver: none}
+  healthcheck:
+    test: [CMD, node, -e, "const s=require('net').connect(4010,'127.0.0.1');s.on('connect',()=>{s.end();process.exit(0)});s.on('error',()=>process.exit(1));s.setTimeout(2000,()=>process.exit(1))"]
+    interval: 2s
+    timeout: 3s
+    retries: 15
+services:
+  pki:
+    image: registry.access.redhat.com/ubi9/ubi:9.6@sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc
+    network_mode: none
+    entrypoint: [bash, /harness/pki.sh]
+    volumes: [./pki.sh:/harness/pki.sh:ro, ca-state:/state, public:/public, server:/server, identity:/identity]
+  runner:
+    image: ${PRISM_RUNNER_IMAGE:?Set project-scoped runner image}
+    platform: linux/amd64
+    build:
+      context: ../..
+      dockerfile: testing/prism/Runner.Containerfile
+      args: {RUNNER_IMAGE: '${PRISM_RUNNER_BASE:?Set immutable local runner base}'}
+    environment:
+      HOME: /home/runner
+      LAB_BROWSER: ${LAB_BROWSER:-chrome}
+      PRISM_SCENARIO: ${PRISM_SCENARIO:-}
+    networks: [front, mock-backend]
+    volumes: [public:/public:ro, identity:/identity:ro, fixtures:/fixtures, state:/state, runner-home:/home/runner, runner-tmp:/tmp, '${PRISM_REPORT_DIR:?Set safe report directory}:/reports']
+  browser-runner:
+    image: ${PRISM_RUNNER_IMAGE:?Set project-scoped runner image}
+    platform: linux/amd64
+    environment:
+      HOME: /home/runner
+      LAB_BROWSER: ${LAB_BROWSER:-chrome}
+      PRISM_SCENARIO: ${PRISM_SCENARIO:-}
+    networks: [front]
+    volumes: [public:/public:ro, identity:/identity:ro, state:/state, browser-home:/home/runner, browser-tmp:/tmp, '${PRISM_REPORT_DIR:?Set safe report directory}:/reports']
+  browser-ui:
+    image: cert-mock-browser-ui:01
+    build:
+      context: ../..
+      dockerfile: spikes/mock-auth/browser/Ui.Containerfile
+    networks:
+      front: {aliases: [shop.magic.test, auth.magic.test]}
+    volumes: [public:/public:ro, server:/server:ro]
+    logging: {driver: none}
+  upstream:
+    image: node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+    user: '1000:1000'
+    command: [node, /harness/compatibility/upstream.mjs]
+    networks:
+      mock-backend: {aliases: [unlisted-upstream]}
+    volumes: [./:/harness:ro, fixtures:/fixtures, server:/server:ro, public:/public:ro]
+    logging: {driver: none}
+  mock-api:
+    image: node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+    user: '1000:1000'
+    command: [node, /harness/adapter.mjs]
+    networks: [front, mock-backend]
+    volumes: [./:/harness:ro, server:/server:ro, public:/public:ro]
+    logging: {driver: none}
+    healthcheck:
+      test: [CMD, node, -e, "const s=require('net').connect(8443,'127.0.0.1');s.on('connect',()=>{s.end();process.exit(0)});s.on('error',()=>process.exit(1));s.setTimeout(2000,()=>process.exit(1))"]
+      interval: 2s
+      timeout: 3s
+      retries: 10
+  catalog-mock:
+    <<: *prism
+    command: [mock, -h, 0.0.0.0, --multiprocess, "false", -v, silent, /fixtures/catalog.json]
+  customer-mock:
+    <<: *prism
+    command: [mock, -h, 0.0.0.0, --multiprocess, "false", -v, silent, /fixtures/customer.json]
+  insights-mock:
+    <<: *prism
+    command: [mock, -h, 0.0.0.0, --multiprocess, "false", -v, silent, /fixtures/insights.json]
+  proxy-report:
+    <<: *prism
+    command: [proxy, /fixtures/catalog.json, "http://upstream:8090", -h, 0.0.0.0, --multiprocess, "false", -v, silent]
+  proxy-errors:
+    <<: *prism
+    command: [proxy, /fixtures/catalog.json, "http://upstream:8090", -h, 0.0.0.0, --multiprocess, "false", -v, silent, --errors]
+  proxy-tls:
+    <<: *prism
+    command: [proxy, /fixtures/catalog.json, "https://upstream:8444", -h, 0.0.0.0, --multiprocess, "false", -v, silent, --errors]
+    environment: {NODE_EXTRA_CA_CERTS: /public/server-ca.pem}
+    volumes: [fixtures:/fixtures:ro, public:/public:ro]
+  proxy-bad-ca:
+    <<: *prism
+    command: [proxy, /fixtures/catalog.json, "https://upstream:8444", -h, 0.0.0.0, --multiprocess, "false", -v, silent, --errors]
+  proxy-bad-name:
+    <<: *prism
+    command: [proxy, /fixtures/catalog.json, "https://unlisted-upstream:8444", -h, 0.0.0.0, --multiprocess, "false", -v, silent, --errors]
+    environment: {NODE_EXTRA_CA_CERTS: /public/server-ca.pem}
+    volumes: [fixtures:/fixtures:ro, public:/public:ro]
+  proxy-mtls:
+    <<: *prism
+    command: [proxy, /fixtures/catalog.json, "https://upstream:8445", -h, 0.0.0.0, --multiprocess, "false", -v, silent, --errors]
+    environment: {NODE_EXTRA_CA_CERTS: /public/server-ca.pem}
+    volumes: [fixtures:/fixtures:ro, public:/public:ro]
+  proxy-insights:
+    <<: *prism
+    command: [proxy, /fixtures/insights.json, "http://upstream:8090", -h, 0.0.0.0, --multiprocess, "false", -v, silent, --errors]
+networks:
+  front: {internal: true}
+  mock-backend: {internal: true}
+volumes:
+  ca-state: {}
+  public: {}
+  server: {}
+  identity: {}
+  fixtures: {}
+  state: {}
+  runner-home: {}
+  runner-tmp: {}
+  browser-home: {}
+  browser-tmp: {}

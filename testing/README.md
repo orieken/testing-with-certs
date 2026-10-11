@@ -91,3 +91,14 @@ exact commands and native Linux/manual limitations.
 Latest observed recording: [passing Chrome login](../artifacts/certificate-password/20261010T020527Z-chrome-40435/certificate-password-chrome.webm),
 a new single-test pass recorded after the original unrecorded matrix. Local
 videos are gitignored and this link is available only where the artifact exists.
+
+The [TEST-03 checkout harness](faults/checkout/README.md) tests the unchanged real
+Node service against injected catalog quote faults, with real Keycloak identities,
+verified TLS and PostgreSQL assertions. Run `./testing/faults/checkout/run.sh`, or
+`./testing/faults/checkout/record.sh` for a newly executed live-output video.
+Reports use a separate fault provenance; they cannot satisfy the live-provider
+gate. Every documented live status now has a requirement or an explicit exclusion.
+
+For TEST-08 real checkout concurrency and committed-response loss, use the [isolated idempotency suite](faults/idempotency/README.md). Run `./testing/faults/idempotency/run.sh` or `./testing/faults/idempotency/record.sh` from the repository root; these create and remove their own private real-provider stack.
+
+For TEST-05 → TEST-07, use the [isolated Prism compatibility and browser suite](prism/README.md): `./testing/prism/run.sh all` runs compatibility first, then eleven scenarios under Chrome/Edge and Playwright/Cucumber. It builds the unchanged Vue app, supplies synthetic authentication only on a private network, validates canonical examples and records actual UI journeys. Its mock report is separate from live-provider coverage.

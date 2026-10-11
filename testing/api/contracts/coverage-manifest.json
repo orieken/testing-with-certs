@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "scaffold-only-no-live-provider-coverage",
+  "status": "live-provider-status-requirements-with-explicit-exclusions",
   "operations": [
     {
       "service": "catalog",
@@ -12,7 +12,8 @@
         400,
         401,
         403
-      ]
+      ],
+      "excludedStatuses": []
     },
     {
       "service": "catalog",
@@ -24,6 +25,16 @@
         400,
         401,
         403
+      ],
+      "excludedStatuses": [
+        {
+          "status": 409,
+          "reason": "Generated random item IDs have no deterministic duplicate-create fixture."
+        },
+        {
+          "status": 422,
+          "reason": "Current provider treats invalid item fields as 400; documented 422 needs contract/provider reconciliation."
+        }
       ]
     },
     {
@@ -35,8 +46,10 @@
         200,
         400,
         401,
-        403
-      ]
+        403,
+        404
+      ],
+      "excludedStatuses": []
     },
     {
       "service": "catalog",
@@ -48,6 +61,16 @@
         400,
         401,
         403
+      ],
+      "excludedStatuses": [
+        {
+          "status": 404,
+          "reason": "Missing-item mutation fixture deferred; getItem 404 does not prove updateItem 404."
+        },
+        {
+          "status": 422,
+          "reason": "Current provider treats invalid patch fields as 400; documented 422 needs contract/provider reconciliation."
+        }
       ]
     },
     {
@@ -60,6 +83,16 @@
         400,
         401,
         403
+      ],
+      "excludedStatuses": [
+        {
+          "status": 404,
+          "reason": "Missing-item archive fixture deferred."
+        },
+        {
+          "status": 409,
+          "reason": "Current provider has no deterministic in-use archive conflict fixture."
+        }
       ]
     },
     {
@@ -71,7 +104,14 @@
         200,
         400,
         401,
-        403
+        403,
+        422
+      ],
+      "excludedStatuses": [
+        {
+          "status": 503,
+          "reason": "Catalog database/JWKS failure injection is deferred; checkout faults do not prove Go provider 503."
+        }
       ]
     },
     {
@@ -84,6 +124,12 @@
         400,
         401,
         403
+      ],
+      "excludedStatuses": [
+        {
+          "status": 404,
+          "reason": "Requires a certificate-mapped user without a profile; existing seed users all have profiles."
+        }
       ]
     },
     {
@@ -96,6 +142,16 @@
         400,
         401,
         403
+      ],
+      "excludedStatuses": [
+        {
+          "status": 404,
+          "reason": "Requires a certificate-mapped user without a profile."
+        },
+        {
+          "status": 422,
+          "reason": "Current provider treats invalid profile patches as 400; documented 422 needs reconciliation."
+        }
       ]
     },
     {
@@ -108,7 +164,8 @@
         400,
         401,
         403
-      ]
+      ],
+      "excludedStatuses": []
     },
     {
       "service": "customer",
@@ -119,7 +176,15 @@
         201,
         400,
         401,
-        403
+        403,
+        409,
+        422
+      ],
+      "excludedStatuses": [
+        {
+          "status": 503,
+          "reason": "Required separately by TEST-03 checkout-fault gate; fault evidence cannot satisfy untouched live-provider coverage."
+        }
       ]
     },
     {
@@ -131,8 +196,10 @@
         200,
         400,
         401,
-        403
-      ]
+        403,
+        404
+      ],
+      "excludedStatuses": []
     },
     {
       "service": "customer",
@@ -144,7 +211,8 @@
         400,
         401,
         403
-      ]
+      ],
+      "excludedStatuses": []
     },
     {
       "service": "customer",
@@ -155,8 +223,10 @@
         200,
         400,
         401,
-        403
-      ]
+        403,
+        422
+      ],
+      "excludedStatuses": []
     },
     {
       "service": "customer",
@@ -168,7 +238,8 @@
         400,
         401,
         403
-      ]
+      ],
+      "excludedStatuses": []
     },
     {
       "service": "customer",
@@ -180,7 +251,8 @@
         400,
         401,
         403
-      ]
+      ],
+      "excludedStatuses": []
     },
     {
       "service": "customer",
@@ -191,7 +263,14 @@
         200,
         400,
         401,
-        403
+        403,
+        409
+      ],
+      "excludedStatuses": [
+        {
+          "status": 503,
+          "reason": "Reporting database/dependency fault experiment deferred to TEST-09."
+        }
       ]
     },
     {
@@ -204,7 +283,8 @@
         400,
         401,
         403
-      ]
+      ],
+      "excludedStatuses": []
     },
     {
       "service": "insights",
@@ -216,6 +296,16 @@
         400,
         401,
         403
+      ],
+      "excludedStatuses": [
+        {
+          "status": 409,
+          "reason": "Complete insights revision-failure path deferred to TEST-09."
+        },
+        {
+          "status": 503,
+          "reason": "Complete insights dependency outage path deferred to TEST-09."
+        }
       ]
     },
     {
@@ -228,6 +318,16 @@
         400,
         401,
         403
+      ],
+      "excludedStatuses": [
+        {
+          "status": 409,
+          "reason": "Complete insights revision-failure path deferred to TEST-09."
+        },
+        {
+          "status": 503,
+          "reason": "Complete insights dependency outage path deferred to TEST-09."
+        }
       ]
     },
     {
@@ -240,6 +340,16 @@
         400,
         401,
         403
+      ],
+      "excludedStatuses": [
+        {
+          "status": 409,
+          "reason": "Complete insights revision-failure path deferred to TEST-09."
+        },
+        {
+          "status": 503,
+          "reason": "Complete insights dependency outage path deferred to TEST-09."
+        }
       ]
     },
     {
@@ -252,7 +362,8 @@
         400,
         401,
         403
-      ]
+      ],
+      "excludedStatuses": []
     },
     {
       "service": "insights",
@@ -263,7 +374,14 @@
         201,
         400,
         401,
-        403
+        403,
+        404
+      ],
+      "excludedStatuses": [
+        {
+          "status": 422,
+          "reason": "Current provider uses 400 for invalid fields; documented 422 needs reconciliation."
+        }
       ]
     },
     {
@@ -276,6 +394,16 @@
         400,
         401,
         403
+      ],
+      "excludedStatuses": [
+        {
+          "status": 404,
+          "reason": "Missing follow-up update fixture deferred."
+        },
+        {
+          "status": 422,
+          "reason": "Current provider uses 400 for invalid fields; documented 422 needs reconciliation."
+        }
       ]
     }
   ]

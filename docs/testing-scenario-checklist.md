@@ -1,6 +1,6 @@
 # Prioritized testing work and agent handoffs
 
-Implementation backlog from the [scenario audit](testing-scenario-audit.md). TEST-02 is completed with native evidence; TEST-01 and TEST-03–11 remain unchecked. The user prioritized the separate FEATURE-01–03 learning examples ahead of these items; their acceptance evidence is recorded below. Follow each testing item's dependencies when resuming this backlog. Checking a box requires recorded acceptance evidence, not merely code or a successful mock response.
+Implementation backlog from the [scenario audit](testing-scenario-audit.md). TEST-01, TEST-03, TEST-05, TEST-07 and TEST-08 are completed with local container evidence; TEST-02 is completed with native evidence. TEST-04, TEST-06 and TEST-09–11 remain unchecked. The user prioritized the separate FEATURE-01–03 learning examples ahead of these items; their acceptance evidence is recorded below. Follow each testing item's dependencies when resuming this backlog. Checking a box requires recorded acceptance evidence, not merely code or a successful mock response.
 
 ## Shared instructions for every handoff
 
@@ -12,9 +12,11 @@ Append these instructions to each prompt below:
 
 ## High priority — handle first
 
-- [ ] **TEST-01 — Strengthen operation/status coverage enforcement.** Dependencies: none.
+- [x] **TEST-01 — Strengthen operation/status coverage enforcement.** Dependencies: none.
 
   **Handoff prompt:** Extend the canonical OpenAPI coverage gate to require applicable documented response statuses, beyond success/400/401/403. Inventory existing tests first. Use explicit, reviewed exclusions with reasons for deferred cases; never silently exempt all uncommon errors. Correct the stale scaffold label. Keep mock observations out of live coverage.
+
+  **Evidence:** [Completion 19](completion/19-checkout-dependency-faults.md): 100 live requirements, 21 explicit exclusions, passing 23-operation gate and 409/422 removal controls. Local container evidence; no new native run.
 
   **Done when:** Removing an existing 409 or 422 observation fails a meaningful gate test; all operations retain coverage; uncovered statuses or exclusions are visible; the live suite passes with its recorded exclusions.
 
@@ -24,9 +26,11 @@ Append these instructions to each prompt below:
 
   **Done when:** A native run supplies all 36 passing cases, readable scanned reports and cleanup evidence. Exercise a failure path to verify cleanup. Prior push results or local emulation do not satisfy native acceptance.
 
-- [ ] **TEST-03 — Prove checkout dependency failure and recovery.** Dependencies: TEST-01; TEST-06 if using Mokapi, otherwise an isolated verified fault harness.
+- [x] **TEST-03 — Prove checkout dependency failure and recovery.** Dependencies: TEST-01; TEST-06 if using Mokapi, otherwise an isolated verified fault harness.
 
   **Handoff prompt:** Test the real Node checkout consumer against unavailable, delayed and malformed catalog quote responses. Assert bounded 503 responses, no persisted order or successful idempotency result, then restore the dependency and retry. Use contract validation and the real database; do not count a mock checkout endpoint as provider evidence.
+
+  **Evidence:** [Completion 19](completion/19-checkout-dependency-faults.md): two fresh 22/22 runs, measured 503 bounds, real database zero-persistence/recovery assertions, verified TLS and mandatory separate fault gate; recorded output and deliberate failure cleanup.
 
   **Done when:** Each fault has a deterministic passing test, measured timeout bound, database assertions and successful recovery; TLS remains verified; 503 is accounted for in the coverage gate.
 
@@ -40,11 +44,13 @@ TEST-02 evidence: [completion 18](completion/18-native-certificate-password-ci.m
 
 ## Medium priority — establish tool compatibility, then scenarios
 
-- [ ] **TEST-05 — Prove Prism compatibility in a bounded container experiment.** Dependencies: TEST-01.
+- [x] **TEST-05 — Prove Prism compatibility in a bounded container experiment.** Dependencies: TEST-01.
 
   **Handoff prompt:** Pin Prism and its container image digest. Load read-only canonical bundles and compare its behavior with existing Ajv fixtures for tuple/date constraints, headers, 204, error schemas and invalid requests. Test validation-proxy enforcement and upstream 501 behavior. Prove CA/hostname verification and client-certificate forwarding before routing authenticated traffic; document incompatibilities rather than disabling TLS.
 
   **Done when:** A reproducible compatibility report names the exact version/digest, passing and unsupported cases, and a concrete decision on mock-only versus proxy use. No default public route changes.
+
+  **Evidence:** [Completion 21](completion/21-prism-compatibility.md): pinned Prism 5.14.2/digest, 27 observed compatibility probes, positive/error/header/204/request and tuple/date checks, proxy warning/enforcement and 501 fallback, verified synthetic TLS negatives and absent client-certificate forwarding. Explicit mock-only decision; no real route changes or native evidence.
 
 - [ ] **TEST-06 — Prove Mokapi sequence and TLS compatibility.** Dependencies: a concrete requirement from TEST-03 or TEST-09.
 
@@ -52,17 +58,21 @@ TEST-02 evidence: [completion 18](completion/18-native-certificate-password-ci.m
 
   **Done when:** The selected sequence is repeatable in independent disposable projects, exact compatibility limitations are recorded, and no credentials escape volumes/artifact scanning.
 
-- [ ] **TEST-07 — Add contract-derived consumer and UI failure scenarios.** Dependencies: TEST-05.
+- [x] **TEST-07 — Add contract-derived consumer and UI failure scenarios.** Dependencies: TEST-05.
 
   **Handoff prompt:** Create a separately named Prism consumer suite using deterministic, Ajv-validated examples for populated/empty catalog and checkout 409/422/503 states. Add explicitly labelled malformed JSON, wrong-type, oversized, delay, disconnect and 403 fault cases. Exercise Vue recovery and absence of stale success or duplicate checkout through shared Playwright/Cucumber journeys. Evaluate runtime response validation only if evidence justifies the implementation cost.
 
   **Done when:** Applicable journeys pass in real Chrome and Edge under both runners; valid fixtures pass contract validation; deliberate faults have specific behavior assertions; reports cannot satisfy live-provider coverage.
 
-- [ ] **TEST-08 — Verify concurrent idempotency and lost-response retry.** Dependencies: none; can follow high-priority work without mock tooling.
+  **Evidence:** [Completion 22](completion/22-prism-browser-failures.md): two full 44-case Chrome/Edge × Playwright/Cucumber matrices, actual recordings, canonical Ajv/Prism examples, typed catalog and JSON/size/transport checkout faults, bounded manual same-key recovery and independent mock evidence gate. Final combined wrapper and intentional failure cleanup verified; no real-provider, native or arbitrary checkout-schema rejection claim.
+
+- [x] **TEST-08 — Verify concurrent idempotency and lost-response retry.** Dependencies: none; can follow high-priority work without mock tooling.
 
   **Handoff prompt:** Against the real isolated provider/database, race identical checkout requests using one key, race different bodies using one key, and simulate a response lost after persistence followed by retry. Verify one persisted order, stable replay and the documented conflict behavior. Avoid timing-only assertions.
 
   **Done when:** Database and API evidence show one winner/order, stable identical replay and 409 for conflicting bodies; the lost-response retry creates no duplicate. Fixtures clean up safely.
+
+  **Evidence:** [Completion 20](completion/20-checkout-idempotency.md): two fresh 21/21 container runs; four/two database-observed insert waiters, one order/revision increment, canonical 201/409 replay and a real committed response discarded before client headers. Separate evidence gate, TLS/auth controls, recorded output and intentional failure cleanup. Local emulation only; no new native evidence.
 
 - [ ] **TEST-09 — Verify insights pagination failure without mixed totals.** Dependencies: TEST-06 for scripted dependency sequences.
 
@@ -92,7 +102,7 @@ See [completion 16](completion/16-mocking-examples.md) and [commands and boundar
 - [x] FEATURE-03: Prism mock-only consumer uses canonical/Ajv-checked fixtures; structured errors, bounded delay, labelled invalid data and recovery observed; verified TLS to the test adapter.
 - [x] Shared example isolation: no published ports or live-app network, credential volumes removed after successful and deliberately failing runs; text reports scanned.
 
-This does **not** complete TEST-05: the bounded Prism experiment established selected mock-only response/request behavior and the TLS adapter boundary. Prism tuple/date generation, validation-proxy enforcement, upstream 501 and authenticated client-certificate forwarding were not exercised. The broader TEST-01 and TEST-03–11 criteria remain open; TEST-02 now has its separate native evidence.
+This does **not** complete TEST-05: the bounded Prism experiment established selected mock-only response/request behavior and the TLS adapter boundary. Prism tuple/date generation, validation-proxy enforcement, upstream 501 and authenticated client-certificate forwarding were not exercised. TEST-01/03 now have separate local evidence in completion 19; TEST-02 has its separate native evidence. TEST-04–11 remain open.
 
 ## Completed isolated browser mock consumers
 
@@ -103,7 +113,7 @@ See [completion 17](completion/17-browser-mock-consumers.md) and [copyable comma
 - [x] Fourteen shared scenarios pass in Chrome and Edge under both Playwright and Cucumber (56 executions); each has an actual browser recording labelled as mock evidence.
 - [x] Verified TLS/mTLS test boundary, canonical Ajv fixture validation, private network, volume-held credentials/profiles, fresh contexts, exported artifact scan and successful/failing cleanup observed.
 
-These mock-consumer criteria do not close live login/provider requirements, production certificate identity pairing, provider PKCE enforcement or native Linux-host evidence. TEST-02 is closed by its separate live native CI run; TEST-01 and TEST-03–11 remain open.
+These mock-consumer criteria do not close live login/provider requirements, production certificate identity pairing, provider PKCE enforcement or native Linux-host evidence. TEST-02 is closed by its separate live native CI run; TEST-01/03 have their separate local evidence in completion 19. TEST-04–11 remain open.
 
 ## Handoff tracking
 

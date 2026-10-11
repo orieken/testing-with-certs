@@ -646,3 +646,61 @@ sequenceDiagram
   Note over B,K: No cookie authenticator or password-only alternative
   Note over V,K: Shop adapter never initializes on lesson callback
 ```
+
+## TEST-03 real checkout failure and recovery
+
+Run [the dedicated local wrapper](../testing/faults/checkout/README.md) or its
+live-output recorder. This browserless evidence is separate from the browser mock
+and live login matrices.
+
+```mermaid
+flowchart TD
+  S["Require fresh disposable project; build pinned unchanged stack"] --> P["Volume-held PKI, real Keycloak clients and real databases"]
+  P --> H["Private quote adapter; only Node catalog hosts entry redirected"]
+  H --> L["17 existing live/schema cases; all 23 operations and required statuses"]
+  L --> F["4 deterministic quote faults plus verified TLS/auth boundary case"]
+  F --> E["Canonical 503 within 8 s; no order, idempotency success or revision change"]
+  E --> R["Restore forwarding; same key creates one real order; stable replay"]
+  R --> B["Independent live gate and fault 503 gate; scan safe local reports"]
+  B --> C["Trap cleanup; assert no project containers, networks or volumes"]
+  P --> Q["Intentional failing-run control in another fresh project"]
+  Q --> C
+  V["Optional no-network Chrome live-output viewer; no credentials"] --> S
+  C --> W["Close/finalize video; remove recorder profile volumes; scan artifacts"]
+```
+
+The 12-second injected hold must trigger Node's existing 5-second abort, with a
+4.5–8-second measured acceptance window. Disconnect and malformed replies must
+also finish within 8 seconds. The quoted success payload comes from real Go,
+not a fabricated checkout endpoint. Fault observations never enter the live
+provider coverage reporter. GitHub updates and native execution are deferred by
+user instruction; [completion 19](completion/19-checkout-dependency-faults.md)
+records the observed local results and limits.
+
+## Local TEST-08 workflow
+
+Run `./testing/faults/idempotency/run.sh` from the repository root, or `./testing/faults/idempotency/record.sh` for a new-run output-viewer video. The wrapper builds/provisions a fresh private real-provider project, runs the existing 17 live/schema cases followed by four race/loss/trust cases, checks the live and separate idempotency gates, scans safe artifacts, then removes containers/networks/volumes. `IDEMPOTENCY_FORCE_FAILURE=1 ./testing/faults/idempotency/run.sh` deliberately exits 1 after provisioning and exercises the same cleanup. No existing stack is adopted.
+
+Races require database-observed blocked inserts; no sleeps establish concurrency. The response-loss test asserts no client headers before ECONNRESET, real commit, then direct replay without another row or revision increment. The 2.5-second barrier, existing 5-second database timeout and 10-second API/transport bounds remain explicit. Reports keep keys, tokens, request headers, receipts and profiles out of exported artifacts. The optional no-network video viewer records safe live output, not an application journey. See [completion 20](completion/20-checkout-idempotency.md) for exact observed commands and limits. GitHub updates remain deferred.
+
+## Local TEST-05 → TEST-07 workflow
+
+Run `./testing/prism/run.sh all` from the repository root. The wrapper resolves
+its existing pinned runner image ID, creates a fresh private `cert-prism-*` project,
+builds/provisions in containers, validates fixtures with canonical Ajv, runs 27
+compatibility observations and a mock-only decision gate, then builds the unchanged
+Vue app and checks synthetic TLS boundaries. Eleven shared journeys run in real
+Chrome/Edge under Playwright/Cucumber, with a video per context and safe observations.
+The mandatory 44-case gate rejects missing/failed/mock-provenance drift, absent
+videos, extra retries/orders, missing faults and deadline violations. It cannot
+satisfy live-provider coverage. Safe scanning and project/container/network/volume/
+temporary-image cleanup follow.
+
+`compatibility` and `browser` select one phase; diagnostic subset mode explicitly
+skips the full matrix gate. The README's intentional failure command exercises
+cleanup after a completed browser journey. Type/JSON/size/transport faults are
+labelled separately from canonical business-error examples. Keys, tokens, secrets,
+profiles and test controls stay in volumes; reports/videos are exported safely.
+See [completion 21](completion/21-prism-compatibility.md) and
+[completion 22](completion/22-prism-browser-failures.md) for exact observed commands,
+pins, results, limitations and corrections. No GitHub/native results are implied.
