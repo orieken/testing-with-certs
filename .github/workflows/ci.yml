@@ -4,6 +4,13 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      evidence_failure_suite:
+        description: Deliberately fail one isolated evidence job to verify cleanup and red gating
+        type: choice
+        required: false
+        default: none
+        options: [none, consumer, checkout, reporting, idempotency, regional]
 
 permissions:
   contents: read
@@ -241,3 +248,170 @@ jobs:
             sh testing/cleanup-certificate-password.sh
           failure_result=$?
           test "$main_result" -eq 0 && test "$failure_result" -eq 0
+
+  consumer:
+    name: Contract-derived mock consumers (Prism)
+    needs: [javascript, services, compose]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      CI_EVIDENCE_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+      CI_FORCE_FAILURE_SUITE: ${{ github.event.inputs.evidence_failure_suite || 'none' }}
+      CI_SUITE: consumer
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Run independent evidence suite in pinned containers
+        id: suite_run
+        run: ./testing/ci/run-isolated.sh "$CI_SUITE"
+      - name: Prove cleanup after an intentional suite failure
+        id: failure_probe
+        run: ./testing/ci/probe-failure.sh "$CI_SUITE"
+      - name: Always dispose and independently verify both projects
+        id: cleanup
+        if: always()
+        timeout-minutes: 5
+        run: ./testing/ci/cleanup-isolated.sh "$CI_SUITE"
+      - name: Prepare, scan and verify allowlisted text reports
+        id: evidence_scan
+        if: always()
+        env:
+          CI_RUN_OUTCOME: ${{ steps.suite_run.outcome }}
+          CI_PROBE_OUTCOME: ${{ steps.failure_probe.outcome }}
+        run: |
+          set -eu
+          docker run --rm --platform linux/amd64 --network none --entrypoint node \
+            -e GITHUB_ACTIONS -v "$PWD:/work" magic-shop-runner:03 \
+            /work/testing/ci/report.mjs "$CI_SUITE" "$CI_EVIDENCE_ID" "$CI_RUN_OUTCOME" "$CI_PROBE_OUTCOME"
+          docker run --rm --platform linux/amd64 --network none --entrypoint node \
+            -v "$PWD:/work:ro" magic-shop-runner:03 \
+            /work/testing/container/check-artifacts.mjs "/work/artifacts/ci-evidence/$CI_SUITE"
+          for file in $(find "artifacts/ci-evidence/$CI_SUITE" -type f); do test -r "$file"; done
+      - name: Upload separate scanned evidence text report
+        if: always() && steps.evidence_scan.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: evidence-${{ env.CI_SUITE }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/ci-evidence/${{ env.CI_SUITE }}/
+          if-no-files-found: error
+          retention-days: 7
+
+  dependency-faults:
+    name: Dependency faults (${{ matrix.suite }})
+    needs: [javascript, services, compose]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [checkout, reporting, idempotency]
+    env:
+      CI_EVIDENCE_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+      CI_FORCE_FAILURE_SUITE: ${{ github.event.inputs.evidence_failure_suite || 'none' }}
+      CI_SUITE: ${{ matrix.suite }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Run independent evidence suite in pinned containers
+        id: suite_run
+        run: ./testing/ci/run-isolated.sh "$CI_SUITE"
+      - name: Prove cleanup after an intentional suite failure
+        id: failure_probe
+        run: ./testing/ci/probe-failure.sh "$CI_SUITE"
+      - name: Always dispose and independently verify both projects
+        id: cleanup
+        if: always()
+        timeout-minutes: 5
+        run: ./testing/ci/cleanup-isolated.sh "$CI_SUITE"
+      - name: Prepare, scan and verify allowlisted text reports
+        id: evidence_scan
+        if: always()
+        env:
+          CI_RUN_OUTCOME: ${{ steps.suite_run.outcome }}
+          CI_PROBE_OUTCOME: ${{ steps.failure_probe.outcome }}
+        run: |
+          set -eu
+          docker run --rm --platform linux/amd64 --network none --entrypoint node \
+            -e GITHUB_ACTIONS -v "$PWD:/work" magic-shop-runner:03 \
+            /work/testing/ci/report.mjs "$CI_SUITE" "$CI_EVIDENCE_ID" "$CI_RUN_OUTCOME" "$CI_PROBE_OUTCOME"
+          docker run --rm --platform linux/amd64 --network none --entrypoint node \
+            -v "$PWD:/work:ro" magic-shop-runner:03 \
+            /work/testing/container/check-artifacts.mjs "/work/artifacts/ci-evidence/$CI_SUITE"
+          for file in $(find "artifacts/ci-evidence/$CI_SUITE" -type f); do test -r "$file"; done
+      - name: Upload separate scanned evidence text report
+        if: always() && steps.evidence_scan.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: evidence-${{ env.CI_SUITE }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/ci-evidence/${{ env.CI_SUITE }}/
+          if-no-files-found: error
+          retention-days: 7
+
+  regional:
+    name: Real-provider regional boundaries
+    needs: [javascript, services, compose]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      CI_EVIDENCE_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+      CI_FORCE_FAILURE_SUITE: ${{ github.event.inputs.evidence_failure_suite || 'none' }}
+      CI_SUITE: regional
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Run independent evidence suite in pinned containers
+        id: suite_run
+        run: ./testing/ci/run-isolated.sh "$CI_SUITE"
+      - name: Prove cleanup after an intentional suite failure
+        id: failure_probe
+        run: ./testing/ci/probe-failure.sh "$CI_SUITE"
+      - name: Always dispose and independently verify both projects
+        id: cleanup
+        if: always()
+        timeout-minutes: 5
+        run: ./testing/ci/cleanup-isolated.sh "$CI_SUITE"
+      - name: Prepare, scan and verify allowlisted text reports
+        id: evidence_scan
+        if: always()
+        env:
+          CI_RUN_OUTCOME: ${{ steps.suite_run.outcome }}
+          CI_PROBE_OUTCOME: ${{ steps.failure_probe.outcome }}
+        run: |
+          set -eu
+          docker run --rm --platform linux/amd64 --network none --entrypoint node \
+            -e GITHUB_ACTIONS -v "$PWD:/work" magic-shop-runner:03 \
+            /work/testing/ci/report.mjs "$CI_SUITE" "$CI_EVIDENCE_ID" "$CI_RUN_OUTCOME" "$CI_PROBE_OUTCOME"
+          docker run --rm --platform linux/amd64 --network none --entrypoint node \
+            -v "$PWD:/work:ro" magic-shop-runner:03 \
+            /work/testing/container/check-artifacts.mjs "/work/artifacts/ci-evidence/$CI_SUITE"
+          for file in $(find "artifacts/ci-evidence/$CI_SUITE" -type f); do test -r "$file"; done
+      - name: Upload separate scanned evidence text report
+        if: always() && steps.evidence_scan.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: evidence-${{ env.CI_SUITE }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/ci-evidence/${{ env.CI_SUITE }}/
+          if-no-files-found: error
+          retention-days: 7
+
+  evidence-gates:
+    name: Require independent live, consumer and fault gates
+    needs: [integration, certificate-password, consumer, dependency-faults, regional]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Build pinned gate runner
+        run: docker build --platform linux/amd64 --target base -t magic-shop-ci-base:local -f infra/ci/Containerfile .
+      - name: Reject missing, skipped, failed or cancelled required gates
+        env:
+          CI_GATE_RESULTS: ${{ toJSON(needs) }}
+        run: |
+          docker run --rm --platform linux/amd64 --network none --entrypoint node \
+            -e CI_GATE_RESULTS magic-shop-ci-base:local /work/testing/ci/check-gates.mjs

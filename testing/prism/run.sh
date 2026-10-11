@@ -27,7 +27,7 @@ cleanup(){
  exit "$result"
 }
 trap cleanup EXIT;trap 'exit 130' INT;trap 'exit 143' TERM
-printf 'Base runner: %s\nHost: %s %s; runner linux/amd64 emulated\n' "$base" "$(uname -s)" "$(uname -m)" > "$PRISM_REPORT_DIR/environment.txt"
+printf 'Base runner: %s\nHost: %s %s; runner platform linux/amd64 (native or emulated according to host)\n' "$base" "$(uname -s)" "$(uname -m)" > "$PRISM_REPORT_DIR/environment.txt"
 compose build runner
 compose run --rm --no-deps pki
 compose run --rm --no-deps runner node /work/testing/prism/prepare.mjs
