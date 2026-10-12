@@ -1,5 +1,7 @@
 # Magic Shop certificate prototype
 
+For a plain-language explanation, read [Understand this project](docs/plain-language/README.md). The three guides explain the system, certificate login, and test evidence with Mermaid diagrams and ASD-STE100-inspired writing.
+
 This repository is a local teaching prototype. Start with the [teaching guide](docs/teaching-guide.md) for container-only startup, selected-user certificate login, tests, troubleshooting and reset. The [implementation guide](docs/README.md) tracks the three-language, OpenAPI-backed shop and acceptance evidence. The [agent adoption prompts](docs/agent-adoption-prompts.md) explain how another project can adapt the certificate tests. The [CI agent handoff prompt](docs/ci-agent-handoff-prompt.md) describes the existing GitHub workflow and remaining native Linux check. The [certificate-login spike](spikes/certificate-login/README.md) and all three live business providers passed on Apple Silicon using amd64 emulation. One GitHub Actions run passed the native Linux certificate, contract and browser matrix; a later run passed report upload, but its last Cucumber selection crashed in Node HTTP/2. Run 38012708736 subsequently passed the full prior native automated workflow. The new certificate/password lesson has local emulation evidence only.
 
 The root pnpm workspace contains the certificate-authenticated Vue shop, a

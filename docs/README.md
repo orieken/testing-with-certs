@@ -1,5 +1,9 @@
 # Magic Shop certificate-authentication teaching prototype
 
+Start with the [plain-language project guides](plain-language/README.md) for an ASD-STE100-inspired explanation of the system, authentication, tests, and evidence. These guides use the requested approximate style target, with necessary software terms retained.
+
+Use the [project terminology dictionary](project-terminology.md) and [writing guide](writing-guide.md) to keep current documentation consistent during conversion. The dictionary connects plain-language terms to the existing domain ownership table; it does not replace API contracts or historical evidence.
+
 See the [testing scenario and contract tooling audit](testing-scenario-audit.md) for coverage gaps and a proposed Prism/Mokapi experiment. The separate [FEATURE-01–03 mock consumers](../spikes/mock-auth/README.md) are implemented and container-verified; [completion 16](completion/16-mocking-examples.md) records their bounded compatibility evidence. The separate [browser mock consumers](../spikes/mock-auth/browser/README.md) add recorded UI and standalone OIDC journeys; [completion 17](completion/17-browser-mock-consumers.md) records their evidence. The separate [real checkout fault harness](../testing/faults/checkout/README.md) now has local failure/recovery evidence in [completion 19](completion/19-checkout-dependency-faults.md); broader fault/browser CI integration remains unverified.
 
 Use the [prioritized testing checklist](testing-scenario-checklist.md) to assign work to agents; each item includes a handoff prompt and completion criteria.
