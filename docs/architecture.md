@@ -1,184 +1,380 @@
 # Architecture and implementation decisions
 
-Status: Prompts 01–10 run PKI, PostgreSQL, HAProxy, an integrated Vue UI, live Go catalog, Node customer and Python insights providers, real Chrome/Edge runner profiles including the selected-user manual desktop, a certificate-only Keycloak realm with six seed users, and a private local package exercised by both test runners. The Vue UI uses Keycloak Authorization Code + PKCE and memory-held tokens. Customer checkout/widgets and administrator regional reporting/follow-ups passed in both real Chrome and Edge on Apple Silicon emulation. All three providers validate signed user requests; Go and Node pair scoped service requests with caller certificates. One GitHub Linux run passed contracts, security and the full real-browser matrix but failed report upload; later runs passed upload but hit a Node HTTP/2 assertion in Cucumber. Disabling Keycloak HTTP/2 did not fix it; an automated-browser HTTP/1.1 candidate awaits native CI validation.
+This document describes the implemented teaching lab and its test boundaries.
+Use the [project terminology dictionary](project-terminology.md) and [writing guide](writing-guide.md) with this document.
+The [plain-language introduction](plain-language/project.md) gives a shorter system overview.
 
-The Prompt 11 teaching slice now shares Saturday page/element/login flow models between Playwright Test and Cucumber. Both runners passed customer and admin examples in both branded browsers. Separate customer Chrome and admin Edge jobs also passed concurrently with two Playwright workers each and distinct local reports. Isolated signing-key rotation and signed JWT-01 negative-claim checks passed live against all three long-running APIs. Prompt 12 defines a Linux CI gate and passed its containerized static, contract, security and eight browser/runner/identity selections locally on Apple Silicon emulation. The second GitHub Linux run also passed those test gates and cleanup, but its artifact upload failed because one scanned telemetry file was unreadable by the host runner. Both current Compose viewer identities were human-confirmed on Apple Silicon.
+## Current state and evidence
 
-Prompt 13 adds a host Go operator built in a pinned container with Bubble Tea, Bubbles and Lip Gloss. Its Apple Silicon status, healthcheck and certificate metadata paths are observed. The healthcheck requires all seven core services healthy and checks the optional manual viewer when present; ephemeral test runners are judged by their exit status. The trusted host process invokes Docker Compose and the existing `lab` test commands; no application or runner receives a Docker socket. Native Linux remains unverified.
+The lab runs Vue, Keycloak, HAProxy, PostgreSQL, and three business APIs.
+The APIs use Go, Node, and Python.
+Vue uses Keycloak Authorization Code with PKCE and keeps tokens in memory.
+The shop requires certificate-only login.
+A separate lesson requires both a certificate and password.
 
-A separate native CI job now runs the real certificate-plus-password teaching
-matrix with allowlisted text reports, volume-held profiles and scoped
-success/failure/cancellation cleanup. Its 36-case matrix, scanned upload and success/failure cleanup passed in native
-run 38027680587; cancellation cleanup passed separately in run 38028333657. See
-[completion 18](completion/18-native-certificate-password-ci.md). Production
-authentication and API boundaries are unchanged.
+The test workspace shares Saturday page, element, and login models between Playwright Test and Cucumber.
+It uses actual Chrome and Edge.
+Local Apple Silicon runs use amd64 emulation for the browser runner.
+A human confirmed the customer Chrome and administrator Edge manual sessions there.
+
+Native Linux push run `38115515064` and PR run `38115518115` passed all 13 expanded CI jobs.
+These results include live contracts/security/browser tests and the separate certificate-password lesson.
+Mock-consumer, dependency-fault, and regional jobs retain separate evidence.
+[Completion 26](completion/26-independent-ci-evidence.md) records exact runs, environments, commands, and limits.
+This document revision does not claim a new runtime test.
+
+Earlier runs failed report upload or crashed in the automated browser certificate proxy's Node HTTP/2 path.
+The Keycloak-side HTTP/2 change did not fix the crash and was removed.
+Later runs passed with automated Chrome and Edge using `--disable-http2`.
+This observation does not establish the exact cause of the race.
+TLS verification and certificate selection remain active.
+See [native CI history](completion/12-native-linux-ci.md) for the original failures and continuation.
+
+Native Linux manual viewer and host operator checks remain unverified.
+Standalone JWT and OIDC examples retain their recorded local evidence.
+Literal clean-checkout/repeat-startup verification remains distinct from new-volume startup evidence.
+The regional timestamp precision issue and affected 25-row UI limit remain open limitations.
 
 ## Topology
 
 ```mermaid
 flowchart TB
-  CI["Observed GitHub Linux host: full prior automated workflow passed"] -->|"isolated LAB_PROJECT, static and live gates"| Lab
-  Operator["Observed host Go operator CLI/TUI; Docker privilege"] -->|"bounded Compose healthcheck and lab actions"| Lab
-  subgraph Lab["Observed Compose lab on Apple Silicon amd64 emulation"]
-    PKI["One-shot UBI9 PKI, no network"] --> CA[("CA signing state: PKI only")]
-    PKI -.-> Trust[("Public roots and CRLs")]
-    PKI -.-> Leaves[("Separate server, service and user leaves")]
-    Secrets["One-shot scoped secret jobs"] -.-> KC["Keycloak: certificate-only shop and separate certificate + password lesson; TLS passthrough"]
-    Secrets -.-> Node["Node customer API"]
-    Secrets -.-> Python["Python insights API"]
-    Browser["Real Chrome or Edge, selected user"] -->|"user mTLS; shop.magic.test:8443"| HA["HAProxy shop TLS termination"]
-    Browser -->|"certificate PKCE; auth.magic.test:9443"| Tunnel["HAProxy auth passthrough"]
-    Tunnel --> KC
-    HA -->|"gateway service mTLS"| UI["Vue shop/admin and isolated lesson entry point"]
-    HA -->|"gateway mTLS plus paired user token"| Go["Go catalog API"]
-    HA -->|"gateway mTLS plus paired user token"| Node
-    HA -->|"gateway mTLS plus paired admin token"| Python
-    Node -->|"Node leaf plus customer-catalog token and catalog.quote"| Go
-    Python -->|"Python leaf plus insights-reporting token and reporting.read"| Node
-    Go -->|"verified TLS"| DB[("PostgreSQL: four scoped databases")]
-    Node -->|"verified TLS"| DB
-    Python -->|"verified TLS"| DB
-    KC -->|"verified TLS"| DB
-    Trust -.-> Browser
-    Trust -.-> HA
-    Trust -.-> KC
-    Leaves -.-> Browser
-    Leaves -.-> HA
-    Leaves -.-> KC
-    Leaves -.-> Go
-    Leaves -.-> Node
-    Leaves -.-> Python
-    Leaves -.-> DB
-    Tests["Browserless contracts/security; automated Chrome/Edge HTTP/1.1 candidate; Node 24.19/Cucumber 12.9"] --> HA
-    Tests -->|"scanned local reports; scanned text-only CI upload passed"| Reports[("Teaching and coverage reports")]
-  end
-  Host["Host: optional protected loopback viewer only"] --> Browser
+  Browser["Chrome or Edge: selected user"] -->|"User mTLS; shop :8443"| Gateway["HAProxy shop listener"]
+  Browser -->|"Certificate login; auth :9443"| Tunnel["HAProxy TLS passthrough"]
+  Tunnel --> Keycloak["Keycloak"]
+  Gateway -->|"Gateway mTLS"| Vue["Vue UI"]
+  Gateway -->|"Gateway mTLS; user token and identity"| Catalog["Go catalog API"]
+  Gateway -->|"Gateway mTLS; user token and identity"| Customer["Node customer API"]
+  Gateway -->|"Gateway mTLS; admin token and identity"| Insights["Python insights API"]
+  Customer -->|"Service mTLS; scoped token; quotes"| Catalog
+  Insights -->|"Service mTLS; scoped token; reporting pages"| Customer
+  Catalog -->|"Verified TLS"| Database["PostgreSQL: four separate databases"]
+  Customer -->|"Verified TLS"| Database
+  Insights -->|"Verified TLS"| Database
+  Keycloak -->|"Verified TLS"| Database
+  PKI["PKI job: no network"] -.-> Trust["Scoped certificate and trust volumes"]
 ```
 
-Diagram omits several per-service credential mounts and token/JWKS calls for readability. The authentication document defines those boundaries. See [infrastructure and workflow diagrams](workflows.md) for the expanded topology, startup, authentication, business requests and runner lifecycle.
+Solid arrows show request paths. The dotted arrow shows certificate provisioning.
+The diagram omits individual trust mounts and token/JWKS requests.
+The authentication listener passes browser TLS to Keycloak without terminating it at HAProxy.
+See [authentication](authentication.md) and [expanded workflows](workflows.md) for those details.
 
-The observed GitHub CI host invoked Docker without receiving a certificate or signing key. Its isolated project created certificate volumes and bootstrapped the realm. After an exact Chrome pin refresh, the second run passed static OpenAPI checks, live contracts/security, all eight browser selections, the credential scan and cleanup; its text-only upload failed because a Cucumber telemetry file had mode `0600`. The third run reached Cucumber and crashed in Node HTTP/2. The fourth run, with Node 24.19/Cucumber 12.9 and corrected telemetry permissions, passed text-only upload but crashed in Node HTTP/2 on the last Edge/admin Cucumber selection. The fifth run crashed in Chrome/customer Cucumber despite Keycloak HTTP/2 being disabled. That Keycloak setting was removed; the sixth run passed the complete native workflow with automated branded browsers limited to HTTP/1.1. This does not conclusively identify the runtime race. Verified TLS, selected client certificates, auth passthrough and manual native-store browsers remain intact. WebM and HTML/video bundles remain local.
+## Containers and tool choices
 
-The Vue UI serves behind verified gateway mTLS, starts certificate-only Keycloak PKCE, shows the selected identity and role, and keeps tokens in memory. Its catalog, profile/orders/widgets, checkout and admin paths reach all three live providers. Customer, shopkeeper inventory and administrator journeys passed in both real Chrome and Edge with local video recordings, including persisted widgets/notes, synced regional reporting, item details and offline map. Native NSS certificate stores and both runner adapters were proved earlier.
-
-| Compose service | Responsibility | Current base / remaining plan |
+| Service or job | Responsibility | Pinned tool family |
 | --- | --- | --- |
-| `ui` | Vue certificate sign-in, shop/cart/checkout, account, inventory and admin/reporting screens backed by three live providers | Pinned Node 24.10 Bookworm builder/runtime; keycloak-js 26.2.4 |
-| `keycloak` | Certificate-only realm, six users, token issuance and verified database TLS | Pinned official Keycloak 26.4.0 image |
-| `customer-api` | Observed seeded profiles/orders, owned checkout, widgets, admin lists, revisioned private reporting, JWT/certificate pairing and authenticated spec | Pinned Node 24.10 Bookworm; pg 8.23.1, jose 6.2.12 |
-| `catalog-api` | Observed seeded browse/detail, item maintenance, private quotes, JWT/certificate pairing and authenticated spec | Pinned Go 1.25.3 Bookworm build, UBI9 runtime; pgx 5.11.0, golang-jwt 5.3.1 |
-| `insights-api` | Observed admin-only regional sales, GeoJSON, customer/order summaries and local follow-up persistence through Node's bounded feed | Pinned UBI9 Python 3.12; PyJWT 2.15.1, psycopg 3.2.13 |
-| `gateway` | Shop mTLS, private backend mTLS and auth passthrough | Pinned HAProxy 3.2.6 image |
-| `runner-test` / `runner-manual` | Same image; real Chrome/Edge, one selected-user mount; shared Saturday Playwright Test and Cucumber customer/admin journeys, plus Playwright shopkeeper inventory, observed | Pinned Node 24.19 Bookworm linux/amd64; signed browser packages; Playwright FFmpeg 1011 for local video |
-| `runner-contracts` / `runner-security` | Browserless OpenAPI gate with scoped service callers; separate security job with customer, second-customer and shopkeeper user leaves only | Same pinned runner image; no host certificate or signing-key mounts |
-| `runner-service-revocation` / `runner-user-validity` | Isolated negative-fixture jobs for revoked/dated service leaves and dated user leaves; each receives public trust plus only its named leaf and required catalog secret | Same pinned runner image; fixture keys remain in Docker volumes and issuer key remains PKI-only |
-| `runner-reporting-scope` / `scope-fixture-admin` | Isolated reporting-scope check with only the Python caller leaf, reporting client secret and public trust; the catalog check reuses `runner-service-revocation` with its Node caller leaf. A separate admin-only job removes one default grant in a disposable realm | Runner uses the pinned amd64 browser image; the scope fixture uses the pinned Node bootstrap image with only public trust and the admin secret |
-| `runner-key-rotation` / `key-rotation-admin` | Isolated certificate-backed PKCE and three-API probe before/after a generated Keycloak signing-key rotation; a separate admin-only job changes the disposable realm | Runner mounts only the shop-admin leaf and public trust; admin job mounts only the admin secret and public trust; no host trust change |
-| `postgres` | Four distinct databases/owners with TLS and persistent volume | Pinned official PostgreSQL 16.15 Trixie image |
-| `pki` | Container-only issuance, renewal, revocation and CRLs | Pinned UBI9 9.6 with OpenSSL; no network |
-| `auth-secrets` / `realm-bootstrap` | Generate isolated admin/service secrets; idempotently apply realm, users, roles, scopes and clients | Pinned UBI9 9.6 and Node 24.10 containers |
+| `ui` | Vue shop, account, inventory, reporting, and separate lesson | Node 24.10 Bookworm; keycloak-js 26.2.4 |
+| `keycloak` | User mapping, clients, roles, flows, and token issuance | Keycloak 26.4.0 |
+| `catalog-api` | Catalog, inventory, and private quotes | Go 1.25.3 builder; UBI9 runtime; pgx 5.11.0; golang-jwt 5.3.1 |
+| `customer-api` | Profiles, orders, checkout, widgets, and private reporting feed | Node 24.10 Bookworm; pg 8.23.1; jose 6.2.12 |
+| `insights-api` | Regional reports and local follow-up notes | UBI9 Python 3.12; PyJWT 2.15.1; psycopg 3.2.13 |
+| `gateway` | Shop certificate checks, backend mTLS, and authentication passthrough | HAProxy 3.2.6 |
+| `postgres` | Four database owners with separate credentials and persistent records | PostgreSQL 16.15 Trixie |
+| `pki` | Certificate issuance, renewal, revocation, and CRLs | UBI9 9.6 with OpenSSL |
+| `auth-secrets` / `realm-bootstrap` | Scoped secrets and idempotent realm setup | UBI9 9.6 / Node 24.10 |
+| Test and manual runners | Actual Chrome and Edge; shared test models; optional desktop | Node 24.19 Bookworm amd64; pinned browser packages; FFmpeg 1011 |
 
-The default profile has seven long-running services: UI, Keycloak, three APIs,
-HAProxy and PostgreSQL. PKI, database secrets and database bootstrap are
-completed jobs. Either optional runner profile adds one container. The manual
-profile is recreated for a different user and only publishes a protected
-loopback viewer. No host-installed runtime or certificate tooling is required
-beyond Docker Compose and a shell.
+The [compatibility record](compatibility.md) and [dependency strategy](dependency-strategy.md) explain version choices and base-image exceptions.
+Completion notes record actual image IDs and runtime versions for each observed run.
+Do not infer a run's environment from a tool-family label alone.
+
+The default profile has seven long-running services.
+PKI, secret generation, and database bootstrap are completed jobs.
+Optional test and manual profiles add their selected runner.
+The host needs Docker Compose and a shell. It needs no language runtime or certificate installation.
+
+Browserless `runner-contracts` and `runner-security` have scoped identities and public trust.
+They have no CA signing-key mounts.
+Revocation and validity runners receive only the leaves and secrets needed for their selected checks.
+Scope and signing-key rotation fixtures use separate privileged jobs in disposable realms.
+The browser runner does not receive the privileged bootstrap secret.
+See [Compose configuration](../infra/compose.yaml) and [coverage evidence](teaching-coverage.md) for the named profiles.
 
 ## Network and origins
 
-- Container DNS aliases on HAProxy: `shop.magic.test` and `auth.magic.test`.
-- Shop origin: `https://shop.magic.test:8443`; issuer: `https://auth.magic.test:9443/realms/magic-shop`.
-- The exact origins, server SANs and Playwright certificate mappings passed the
-  Prompt 03 Chrome/Edge transport smoke checks and Prompt 04 PKCE logins.
-- HAProxy binds two internal listeners: shop HTTPS termination and Keycloak TCP passthrough. Its backend server names refresh through Docker DNS after a service container is recreated, while backend TLS still verifies each server name and CA.
-- `/api/catalog/*` routes to Go; `/api/customer/*` to Node; `/api/insights/*` to Python; other shop paths serve the UI. Preserve path prefixes consistently in each OpenAPI contract.
-- All callers use the canonical issuer URL for discovery/tokens/JWKS. Do not switch between `localhost`, container names, and external issuer strings.
-- Keycloak belongs to a private proxy network; its HTTPS port is not published to the host. Service callers reach it through HAProxy's auth listener. Unknown paths on the shop API namespace return an API 404, not the SPA shell.
-- Business backend ports and database ports are internal only. Separate private backend/DB networks; container health endpoints are not routed publicly.
-- The canonical OpenAPI contracts name private HTTPS service origins
-  `https://catalog-api:8443`, `https://customer-api:8443`, and
-  `https://insights-api:8443`. All listeners and SANs exist. Go serves six
-  catalog operations, Node serves ten customer operations and Python serves seven insights operations.
-- Only the optional manual viewer publishes on `127.0.0.1`, default port 6080
-  (configurable when occupied). No host DNS or trust-store changes are needed.
-- Configure Keycloak passthrough without trusting HTTP forwarded headers. If using PROXY protocol, enable it on both ends and confine the connection to HAProxy's private network. Record the chosen behavior in the spike.
+| Entry or route | Destination |
+| --- | --- |
+| `https://shop.magic.test:8443` | HAProxy shop TLS listener |
+| `https://auth.magic.test:9443` | HAProxy authentication TCP listener |
+| `https://auth.magic.test:9443/realms/magic-shop` | Canonical token issuer |
+| `/api/catalog/*` | Go catalog API |
+| `/api/customer/*` | Node customer API |
+| `/api/insights/*` | Python insights API |
+| Other shop paths | Vue UI |
+| Unknown paths in the API namespace | API 404, not the UI shell |
+
+Discovery, token requests, and JWKS use the canonical issuer origin.
+Changing it to `localhost` or a container name changes issuer and server identity checks.
+HAProxy backend DNS refresh supports recreated containers while preserving TLS server-name checks.
+Keycloak passthrough does not depend on trusted HTTP forwarding headers.
+
+Business API, Keycloak, and database ports are internal.
+The lab separates `front`, `backend`, `auth`, and `database` networks.
+Private API origins are `https://catalog-api:8443`, `https://customer-api:8443`, and `https://insights-api:8443`.
+Private business operations have no browser-facing HAProxy route.
+Container health endpoints are not routed publicly.
+Only the optional protected manual viewer publishes on `127.0.0.1`, at port 6080 by default.
+No host DNS or trust-store change is required.
 
 ## Domain and service ownership
 
-| Owner | Records | Public operations | Internal operations |
+| Owner | Records | Public operations | Private capability |
 | --- | --- | --- | --- |
-| Go catalog | Items, item categories, display stock | Paginated browse/detail; shopkeeper/admin item create/update/archive | Node service may batch-resolve current item IDs and prices |
-| Node customer/orders | Customer profile keyed by Keycloak `sub`; order and immutable lines; dashboard widget layout | Own profile, own orders, simulated checkout, own widget layout; admin customer/order lists | Python service may request paginated reporting snapshots |
-| Python insights | Region definitions, follow-up notes; derived sales/read models if needed | Admin sales summaries, region-filtered users/orders, map data, follow-up notes | Reads Node reporting feed using its own constrained service identity |
-| Keycloak | Users, login identity mapping, roles, service clients | OIDC flows | Operator-controlled setup API only |
+| Go catalog | Items, categories, and display stock | Browse, detail, create, update, and archive items | Price quotes for the customer service |
+| Node customer | Profiles, orders, immutable order lines, and widget layouts | Own account/orders/widgets; checkout; authorized administrator lists | Revisioned reporting pages for insights |
+| Python insights | Region definitions and follow-up notes | Administrator reports, map data, and local notes | Reads the customer reporting feed |
+| Keycloak | Users, protected identity mappings, roles, and clients | Configured OIDC flows | Trusted operator setup |
 
-The three [canonical OpenAPI 3.1 contracts](../contracts/openapi/README.md) define the interfaces: Go implements six catalog operations, Node ten customer operations and Python seven insights operations. The [domain and contract design](domain-contract-design.md) records terms, ownership and authorization and is not a second canonical specification. All three package resolved documents, check operation/transport fields, and pass live browserless Playwright contracts. The 23-operation status gate passed on Apple Silicon emulation. See [API contract requirements](api-contracts.md) for the remaining CI gate.
+The [canonical OpenAPI 3.1 contracts](../contracts/openapi/README.md) define the exact interfaces.
+Go implements six business operations, Node ten, and Python seven.
+Each provider packages and exposes its authenticated bundled contract.
+Live browserless tests check the 23-operation status coverage gate.
+[Completion 25](completion/25-pr-base-contract-evidence.md) records actual unchanged, additive, and breaking PR-base comparisons.
 
-Canonical operation groups now specified for later implementation:
+The [domain ownership table](domain-contract-design.md#domain-dictionary-and-ownership) defines business invariants.
+The terminology dictionary explains preferred writing terms. Neither document is a second canonical API specification.
 
-- `GET/POST /api/catalog/items`, `GET/PATCH /api/catalog/items/{id}`, `DELETE /api/catalog/items/{id}` (archive).
-- `GET/PATCH /api/customer/me`, `GET/POST /api/customer/orders`, `GET /api/customer/orders/{id}`.
-- `GET /api/customer/admin/users`, `GET /api/customer/admin/orders` with cursor/limit and region/date filters.
-- `GET/PUT /api/customer/me/widgets`; validate the widget IDs against role-allowed widget types.
-- `GET /api/insights/regions`, `GET /api/insights/sales`, `GET /api/insights/customers`, `GET /api/insights/orders`; admin only.
-- `POST/GET /api/insights/follow-ups` and `PATCH /api/insights/follow-ups/{followUpId}` for local notes/status, with pagination on lists.
-- Private `/internal/catalog/quotes` and `/internal/reporting/orders` routes: service-only, never forwarded from the browser-facing proxy.
+### Checkout and historical records
 
-All lists have bounded pagination. Define amounts as integer copper pieces, UTC timestamps, stable synthetic IDs, order status, and explicit region IDs. Use seeded coordinates and nonoverlapping sample region polygons; document boundary membership. No external geocoding is necessary. Return GeoJSON coordinates in longitude/latitude order; convert appropriately for Leaflet APIs.
+Checkout accepts item IDs and integer quantities.
+Node requests current prices from Go, computes totals, and saves name/price snapshots.
+It applies the owner-scoped `Idempotency-Key` with the order transaction.
+It does not trust totals supplied by the browser.
+Stock is informational. Atomic stock reservation and real payments are outside this prototype.
 
-Use a stored region ID on the order as the sales grouping dimension. A customer's current profile region can differ from their historical order regions. “Users who ordered from an area” means unique customers with orders in that area, not all users whose current address is there. Aggregate completed orders only by default, using half-open UTC date ranges; label these rules in the UI.
+Money uses integer copper. Dates use UTC timestamps and half-open `[from, to)` filters.
+GeoJSON coordinates use longitude/latitude order. Leaflet coordinates need the corresponding conversion.
+IDs are stable synthetic identifiers, not permission grants.
+Lists use bounded pagination. The affected regional UI currently displays only the first 25 rows.
 
-Checkout accepts item IDs and quantities. Node resolves prices from Go, computes totals, checks quantities, snapshots names/prices, and applies an idempotency key. Do not trust the old client's submitted totals. Initial stock is informational; atomic stock reservation and real payment are outside the first prototype. Make this explicit in the teaching UI.
+An order retains its historical region.
+A profile change does not rewrite earlier orders.
+Sales summaries count completed orders and distinct customers in the selected historical region and interval.
+They do not count all customers currently living in that region.
 
-Python must not access Node's database directly. Its service token grants the bounded internal reporting read capability, not arbitrary customer mutations. Prefer a paginated batch feed over per-order/per-user requests; define a dataset revision for consistent summaries. For the small lab seed, bounded synchronous aggregation is sufficient; record a maximum input size and a clear failure when exceeded. Do not silently return partial totals.
+Python reads Node's bounded, revisioned reporting feed. It cannot query Node's database directly.
+The consumer rejects overlarge or unstable feeds instead of returning partial totals.
+The mixed whole/fractional-second timestamp comparison remains a known limitation.
+See [regional completion](completion/24-regional-reporting-boundaries.md) for the exact observed case.
 
 ## User experience
 
-- Reuse the existing shop's visual theme, item images, cart, item details, account, and locations view.
-- Replace the old mock login with certificate-backed Keycloak login. Show current identity and role, logout, and a clear access-denied state.
-- Customer sees their orders and personal widgets. Shopkeeper can maintain catalog items. Shop-admin sees users, orders, total sales, region filters, and the map-linked customer list.
-- Add/remove widgets with persistence: own recent orders for customers; total sales, sales by region, recent orders, and customer list for admins. Unsupported widgets and another user's layout cannot be written through API tampering.
-- The regional Leaflet map and table share filters. Provide keyboard-accessible equivalent table controls and meaningful loading/empty/error states.
-- Ship deterministic local map assets or a local schematic base layer. Existing external OpenStreetMap tiles may be an optional manual mode; CI must not depend on their network availability. Preserve attribution for any reused tiles/assets.
-- Follow-up means a synthetic customer list and local note/status records. Sending email/SMS and real customer data are outside this build.
+The UI retains the imported shop theme, images, cart, item details, account, and locations view.
+Certificate-backed Keycloak login replaces the old mock login.
+It shows the current identity and role, logout, and access-denied states.
+
+Customers see their own orders and permitted widgets.
+Shopkeepers can maintain catalog items.
+Shop-admin users see customer/order lists, sales, region filters, and the linked map.
+Widget layouts persist. API checks reject unsupported widgets and another user's layout.
+The regional map and table share filters and have equivalent keyboard-accessible table controls.
+They show loading, empty, and error states.
+
+The map uses deterministic local assets and GeoJSON.
+CI does not depend on external map tiles.
+Asset notices preserve the imported attribution.
+Follow-up notes are local synthetic records. They send no email, SMS, or other external message.
 
 ## Data, isolation, and reproducibility
 
-- Separate PostgreSQL databases and credentials: Keycloak, customer/orders, catalog, insights. Services cannot query each other's stores. Use verified TLS to the database; DB client-certificate auth is a later lesson, not required business-service mTLS coverage.
-- Bootstrap synthetic fixtures based on the copied shop data. Strip legacy passwords/tokens; remap old user IDs to explicit Keycloak subjects. Do not carry the mock authentication server forward.
-- Seed at least two customers in different regions, a shopkeeper, an admin, a disabled identity, and representative orders in multiple statuses and date ranges.
-- The [synthetic seed and independent reporting oracle](../seed/README.md) now define six identities, four regions and nine orders for later idempotent bootstrap. They are validated as local fixtures, not loaded into the planned services.
-- Parallel workers receive separate test customers/data IDs and fresh browser contexts. Destructive certificate/realm tests use isolated Compose projects or dedicated identities, not shared manual state.
-- Reset is an explicit command scoped to a named Compose project. Ordinary startup must not erase persistent orders, notes, certificates, or users.
-- Pin images, browser packages, runtime and Saturday versions after compatibility validation; capture source revision and image digests in run metadata.
+Keycloak, catalog, customer, and insights have separate PostgreSQL databases and credentials.
+Services cannot query each other's stores.
+Database connections use verified TLS with password authentication.
+Database client-certificate authentication is outside the current business-service mTLS evidence.
+
+The [seed and independent reporting oracle](../seed/README.md) define six identities, four regions, and nine baseline orders.
+The bootstrap loads synthetic fixtures idempotently.
+Additional boundary suites use their own deterministic records in disposable projects.
+Legacy passwords, access tokens, and mock authentication are not imported into the real lab.
+
+Parallel workers use separate test IDs and fresh browser contexts.
+Destructive certificate and realm tests use disposable projects or dedicated identities.
+An explicit reset removes only the named project's resources.
+Ordinary startup retains orders, notes, certificates, and users.
+Run metadata records source revisions, image digests, and observed tool versions.
+
+## Operator privilege boundary
+
+The Go operator uses Bubble Tea, Bubbles, and Lip Gloss.
+It is built in a pinned container and runs as a trusted host process.
+It calls Docker Compose and the existing `lab` commands.
+No API or test runner receives a Docker socket.
+
+Its healthcheck requires all seven core services to be healthy.
+It checks the optional manual viewer when present.
+A completed test runner is judged by its exit status, not by a running state.
+The operator shows bounded redacted telemetry and public certificate metadata.
+Apple Silicon operator checks are recorded in [completion 13](completion/13-operator-tui.md).
+Native Linux operator checks remain unverified.
+
+## Certificate + password teaching boundary
+
+The `shop-spa` client retains its REQUIRED X.509 flow and exact callback.
+The separate `certificate-password-spa` client requires X.509 followed by the password form.
+Its adapter owns only the lesson path and exact callback.
+Both clients use Authorization Code with PKCE S256.
+Keycloak owns password collection and verification.
+The lesson displays verified token identity. Business APIs reject lesson tokens.
+Operator password setup uses hidden container input. Bootstrap preserves existing passwords.
+
+```mermaid
+flowchart LR
+  Browser["Selected user certificate"] --> Tunnel["Authentication TLS passthrough"]
+  Tunnel --> Shop["shop-spa: REQUIRED X.509"]
+  Tunnel --> Lesson["certificate-password-spa: REQUIRED X.509 then password"]
+  Shop --> Check["Shop token plus API identity and permission checks"]
+  Check --> Business["Authorized business result"]
+  Lesson --> Identity["Lesson token: identity display only"]
+  Identity --> Reject["Business APIs reject lesson tokens"]
+```
+
+The branches represent separate client flows, not alternative checks within a single login.
+See [authentication](authentication.md#separate-certificate--password-teaching-view) for exact client and callback rules.
+
+## TEST-03 disposable checkout fault boundary
+
+The [checkout fault overlay](../testing/faults/checkout/README.md) uses the unchanged real stack in a fresh private project.
+Only Node's test-container host mapping redirects private catalog quotes to the adapter.
+Public catalog routing, Vue, Keycloak, PKCE, certificate pairing, and API verification remain unchanged.
+
+The adapter has only that project's catalog server leaf and Node caller leaf.
+It verifies the service CA, CRL, and caller CN.
+It forwards the original service token to Go with verified upstream TLS and mTLS.
+Go authorization precedes the injected reply.
+This is a trusted disposable component, not certificate passthrough or a production proxy.
+
+```mermaid
+flowchart LR
+  T["Browserless test: real certificate-only PKCE user token"] --> G["Unchanged HAProxy shop mTLS and identity header"]
+  G --> N["Real Node checkout consumer"]
+  N --> K["Real Keycloak scoped service token over verified TLS"]
+  N --> F["Disposable quote adapter: verified service mTLS and caller CN"]
+  F --> C["Real Go catalog: verified upstream TLS, service certificate and signed scoped token"]
+  C --> F
+  F --> X["After authorized 200: disconnect, delay or labelled invalid payload"]
+  X --> N
+  N --> D[("Real PostgreSQL over verified TLS")]
+  T --> D
+  D --> A["Assert no failure persistence; restore then one same-key order and stable replay"]
+```
+
+The five fault cases require no failed-checkout persistence and successful same-key recovery and replay.
+Their independent evidence gate stays separate from normal live-provider coverage.
+[Completion 19](completion/19-checkout-dependency-faults.md) records local evidence.
+[Completion 26](completion/26-independent-ci-evidence.md) records the subsequent native job and cleanup control.
+Reports do not retain access tokens, private keys, profiles, or raw failure attachments.
+
+## TEST-08 checkout concurrency and response loss
+
+The [idempotency overlay](../infra/checkout-idempotency.compose.yaml) adds a private response-loss intermediary and database observer.
+Normal races use HAProxy, Node, and Go without route changes.
+A scoped database connection holds a SHARE table lock.
+The test requires `pg_locks` and `pg_stat_activity` to show each Node INSERT waiting before release.
+The owner/key unique constraint selects one persisted winner.
+
+Only the lost-response case redirects the test client socket to the intermediary.
+The exact shop URL, SNI, and verified TLS remain.
+The intermediary checks the selected customer certificate.
+It forwards the unchanged token with the same disposable certificate to real HAProxy.
+It stores the committed canonical response in a private volume and disconnects before headers.
+Direct gateway replay must match that response and leave database state unchanged.
+These are two verified TLS connections, not certificate passthrough.
+
+The four cases check actual waiters, database counts/revisions/hash, stable 201 replay, 409 conflict, and trust/auth rejection.
+[Completion 20](completion/20-checkout-idempotency.md) records local evidence.
+The separate native job is recorded in completion 26.
+
+## TEST-05/07 isolated Prism consumer architecture
+
+The [Prism project](../testing/prism/compose.yaml) has no connection to real Keycloak, HAProxy, or business APIs.
+Only disposable derivatives remove security metadata. Canonical schemas, paths, and headers remain unchanged.
+The unchanged Vue build receives synthetic authentication through browser interception.
+Business replies come from pinned Prism through a verified synthetic-mTLS adapter.
+Credentials do not reach the private HTTP mock hop.
+Valid replies are checked against the canonical contract before deliberate faults are applied.
+
+```mermaid
+flowchart LR
+  V["Unchanged Vue build on synthetic mTLS static server"] --> A["Browser synthetic auth responses; ephemeral keys/tokens in volume"]
+  V --> I["Browser API interceptor; strips credentials from mock call"]
+  I -->|"Verified synthetic mTLS"| T["Fixed test-only TLS adapter"]
+  T -->|"Credential-free HTTP / internal mock network"| P["Pinned Prism catalog/customer/insights mocks"]
+  P --> C["Canonical Ajv check before delivery"]
+  C --> F["Selected labelled type / JSON / size / delay / disconnect fault"]
+  F --> V
+  C --> V
+  O["Read-only canonical bundles"] --> D["Ajv-checked volume-held example derivatives"]
+  D --> P
+```
+
+The compatibility experiment uses a synthetic upstream to check supported behavior and constraints.
+Prism does not forward the selected client certificate in this experiment.
+It is not used on real authenticated routes.
+[Completion 21](completion/21-prism-compatibility.md) records compatibility limits.
+[Completion 22](completion/22-prism-browser-failures.md) records local journeys and videos.
+Completion 26 records the separate native consumer job.
+These reports cannot prove real login or normal provider behavior.
+
+## TEST-06/09 isolated reporting sequence boundary
+
+The disposable overlay redirects only insights-to-customer reporting DNS to a verified mTLS wrapper.
+Python and Keycloak remain unchanged.
+The wrapper checks the insights certificate identity.
+Real Node validates the reporting token on the same private operation.
+The wrapper then makes a credential-free request to Mokapi on a separate internal network.
+
+Mokapi supplies scripted pages. Node provides real authorization checks.
+Those checks do not prove that mock cursors or datasets are real Node records.
+Normal routing and application authorization remain unchanged.
+[Completion 23](completion/23-mokapi-reporting-sequences.md) records local behavior and limits.
+Completion 26 records the separate native reporting job.
+
+## Independent CI evidence boundary
+
+CI requires the existing live-provider/security/browser job and the separate real certificate-password job.
+Consumer, checkout, reporting, idempotency, and regional selections produce their own reports.
+The final gate rejects missing, skipped, cancelled, or failed required jobs.
+Mock and fault reports do not contribute to normal live-provider coverage.
+
+Only allowlisted, scanned, readable text reports leave the runner in native uploads.
+Applicable browser jobs require local video evidence but do not upload those videos.
+Separate intentional-failure probes and always-running cleanup check disposal.
+See [the CI guide](../testing/ci/README.md) and completion 26 for commands and actual outcomes.
 
 ## Architecture checks
 
-| Decision | Automated proof to add |
+| Decision | Check and evidence scope |
 | --- | --- |
-| Exactly three business APIs in three languages | Compose service inventory and image/runtime smoke check |
-| Container-only certificate lifecycle | Mount inventory, host-wrapper scan and unchanged macOS trust/keychain fingerprints across containerized PKI/security checks; native Linux remains unverified |
-| Certificate gate and token permissions | Negative handshake, token, role, ownership, and identity-mismatch tests |
-| Independent service ownership | Dependency checks and database grant tests |
-| Services conform to canonical OpenAPI | Specification lint/drift checks and live Playwright contract tests for all three APIs |
-| Same Saturday model in both runners | One equivalent scenario passes through each adapter |
-| Deterministic regional UI | Offline map test and seeded aggregate/table consistency assertions |
-| Real Chrome/Edge | Channel and installed-binary version assertion, no bundled Chromium download |
-| UBI9 preference with explicit exceptions | Image manifest/base report and recorded compatibility result |
+| Exactly three business APIs in three languages | Compose inventory, static builds, and runtime checks |
+| Container-only certificate lifecycle | Mount/wrapper checks; local macOS trust audit; native jobs without host certificate installation |
+| Certificate gate and token permissions | Handshake, token, role, ownership, and identity-mismatch negatives |
+| Separate service data ownership | Dependency and database grant checks |
+| Canonical OpenAPI interfaces | Lint, generated/spec drift, PR-base comparison, and live contracts |
+| Shared Saturday models | Equivalent journeys through both runner adapters |
+| Deterministic regional UI | Offline map and seeded aggregate/table assertions within recorded limits |
+| Actual Chrome and Edge | Installed binary versions and channel checks; no bundled Chromium substitution |
+| UBI9 preference with exceptions | Pinned image records and compatibility observations |
+| Independent evidence gates | Missing/failed-result mutation tests and observed native intentional-failure run |
 
-Service boundaries and the fantasy presentation are judgment-only choices: they prioritize a manageable teaching example and three language ecosystems rather than measured production scaling needs. Automated checks can enforce the boundaries, but cannot prove that this is the only appropriate decomposition.
+The [host trust audit](completion/12-host-trust-audit.md) observed unchanged macOS trust and keychain fingerprints.
+That audit is not a Linux trust-store before/after measurement.
+Test counts and per-ID scope remain in the coverage map and completion notes.
+Service boundaries and the fantasy presentation are judgment-only choices for a manageable teaching example.
+Automated checks enforce their implementation, but do not prove that this is the only suitable decomposition.
 
-## Prompt 01 spike (observed Apple Silicon proof)
+## Historical feasibility and transport stages
 
-`spikes/certificate-login` is a bounded feasibility harness, not the full stack above.
-It keeps the exact two origins. Its single Node landing/identity endpoint substitutes
-for the planned UI and business APIs only within this spike. Keycloak uses isolated
-file storage for this experiment; PostgreSQL and all three business APIs remain planned.
-UBI9 9.6 verified repositories lack Xvfb and xdg-utils; the amd64 Debian Bookworm
-runner now launches both branded browsers under Apple Silicon emulation. UBI9 remains
-the PKI base. Runtime evidence is tracked in
-[compatibility](compatibility.md), including failures and unavailable platforms.
+The diagrams below retain earlier stage snapshots. They do not describe missing features in the current system.
+
+### Prompt 01 spike
+
+The bounded `spikes/certificate-login` harness used a Node landing/identity endpoint instead of business APIs.
+It used Keycloak file storage rather than the current PostgreSQL setup.
+Actual Chrome and Edge ran on amd64 Bookworm under Apple Silicon emulation.
+UBI9 remained the PKI base after its verified repositories lacked required desktop packages.
+The spike trusted only the user CA for certificate authentication.
+See [completion 01](completion/01-certificate-login-feasibility.md) for the original acceptance scope.
 
 ```mermaid
 flowchart LR
@@ -202,23 +398,16 @@ flowchart LR
   AppCert -.-> L
 ```
 
-Keycloak currently trusts only the user-client CA for certificate authentication.
-Service-client credentials are deliberately outside that trust domain; broadening
-it for future service token acquisition requires an explicit human-flow issuer check.
+Solid arrows show requests. Dotted arrows show scoped certificate or public trust mounts.
+The landing endpoint is a spike component, not a current business API.
 
-## Prompt 03 infrastructure overlay (historical transport and runners)
+### Prompt 03 infrastructure overlay
 
-This diagram records the early transport stage; the live component state is the
-topology above. At that stage `infra/compose.yaml` had a pinned, non-root UBI9 PKI job, an isolated database
-secret job, PostgreSQL 16.15, an idempotent database bootstrap job, Keycloak
-26.4.0, HAProxy 3.2.6, a Node 24 static UI server and three small API transport
-placeholders and optional test/manual runner profiles. The
-PostgreSQL base is the pinned official Debian Trixie image, an explicit UBI9
-exception to retain its maintained multi-architecture entrypoint. Only the
-manual viewer publishes a loopback host port. All four networks exist: `front`, private `backend`,
-private `auth`, and private `database`. Server DNS names and user CNs match the
-planned topology and seed identities. Dotted mounts below remain
-**planned** where their consumers do not yet exist.
+The early infrastructure stage established networks, certificate volumes, database isolation, and private API listeners.
+Node and Python still returned 503 for unimplemented business operations at that stage.
+Go's implementation was added during the recorded continuation.
+The current APIs subsequently implemented the business operations shown above.
+See [completion 03](completion/03-container-infrastructure.md) for transport checks and original timing.
 
 ```mermaid
 flowchart LR
@@ -276,130 +465,8 @@ flowchart LR
   Py -.->|"Planned: reporting feed call; transport allowlist checked directly"| N
 ```
 
-`./lab pki init` preserves serials and certificates. PostgreSQL accepts only
-TLS plus SCRAM over the private database network. Bootstrap and diagnostics use
-`sslmode=verify-full` against the `postgres` SAN; tests rejected cross-database,
-plaintext, wrong-CA and wrong-hostname connections. Keycloak is healthy and
-its database sessions use TLS; direct `auth.magic.test:8443` server validation
-passed with the server CA and rejected wrong trust/hostname. Both exact origins
-now returned HTTP 200 through HAProxy with a user certificate and verified
-server hostname. The shop denied no certificate, blocked `/internal/*`, and
-returned 503 for unfinished `/api/*` routes. The UI allowed only the gateway
-service certificate. An isolated project proved that revocation plus HAProxy
-restart rejected a fresh shop connection while another valid user still passed.
-Prompt 04 subsequently added the magic-shop realm and observed CRL-based human login rejection on a fresh connection after reload. Three
-API containers now listen privately with gateway-only public transport and the
-intended customer-to-catalog and insights-to-customer caller allowlists, but
-return 503 for all unimplemented business operations. They do not yet query
-their mounted database credentials, obtain service tokens or conform to the
-OpenAPI contracts. The optional test profile passed actual Chrome and Edge
-transport checks with strict server validation; the manual profile installed a
-customer certificate in Chrome, then recreated its HOME with only the admin
-certificate in Edge. A disposable project proved fresh-connection service-CRL
-rejection at all three APIs while a valid gateway caller still connected. The
-full-stack business topology above remains a target.
-
-## Certificate + password teaching boundary
-
-The separate `certificate-password-spa` public client binds to a two-execution
-REQUIRED certificate/password browser flow. Its adapter owns only the lesson path
-and exact callback, with Code + PKCE S256. Keycloak owns the password form and
-credential verification. `shop-spa` retains its single REQUIRED certificate flow;
-all three business APIs retain their client allowlist and gateway/token comparison.
-The lesson shows account, subject and certificate identity from the issued token.
-`testing/run-certificate-password.sh` supplies behavioral checks shared by both runners.
-No password value or browser profile is written to the host. Operator setup uses
-hidden terminal input inside a container; bootstrap preserves existing credentials.
-
-```mermaid
-flowchart LR
-  B["Chrome or Edge with selected certificate"] --> H["Shop mTLS :8443"]
-  H --> S["Shop adapter: shop-spa /callback"]
-  H --> L["Lesson adapter: certificate-password-spa /teaching/certificate-password/callback"]
-  S --> X["Keycloak REQUIRED X509 only"]
-  L --> T["Auth TLS passthrough :9443"]
-  T --> XP["Keycloak REQUIRED X509 then password form"]
-  Operator["Hidden interactive input inside container"] --> KC["Keycloak account password credential"]
-  KC --> XP
-  XP --> M["Lesson token in memory; identity display"]
-  X --> APIs["Shop token and gateway certificate identity comparison"]
-```
-
-## TEST-03 disposable checkout fault boundary
-
-The [checkout fault overlay](../testing/faults/checkout/README.md) builds the
-unchanged real stack in a fresh private project. Only Node's test-container hosts
-entry redirects catalog quotes to a private adapter. The public HAProxy catalog
-route, both exact auth/shop origins, Vue, real Keycloak clients/flows, PKCE,
-certificate identity comparison and API verifiers retain their ordinary behavior.
-The adapter owns only that project's catalog server leaf and Node caller leaf,
-verifies service CA/CRL/CN, and forwards the original real service token to Go over
-verified server CA/hostname and mTLS. Go authorization precedes injected replies.
-The adapter is a trusted disposable test component, not a production proxy or
-end-to-end client certificate forwarding mechanism.
-
-```mermaid
-flowchart LR
-  T["Browserless test: real certificate-only PKCE user token"] --> G["Unchanged HAProxy shop mTLS and identity header"]
-  G --> N["Real Node checkout consumer"]
-  N --> K["Real Keycloak scoped service token over verified TLS"]
-  N --> F["Disposable quote adapter: verified service mTLS and caller CN"]
-  F --> C["Real Go catalog: verified upstream TLS, service certificate and signed scoped token"]
-  C --> F
-  F --> X["After authorized 200: disconnect, delay or labelled invalid payload"]
-  X --> N
-  N --> D[("Real PostgreSQL over verified TLS")]
-  T --> D
-  D --> A["Assert no failure persistence; restore then one same-key order and stable replay"]
-```
-
-The fitness checks are the five TEST-03 cases and their mandatory separate fault
-gate, plus the live operation/status gate and eight coverage/report controls. They run
-locally through the explicit wrapper; native fault CI integration remains TEST-11.
-There is no product behavior or new production architectural property to wire into
-CI during this local-only increment. Tests/exported reports do not retain tokens,
-private keys, browser state or raw failure attachments.
-
-## TEST-08 checkout concurrency and response loss
-
-The [separate test overlay](../infra/checkout-idempotency.compose.yaml) adds a private response-loss intermediary and database observer without changing any real service route or configuration. Races use the normal HAProxy → Node → Go path. A scoped test database connection holds a SHARE table lock; `pg_locks`/`pg_stat_activity` must show every real Node INSERT waiting before release. The existing owner/key unique constraint selects one persisted winner. The lost-response case alone resolves the test client socket to the intermediary while retaining the exact shop URL/SNI and verified TLS. It verifies the selected customer certificate, forwards its unchanged real token with the same disposable certificate to real HAProxy, stores only the committed canonical response in a private volume, then disconnects before sending headers. Direct gateway replay must match that response and leave the database unchanged.
-
-The four cases and mandatory independent evidence gate assert actual waiters, database counts/revisions/hash, stable 201 replay, 409 conflict and trust/auth rejections. This is two verified TLS connections, not certificate passthrough. [Completion 20](completion/20-checkout-idempotency.md) records local proof and scope; no product change, CI wiring or native result is claimed.
-
-## TEST-05/07 isolated Prism consumer architecture
-
-The [Prism project](../testing/prism/compose.yaml) is independent of real Keycloak,
-HAProxy and business APIs. Only disposable mock derivatives drop security metadata;
-canonical schemas/paths/headers stay unchanged. The unchanged Vue build receives
-synthetic auth through browser interception and normal business replies from actual
-pinned Prism through a verified synthetic-mTLS adapter. Credential headers never
-reach the private HTTP mock hop. Deliberate invalid/transport faults are applied
-outside valid Prism examples, after normal replies have been contract checked.
-
-```mermaid
-flowchart LR
-  V["Unchanged Vue build on synthetic mTLS static server"] --> A["Browser synthetic auth responses; ephemeral keys/tokens in volume"]
-  V --> I["Browser API interceptor; strips credentials from mock call"]
-  I -->|"Verified synthetic mTLS"| T["Fixed test-only TLS adapter"]
-  T -->|"Credential-free HTTP / internal mock network"| P["Pinned Prism catalog/customer/insights mocks"]
-  P --> C["Canonical Ajv check before delivery"]
-  C --> F["Selected labelled type / JSON / size / delay / disconnect fault"]
-  F --> V
-  C --> V
-  O["Read-only canonical bundles"] --> D["Ajv-checked volume-held example derivatives"]
-  D --> P
-```
-
-The compatibility experiment uses only a synthetic upstream to observe warning/
-enforcement, tuple/date/header constraints, 501 fallback and verified upstream TLS.
-Prism does not forward the selected client certificate in this experiment, so it
-is not placed on real authenticated routes. [Completion 21](completion/21-prism-compatibility.md)
-and [completion 22](completion/22-prism-browser-failures.md) explain evidence limits,
-actual recordings, independent gates and project/profile cleanup. No production
-architectural property or CI gate was wired during this local-only increment.
-
-## TEST-06/09 isolated reporting sequence boundary
-
-The disposable overlay redirects only insights→customer reporting DNS to a verified mTLS wrapper. The real Python consumer and Keycloak remain unchanged. The wrapper checks the insights certificate identity and asks real Node to validate the reporting token on the same private operation, then sends a credential-free request to Mokapi on a separate internal network. Mokapi supplies scripted page contents; real Node authorization is an oracle, not an assertion that the mock cursors or dataset are real. No normal routing or application authorization is replaced. See [completion 23](completion/23-mokapi-reporting-sequences.md).
-
-The [independent CI evidence boundary](../testing/ci/README.md) requires the existing live-provider/security/browser jobs alongside separately named mock consumer, dependency-fault and real regional jobs. A final gate rejects failed or missing independent requirements; mock/fault reports never contribute to live-provider coverage. Only allowlisted scanned/readable text artifacts leave the runner. [Completion 26](completion/26-independent-ci-evidence.md) records native execution and deliberate-failure cleanup.
+Solid arrows show requests or established mounts. Dotted arrows retain that stage's planned mounts and service calls.
+Historical 503 placeholders are not current provider behavior.
+The stage verified fresh-connection user and service revocation, exact origins, server names, and database isolation.
+It also checked the native certificate store for customer Chrome and administrator Edge on Apple Silicon.
+Later implementation and native results are linked in the current evidence sections.

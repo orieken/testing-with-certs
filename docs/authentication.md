@@ -1,121 +1,263 @@
 # Certificate authentication and browser operation
 
-See [Mermaid workflows](workflows.md) for visual walkthroughs of provisioning, login, service authentication, manual browsing and certificate renewal/revocation.
+This document explains the implemented identity and access boundaries.
+Use the [project terminology dictionary](project-terminology.md) and [writing guide](writing-guide.md) with this document.
+See [Mermaid workflows](workflows.md) for expanded request and certificate lifecycle diagrams.
+The [teaching guide](teaching-guide.md) gives copyable learner procedures.
 
 ## Issuance versus authentication
 
-Keycloak's X.509 feature authenticates a certificate holder and maps that identity to a user. Treat the local certificate authority as the issuer; do not design a nonexistent general-purpose Keycloak user-certificate download endpoint. Keycloak realm signing certificates are also distinct from users' client certificates. See the [Keycloak X.509 guide](https://www.keycloak.org/docs/latest/server_admin/#_x509).
+The lab certificate authority issues user certificates.
+Keycloak checks a certificate holder and maps that identity to an enabled user.
+Keycloak does not provide a general-purpose user-certificate download endpoint for this lab.
+Realm signing keys sign tokens. They differ from users' certificate private keys.
 
-The lab presents one operator workflow: select or provision a Keycloak user, issue their client certificate, install it into the runner, and open the shop. Initially this is a containerized operator CLI, not a public enrollment web service. A future enrollment portal can wrap that workflow with independent identity proof and approvals.
+The trusted operator selects or provisions a seeded user and issues that user's certificate.
+The runner installs the selected identity before it opens the shop.
+This is an operator workflow, not a public enrollment service.
+Future self-enrollment would need independent identity proof and approvals.
+See the [Keycloak X.509 guide](https://www.keycloak.org/docs/latest/server_admin/#_x509) for general background.
 
 ## Provisioning sequence
 
-1. `pki-init` establishes separate user-client, service-client, and server certificate trust domains and initial revocation lists. Use distinct trust anchors for the three purposes in the first lab to avoid accidental cross-trust. All CA private keys remain in a PKI-only volume.
-2. Issue server certificates with exact SANs for HAProxy, Keycloak, UI, APIs, and PostgreSQL; issue service-client leaves with explicit identities and clientAuth usage. Bootstrap can operate using server trust plus an operator credential; it does not need a preexisting human user certificate.
-3. Start PostgreSQL and Keycloak, then run an idempotent bootstrap job through the internal auth route to create the realm, clients, roles, and users.
-4. Assign each user a stable opaque `cert_identity` attribute. Provisioning enforces uniqueness, and ordinary users cannot edit it. A UUID is preferable to display names or email addresses.
-5. Generate a unique user key and certificate whose CN contains that stable identifier; set clientAuth EKU and issuer constraints. Keycloak's X.509 flow extracts CN and matches the protected attribute. This is the initial mapping to prove in the spike.
-6. Write PEM certificate/key and a PKCS#12 bundle for the selected identity to a narrowly scoped volume. Pass bundle passwords using mounted secret files, never command-line logs. Store public serial/fingerprint/expiry metadata separately.
-7. Install only the selected user's identity into a fresh manual browser home; load the server trust anchor. Automated workers use selected PEM files through Playwright's `clientCertificates` API.
+1. The PKI container establishes separate user, service, and server trust domains.
+   It creates the initial certificate revocation lists (CRLs).
+   Certificate-authority private keys stay in the PKI-only volume.
+2. The issuer creates server certificates with exact subject alternative names (SANs).
+   It creates service certificates with explicit identities and clientAuth extended key usage (EKU).
+3. PostgreSQL and Keycloak start.
+   The bootstrap job creates or verifies the realm, clients, roles, and seeded users through the internal authentication route.
+   Bootstrap uses server trust and an operator credential. It needs no existing human certificate.
+4. Each user gets a protected, unique `cert_identity` attribute.
+   This stable opaque UUID is not a display name or email address.
+   Ordinary users cannot edit it.
+5. The issuer creates the user's key and certificate.
+   The certificate common name (CN) contains the stable identity.
+   The certificate has clientAuth EKU and the required issuer constraints.
+   Keycloak extracts CN and matches the protected attribute.
+6. The issuer writes PEM certificate/key files and a PKCS#12 bundle to narrowly scoped volumes.
+   Bundle passwords use mounted secret files. They do not appear in command arguments or logs.
+   Public serial, fingerprint, and expiry metadata remain separate.
+7. The manual runner installs only the selected user's identity in a fresh browser HOME.
+   It loads the server trust anchor.
+   Automated workers use selected PEM files through Playwright's `clientCertificates` API.
 
-Use a short, configurable lab validity period (initial proposal: seven days); fixture certificates supply expired, not-yet-valid, revoked, unknown-user, and wrong-issuer cases. Renewal reuses the stable identity but rotates the key/serial. Persist CA state and serial counters; serialize issuer writes. Repeated ordinary startup must not silently rotate keys or recreate the realm.
+The current PKI configuration uses a 30-day default leaf validity and a seven-day CRL validity.
+Special fixtures cover expired, not-yet-valid, revoked, unmapped, and wrong-issuer certificates.
+Renewal retains the stable identity and rotates the key and serial.
+Issuer state and serial counters persist. Issuer writes are serialized.
+Ordinary startup does not rotate keys or recreate the realm.
+See [the issuer configuration](../infra/pki/issue.sh) for exact settings.
 
 ## Browser login
 
-1. A browser with a valid user certificate connects to `https://shop.magic.test:8443`. HAProxy requires a certificate from the user CA and checks validity/revocation before serving the UI shell.
-2. Vue starts OIDC Authorization Code with PKCE S256 against `https://auth.magic.test:9443`. Configure one public SPA client, exact redirect URIs and allowed origin, no embedded client secret, and no direct password grant.
-3. HAProxy's auth listener tunnels TLS directly to Keycloak. Keycloak receives the browser certificate itself; no forwarded certificate HTTP header is involved. This follows Keycloak's [passthrough recommendation](https://www.keycloak.org/server/reverseproxy).
+1. The browser connects to `https://shop.magic.test:8443` with its selected user certificate.
+   HAProxy requires user-CA trust and checks validity and revocation before serving the UI shell.
+2. Vue starts OIDC Authorization Code with PKCE S256 against `https://auth.magic.test:9443`.
+   The `shop-spa` public client uses exact redirects and an allowed origin.
+   It has no embedded client secret or direct password grant.
+3. HAProxy tunnels the authentication TLS connection directly to Keycloak.
+   Keycloak receives the browser certificate itself. It does not use a forwarded certificate HTTP header.
+4. Keycloak checks the certificate and enabled user mapping.
+   The shop flow requires X.509. It has no password alternative or cookie-only identity bypass.
+   The pinned configuration disables the identity confirmation page.
+5. Vue exchanges the authorization code with PKCE through `keycloak-js` 26.2.4.
+   It initializes the adapter before the router and clears the callback URL.
+   Access and refresh tokens stay in memory.
+6. Business requests carry the selected user's access token.
+   Each API checks the signature, issuer, audience, lifetime, role, and certificate identity match.
 
-4. Keycloak maps the certificate to the enabled user and issues authorization results. Configure a client-specific certificate-required browser flow, without a password alternative or a cookie-only bypass of the identity check. Identity confirmation can be skipped if supported by the pinned version; a confirmation screen is acceptable, a required password is not.
-5. The Vue shell now exchanges the authorization code using PKCE through pinned `keycloak-js` 26.2.4. It initializes the adapter before the router, holds access/refresh tokens in memory and clears the callback URL; the old localStorage bearer-token implementation is gone. [Adapter guidance](https://www.keycloak.org/securing-apps/javascript-adapter)
-6. Signed-in catalog, customer and insights requests carry the selected user's access token. Each provider verifies its signature, issuer, own audience, lifetime, role and pairing with the gateway's certificate identity before returning business data. The UI clears identity and previously loaded item data on refresh failure/expiry, and returns to a signed-out shop shell after Keycloak logout using the exact registered post-logout redirect.
+The UI clears identity and previously loaded item data when refresh fails or the session expires.
+Keycloak logout returns to the signed-out shop shell through the registered post-logout redirect.
+The old localStorage bearer-token implementation is not used.
+See [reverse proxy guidance](https://www.keycloak.org/server/reverseproxy) and
+[adapter guidance](https://www.keycloak.org/securing-apps/javascript-adapter) for general background.
 
-Automated Playwright Test and Cucumber browser launches now ask real Chrome and
-Edge to use HTTP/1.1 via `--disable-http2`. Playwright 1.61.0's context-certificate
-proxy contains a Node HTTP/2 server path, and native CI twice crashed in that
-path. This is a candidate for the intermittent crash, pending a full native
-rerun. It changes neither HTTPS validation nor the selected client certificate.
-Manual native-store Chrome and Edge do not use this launch option. A prior
-Keycloak-side HTTP/2 change did not prevent the crash and was removed.
+Automated Playwright Test and Cucumber launches use `--disable-http2` for Chrome and Edge.
+Earlier native runs crashed in the Node HTTP/2 path of the context-certificate proxy.
+A Keycloak-side HTTP/2 change did not fix the crash and was removed.
+Later native workflows passed with the automated browser launch option.
+This result does not establish the exact cause of the race.
+TLS validation and the selected certificate remain active.
+Manual browsers with native certificate stores do not use this launch option.
+See [native CI history](completion/12-native-linux-ci.md) and [current CI evidence](completion/26-independent-ci-evidence.md).
 
-Keycloak's HTTPS listener may request rather than universally require a client certificate so discovery/JWKS and confidential-client flows work. Its listener may trust both user and service client CAs, but the shop's login flow must additionally require the user CA and a valid user mapping. A service certificate with a colliding CN must never map to a human user. Verify the chosen listener trust configuration and all flow paths in prompt 01.
+Keycloak uses `--https-client-auth=request`, not a universal client-certificate requirement at its TLS listener.
+Discovery, JWKS, and confidential-client token requests can therefore operate without a human certificate.
+The configured trust store contains the user CA. The human login flow still requires a valid user certificate and mapping.
+A service certificate must not authenticate as a human, even if its CN collides.
+See [Keycloak container configuration](../infra/keycloak/Containerfile),
+[Compose trust configuration](../infra/compose.yaml), and [realm settings](../infra/keycloak/realm.json).
 
-A trusted but unmapped user certificate can pass the shop's TLS gate and load a non-sensitive shell, but must fail Keycloak authentication and never obtain application data. Likewise, a disabled user can pass TLS yet fail login. Browser transport errors for missing/untrusted certificates may occur before any application page exists; tests must assert at the appropriate layer.
+A trusted but unmapped certificate can pass the shop TLS gate and load a non-sensitive shell.
+It cannot obtain a successful Keycloak login or business records.
+A disabled account also cannot log in.
+Missing or untrusted certificates can fail before an application page exists.
+Tests must check failure at the appropriate layer.
 
-Logout ends tokens/session but does not uninstall a certificate. Returning to login can authenticate again using the installed certificate. Changing user therefore creates a fresh browser profile/container rather than merely calling logout. No cookie or storageState may turn user A's certificate session into user B's session. The preview cart is now keyed by signed-in subject and cleared from view on logout; it is not an authentication store.
+Logout ends the session. It does not uninstall the certificate.
+The same browser can authenticate again with its installed certificate.
+Changing users requires a fresh browser profile or container.
+Cookies and `storageState` must not convert one user's certificate session into another user's session.
+The preview cart is keyed by signed-in subject and cleared from view on logout.
+It is not an authentication store.
 
 ## Separate certificate + password teaching view
 
-`https://shop.magic.test:8443/teaching/certificate-password` uses the separate public
-`certificate-password-spa` client and exact `/teaching/certificate-password/callback`.
-The `certificate-password-browser` flow has REQUIRED X.509 followed by REQUIRED
-`auth-password-form`; it has no cookie execution, username form or alternative.
-Keycloak selects the protected certificate-mapped account, then collects and verifies
-that account's password on the auth origin. Vue never collects or submits passwords.
-PKCE S256, auth TLS passthrough, both exact origins and memory-held tokens remain.
-The entry point chooses only the lesson adapter on lesson/callback paths, before
-initializing an adapter, so `shop-spa` cannot consume the other client's callback.
-Business APIs retain their `shop-spa` allowlist and certificate/token identity comparison;
-the lesson displays verified token identity and does not enable business access.
+The lesson is at `https://shop.magic.test:8443/teaching/certificate-password`.
+It uses the separate public client `certificate-password-spa`.
+Its exact callback is `/teaching/certificate-password/callback`.
 
-The user chose interactive container setup, with no documented fixture password:
+The `certificate-password-browser` flow requires X.509 followed by `auth-password-form`.
+It has no cookie execution, username form, or alternative execution.
+Keycloak selects the certificate-mapped account and checks that account's password on the authentication origin.
+Vue never collects or submits passwords.
+
+The lesson retains PKCE S256, TLS passthrough, exact origins, and memory-held tokens.
+The entry point selects the lesson adapter before initialization on lesson and callback paths.
+The shop adapter cannot consume the lesson's callback.
+Business APIs retain their `shop-spa` allowlist and certificate/token identity checks.
+The lesson displays verified token identity. Its tokens do not grant business API access.
+
+Run these commands from the repository root for operator-controlled password setup:
 
 ```sh
 docker compose -f infra/compose.yaml build realm-bootstrap
 ./lab user set-password customer-waterdeep
 ```
 
-Enter and confirm a password of at least 12 characters in the container terminal.
-Input is hidden, never passed in arguments or stored on the host. Keycloak stores
-its password credential; this operation terminates that user's existing sessions.
-Normal bootstrap does not add, overwrite or remove account passwords. The shop
-remains certificate-only even for an account with a password. Account password
-provisioning is separate from certificate issuance/renewal/revocation.
+Enter and confirm at least 12 characters in the hidden container prompt.
+The password is not passed in arguments or stored on the host.
+Keycloak stores the password credential. The operation ends that user's existing sessions.
+Normal bootstrap does not add, overwrite, or remove account passwords.
+An account with a password still uses certificate-only login in the shop.
+Password setup is separate from certificate issuance, renewal, and revocation.
 
-Pinned behavior was inspected in [Keycloak 26.4.0 PasswordForm](https://github.com/keycloak/keycloak/blob/26.4.0/services/src/main/java/org/keycloak/authentication/authenticators/browser/PasswordForm.java)
-and [its factory](https://github.com/keycloak/keycloak/blob/26.4.0/services/src/main/java/org/keycloak/authentication/authenticators/browser/PasswordFormFactory.java),
-then tested live; the newer administration guide is context, not pinned-version evidence.
-See [completion 15](completion/15-certificate-password-view.md) for observed results and limits.
+The original implementation review inspected [Keycloak 26.4.0 PasswordForm](https://github.com/keycloak/keycloak/blob/26.4.0/services/src/main/java/org/keycloak/authentication/authenticators/browser/PasswordForm.java)
+and [its factory](https://github.com/keycloak/keycloak/blob/26.4.0/services/src/main/java/org/keycloak/authentication/authenticators/browser/PasswordFormFactory.java).
+The current administration guide supplies context, not evidence about that pinned release.
+See [completion 15](completion/15-certificate-password-view.md) for implementation observations.
+See [completion 18](completion/18-native-certificate-password-ci.md) for the 36-case native matrix and cleanup evidence.
 
 ## User tokens and service identities
 
-- Each API validates JWT signature against cached JWKS, exact issuer, its own expected audience, expiry/not-before, permitted algorithm, and required roles/scopes. Reject ID tokens used as API tokens. Bounded timeouts apply to JWKS refresh and network calls; unknown keys fail closed if refresh fails.
-- User tokens intentionally include the three business API audiences needed by this SPA, plus `cert_identity`. Document this lab choice and avoid broad realm-admin roles. Roles determine permissions; certificates do not encode admin privileges.
-- HAProxy strips user-supplied identity/forwarding headers and sets a single verified user identity header from the TLS certificate CN. Only the HAProxy service certificate may invoke public API routes; APIs compare this trusted header to the signed token's `cert_identity`. A token stolen from user B cannot be paired with user A's certificate. The attribute mapping and comparison must be tested, not assumed.
-- HAProxy-to-UI/API connections use distinct service-client trust from human clients, verified server names, and certificate identity allowlists. A certificate signed by the service CA is insufficient without an allowed caller identity.
-- Node-to-Go uses a Node service certificate and a Keycloak confidential-client access token with audience `catalog-api` and the narrow internal quote scope. Python-to-Node uses a Python service certificate and a token with audience `customer-api` and internal reporting scope.
-- Service endpoints validate that the mTLS caller identity matches the token's allowed client (`azp` or the pinned-version equivalent), audience, and scope. They reject user tokens and the HAProxy identity. Browser-visible paths cannot route to these endpoints.
-- Observed service token acquisition uses client credentials with a generated secret mounted into the intended consumer, over verified TLS. The Keycloak token endpoint does not request Node's or Python's service certificate; each presents its certificate to the private API listener. Go pairs Node's certificate with the signed `customer-catalog` token, catalog audience and `catalog.quote` scope. Node's private reporting route pairs Python's certificate with an `insights-reporting` token, customer audience and `reporting.read` scope. Both service calls run live. This is separate from RFC 8705 certificate-bound tokens.
-- Python checks the requesting user's admin permission before obtaining broad reporting data with its own service identity. Services never forward a privileged service token to the browser. Node enforces customer ownership from token `sub`, never a caller-supplied user ID.
+### Public business requests
+
+Each API validates the JWT signature against cached JWKS.
+It checks the exact issuer, its own audience, expiry, not-before, permitted algorithm, and required role.
+It rejects ID tokens presented as API access tokens.
+JWKS refresh and network requests have bounded timeouts.
+An unknown key fails closed if refresh fails.
+
+The shop's user access tokens include the three business API audiences and `cert_identity`.
+This is a lab client choice. It does not grant realm-administrator privileges.
+Roles determine permissions. Certificates do not encode administrator privileges.
+
+HAProxy removes caller-supplied identity and forwarding headers.
+It sets one verified user identity header from the certificate CN.
+Only the allowed HAProxy service certificate can invoke public API routes.
+The API compares the trusted identity header with the signed `cert_identity` claim.
+User B's token cannot be paired with user A's certificate.
+Node derives record ownership from verified token `sub`, not a caller-supplied user ID.
+
+Gateway-to-UI and gateway-to-API connections verify the server name and CA.
+They use service-client trust and explicit caller identity allowlists.
+Service-CA trust alone is not enough to permit a caller.
+
+### Private service requests
+
+| Consumer | Certificate identity | Token client | Audience | Required scope |
+| --- | --- | --- | --- | --- |
+| Node customer API | `customer-api` | `customer-catalog` | `catalog-api` | `catalog.quote` |
+| Python insights API | `insights-api` | `insights-reporting` | `customer-api` | `reporting.read` |
+
+The service obtains its access token through client credentials over verified TLS.
+Its generated client secret is mounted only into the intended consumer.
+Keycloak does not request these service certificates at the token endpoint.
+The consumer presents its service certificate to the private API listener instead.
+
+Private APIs check the certificate identity, token client (`azp`), audience, and scope together.
+They reject user tokens and the gateway identity on these private operations.
+Browser-visible routes cannot reach those operations.
+These checks are not RFC 8705 certificate-bound tokens.
+
+Python checks the requesting user's administrator permission before reading the reporting feed.
+A privileged service token is never forwarded to the browser.
+See the [live security plan](test-plan.md) and [coverage map](teaching-coverage.md) for observed checks.
 
 ## Revocation and lifetime expectations
 
-HAProxy checks the user CA CRL; Keycloak validates the user chain and configured revocation policy; service listeners check service revocation where supported. In an isolated Apple Silicon emulation run, explicit publication and reload rejected a revoked certificate on a fresh shop connection by 31,418 ms and denied a fresh Keycloak authorization code by 31,860 ms, including consumer reload and health checks; the documented target was 60 seconds. An earlier run measured shop rejection by 45 seconds but did not separately time Keycloak. These are observed upper bounds for those runs, not a guaranteed platform-wide revocation SLA. Test with new TLS connections and cleared browser sessions; connection/session caches matter.
+HAProxy checks the user-CA CRL.
+Keycloak checks the user chain and configured revocation policy.
+Service listeners check service revocation under their configured TLS policy.
+Publication alone does not reload every consumer. Reload the required services and use fresh connections.
 
-Access tokens already issued do not automatically become invalid just because a user is disabled or a certificate is revoked. Start with a short access-token lifetime (proposal: two minutes), refresh rejection, and session revocation on administrative disable. Document and test the residual lifetime. The proxy certificate gate protects subsequent new shop connections, but existing connections require drain/restart for an immediate lab demonstration. Do not claim instantaneous revocation.
+One isolated Apple Silicon emulation run observed fresh shop rejection by 31,418 ms.
+It observed denial of a fresh Keycloak authorization code by 31,860 ms.
+These times include consumer reload and health checks. The recorded target was 60 seconds.
+An earlier run observed shop rejection by 45 seconds without separately timing Keycloak.
+These are upper bounds for those runs, not a platform-wide service-level guarantee.
+See [security completion](completion/11-security-matrix.md) for the recorded evidence.
+
+Disabling a user or revoking a certificate does not automatically invalidate an issued access token.
+The realm configures a 120-second access-token lifetime.
+Administrative disable also revokes sessions and blocks refresh.
+Existing connections and sessions can retain state until their respective checks or lifetimes end.
+Drain or restart connections for an immediate lab demonstration.
+Do not claim instantaneous revocation.
 
 ## Manual mode
 
-Use the test image with Xvfb, a lightweight window manager, a VNC server, and noVNC/websockify. Launch actual Chrome or Edge as a non-root user. noVNC supplies a browser-accessible remote desktop; the host browser only displays that desktop. [noVNC overview](https://novnc.com/info.html)
+The manual runner uses the test image with Xvfb, a window manager, VNC, and noVNC/websockify.
+It launches actual Chrome or Edge as a non-root user.
+The host browser displays the remote desktop. It does not perform the lab login itself.
+See the [noVNC overview](https://novnc.com/info.html) for the remote desktop tool.
 
-- Input contract: `LAB_USER`, `LAB_BROWSER=chrome|msedge`, and `RUN_MODE=manual`.
-- Import selected PKCS#12 identity and public trust into the browser's actual Linux certificate database using NSS tools. Detect the chosen browser version's database path; Chromium's documented default changed in M146. Validate Chrome and Edge separately. [Linux certificate management](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/linux/cert_management.md)
-- Configure browser-specific `AutoSelectCertificateForUrls` policies narrowly for the two exact lab endpoints, matching issuer and selected subject. Verify loaded policies in both browsers; a policy only chooses an installed certificate, it does not install or trust one. [Edge policy](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/AutoSelectCertificateForUrls)
-- Prefer successful native certificate installation as the manual acceptance criterion. Playwright-managed headed contexts can be a diagnostic fallback, but do not count as proof that native certificate installation works.
-- Bind the viewer to loopback, protect it with a generated credential, do not publish raw VNC or browser debugging ports, and do not mount the Docker socket. Manual mode is off in CI.
-- Give each session a fresh HOME/profile and only one user's certificate volume. Certificate stores can span profiles, so switching only `--user-data-dir` is insufficient isolation. No CA signing key or bootstrap credential is available to the runner.
-- Opening the viewer on the host needs no client certificate. The remote browser must reach both application origins without warnings or TLS bypass flags.
+The input contract is `LAB_USER`, `LAB_BROWSER=chrome|msedge`, and `RUN_MODE=manual`.
+The runner imports the selected PKCS#12 identity and public trust with NSS tools.
+It uses the certificate database path required by the pinned browser.
+Chrome and Edge installation and policy checks are separate.
+See [Chromium certificate management](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/linux/cert_management.md) for general background.
 
-Current operator interface includes `./lab up`, `./lab user provision|inspect|disable|enable SEED_USER`, `./lab pki renew|revoke USER`, `./lab test chrome|msedge [SEED_USER]`, and `./lab manual --user SEED_USER --browser chrome|msedge`. The full Vue UI uses Keycloak PKCE. See the [manual browser guide](manual-browser.md). Later proposed aliases for test runners and certificate lifecycle are planned:
+Browser-specific `AutoSelectCertificateForUrls` policies match the selected issuer and subject at the two exact endpoints.
+A policy selects an installed certificate. It does not install or trust a certificate.
+See the [Edge policy definition](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/AutoSelectCertificateForUrls).
+A Playwright-managed headed context can help diagnosis, but does not prove native certificate installation.
 
-```text
+The viewer is bound to loopback and protected by a generated credential.
+Raw VNC and browser debugging ports are not published.
+The runner has no Docker socket, CA signing key, or bootstrap credential.
+Manual mode is off in CI.
+
+Each session has a fresh HOME and profile with only one selected user certificate volume.
+Changing only `--user-data-dir` is insufficient because certificate stores can span browser profiles.
+The host needs no client certificate to open the viewer.
+The remote browser must reach both origins without warnings or TLS bypass flags.
+
+Run the implemented commands from the repository root:
+
+```sh
 ./lab up
+./lab user inspect customer-waterdeep
 ./lab user provision customer-waterdeep
-./lab test --runner playwright --browser chrome
-./lab test --runner cucumber --browser msedge
-./lab cert renew customer-waterdeep
-./lab cert revoke customer-waterdeep
-./lab reset --project <explicit-lab-project>
+./lab test --runner playwright --browser chrome --user customer-waterdeep
+./lab test --runner cucumber --browser msedge --user shop-admin
+./lab manual --user customer-waterdeep --browser chrome
+./lab pki renew customer-waterdeep
+./lab pki revoke customer-waterdeep
 ```
 
-Only the runner-suite and some `cert` spellings in that target list remain planned. `lab` is a thin Docker Compose wrapper; all provisioning and certificate commands execute inside containers. The current operator selects one of six seeded Keycloak identities. Arbitrary-user provisioning remains a future trusted-operator capability, not an endpoint offered to app users.
+The lifecycle spelling is `pki`, not the earlier proposed `cert` alias.
+`lab` is a thin Docker Compose wrapper. Provisioning and certificate commands run in containers.
+It selects the six seeded identities. Arbitrary-user provisioning remains future trusted-operator scope.
+See the [manual browser guide](manual-browser.md) for viewer access and profile disposal.
+Native Linux manual viewer and operator checks remain unverified.
+
+## Test replacements do not change these boundaries
+
+Standalone JWT and OIDC examples use dedicated consumers and disposable identities.
+Browser mock suites keep synthetic authentication inside their isolated test system.
+Fault suites replace a specified dependency while retaining the required real authentication checks.
+No mock authentication is injected into real business APIs.
+Mock results do not prove real Keycloak login or normal live-provider behavior.
+See [current independent CI evidence](completion/26-independent-ci-evidence.md) for the separate required reports.
