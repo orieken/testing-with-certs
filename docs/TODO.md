@@ -1,6 +1,6 @@
 # Implementation todo list
 
-Status: Prompts 01–11 have observed Apple Silicon amd64-emulation evidence, including all three live business APIs, the 23-operation Playwright OpenAPI coverage gate, integrated customer/admin UI, both teaching runners in Chrome and Edge, and the signed JWT-01 matrix. Prompt 12's static and isolated live CI-equivalent checks, new-volume/repeat startup, teaching guide, diagrams and local host-trust before/after audit passed. Prompt 13's Go operator passed local CLI/TUI, diagnostic and runner checks. The second GitHub Linux push passed static checks, stack startup, live contracts/security, all eight browser selections, credential scan and cleanup, but report upload failed on permissions. Later runs passed upload but hit an intermittent Node HTTP/2 crash in Cucumber. The sixth run 38012708736 passed the complete prior native automated workflow with browser HTTP/1.1; the new lesson still has no native CI evidence. Native manual viewer/operator, a literal clean-clone test and an actual PR-base comparison remain unverified. See [native CI continuation](completion/12-native-linux-ci.md) and [implementation prompts](implementation-prompts.md).
+Status reconciled by TEST-04 on 2026-10-10 (America/Chicago): Prompts 01–13 retain their recorded local evidence. Native run [38097316475](https://github.com/orieken/testing-with-certs/actions/runs/38097316475) passed the complete existing workflow, including live contracts/security, all eight customer/admin browser selections, the separate 36-case certificate/password job, scanned/readable text uploads and cleanup. [Completion 25](completion/25-pr-base-contract-evidence.md) records actual unchanged/additive/breaking PR-base acceptance/rejection against committed main; temporary probe mutations were reverted and their draft PRs closed without merging. TEST-03/05–10 now also have their named native consumer/fault/regional scenarios observed under TEST-11 in [completion 26](completion/26-independent-ci-evidence.md), separately from the required live-provider gate. Native manual viewer/operator and literal clean-checkout/repeat-startup remain unverified. Historical failures and limitations remain in their original completion notes.
 
 ## Planning baseline
 
@@ -128,8 +128,8 @@ Observed partial work (does not close the runtime checks above):
 ## 12 — CI and handoff
 
 - [x] Build/run isolated Compose stack in Linux amd64 CI; the second GitHub push passed startup, live contracts/security and all eight real-browser selections, plus cleanup.
-- [ ] Gate CI on OpenAPI validity, generated/spec drift, breaking changes and Playwright contract coverage before browser suites (native static, contracts and browser ordering passed; text upload passed in the fourth run, but the matrix crashed and actual PR-base comparison remains unverified).
-- [x] Implement the conservative OpenAPI base-bundle comparison and test its unchanged, additive and changed cases in a pinned container; the actual PR base comparison awaits a pull request and CI run.
+- [x] Gate CI on OpenAPI validity, generated/spec drift, conservative breaking changes and live contract coverage before browser suites: native workflow 38097316475 and actual PR unchanged/additive/rejection steps in completion 25. Separate consumer/fault CI jobs and their native outcomes are recorded in completion 26.
+- [x] Implement the conservative OpenAPI base-bundle comparison and test its unchanged, additive and changed cases in a pinned container; actual committed-base PR acceptance/rejection is recorded in completion 25.
 - [x] Pass a disposable Apple Silicon CI-equivalent stack through live contracts, security, and all Chrome/Edge × Playwright/Cucumber × customer/admin selections; scan reports and remove only that project's volumes.
 - [x] Add architecture/mount/TLS checks, the 23-operation/92-status contract coverage gate, and a measured Go/TypeScript/Python complexity cap over authored source; two existing transport handlers have explicit non-increasing baselines.
 - [x] Verify a fresh project with new volumes and repeat startup without reset: the existing realm and a customer database marker survived; database TLS/isolation and PKI/CRLs re-verified. A literal clean Git checkout remains untested after the initial commit.
@@ -137,7 +137,7 @@ Observed partial work (does not close the runtime checks above):
 - [x] Reconcile architecture/workflow diagrams with implemented behavior and observed/planned CI status; link them from the teaching guide.
 - [x] Render all 20 Mermaid blocks from the Markdown sources with a digest-pinned container; inspect the topology, infrastructure and CI layouts, and simplify the two crowded overviews.
 - [x] Demonstrate zero host certificate installation/management in the audited Apple Silicon run; user/admin trust settings and login/System keychain fingerprints were unchanged before/after containerized PKI and security tests.
-- [x] Record historical Chrome 154.0.8037.97 and refreshed Chrome 155.0.8059.39, Edge 154.0.4258.62, Node 24.10.0 and pinned base/container versions with Apple Silicon and native GitHub browser results; Node 24.19.0/Cucumber 12.9.0 runner candidate awaits a native rerun.
+- [x] Record historical Chrome 154.0.8037.97 and refreshed Chrome 155.0.8059.39, Edge 154.0.4258.62, Node 24.10.0 and pinned base/container versions with Apple Silicon and native GitHub browser results; the updated runner also passed existing native workflow 38097316475; this does not establish native evidence for separate local-only scenarios.
 - [x] Document limitations and possible package upstreaming in the teaching guide and completion note; no package was published.
 
 ## 13 — Operator CLI/TUI (after the core lab)
@@ -160,7 +160,7 @@ Observed partial work (does not close the runtime checks above):
 
 ## Testing expansion — prioritized agent checklist
 
-See the [prioritized testing checklist](testing-scenario-checklist.md) for TEST-01–11, ordered by priority with handoff prompts, dependencies and acceptance criteria. All implementation items are open. Start with status coverage, native certificate/password CI, checkout dependency failures and PR-base evidence.
+See the [prioritized testing checklist](testing-scenario-checklist.md) for TEST-01–11, ordered by priority with handoff prompts, dependencies and acceptance criteria. TEST-01/03 have local status/fault evidence in [completion 19](completion/19-checkout-dependency-faults.md); TEST-02 has native certificate/password evidence in completion 18. TEST-08 has local concurrent idempotency/lost-response evidence in [completion 20](completion/20-checkout-idempotency.md). TEST-05/07 have local Prism compatibility/UI failure evidence in [completion 21](completion/21-prism-compatibility.md) and [completion 22](completion/22-prism-browser-failures.md). TEST-06/09 have Mokapi compatibility and real insights pagination fault evidence in [completion 23](completion/23-mokapi-reporting-sequences.md). TEST-10 has real provider and browser boundary evidence in [completion 24](completion/24-regional-reporting-boundaries.md). TEST-04 is recorded in [completion 25](completion/25-pr-base-contract-evidence.md); TEST-11 is complete with separate native reports and intentional-failure cleanup/red-gating evidence in [completion 26](completion/26-independent-ci-evidence.md). Local TEST-06/09/10 work was committed and pushed as `d637aa7`; the corresponding native jobs were added in `54ef7dd`, corrected for Linux harness behavior in `20272cf` and verified in completion 26.
 
 ## Deferred scope
 
@@ -217,4 +217,6 @@ FEATURE-04–06 propose app behavior changes. They remain separate future scope 
 - [x] Keep passwords on Keycloak pages and preserve the certificate-only shop/API boundaries.
 - [x] Complete Chrome/Edge × Playwright/Cucumber positive, negative and cookie matrix; record completion 15.
 - [ ] Set the user's demo password interactively inside the container and demonstrate the lesson manually.
-- [ ] Verify the new feature in native Linux CI; prior run 38012708736 does not cover it.
+- [x] Verify the new feature in native Linux CI: 36/36 in run 38027680587 with scanned/readable uploaded reports and success/failure/cancellation cleanup evidence; see [completion 18](completion/18-native-certificate-password-ci.md). Prior run 38012708736 remains unrelated to this feature.
+
+- [ ] **Reporting timestamp precision follow-up:** Compare reporting range endpoints chronologically rather than lexically. Completion 24 observes a valid mixed whole/fractional-second interval returning canonical 503. Preserve half-open UTC semantics and authorization; add independent regression coverage before claiming full endpoint precision support.

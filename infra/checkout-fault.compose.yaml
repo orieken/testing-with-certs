@@ -1,0 +1,56 @@
+# Explicit disposable overlay only. Only Node's catalog DNS is redirected.
+services:
+  customer-api:
+    extra_hosts:
+      - "catalog-api=${CHECKOUT_FAULT_IP:-127.0.0.1}"
+  checkout-fault:
+    image: node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+    user: "1000:1000"
+    command: [node, /harness/proxy.mjs]
+    volumes:
+      - ../testing/faults/checkout:/harness:ro
+      - public-trust:/trust:ro
+      - cert-catalog-api:/credentials:ro
+      - cert-customer-client:/caller:ro
+      - checkout-fault-state:/fault-state
+    networks: [backend]
+    healthcheck:
+      test: [CMD, node, -e, "const s=require('net').connect(8443,'127.0.0.1');s.on('connect',()=>{s.end();process.exit(0)});s.on('error',()=>process.exit(1));s.setTimeout(2000,()=>process.exit(1))"]
+      interval: 2s
+      timeout: 3s
+      retries: 10
+  runner-checkout-fault:
+    platform: linux/amd64
+    image: magic-shop-runner:03
+    entrypoint: [sh, /work/testing/faults/checkout/trust.sh]
+    user: "1000:1000"
+    environment:
+      CHECKOUT_FAULT_IP: ${CHECKOUT_FAULT_IP:-127.0.0.1}
+      HOME: /home/runner
+      LAB_CONTRACT_REPORT_DIR: /home/runner/live-artifacts
+      LAB_FAULT_REPORT_DIR: /work/artifacts/checkout-faults/${LAB_PROJECT}
+    volumes:
+      - ../seed:/work/seed:ro
+      - ../testing/faults:/work/testing/faults:ro
+      - ../infra:/work/infra:ro
+      - ../testing/api/contracts/coverage-manifest.json:/work/testing/api/contracts/coverage-manifest.json:ro
+      - ../artifacts/checkout-faults/${LAB_PROJECT}:/work/artifacts/checkout-faults/${LAB_PROJECT}
+      - public-trust:/public:ro
+      - cert-customer-waterdeep:/identity-customer:ro
+      - cert-customer-baldur:/identity-second-customer:ro
+      - cert-shop-admin:/identity-admin:ro
+      - cert-customer-client:/service-identity:ro
+      - cert-insights-client:/reporting-identity:ro
+      - auth-secret-catalog:/service-secret:ro
+      - auth-secret-reporting:/reporting-secret:ro
+      - db-secret-customer:/db-secret:ro
+      - checkout-fault-state:/fault-state
+      - checkout-fault-home:/home/runner
+      - checkout-fault-tmp:/tmp
+    networks: [front, backend, database]
+networks:
+  front: {internal: true}
+volumes:
+  checkout-fault-state: {}
+  checkout-fault-home: {}
+  checkout-fault-tmp: {}

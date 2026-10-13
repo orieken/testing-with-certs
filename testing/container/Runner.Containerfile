@@ -20,6 +20,7 @@ ENV PLAYWRIGHT_BROWSERS_PATH=/opt/ms-playwright
 COPY testing/container/ testing/container/
 COPY --from=dependencies /work/node_modules /work/node_modules
 COPY --from=dependencies /work/testing/node_modules /work/testing/node_modules
+COPY --from=dependencies /work/services/customer-api/node_modules /work/services/customer-api/node_modules
 COPY --from=dependencies /work/packages/saturday-keycloak/node_modules /work/packages/saturday-keycloak/node_modules
 RUN /work/testing/node_modules/.bin/playwright install ffmpeg && chmod -R a+rX /opt/ms-playwright
 COPY packages/saturday-keycloak/ /work/packages/saturday-keycloak/

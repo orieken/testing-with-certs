@@ -1,9 +1,10 @@
-import { createHash, randomBytes } from 'node:crypto';
+import { randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { request, test, expect, type APIRequestContext } from '@playwright/test';
 import { ServiceTokenClient } from 'saturday-keycloak-prototype';
 import { assertContractResponse, assertExpectedSpec, createContractContext } from './fixtures.js';
 import { validateJsonRequest } from './validator.js';
+import { userToken } from './user-token.js';
 
 const shop = 'https://shop.magic.test:8443';
 const auth = 'https://auth.magic.test:9443';
@@ -11,25 +12,6 @@ const issuer = `${auth}/realms/magic-shop`;
 const customerCert = { certificatePath: '/identity-customer/cert.pem', privateKeyPath: '/identity-customer/key.pem' };
 const secondCert = { certificatePath: '/identity-second-customer/cert.pem', privateKeyPath: '/identity-second-customer/key.pem' };
 const adminCert = { certificatePath: '/identity-admin/cert.pem', privateKeyPath: '/identity-admin/key.pem' };
-async function userToken(cert: typeof customerCert): Promise<string> {
-  const context = await request.newContext({ clientCertificates: [
-    { origin: shop, certPath: cert.certificatePath, keyPath: cert.privateKeyPath },
-    { origin: auth, certPath: cert.certificatePath, keyPath: cert.privateKeyPath }
-  ], ignoreHTTPSErrors: false, timeout: 10_000 });
-  try {
-    const verifier = randomBytes(32).toString('base64url'); const state = randomBytes(16).toString('base64url');
-    const url = new URL(`${issuer}/protocol/openid-connect/auth`);
-    for (const [key, value] of Object.entries({ response_type: 'code', client_id: 'shop-spa', redirect_uri: `${shop}/callback`, scope: 'openid profile', code_challenge: createHash('sha256').update(verifier).digest('base64url'), code_challenge_method: 'S256', state })) url.searchParams.set(key, value);
-    const response = await context.get(url.href, { maxRedirects: 0 });
-    if (response.status() !== 302 || !response.headers().location) throw new Error(`Certificate authorization returned ${response.status()}`);
-    const callback = new URL(response.headers().location!, auth); const code = callback.searchParams.get('code');
-    if (callback.origin !== shop || callback.pathname !== '/callback' || callback.searchParams.get('state') !== state || !code) throw new Error('Certificate authorization returned an unexpected callback');
-    const token = await context.post(`${issuer}/protocol/openid-connect/token`, { form: { grant_type: 'authorization_code', client_id: 'shop-spa', code, redirect_uri: `${shop}/callback`, code_verifier: verifier } });
-    if (token.status() !== 200) throw new Error(`Code exchange returned ${token.status()}`);
-    const value = await token.json() as { access_token?: string }; if (!value.access_token) throw new Error('Access token missing');
-    return value.access_token;
-  } finally { await context.dispose(); }
-}
 async function reportingToken(): Promise<string> {
   return new ServiceTokenClient({ target: { issuer, origins: [auth] }, clientId: 'insights-reporting', secretFile: '/reporting-secret/client-secret', audience: 'customer-api', scopes: ['reporting.read'] }).getToken();
 }

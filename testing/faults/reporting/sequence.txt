@@ -1,0 +1,29 @@
+function errorPage(mode,index){
+ if(index!==2)return null;
+ const codes={conflict:[409,'conflict'],outage:[503,'dependency_unavailable']};
+ const selected=codes[mode];
+ return selected?{status:selected[0],data:{code:selected[1],message:selected[1]}}:null;
+}
+function regular(mode,index){return {revision:index===2&&mode==='revision'?'r2':'r1',items:[row(index)],nextCursor:index===1?'c1':null};}
+function many(data,index,exact){data.items=Array.from({length:100},(_,i)=>row((index-1)*100+i));data.nextCursor=exact&&index===100?null:'c'+index;}
+const modifiers={
+ repeat:(data)=>{data.nextCursor='c1';},
+ empty:(data,index)=>{data.items=index===2?[]:[row(index)];data.nextCursor=index<3?'c'+index:null;},
+ loop:(data,index)=>{data.items=[];data.nextCursor='c'+index;},
+ exact:(data,index)=>many(data,index,true),
+ over:(data,index)=>many(data,index,false),
+ // Intentionally invalid fault fixture; never a canonical-valid example.
+ 'wrong-type':(data)=>{data.items='FAULT_INVALID_ITEMS';}
+};
+export default function(){
+ let generation='',index=0;
+ on('http',function(req,res){
+  if(req.query.generation!==generation){generation=req.query.generation;index=0;}
+  index++;const mode=req.query.mode;const failure=errorPage(mode,index);
+  res.statusCode=failure?failure.status:200;
+  res.headers={'Content-Type':'application/json'};
+  res.data=failure?failure.data:regular(mode,index);
+  if(!failure&&modifiers[mode])modifiers[mode](res.data,index);
+  res.body=JSON.stringify(res.data);return true;
+ },{track:false});
+}

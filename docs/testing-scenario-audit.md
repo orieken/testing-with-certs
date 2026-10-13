@@ -59,3 +59,41 @@ The historical audit above remains a source review. [Completion 16](completion/1
 ## Subsequent browser mock consumer evidence
 
 [Completion 17](completion/17-browser-mock-consumers.md) records 56 passing isolated browser executions across Chrome/Edge and Playwright/Cucumber, with actual recordings. The unchanged Vue build uses intercepted authentication/API responses; a separate OIDC browser consumer uses the pinned NAV mock with verified TLS and JWKS validation. This adds consumer/UI evidence only. Live login, production certificate/account pairing, API authorization and native Linux-host criteria remain open.
+
+## Subsequent native certificate-password CI evidence
+
+TEST-02 is complete in [completion 18](completion/18-native-certificate-password-ci.md): native run 38027680587 passed all 36 real authentication cases, safe-report completeness/scanning/readability/upload, and successful/intentional-failure cleanup. Deliberately cancelled run 38028333657 passed resource cleanup after healthy startup during runner build. This closes the historical CI-wiring gap above without claiming the remaining live-provider, mock/fault or PR-base criteria.
+
+## Subsequent local TEST-01/03 execution
+
+[Completion 19](completion/19-checkout-dependency-faults.md) records the later
+local status-gate prerequisite and real checkout dependency-fault suite. Two fresh
+container projects passed 22 cases each, including measured 503 failures, real
+database invariants, same-key recovery and verified TLS; deliberate failure
+cleanup passed. The live gate now accounts for every documented status through
+100 requirements and 21 explicit exclusions. Fault 503 is separately mandatory
+and cannot satisfy untouched provider coverage. This does not change the
+historical source audit, close TEST-05/06/08/09/11, or supply new native evidence.
+GitHub updates are deferred until local work is complete.
+
+## Subsequent local TEST-08 execution
+
+[Completion 20](completion/20-checkout-idempotency.md) closes TEST-08 with two fresh 21-case runs against the unchanged real stack. The database observes four identical and two conflicting inserts before releasing a lock; stored row/hash/revision and canonical responses prove one winner, stable replay and 409 conflict. A private TLS intermediary consumes a real committed 201 and drops the client connection before headers; direct retry returns the same order without persistence changes. TLS/auth rejection controls and intentional failure cleanup passed. This adds local browserless evidence only; GitHub/native execution remains deferred.
+
+## Subsequent local TEST-05/07 execution
+
+[Completion 21](completion/21-prism-compatibility.md) records 27 bounded pinned-Prism compatibility observations and an explicit mock-only decision: selected tuples/dates/headers/errors work, default warnings pass invalid responses, upstream 501 can become mocked 200, and client certificates were not forwarded. [Completion 22](completion/22-prism-browser-failures.md) records eleven real Vue mock-consumer journeys in Chrome/Edge under Playwright/Cucumber, with canonical fixtures, labelled faults, measured recovery, actual videos and independent evidence gating. These local results close TEST-05/07 without adding mock passes to real-provider coverage, changing product behavior, or claiming native execution/full checkout runtime schema enforcement. GitHub remains deferred.
+
+## TEST-06/09 local follow-up
+
+[Completion 23](completion/23-mokapi-reporting-sequences.md) records pinned Mokapi reporting sequences and two independent 19-case real insights consumer runs. Revision conflicts, outages, repeated cursors, empty-page continuation, exact record caps and page termination now have whole-HTTP-path evidence. The independent fault gate cannot credit a real provider or native execution. At that historical point, TEST-04 and TEST-11 remained.
+
+[Completion 24](completion/24-regional-reporting-boundaries.md) closes the targeted REGION-02 matrix with real provider boundaries, profile/history distinction, exhaustive pagination and recorded map/table journeys. Mixed-precision endpoint rejection is retained as a separate explicit production follow-up; UI order rows are bounded to its existing first 25.
+
+## TEST-04 evidence reconciliation
+
+[Completion 25](completion/25-pr-base-contract-evidence.md) records actual PR-event unchanged/additive acceptance and breaking-schema rejection against committed main, plus reversion/closure of both disposable controls. The original audit findings above are historical, not current missing coverage. Native workflow 38097316475 passed the existing live/security/browser/lesson jobs; new standalone fault, consumer and regional suites retain their local provenance. TEST-11 was the remaining checklist item at that point. Native manual viewer/operator, literal clean-checkout/repeat-startup and the timestamp precision follow-up remain separate open work.
+
+## TEST-11 native follow-up
+
+[Completion 26](completion/26-independent-ci-evidence.md) records complete native push/PR workflows with independent consumer, checkout/reporting/idempotency fault and real regional jobs, required live/security/browser and lesson gates, separate scanned/readable uploaded reports, and success/failure cleanup. The deliberate-red native control produced an explicitly failed checkout report and a failed aggregate while the other gates passed. TEST-01–11 are complete at their named acceptance scope. Manual Linux viewer/operator, literal clean-checkout/repeat-startup, standalone examples outside these jobs and timestamp precision support retain their explicit limitations.

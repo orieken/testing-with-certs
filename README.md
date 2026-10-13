@@ -1,6 +1,10 @@
 # Magic Shop certificate prototype
 
-This repository is a local teaching prototype. Start with the [teaching guide](docs/teaching-guide.md) for container-only startup, selected-user certificate login, tests, troubleshooting and reset. The [implementation guide](docs/README.md) tracks the three-language, OpenAPI-backed shop and acceptance evidence. The [agent adoption prompts](docs/agent-adoption-prompts.md) explain how another project can adapt the certificate tests. The [CI agent handoff prompt](docs/ci-agent-handoff-prompt.md) describes the existing GitHub workflow and remaining native Linux check. The [certificate-login spike](spikes/certificate-login/README.md) and all three live business providers passed on Apple Silicon using amd64 emulation. One GitHub Actions run passed the native Linux certificate, contract and browser matrix; a later run passed report upload, but its last Cucumber selection crashed in Node HTTP/2. Run 38012708736 subsequently passed the full prior native automated workflow. The new certificate/password lesson has local emulation evidence only.
+Start with [Get started with certificate tests](docs/getting-started.md) for setup and copyable container test commands. Use the [project pitch and current gaps](docs/project-pitch.md) to explain the approach and its limits.
+
+For a plain-language explanation, read [Understand this project](docs/plain-language/README.md). The three guides explain the system, certificate login, and test evidence with Mermaid diagrams and ASD-STE100-inspired writing.
+
+This repository is a local teaching prototype. Start with the [teaching guide](docs/teaching-guide.md) for container-only startup, selected-user certificate login, tests, troubleshooting and reset. The [implementation guide](docs/README.md) tracks the three-language, OpenAPI-backed shop and acceptance evidence. The [agent adoption prompts](docs/agent-adoption-prompts.md) explain how another project can adapt the certificate tests. The [CI agent handoff prompt](docs/ci-agent-handoff-prompt.md) describes the existing GitHub workflow and remaining native Linux check. The [certificate-login spike](spikes/certificate-login/README.md) and all three live business providers passed on Apple Silicon using amd64 emulation. One GitHub Actions run passed the native Linux certificate, contract and browser matrix; a later run passed report upload, but its last Cucumber selection crashed in Node HTTP/2. Run 38012708736 subsequently passed the full prior native automated workflow. The certificate/password lesson also has recorded native Linux evidence; see [completion 18](docs/completion/18-native-certificate-password-ci.md).
 
 The root pnpm workspace contains the certificate-authenticated Vue shop, a
 private local Keycloak package, Go catalog, Node customer and Python insights
@@ -34,7 +38,7 @@ docker build --platform linux/amd64 -f services/insights-api/Containerfile .
 docker compose -f infra/compose.yaml --profile '*' config --quiet
 ```
 
-No repository secrets are required by the CI workflow. The initial commit establishes a source baseline. The actual pull-request base comparison has not been run because this was a push, not a pull request.
+No repository secrets are required by the CI workflow. [Completion 25](docs/completion/25-pr-base-contract-evidence.md) records actual committed-base PR comparisons. [Completion 26](docs/completion/26-independent-ci-evidence.md) records subsequent native live, lesson, consumer, fault, and regional jobs with separate evidence.
 
 ## Separate certificate + password lesson
 

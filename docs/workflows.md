@@ -1,6 +1,6 @@
 # System and infrastructure workflows
 
-Status: the nine main workflows describe the full-stack design. Prompts 03–10 infrastructure, Keycloak provisioning, local package adapters, all three business providers, the integrated Vue UI and selected-user manual desktop are observed on Apple Silicon amd64 emulation. Prompt 11 shared Saturday customer/admin teaching examples pass in Playwright Test and Cucumber under both real Chrome and Edge; a shopkeeper inventory example passes in Playwright Test under both browsers. Concurrent two-worker customer/admin runs, isolated service-scope and signing-key rotation checks, and the live signed JWT-01 failure matrix passed. Prompt 12's static, live contract, security and eight browser/runner/identity CI-equivalent selections passed locally and in one native GitHub Linux run; later native runs passed report upload but crashed in Node HTTP/2 during Cucumber. Disabling Keycloak HTTP/2 did not fix this; the sixth run passed the complete prior native workflow with automated-browser HTTP/1.1. The new lesson has separate local evidence. See [architecture](architecture.md), [authentication](authentication.md), and the [test matrix](test-plan.md) for detailed rules.
+Status: the nine main workflows describe the full-stack design. Prompts 03–10 infrastructure, Keycloak provisioning, local package adapters, all three business providers, the integrated Vue UI and selected-user manual desktop are observed on Apple Silicon amd64 emulation. Prompt 11 shared Saturday customer/admin teaching examples pass in Playwright Test and Cucumber under both real Chrome and Edge; a shopkeeper inventory example passes in Playwright Test under both browsers. Concurrent two-worker customer/admin runs, isolated service-scope and signing-key rotation checks, and the live signed JWT-01 failure matrix passed. Prompt 12's static, live contract, security and eight browser/runner/identity CI-equivalent selections passed locally and in one native GitHub Linux run; later native runs passed report upload but crashed in Node HTTP/2 during Cucumber. Disabling Keycloak HTTP/2 did not fix this; the sixth run passed the complete prior native workflow with automated-browser HTTP/1.1. The new lesson has separate local and 36-case native evidence in completion 18. See [architecture](architecture.md), [authentication](authentication.md), and the [test matrix](test-plan.md) for detailed rules.
 
 Solid arrows describe requests or ordered actions. Dotted arrows in the infrastructure diagram describe credential provisioning/mounts. A box inside a container group is a component or logical database, not an additional container. The shop/auth ports shown are the observed Compose values; the prior matrix and artifact upload passed together in native GitHub run 38012708736; the new lesson has no native run yet.
 
@@ -324,19 +324,38 @@ The request contexts use the real providers and exact-origin client certificates
 
 ## 9. Isolated CI gate and report boundary
 
-The workflow is implemented in `.github/workflows/ci.yml`. Its static checks, live contracts/security suite and all eight customer/admin combinations passed in a disposable Compose project on Apple Silicon amd64 emulation and in the second GitHub Linux push. That run's upload failed on telemetry mode `0600`. The third and fourth runs hit a Node HTTP/2 assertion in Cucumber; the fourth passed scanned text upload. The fifth run passed security and report upload but still crashed during Chrome/customer Cucumber with Keycloak HTTP/2 disabled, so that setting was removed. Automated browser launches in both runners now request HTTP/1.1; local Chrome/customer Cucumber, Edge/admin Cucumber and Chrome/customer Playwright Test passed with it. Native rerun is pending. The actual pull-request base comparison remains unobserved because these were pushes. The CI host controls Docker while signing keys, user leaves and service credentials stay in project-scoped volumes and scoped containers.
+The workflow is implemented in `.github/workflows/ci.yml`. The complete prior
+native contracts/security/customer-admin browser workflow passed in run
+38012708736 and again at the mock-example revision in run 38026456294. Historical
+HTTP/2 failures and report-permission corrections remain in completion 12. A
+separate certificate-password job now adds nine live cases in each Chrome/Edge
+and Playwright/Cucumber selection, safe text reports and a deliberate runner
+failure cleanup control. Its 36-case matrix, upload and success/failure cleanup passed in native run
+38027680587; cancellation cleanup passed in the deliberate probe 38028333657.
+See [completion 18](completion/18-native-certificate-password-ci.md). The host controls Docker; signing keys, credentials and
+browser profiles remain in project volumes. [Completion 25](completion/25-pr-base-contract-evidence.md) records native PR-base
+unchanged/additive acceptance and deliberate changed-schema rejection. The broader
+control runs are not credited as new full regression passes.
 
 ```mermaid
 flowchart TD
-  Trigger["Observed GitHub Linux pushes; one full green workflow pending"] --> Static["Observed on Linux: pinned builds, types, units, OpenAPI drift, architecture and complexity gates"]
+  Trigger["Observed GitHub Linux pushes; prior complete workflow passed"] --> Static["Observed on Linux: pinned builds, types, units, OpenAPI drift, architecture and complexity gates"]
+  Static --> Lesson["Observed native job: disposable certificate/password stack"]
+  Lesson --> LessonMatrix["Observed on Linux: 36 live cases; Chrome/Edge and both runners"]
+  LessonMatrix --> LessonReports["Allowlisted JUnit/JSON; completeness, scan, readability, upload"]
+  LessonReports --> LessonClean["Always: verify project containers/networks/volumes removed"]
+  LessonClean --> Failure["Second disposable stack: intentional runner failure"]
+  Failure --> Fixture["Verify temporary passwords and sessions removed"]
+  Fixture --> FinalClean["Always: verify both project resource sets absent"]
+  Lesson --> FinalClean
   Static --> Base{"Pull request with existing base bundles?"}
-  Base -->|"Yes: planned live PR check"| Compare["Conservative existing-operation, schema, origin and auth comparator"]
+  Base -->|"Yes: observed PR-base controls"| Compare["Conservative existing-operation, schema, origin and auth comparator"]
   Base -->|"No first baseline"| Compose
   Compare --> Compose["Observed on Linux: unique LAB_PROJECT, one-shot PKI/secrets/DB/realm jobs, healthy stack"]
   Compose --> Certs[("Isolated Docker volumes: CA key PKI-only; per-runner leaves and scoped secrets")]
   Compose --> Contracts["Observed on Linux: browserless Playwright live contracts, 23 operations and status gate"]
   Contracts --> Security["Observed on Linux: TLS, token, ownership and identity checks"]
-  Security --> Candidate["Local candidate: automated Chrome/Edge HTTP/1.1 through Playwright certificate proxy; native rerun pending"]
+  Security --> Candidate["Observed on Linux: automated Chrome/Edge HTTP/1.1 through Playwright certificate proxy"]
   Candidate --> Matrix["Previously observed on Linux: real Chrome and Edge; both runners; customer and admin"]
   Certs -.->|"selected mounts only"| Contracts
   Certs -.->|"selected mounts only"| Security
@@ -628,3 +647,77 @@ sequenceDiagram
   Note over B,K: No cookie authenticator or password-only alternative
   Note over V,K: Shop adapter never initializes on lesson callback
 ```
+
+## TEST-03 real checkout failure and recovery
+
+Run [the dedicated local wrapper](../testing/faults/checkout/README.md) or its
+live-output recorder. This browserless evidence is separate from the browser mock
+and live login matrices.
+
+```mermaid
+flowchart TD
+  S["Require fresh disposable project; build pinned unchanged stack"] --> P["Volume-held PKI, real Keycloak clients and real databases"]
+  P --> H["Private quote adapter; only Node catalog hosts entry redirected"]
+  H --> L["17 existing live/schema cases; all 23 operations and required statuses"]
+  L --> F["4 deterministic quote faults plus verified TLS/auth boundary case"]
+  F --> E["Canonical 503 within 8 s; no order, idempotency success or revision change"]
+  E --> R["Restore forwarding; same key creates one real order; stable replay"]
+  R --> B["Independent live gate and fault 503 gate; scan safe local reports"]
+  B --> C["Trap cleanup; assert no project containers, networks or volumes"]
+  P --> Q["Intentional failing-run control in another fresh project"]
+  Q --> C
+  V["Optional no-network Chrome live-output viewer; no credentials"] --> S
+  C --> W["Close/finalize video; remove recorder profile volumes; scan artifacts"]
+```
+
+The 12-second injected hold must trigger Node's existing 5-second abort, with a
+4.5–8-second measured acceptance window. Disconnect and malformed replies must
+also finish within 8 seconds. The quoted success payload comes from real Go,
+not a fabricated checkout endpoint. Fault observations never enter the live
+provider coverage reporter. GitHub updates and native execution are deferred by
+user instruction; [completion 19](completion/19-checkout-dependency-faults.md)
+records the observed local results and limits.
+
+## Local TEST-08 workflow
+
+Run `./testing/faults/idempotency/run.sh` from the repository root, or `./testing/faults/idempotency/record.sh` for a new-run output-viewer video. The wrapper builds/provisions a fresh private real-provider project, runs the existing 17 live/schema cases followed by four race/loss/trust cases, checks the live and separate idempotency gates, scans safe artifacts, then removes containers/networks/volumes. `IDEMPOTENCY_FORCE_FAILURE=1 ./testing/faults/idempotency/run.sh` deliberately exits 1 after provisioning and exercises the same cleanup. No existing stack is adopted.
+
+Races require database-observed blocked inserts; no sleeps establish concurrency. The response-loss test asserts no client headers before ECONNRESET, real commit, then direct replay without another row or revision increment. The 2.5-second barrier, existing 5-second database timeout and 10-second API/transport bounds remain explicit. Reports keep keys, tokens, request headers, receipts and profiles out of exported artifacts. The optional no-network video viewer records safe live output, not an application journey. See [completion 20](completion/20-checkout-idempotency.md) for exact observed commands and limits. GitHub updates remain deferred.
+
+## Local TEST-05 → TEST-07 workflow
+
+Run `./testing/prism/run.sh all` from the repository root. The wrapper resolves
+its existing pinned runner image ID, creates a fresh private `cert-prism-*` project,
+builds/provisions in containers, validates fixtures with canonical Ajv, runs 27
+compatibility observations and a mock-only decision gate, then builds the unchanged
+Vue app and checks synthetic TLS boundaries. Eleven shared journeys run in real
+Chrome/Edge under Playwright/Cucumber, with a video per context and safe observations.
+The mandatory 44-case gate rejects missing/failed/mock-provenance drift, absent
+videos, extra retries/orders, missing faults and deadline violations. It cannot
+satisfy live-provider coverage. Safe scanning and project/container/network/volume/
+temporary-image cleanup follow.
+
+`compatibility` and `browser` select one phase; diagnostic subset mode explicitly
+skips the full matrix gate. The README's intentional failure command exercises
+cleanup after a completed browser journey. Type/JSON/size/transport faults are
+labelled separately from canonical business-error examples. Keys, tokens, secrets,
+profiles and test controls stay in volumes; reports/videos are exported safely.
+See [completion 21](completion/21-prism-compatibility.md) and
+[completion 22](completion/22-prism-browser-failures.md) for exact observed commands,
+pins, results, limitations and corrections. No GitHub/native results are implied.
+
+## Scripted reporting dependency
+
+```sh
+./testing/faults/reporting/compatibility.sh
+./testing/faults/reporting/run.sh
+./testing/faults/reporting/record.sh
+```
+
+These create fresh private projects, keep credentials/profiles in volumes and clean up on exit. Mokapi supplies only reporting page contents after the real service token is validated over verified TLS. The last command records a new run in a labelled output viewer, not an app browser journey. See [completion 23](completion/23-mokapi-reporting-sequences.md) for exact observed runs and limits.
+
+TEST-10: [real regional boundary commands](../testing/regional/README.md). Run `LAB_PROJECT=magic-shop-regional-example ./testing/regional/run.sh` from the repository root for isolated real-auth provider checks and 16 recorded Chrome/Edge Playwright/Cucumber journeys. Exact evidence and retained limits are in [completion 24](completion/24-regional-reporting-boundaries.md).
+
+## Independent consumer/fault evidence
+
+[Completion 26](completion/26-independent-ci-evidence.md) records native push 38115515064 and PR 38115518115 passing the existing workflow plus independent Prism consumer, checkout/reporting/idempotency fault and real regional jobs. Each new job runs its own completeness gate, intentional-failure probe, independent always-cleanup and scanned/readable allowlisted text upload. A final required aggregate rejects missing/skipped/cancelled/failed live, lesson, consumer, fault-matrix or regional requirements. Deliberate-red run 38115560267 proves an actual failing checkout job still cleans up and exports an explicitly failed report; other jobs pass and the aggregate stays red. Browser videos remain required by applicable gates but are not uploaded. No product/security behavior changes. Copyable commands: [CI suite guide](../testing/ci/README.md).

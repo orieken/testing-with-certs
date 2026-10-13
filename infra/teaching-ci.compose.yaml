@@ -1,0 +1,6 @@
+services:
+  teaching-tests:
+    environment:
+      LAB_PASSWORD_REPORTS: "1"
+    volumes:
+      - ${LAB_PASSWORD_REPORT_DIR:?Set disposable report directory}:/work/artifacts/certificate-password-ci

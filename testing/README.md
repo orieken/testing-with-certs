@@ -31,8 +31,8 @@ Run the full matrix in a disposable project, from the repository root:
 
 ```sh
 LAB_PROJECT=magic-shop-password-check ./lab up
-LAB_PROJECT=magic-shop-password-check sh testing/run-certificate-password.sh
-LAB_PROJECT=magic-shop-password-check docker compose -f infra/compose.yaml -f infra/teaching.compose.yaml --profile '*' down --volumes --remove-orphans
+LAB_PROJECT=magic-shop-password-check LAB_PASSWORD_REPORTS=1 sh testing/run-certificate-password.sh
+LAB_PROJECT=magic-shop-password-check sh testing/cleanup-certificate-password.sh
 ```
 
 The wrapper runs nine shared checks under Playwright Test and Cucumber in both
@@ -49,7 +49,20 @@ LAB_PROJECT=magic-shop-password-check docker compose -f infra/compose.yaml -f in
 ```
 
 The full matrix records no video, screenshots, traces, HAR or storageState and
-exports no secrets/profiles. Its results are terminal assertions. For an opt-in
+exports no secrets/profiles. With `LAB_PASSWORD_REPORTS=1`, each browser/runner
+exports allowlisted case names and pass/fail status in JUnit and JSON at
+`artifacts/certificate-password-ci/<project>/<browser>-<runner>/`. Raw assertion
+messages, attachments, stdout/stderr, tokens and passwords are omitted. CI requires
+all nine cases in all four selections, scans the reports and checks host readability
+before text-only upload. Every selection gets fresh Docker-volume HOME/tmp; the
+exit trap removes temporary passwords/sessions and verifies credentials are gone.
+`cleanup-certificate-password.sh` removes and verifies only the named project's
+containers, networks and volumes. GitHub uses `always()` cleanup for failures and
+cancellation; forced runner termination or host loss can prevent traps, so retain
+the explicit cleanup command. The CI job also starts a second disposable stack,
+injects a runner failure after provisioning, and verifies credential/resource
+cleanup. See [completion 18](../docs/completion/18-native-certificate-password-ci.md)
+for observed native results and limits. For an opt-in
 **new passing login recording**, use a separate disposable project:
 
 ```sh
@@ -78,3 +91,20 @@ exact commands and native Linux/manual limitations.
 Latest observed recording: [passing Chrome login](../artifacts/certificate-password/20261010T020527Z-chrome-40435/certificate-password-chrome.webm),
 a new single-test pass recorded after the original unrecorded matrix. Local
 videos are gitignored and this link is available only where the artifact exists.
+
+The [TEST-03 checkout harness](faults/checkout/README.md) tests the unchanged real
+Node service against injected catalog quote faults, with real Keycloak identities,
+verified TLS and PostgreSQL assertions. Run `./testing/faults/checkout/run.sh`, or
+`./testing/faults/checkout/record.sh` for a newly executed live-output video.
+Reports use a separate fault provenance; they cannot satisfy the live-provider
+gate. Every documented live status now has a requirement or an explicit exclusion.
+
+For TEST-08 real checkout concurrency and committed-response loss, use the [isolated idempotency suite](faults/idempotency/README.md). Run `./testing/faults/idempotency/run.sh` or `./testing/faults/idempotency/record.sh` from the repository root; these create and remove their own private real-provider stack.
+
+For TEST-05 → TEST-07, use the [isolated Prism compatibility and browser suite](prism/README.md): `./testing/prism/run.sh all` runs compatibility first, then eleven scenarios under Chrome/Edge and Playwright/Cucumber. It builds the unchanged Vue app, supplies synthetic authentication only on a private network, validates canonical examples and records actual UI journeys. Its mock report is separate from live-provider coverage.
+
+TEST-06/09: [Mokapi reporting sequence commands](../testing/faults/reporting/README.md) and [completion 23](../docs/completion/23-mokapi-reporting-sequences.md). The real insights consumer uses an isolated scripted dependency with verified TLS and real authorization.
+
+TEST-10: [real regional boundary commands](regional/README.md). Run `LAB_PROJECT=magic-shop-regional-example ./testing/regional/run.sh` from the repository root for isolated real-auth provider checks and 16 recorded Chrome/Edge Playwright/Cucumber journeys. Exact evidence and retained limits are in [completion 24](../docs/completion/24-regional-reporting-boundaries.md).
+
+[Independent CI suites](ci/README.md) reuse these bounded commands in separately required native jobs and publish scanned text reports with explicit provenance. [Completion 26](../docs/completion/26-independent-ci-evidence.md) records the observed green push/PR workflows and intentional-red cleanup/gating control.

@@ -9,6 +9,8 @@ documents nor the services are a running API. The
 
 ## Domain dictionary and ownership
 
+Use the [project terminology dictionary](project-terminology.md) for preferred writing terms and plain-language explanations. This ownership table remains the source for business invariants. Use the [writing guide](writing-guide.md) when simplifying prose; preserve canonical contract names and security boundaries.
+
 | Term | Owner and identity | Invariants |
 | --- | --- | --- |
 | Human identity | Keycloak; stable `sub` plus protected, unique opaque UUID `cert_identity` | Certificate CN resolves to exactly one enabled user; display name/email are not identity keys. Roles come from the access token, not the certificate. |

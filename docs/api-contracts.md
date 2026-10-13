@@ -77,3 +77,21 @@ The certificate + password lesson adds no business operation or password endpoin
 Keycloak owns its form. Business providers retain the `shop-spa` authorized-party
 allowlist and existing certificate/token identity comparison. Lesson tokens are
 not accepted as business API credentials; completion 15 records that boundary.
+
+## Required statuses and checkout fault evidence
+
+The live coverage manifest now partitions every documented response into a
+required status or an explicit reasoned exclusion. Existing checkout 409/422,
+owned-order/item 404, widget/quote 422, reporting 409 and follow-up 404 cannot be
+silently dropped. New statuses require a visible coverage decision; mutation
+controls verify removal failures. Exclusions identify deferred scenarios and
+provider/contract reconciliation work, rather than treating all errors as tested.
+
+[The TEST-03 harness](../testing/faults/checkout/README.md) separately requires
+real Node checkout 503, verified-TLS database invariants and same-key recovery.
+Its fault report is rejected by the live coverage gate. Run the wrapper to execute
+both gates; ordinary live contracts do not claim dependency-fault coverage.
+
+TEST-08 adds [real concurrent idempotency and committed-response retry evidence](completion/20-checkout-idempotency.md). Its dedicated suite validates the existing canonical checkout requests and 201/409 responses, checks the persisted owner/key/request hash and revision, and proves stable replay after a response is deliberately lost following commit. These new cases are separately gated; they do not add mock observations to live coverage or alter the contract.
+
+[TEST-05 → TEST-07](../testing/prism/README.md) keeps canonical bundles read-only and adds seventeen Ajv-checked examples to disposable Prism derivatives. Its proxy experiment explicitly reports warning/enforcement behavior, 501 mock fallback and missing client-certificate forwarding; it routes no authenticated real-provider traffic. The separate Vue suite gets normal/error replies from Prism and labels deliberately invalid type/JSON/size/transport faults. Complete runtime checkout schema validation is not claimed.

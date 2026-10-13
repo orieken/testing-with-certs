@@ -1,84 +1,334 @@
 # Teaching guide: certificate-authenticated Magic Shop
 
-This prototype keeps the browser, certificate authority, user certificates, PostgreSQL and Keycloak inside Docker. The host needs Docker Compose and a shell; it does not need Node, Go, Python, OpenSSL, a trusted lab CA or a client certificate. The shop and auth origins exist on the Compose front network as `https://shop.magic.test:8443` and `https://auth.magic.test:9443`. Only the optional protected desktop viewer is forwarded to host loopback. The prior automated workflow passed on native Linux amd64 in run 38012708736. The new certificate/password lesson and manual viewer/operator retain separate platform limits; the local lesson results below use Apple Silicon amd64 emulation.
+This is a local teaching lab. The host needs Docker Compose and a shell.
+Builds, tests, database setup, and certificate operations run in containers.
+The host needs no Node, Go, Python, OpenSSL, or installed lab certificate.
+Private keys, secrets, and browser profiles stay in Docker volumes.
 
-## Start and choose an identity
+Read the [plain-language introduction](plain-language/README.md) for a system overview.
+This guide follows the [writing guide](writing-guide.md) and [project terminology dictionary](project-terminology.md).
+The approximate ASD-STE100 target is a writing preference, not a formal compliance score.
 
-From the repository root, run `./lab up`. It builds the pinned images, provisions the CA and separate certificate volumes, initializes four database owners, starts the healthy services and idempotently applies the certificate-only Keycloak realm. Repeating `./lab up` keeps the existing realm, certificates and database data. `./lab status` shows the running and completed jobs. A new learner should use a unique `LAB_PROJECT` value to avoid another learner's volumes, for example `LAB_PROJECT=magic-shop-lesson-1 ./lab up` and the same prefix on subsequent commands.
+## Choose a project and start the lab
 
-For a manual customer session, run `./lab manual --user customer-waterdeep --browser chrome`, read the one-session password with `./lab viewer-password`, open the printed `http://127.0.0.1:6080/vnc.html` loopback URL and choose **Sign in with certificate** in the remote browser. Use `LAB_VIEWER_PORT=6081` when 6080 is occupied. To teach an administrator journey, recreate the desktop with `./lab manual --user shop-admin --browser msedge`. That recreates HOME, native certificate store, browser profile and viewer password with one selected identity; `./lab manual stop` discards them. The customer and admin selected-user paths passed automated native-store checks on Apple Silicon; the user later confirmed shop-admin in Edge and customer-waterdeep in Chrome through the current Compose viewer. [Manual browser details](manual-browser.md) distinguish this from the earlier human-verified spike viewer.
+Run commands from the repository root. Use a unique project name to separate your resources from another learner's resources.
+Keep the same project name for all commands in your session.
 
-The seeded user choices are `customer-waterdeep`, `customer-baldur`, `customer-neverwinter`, `shopkeeper`, `shop-admin` and `disabled-customer`. `unknown-user` is a trusted-certificate negative fixture with no Keycloak mapping. `./lab user inspect customer-waterdeep` reads the mapping; `./lab user provision customer-waterdeep` reapplies the selected seeded user. The prototype has no self-enrollment or arbitrary new-user API. The shop does not offer password login.
+1. Select the project:
 
-## Run the lessons and review evidence
+   ```sh
+   export LAB_PROJECT=magic-shop-lesson-1
+   ```
 
-Run `./lab test --runner playwright --suite contracts` first. It opens no browser, sends authenticated requests to all three live providers, validates the canonical OpenAPI response schemas and checks every one of the 23 operations and required statuses. Then run `./lab test --runner playwright --suite security` for TLS, token, ownership and boundary checks. The shared customer/admin examples can be run with either `playwright` or `cucumber` and either `chrome` or `msedge`:
+2. Start the lab:
+
+   ```sh
+   ./lab up
+   ```
+
+3. Check its state:
+
+   ```sh
+   ./lab status
+   ```
+
+Startup builds pinned images and provisions separate certificate volumes.
+It initializes four database owners and applies the certificate-only Keycloak realm.
+Repeating startup retains the existing realm, certificates, and database records.
+Normal startup does not reset volumes.
+
+The shop origin is `https://shop.magic.test:8443`.
+The authentication origin is `https://auth.magic.test:9443`.
+These origins are available inside the Compose network.
+Only the optional protected desktop viewer is forwarded to host loopback.
+
+## Open a selected-user browser
+
+1. Start a customer session:
+
+   ```sh
+   ./lab manual --user customer-waterdeep --browser chrome
+   ```
+
+2. Read the one-session viewer password:
+
+   ```sh
+   ./lab viewer-password
+   ```
+
+3. Open the printed `http://127.0.0.1:6080/vnc.html` URL.
+4. Enter the viewer password.
+5. Select **Sign in with certificate** in the remote browser.
+
+If port 6080 is occupied, start the viewer on another loopback port:
+
+```sh
+LAB_VIEWER_PORT=6081 ./lab manual --user customer-waterdeep --browser chrome
+```
+
+For an administrator session, recreate the desktop:
+
+```sh
+./lab manual --user shop-admin --browser msedge
+```
+
+This action creates a fresh HOME, certificate store, browser profile, and viewer password.
+Only the selected user identity is installed.
+Read the new viewer password before connecting again.
+To discard the manual session, use:
+
+```sh
+./lab manual stop
+```
+
+The seeded users are `customer-waterdeep`, `customer-baldur`, `customer-neverwinter`,
+`shopkeeper`, `shop-admin`, and `disabled-customer`.
+The `unknown-user` fixture has a trusted certificate but no Keycloak mapping.
+It is a negative fixture, not a usable login account.
+
+Inspect or reapply a selected seeded user with:
+
+```sh
+./lab user inspect customer-waterdeep
+./lab user provision customer-waterdeep
+```
+
+The prototype has no self-enrollment or arbitrary new-user API.
+The shop does not offer password login.
+See [manual browser details](manual-browser.md) for certificate selection and session boundaries.
+
+## Run real-system tests
+
+Run live contract checks before security and browser checks.
+The contract suite opens no browser. It checks all three providers against the canonical OpenAPI contracts.
+Its coverage gate requires all 23 business operations and the required statuses.
+
+```sh
+./lab test --runner playwright --suite contracts
+./lab test --runner playwright --suite security
+```
+
+The security suite checks TLS, access tokens, record ownership, and access boundaries.
+For a customer or administrator browser journey, use:
 
 ```sh
 ./lab test --runner playwright --browser chrome --user customer-waterdeep
 ./lab test --runner cucumber --browser msedge --user shop-admin
 ```
 
-Use `./lab test --runner playwright --browser chrome --user shopkeeper` for the inventory example. Playwright Test teaching runs save local HTML, JUnit and WebM under `artifacts/teaching/<run-id>/`; Cucumber saves JSON, JUnit and scenario telemetry there. `./lab record chrome customer-waterdeep` is a separate local video-focused UI run. The local reports passed a credential-file/text scan, but browser video and HTML/video bundles are intentionally excluded from CI uploads because they show the login flow. The [test matrix](test-plan.md) and [per-ID evidence](teaching-coverage.md) separate observed checks from partial ones.
+Select `playwright` or `cucumber` as the runner.
+Select `chrome` or `msedge` as the browser.
+Repeat both identities with both runners and browsers for the eight core selections.
+For the shopkeeper inventory example, use:
 
-## Teach certificate + password authentication
+```sh
+./lab test --runner playwright --browser chrome --user shopkeeper
+```
+
+Playwright Test saves local HTML, JUnit, and WebM files under `artifacts/teaching/<run-id>/`.
+Cucumber saves JSON, JUnit, and scenario telemetry there.
+For a separate video-focused customer run, use:
+
+```sh
+./lab record chrome customer-waterdeep
+```
+
+Review assertions together with recordings. A video alone does not prove hidden API checks.
+CI uploads allowlisted text reports. Videos and HTML/video bundles remain local.
+Profiles, private keys, secrets, and network captures are not exported.
+See the [test matrix](test-plan.md) and [per-ID evidence](teaching-coverage.md) for coverage details.
+
+## Run dependency-replacement examples
+
+The standalone examples use dedicated consumers. They do not reconfigure the shop's Keycloak or real APIs.
+
+```sh
+./spikes/mock-auth/run.sh jwt
+./spikes/mock-auth/run.sh oidc
+./spikes/mock-auth/run.sh api
+```
+
+The examples replace signing-key input, an OIDC dependency, or a catalog dependency.
+Mock results do not prove real login, certificate pairing, or live-provider authorization.
+See the [mock example guide](../spikes/mock-auth/README.md) for checks, limits, and cleanup.
+See the [plain-language test guide](plain-language/testing.md) for the independent CI and fault selections.
+
+## Teach certificate and password authentication
 
 The separate lesson is at `/teaching/certificate-password` on the shop origin.
-Keycloak first maps the valid client certificate, then asks for that account's
-password. Both are required; there is no password-only alternative. Its separate
-client/callback prevents the shop adapter from consuming the lesson's code. The
-lesson displays the issued identity; the existing shop remains certificate-only.
+Keycloak checks the certificate-selected account and then requires its password.
+Both checks are required. There is no password-only alternative.
+A separate client and callback keep the lesson flow separate from the shop flow.
+Lesson tokens do not grant business API access. The shop remains certificate-only.
 
-For manual use, run `./lab user set-password customer-waterdeep` in an interactive
-terminal, enter/confirm the password in the hidden container prompt, and open the
-lesson in that user's remote Chrome/Edge browser. Supply the password only on
-Keycloak's page. Setting it ends that account's existing Keycloak sessions.
+For manual use:
 
-For automated verification, use a disposable project:
+1. Open an interactive terminal.
+2. Set the selected account's password:
+
+   ```sh
+   ./lab user set-password customer-waterdeep
+   ```
+
+3. Enter and confirm the password in the hidden container prompt.
+4. Open the lesson in that user's remote Chrome or Edge browser.
+5. Supply the account password only on Keycloak's page.
+
+Setting the password ends that account's existing Keycloak sessions.
+The account password differs from the desktop viewer password.
+
+For automated verification, use a separate disposable project:
 
 ```sh
 LAB_PROJECT=magic-shop-password-check ./lab up
 LAB_PROJECT=magic-shop-password-check sh testing/run-certificate-password.sh
-LAB_PROJECT=magic-shop-password-check docker compose -f infra/compose.yaml -f infra/teaching.compose.yaml --profile '*' down --volumes --remove-orphans
+LAB_PROJECT=magic-shop-password-check sh testing/cleanup-certificate-password.sh
 ```
 
-This runs all nine positive/negative/cookie/shop checks under both runners and
-both browsers, with temporary random passwords in Docker volumes and automatic
-password/session cleanup. The matrix does not record video. To record a fresh
-passing login, start another disposable project and run
-`LAB_PROJECT=magic-shop-password-video sh testing/record-certificate-password.sh chrome`
-after `LAB_PROJECT=magic-shop-password-video ./lab up`; use `msedge` for Edge.
-The output is a local viewport-only WebM with masked password input. Use the same
-explicit project cleanup afterward. [Testing instructions](../testing/README.md#certificate--password-lesson)
-explain recording, interrupted-fixture recovery and artifact boundaries;
-[completion 15](completion/15-certificate-password-view.md) records observed results.
+The wrapper runs nine checks under both runners and both browsers: 36 checks in total.
+Temporary random passwords stay in Docker volumes.
+The exit procedure removes the temporary passwords and fixture sessions.
+The matrix records no video.
+See [testing instructions](../testing/README.md#certificate--password-lesson) for interrupted-fixture recovery.
 
-## Follow a request across the boundaries
+For a new passing-login recording, use another disposable project:
 
-The optional [Go operator](operator-guide.md) shows Compose health, bounded local telemetry and public certificate metadata, starts/stops named services, and launches the same Playwright/Cucumber suites. It is built in a container and runs only as a trusted host tool; the APIs and runners receive no Docker socket.
+```sh
+LAB_PROJECT=magic-shop-password-video ./lab up
+LAB_PROJECT=magic-shop-password-video sh testing/record-certificate-password.sh chrome
+LAB_PROJECT=magic-shop-password-video sh testing/cleanup-certificate-password.sh
+```
 
-The remote Chrome or Edge browser sends its selected human certificate to HAProxy's shop listener and uses the same identity at Keycloak's auth listener. Keycloak maps the certificate to an immutable `cert_identity` and issues an Authorization Code + PKCE access token. HAProxy strips caller-supplied identity headers, sets the verified identity from its mTLS connection, and presents its own service certificate to the APIs. Go, Node and Python verify the token signature, exact issuer/audience/lifetime, role and equality with the gateway's verified certificate identity. A TLS failure happens before HTTP; a missing/invalid bearer token yields 401, insufficient role/scope 403, and a hidden owned record 404.
+Use `msedge` for Edge. The local WebM shows the page viewport with masked password input.
+It does not add recordings to an earlier unrecorded matrix.
+[Completion 18](completion/18-native-certificate-password-ci.md) records the native lesson results and cleanup checks.
 
-Go owns catalog and inventory, Node owns profiles, orders and widgets, and Python owns regional reporting and local follow-up notes. Node's private quote request presents the `customer-api` certificate with a `customer-catalog` token carrying `catalog.quote`. Python's private feed request presents the `insights-api` certificate with an `insights-reporting` token carrying `reporting.read`. Those two private routes have no public HAProxy route. The [architecture overview](architecture.md) and [workflow diagrams](workflows.md) show the infrastructure/volumes, provisioning, login, service requests, reporting, both runner modes, certificate lifecycle, CI gate and operator control path. The [canonical OpenAPI contracts](../contracts/openapi/README.md) are the interface source of truth.
+## Follow a request through the system
 
-As an exercise, add a permitted dashboard widget with a customer session, sign out and sign in again, and observe the persisted layout. Add a scenario to `testing/playwright/` or `testing/cucumber/` using the shared Saturday site/page/flow models and the selected identity fixture; do not embed certificate files or tokens in a test. A new seeded user requires a unique immutable `certIdentity` in `seed/identities.json`, a PKI user-volume mapping, Keycloak provisioning and a selected-user runner mapping; this is a source change, not a runtime free-form enrollment command. The September Waterdeep admin report provides a fixed teaching oracle: 570 gp, three completed orders and two customers. Its map uses local GeoJSON without external tiles, and follow-up notes never send outbound messages.
+The browser sends its user certificate to the shop listener.
+The authentication listener passes browser TLS directly to Keycloak.
+Keycloak maps the certificate to the protected `cert_identity` attribute.
+Vue uses Authorization Code with PKCE to obtain tokens.
 
-## Renew, revoke, stop and reset
+HAProxy removes caller-supplied identity headers and sets the verified certificate identity.
+It presents its own service certificate to the business APIs.
+Each API checks the access token's signature, issuer, audience, lifetime, and role.
+It also checks that token identity matches the gateway's verified user certificate identity.
 
-`./lab pki renew customer-waterdeep` rotates the selected certificate key/serial while retaining its immutable identity; recreate a manual browser to import the new bundle. `./lab pki revoke customer-waterdeep` publishes a CRL. Restart the gateway and Keycloak through Compose so both reload it, then use a fresh connection to test rejection. Existing TLS connections and issued access tokens have separate lifetimes; a token can remain valid for at most its 120-second configured lifetime. Use a disposable `LAB_PROJECT` for revocation lessons because the action affects that project's learner session. [Authentication and lifecycle rules](authentication.md) give the full distinction between certificate and account disablement.
+A TLS rejection occurs before HTTP.
+A missing or invalid access token returns 401.
+Insufficient role or scope returns 403.
+Another customer's owned record is hidden with 404.
 
-`./lab down` stops the selected project without deleting its data. `./lab reset --project magic-shop-lesson-1` removes that named project's containers and volumes, including its CA and database; run it only when that project can be discarded. No routine startup should reset volumes. UBI9 is retained for PKI, Go runtime and Python; the real-browser runner uses pinned amd64 Bookworm because verified UBI9 repositories lacked the required desktop packages. PostgreSQL uses its maintained pinned image. See [compatibility and exact versions](compatibility.md) and [dependency strategy](dependency-strategy.md).
+The catalog API owns items and inventory.
+The customer API owns profiles, orders, and widgets.
+The insights API owns regional reporting and local follow-up notes.
+
+The customer API uses its `customer-api` certificate and a `customer-catalog` service access token for private quotes.
+That request requires `catalog.quote`.
+The insights API uses its `insights-api` certificate and an `insights-reporting` service access token for private reporting pages.
+That request requires `reporting.read`.
+Neither private operation has a public HAProxy route.
+
+See the [architecture](architecture.md), [workflow diagrams](workflows.md), and
+[canonical OpenAPI contracts](../contracts/openapi/README.md) for exact interfaces and boundaries.
+
+The optional [Go operator](operator-guide.md) shows health, bounded telemetry, and public certificate metadata.
+It starts named services and launches the existing suites.
+The operator is built in a container and runs as a trusted host tool.
+The APIs and test runners receive no Docker socket.
+
+## Try a teaching exercise
+
+Use a customer session to add a permitted dashboard widget.
+Sign out, sign in again, and check the saved layout.
+
+Add scenarios in `testing/playwright/` or `testing/cucumber/` with the shared Saturday page and flow models.
+Use the selected identity fixture. Do not embed certificates or access tokens in tests.
+
+A new seeded user needs a unique `certIdentity` in `seed/identities.json`.
+It also needs a PKI volume mapping, Keycloak provisioning, and a selected-user runner mapping.
+This is a source change. It is not a runtime self-enrollment command.
+
+The September Waterdeep report has an independent expected result:
+570 gp, three completed orders, and two customers.
+Its map uses local GeoJSON without external tiles.
+Follow-up notes do not send external messages.
+
+## Renew and revoke certificates
+
+Use a disposable project for certificate lifecycle exercises.
+Renewal changes the certificate key and serial while retaining the stable identity:
+
+```sh
+./lab pki renew customer-waterdeep
+```
+
+Recreate the manual browser to import the new certificate bundle.
+To revoke the selected certificate, use:
+
+```sh
+./lab pki revoke customer-waterdeep
+```
+
+Restart the gateway and Keycloak so both reload the certificate revocation list:
+
+```sh
+docker compose -f infra/compose.yaml restart gateway keycloak
+```
+
+Use a fresh connection to check rejection.
+Existing TLS connections and issued access tokens have separate lifetimes.
+An access token can remain valid for at most its configured 120-second lifetime.
+See [authentication and lifecycle rules](authentication.md) for certificate revocation and account disablement.
+
+## Stop or discard the project
+
+To stop the selected project and retain its data, use:
+
+```sh
+./lab down
+```
+
+To discard the example project's containers and volumes, use:
+
+```sh
+./lab reset --project magic-shop-lesson-1
+```
+
+Reset removes that project's certificate authority and database records.
+Run reset only when that named project can be discarded.
+Do not use reset during routine startup.
+
+The PKI job, Go runtime, and Python use UBI9.
+The branded-browser runner uses pinned amd64 Bookworm because verified UBI9 repositories lacked required desktop packages.
+PostgreSQL uses its pinned image.
+See [compatibility](compatibility.md) and [dependency strategy](dependency-strategy.md) for exact versions and decisions.
 
 ## Troubleshoot by layer
 
-| Layer | Check | Likely boundary |
+| Layer | Check | Interpretation |
 | --- | --- | --- |
-| DNS/origin | Use the exact `shop.magic.test:8443` and `auth.magic.test:9443` origins inside the runner; check `./lab status`. | A container name, `localhost` or wrong port changes issuer/SAN validation. |
-| TLS/trust | Run `./lab pki verify` and `./lab db verify`; use a fresh connection after CRL reload. | Wrong CA, hostname, expired/revoked leaf or missing certificate fails before HTTP. Never bypass TLS verification. |
-| Certificate selection | Recreate manual mode with the intended `--user` and `--browser`; check the selected identity message. | Chrome and Edge have separate native stores/policies; old profiles must not carry the other user. |
-| Keycloak mapping | Run `./lab user inspect USER`; compare the certificate's immutable mapping to the enabled seed account. | Unknown or disabled users receive no authorization code; no password fallback exists. |
-| Token | Check that a fresh PKCE access token has the API audience, issuer and current lifetime. | Missing/altered/expired/wrong-audience tokens return 401 even with a valid certificate. |
-| Role/ownership | Compare customer, shopkeeper and shop-admin examples and the per-ID matrix. | Valid identity with insufficient role/scope returns 403; another customer's owned record is hidden as 404. |
-| Application | Run contracts before UI tests, then inspect the named local JUnit/HTML report. | A healthy transport alone does not prove business response or OpenAPI conformance. |
+| Origin | Use the exact shop and authentication origins inside the runner. Check `./lab status`. | A wrong hostname or port can invalidate server identity or issuer checks. |
+| TLS | Run `./lab pki verify` and `./lab db verify`. Use a fresh connection after revocation-list reload. | Wrong trust, hostname, validity, or certificate can fail before HTTP. Keep TLS verification active. |
+| Certificate selection | Recreate manual mode with the intended user and browser. | A previous user's certificate or profile must not remain. |
+| User mapping | Run `./lab user inspect USER`. Check the protected mapping and enabled account. | Unknown or disabled users cannot log in. The shop has no password fallback. |
+| Access token | Run the security suite and inspect sanitized results. | Missing, altered, expired, or wrong-audience tokens return 401. Do not export tokens for diagnosis. |
+| Permission | Compare customer, shopkeeper, and shop-admin checks. | Insufficient permissions return 403. Another customer's owned record returns 404. |
+| Application | Run contracts before browser tests. Review the named local report. | A healthy connection does not prove correct business results. |
 
-The local [`saturday-keycloak` package](../packages/saturday-keycloak/) remains private to this repository. Future upstream work could generalize the identity resolver, exact-origin browser policy and isolated issuer adapter after independent API and credential-boundary review; no package has been published or copied into Saturday.
+## Read the evidence and remaining limits
+
+Native push run `38115515064` and PR run `38115518115` passed all 13 expanded CI jobs.
+The results include the live matrix, lesson, and separate consumer, fault, and regional jobs.
+[Completion 26](completion/26-independent-ci-evidence.md) records their exact commands, environments, and cleanup results.
+These are prior observed runs. This documentation revision does not claim a new run.
+
+A human confirmed customer Chrome and administrator Edge in the Apple Silicon manual viewer.
+Native Linux manual viewer and operator checks remain unverified.
+The regional timestamp precision issue and affected 25-row UI limit remain recorded limitations.
+Standalone JWT and OIDC examples retain their recorded local evidence.
+
+The local [Saturday Keycloak package](../packages/saturday-keycloak/) remains private to this repository.
+No package has been published or copied into the Saturday checkout.
+The [backlog](TODO.md) distinguishes completed checks, remaining evidence, and separate product expansion ideas.
