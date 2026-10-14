@@ -96,6 +96,37 @@ The second command runs only if the first succeeds.
 
 ## Run the core browser matrix
 
+For one command that builds the workspace, infrastructure, and all three services, then runs the real-system suites, use:
+
+```sh
+sh testing/run-all.sh all
+```
+
+If pnpm is already available in your host terminal, the equivalent root package script is:
+
+```sh
+pnpm run build:test
+```
+
+The package scripts call the Docker wrapper. Builds, dependency installs, and test execution still happen in containers.
+`pnpm run build:all` runs container builds and unit/static checks only.
+`pnpm run test:all` also builds the required images, then runs the real-system checks.
+The `test` and `all` modes have the same complete verification behavior.
+
+The complete run creates its own `magic-shop-all-*` project and ignores a retained `LAB_PROJECT` setting.
+It runs PKI/database checks, packed-package checks, live contracts/security, eight customer/admin browser selections,
+two shopkeeper browser selections, and the 36-case certificate-password lesson.
+It stops on failure and removes only that disposable project's containers, networks, and volumes.
+It retains local reports under `artifacts/`.
+See [all-service verification](completion/27-all-service-command.md) for observed results, environment, and exact commands.
+The separate mocks, fault suites, and regional expansion suites remain separate commands in their guides.
+If your terminal is forcibly killed or Docker becomes unavailable, the exit trap can't guarantee cleanup.
+Use the printed project name with the scoped recovery command:
+
+```sh
+LAB_PROJECT=magic-shop-all-REPLACE-WITH-PRINTED-ID sh testing/cleanup-certificate-password.sh
+```
+
 Run these commands from the repository root after successful startup:
 
 ```sh

@@ -332,6 +332,8 @@ func (o operator) execute(args []string) (string, error) {
 		return "", errors.New("missing command")
 	}
 	switch args[0] {
+	case "matrix":
+		return o.matrix(args[1:])
 	case "status", "health", "healthcheck", "telemetry", "certs", "diagnose":
 		if len(args) != 1 {
 			return "", errors.New("unexpected arguments")
@@ -453,7 +455,11 @@ type model struct {
 
 func initialModel(op operator) model {
 	items := []list.Item{action{"Service status", "status"}, action{"Healthcheck", "healthcheck"}, action{"Local telemetry", "telemetry"}, action{"Certificate metadata", "certs"}, action{"Security diagnostics", "diagnose"}, action{"OpenAPI contracts", "test contracts"}}
-	items = append(items, action{"Isolated user revocation probe", "diagnose-revoked --yes"})
+	items = append(items, action{"Isolated user revocation probe", "diagnose-revoked --yes"},
+		action{"Preview browser matrix", "matrix --plan"},
+		action{"Run all browser matrix", "matrix"},
+		action{"Run Debian browser matrix", "matrix --os debian"},
+		action{"Run UBI9 browser matrix", "matrix --os ubi9"})
 	for _, runner := range []string{"playwright", "cucumber"} {
 		for _, browser := range []string{"chrome", "msedge"} {
 			for _, user := range []string{"customer-waterdeep", "shop-admin", "shopkeeper"} {

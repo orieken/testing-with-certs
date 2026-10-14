@@ -7,6 +7,10 @@
     "node": "24.10.0"
   },
   "scripts": {
-    "workspace:list": "pnpm -r list --depth -1"
+    "workspace:list": "pnpm -r list --depth -1",
+    "build:all": "sh testing/run-all.sh build",
+    "test:all": "sh testing/run-all.sh test",
+    "build:test": "sh testing/run-all.sh all",
+    "test:matrix": "./lab matrix"
   }
 }

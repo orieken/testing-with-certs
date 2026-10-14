@@ -279,10 +279,11 @@ services:
     platform: linux/amd64
     build:
       context: ..
-      dockerfile: testing/container/Runner.Containerfile
-    image: magic-shop-runner:03
+      dockerfile: ${LAB_RUNNER_CONTAINERFILE:-testing/container/Runner.Containerfile}
+    image: ${LAB_RUNNER_IMAGE:-magic-shop-runner:03}
     user: "1000:1000"
     environment:
+      LAB_RUNNER_OS: ${LAB_RUNNER_OS:-debian}
       LAB_BROWSER: ${LAB_BROWSER:-chrome}
       LAB_USER: ${LAB_USER:-customer-waterdeep}
     volumes:
@@ -295,7 +296,7 @@ services:
   runner-contracts:
     profiles: [test]
     platform: linux/amd64
-    image: magic-shop-runner:03
+    image: ${LAB_RUNNER_IMAGE:-magic-shop-runner:03}
     user: "1000:1000"
     environment:
       LAB_BROWSER: chrome
@@ -318,7 +319,7 @@ services:
   runner-security:
     profiles: [test]
     platform: linux/amd64
-    image: magic-shop-runner:03
+    image: ${LAB_RUNNER_IMAGE:-magic-shop-runner:03}
     user: "1000:1000"
     environment:
       LAB_BROWSER: chrome
@@ -335,7 +336,7 @@ services:
   runner-service-revocation:
     profiles: [test]
     platform: linux/amd64
-    image: magic-shop-runner:03
+    image: ${LAB_RUNNER_IMAGE:-magic-shop-runner:03}
     user: "1000:1000"
     environment:
       LAB_BROWSER: chrome
@@ -351,7 +352,7 @@ services:
   runner-reporting-scope:
     profiles: [test]
     platform: linux/amd64
-    image: magic-shop-runner:03
+    image: ${LAB_RUNNER_IMAGE:-magic-shop-runner:03}
     user: "1000:1000"
     volumes:
       - public-trust:/public:ro
@@ -392,7 +393,7 @@ services:
   runner-key-rotation:
     profiles: [test]
     platform: linux/amd64
-    image: magic-shop-runner:03
+    image: ${LAB_RUNNER_IMAGE:-magic-shop-runner:03}
     user: "1000:1000"
     volumes:
       - public-trust:/public:ro
@@ -419,7 +420,7 @@ services:
   runner-jwt-matrix:
     profiles: [test]
     platform: linux/amd64
-    image: magic-shop-runner:03
+    image: ${LAB_RUNNER_IMAGE:-magic-shop-runner:03}
     user: "1000:1000"
     volumes:
       - public-trust:/public:ro
@@ -432,7 +433,7 @@ services:
   runner-user-validity:
     profiles: [test]
     platform: linux/amd64
-    image: magic-shop-runner:03
+    image: ${LAB_RUNNER_IMAGE:-magic-shop-runner:03}
     user: "1000:1000"
     environment:
       LAB_BROWSER: chrome
@@ -452,6 +453,7 @@ services:
     image: magic-shop-runner:03
     user: "1000:1000"
     environment:
+      LAB_RUNNER_OS: ${LAB_RUNNER_OS:-debian}
       LAB_BROWSER: ${LAB_BROWSER:-chrome}
       LAB_USER: ${LAB_USER:-customer-waterdeep}
     command: [sh, /work/testing/container/manual.sh]
@@ -468,6 +470,15 @@ services:
       interval: 5s
       timeout: 3s
       retries: 8
+
+  runner-manual-ubi9:
+    extends: runner-manual
+    profiles: !override [manual-ubi9]
+    build:
+      dockerfile: testing/container/Runner.ubi9.Containerfile
+    image: magic-shop-runner-ubi9:01
+    ports: !override
+      - "127.0.0.1:${LAB_VIEWER_PORT:-6082}:6080"
 
 networks:
   front: {}

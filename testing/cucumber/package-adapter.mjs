@@ -6,6 +6,8 @@ import { installCertificateCucumberHooks } from 'saturday-keycloak-prototype/cuc
 
 const selected = process.env.LAB_USER;
 const channel = process.env.LAB_BROWSER;
+const runId = process.env.LAB_RUN_ID;
+if (runId && !/^[A-Za-z0-9_-]+$/.test(runId)) throw new Error('Invalid LAB_RUN_ID');
 if (!selected || !['chrome', 'msedge'].includes(channel)) throw new Error('Selected user and real browser channel required');
 setDefaultTimeout(20_000);
 const provider = new FileCertificateProvider('/identity', { [`lab/${selected}`]: { cert: 'cert.pem', key: 'key.pem' } });
@@ -16,6 +18,7 @@ AfterAll(async () => { await browser?.close(); });
 installCertificateCucumberHooks({
   browser: () => { if (!browser) throw new Error('Browser not started'); return browser; },
   provider,
+  ...(runId ? { recordVideo: { dir: `/work/artifacts/teaching/${runId}/videos` } } : {}),
   target: { origins: ['https://shop.magic.test:8443', 'https://auth.magic.test:9443'], issuer: 'https://auth.magic.test:9443/realms/magic-shop' },
   resolveIdentity: () => ({ namespace: 'lab', name: selected })
 });

@@ -36,3 +36,10 @@ Test actions display source-controlled test names, pass/fail totals and local re
 Start/stop only accept named services; `manual` accepts a named browser and seed identity. Normal start/stop does not remove volumes. Volume destruction is a separate, explicit `./lab operator reset PROJECT --yes` and requires `LAB_PROJECT=PROJECT`. Do not use that command against a project whose certificates, orders, notes or reports must be retained.
 
 The binary and reports are local ignored artifacts. Package installation, Go compilation, certificate operations and all tests occur in containers. Apple Silicon was checked with the amd64 application/runner images under Docker emulation. The user later confirmed both selected identities in the current Compose manual viewer. Native Linux amd64 remains unverified.
+
+## OS and browser matrix
+
+The Go operator supports `./lab matrix` (also `./lab operator matrix`). Use
+`--plan` to preview, `--os ubi9` or `--os debian` for one OS, and optional
+browser/runner/user/suite filters for a specific selection. The Bubble Tea menu
+includes matrix actions. See [browser matrix commands and saved recordings](browser-matrix.md).

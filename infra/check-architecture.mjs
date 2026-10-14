@@ -30,14 +30,15 @@ for (const [name, service] of Object.entries(services)) {
   if (service.privileged) throw new Error(`${name} is privileged`);
   if ((service.volumes ?? []).some((entry) => String(entry.source).includes('docker.sock'))) throw new Error(`${name} mounts Docker socket`);
   const ports = service.ports ?? [];
-  if (name !== 'runner-manual' && ports.length) throw new Error(`${name} publishes a host port`);
-  if (name === 'runner-manual' && (ports.length !== 1 || ports[0].host_ip !== '127.0.0.1' || ports[0].target !== 6080)) throw new Error('Manual viewer must publish only loopback 6080');
+  const isManual = ['runner-manual', 'runner-manual-ubi9'].includes(name);
+  if (!isManual && ports.length) throw new Error(`${name} publishes a host port`);
+  if (isManual && (ports.length !== 1 || ports[0].host_ip !== '127.0.0.1' || ports[0].target !== 6080)) throw new Error('Manual viewer must publish only loopback 6080');
   if (name.startsWith('runner-') && service.platform !== 'linux/amd64') throw new Error(`${name} is not pinned to amd64`);
 }
 if (services.pki.network_mode !== 'none') throw new Error('PKI must have no network');
 for (const name of ['backend', 'auth', 'database']) if (config.networks?.[name]?.internal !== true) throw new Error(`${name} network is not private`);
 const hasNetwork = (service, network) => Object.hasOwn(services[service].networks ?? {}, network);
-if (['runner-test', 'runner-manual'].some((name) => hasNetwork(name, 'backend') || hasNetwork(name, 'database'))) throw new Error('Browser runner bypasses gateway network');
+if (['runner-test', 'runner-manual', 'runner-manual-ubi9'].filter(name => services[name]).some((name) => hasNetwork(name, 'backend') || hasNetwork(name, 'database'))) throw new Error('Browser runner bypasses gateway network');
 for (const name of ['catalog-api', 'customer-api', 'insights-api']) {
   if (!hasNetwork(name, 'backend') || !hasNetwork(name, 'database')) throw new Error(`${name} lacks private backend/database networks`);
   if (hasNetwork(name, 'front')) throw new Error(`${name} is directly on browser front network`);

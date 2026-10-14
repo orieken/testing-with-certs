@@ -1,5 +1,5 @@
 import { After, Before, type ITestCaseHookParameter } from '@cucumber/cucumber';
-import type { Browser, BrowserContext, Page } from '@playwright/test';
+import type { Browser, BrowserContext, BrowserContextOptions, Page } from '@playwright/test';
 import type { SaturdayWorld } from '@orieken/saturday-cucumber';
 import { certificateContextOptions } from './playwright.js';
 import type { AuthenticationTarget, CertificateProvider, IdentityRef } from './core.js';
@@ -10,12 +10,17 @@ export type CucumberIdentityOptions = Readonly<{
   provider: CertificateProvider;
   target: AuthenticationTarget;
   resolveIdentity: (scenario: ITestCaseHookParameter) => IdentityRef;
+  recordVideo?: BrowserContextOptions['recordVideo'];
 }>;
 
 export function createCertificateCucumberHooks(options: CucumberIdentityOptions) {
   const before = async function (this: CertificateWorld, scenario: ITestCaseHookParameter): Promise<void> {
     const ref = options.resolveIdentity(scenario);
-    const context = await options.browser().newContext(await certificateContextOptions(options.provider, ref, options.target));
+    const certificateOptions = await certificateContextOptions(options.provider, ref, options.target);
+    const context = await options.browser().newContext({
+      ...certificateOptions,
+      ...(options.recordVideo ? { recordVideo: { dir: options.recordVideo.dir, ...(options.recordVideo.size ? { size: options.recordVideo.size } : {}) } } : {})
+    });
     try {
       this.context = context;
       this.page = await context.newPage();
