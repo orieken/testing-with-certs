@@ -1,0 +1,127 @@
+services:
+  gateway:
+    networks:
+      auth:
+        aliases: [auth.magic.test, shop.magic.test]
+  keycloak:
+    environment:
+      JAVA_OPTS_APPEND: -Djboss.server.config.dir=/opt/keycloak/conf -Djava.security.krb5.conf=/etc/krb5.conf
+    volumes:
+      - ./kerberos/krb5.conf:/etc/krb5.conf:ro
+      - kerberos-server-keytab:/kerberos:ro
+    depends_on:
+      lesson-kdc: {condition: service_healthy}
+  lesson-provider:
+    image: quay.io/keycloak/keycloak:26.4.0@sha256:5f3fb534cde6bf006d79f5912473e5d2c828c707cdfc52e16972803aca9d43dd
+    user: "1000:0"
+    entrypoint: [bash, /app/provider.sh]
+    environment:
+      KC_BOOTSTRAP_ADMIN_CLIENT_ID: lab-bootstrap
+      KC_TRUSTSTORE_PATHS: /trust/server-ca.pem
+    volumes:
+      - ./auth-lessons/provider.sh:/app/provider.sh:ro
+      - cert-shop:/credentials:ro
+      - public-trust:/trust:ro
+      - auth-secret-admin:/bootstrap-secret:ro
+      - lesson-provider-data:/opt/keycloak/data
+    networks: [auth]
+    depends_on:
+      pki: {condition: service_completed_successfully}
+      auth-secrets: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD-SHELL, "bash -c 'exec 3<>/dev/tcp/127.0.0.1/9000; printf \"GET /health/ready HTTP/1.0\\r\\n\\r\\n\" >&3; grep -q UP <&3'"]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+    mem_limit: 1g
+  lesson-kdc:
+    build:
+      context: ..
+      dockerfile: infra/kerberos/Containerfile
+    image: magic-shop-lesson-kdc:01
+    user: "1000:1000"
+    volumes:
+      - kerberos-state:/state
+      - kerberos-server-keytab:/keytabs/server
+      - kerberos-client-keytab:/keytabs/client
+      - kerberos-tickets:/tickets
+    networks: [auth, front]
+    healthcheck:
+      test: [CMD-SHELL, "test -s /keytabs/server/http.keytab && test -s /keytabs/client/user.keytab && kill -0 $$(cat /state/kdc.pid)"]
+      interval: 3s
+      timeout: 2s
+      retries: 30
+  auth-lesson-setup:
+    image: magic-shop-realm-bootstrap:04
+    user: "1000:1000"
+    entrypoint: [sh, -c, 'node /app/federation.mjs && node /app/kerberos.mjs']
+    environment:
+      NODE_EXTRA_CA_CERTS: /trust/server-ca.pem
+    volumes:
+      - public-trust:/trust:ro
+      - auth-secret-admin:/secrets/admin:ro
+      - auth-lesson-secrets:/test-secrets
+    networks: [front]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+      lesson-provider: {condition: service_healthy}
+  auth-lesson-fixture:
+    image: magic-shop-realm-bootstrap:04
+    user: "1000:1000"
+    entrypoint: [node, /app/auth-lesson-fixture.mjs]
+    environment:
+      LAB_PROJECT: ${LAB_PROJECT:-magic-shop-lab}
+      NODE_EXTRA_CA_CERTS: /trust/server-ca.pem
+    volumes:
+      - public-trust:/trust:ro
+      - auth-secret-admin:/secrets/admin:ro
+      - auth-lesson-secrets:/test-secrets
+    networks: [front]
+  auth-lesson-tests:
+    image: magic-shop-runner:03
+    platform: linux/amd64
+    user: "1000:1000"
+    environment:
+      LAB_BROWSER: ${LAB_BROWSER:-chrome}
+      NODE_EXTRA_CA_CERTS: /public/server-ca.pem
+    volumes:
+      - public-trust:/public:ro
+      - cert-customer-waterdeep:/identity-customer:ro
+      - auth-lesson-secrets:/test-secrets:ro
+      - auth-lesson-home:/home/runner
+      - auth-lesson-tmp:/tmp
+      - kerberos-tickets:/tickets
+      - ./kerberos/krb5.conf:/etc/krb5.conf:ro
+      - ${LAB_AUTH_REPORT_DIR:-../artifacts/auth-lessons/local}:/work/artifacts/auth-lessons
+    networks: [front]
+  runner-auth-manual:
+    profiles: [auth-manual]
+    image: magic-shop-runner:03
+    platform: linux/amd64
+    user: "1000:1000"
+    command: [sh, /work/testing/container/auth-manual.sh]
+    environment:
+      LAB_BROWSER: ${LAB_BROWSER:-chrome}
+      LAB_AUTH_LESSON: ${LAB_AUTH_LESSON:-index}
+    ports:
+      - "127.0.0.1:${LAB_AUTH_VIEWER_PORT:-6084}:6080"
+    volumes:
+      - public-trust:/public:ro
+      - kerberos-tickets:/tickets
+      - ./kerberos/krb5.conf:/etc/krb5.conf:ro
+      - auth-manual-home:/home/runner
+      - auth-manual-tmp:/tmp
+    networks: [front]
+    depends_on:
+      auth-lesson-setup: {condition: service_completed_successfully}
+volumes:
+  lesson-provider-data: {}
+  kerberos-state: {}
+  kerberos-server-keytab: {}
+  kerberos-client-keytab: {}
+  kerberos-tickets: {}
+  auth-lesson-secrets: {}
+  auth-lesson-home: {}
+  auth-lesson-tmp: {}
+  auth-manual-home: {}
+  auth-manual-tmp: {}

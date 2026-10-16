@@ -1,4 +1,6 @@
 import { readFileSync } from 'node:fs';
+import { ensurePasswordOtp } from './password-otp.mjs';
+import { ensureLessons } from './lessons.mjs';
 
 const origin = 'https://auth.magic.test:9443';
 const realmName = 'magic-shop';
@@ -262,5 +264,8 @@ const token = await adminToken();
 await ensureRealm(token);
 await ensureUsers(token);
 await ensureTeachingClient(token);
+await ensurePasswordOtp(token, template, call);
+await ensureLessons(async (method, path, body, expected = 200) =>
+  (await call(method, `/admin/realms/${realmName}${path}`, token, body, [expected])).data);
 await ensureScopesAndClients(token);
 console.log('Keycloak bootstrap complete.');

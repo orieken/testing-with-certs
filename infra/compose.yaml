@@ -274,6 +274,24 @@ services:
     depends_on:
       realm-bootstrap: {condition: service_completed_successfully}
 
+  lesson-user:
+    profiles: [operator]
+    image: magic-shop-realm-bootstrap:04
+    user: "1000:1000"
+    entrypoint: [node, /app/otp-user.mjs]
+    environment:
+      NODE_EXTRA_CA_CERTS: /trust/server-ca.pem
+    volumes:
+      - public-trust:/trust:ro
+      - auth-secret-admin:/secrets/admin:ro
+    networks: [front]
+    depends_on:
+      realm-bootstrap: {condition: service_completed_successfully}
+
+  passkey-user:
+    extends: lesson-user
+    entrypoint: [node, /app/passkey-user.mjs]
+
   runner-test:
     profiles: [test]
     platform: linux/amd64

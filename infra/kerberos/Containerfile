@@ -1,0 +1,10 @@
+FROM node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+ENV DEBIAN_FRONTEND=noninteractive KRB5_CONFIG=/app/krb5.conf KRB5_KDC_PROFILE=/app/kdc.conf
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    krb5-kdc=1.20.1-2+deb12u5 krb5-admin-server=1.20.1-2+deb12u5 krb5-user=1.20.1-2+deb12u5 \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /state /keytabs/server /keytabs/client /tickets \
+    && chown -R 1000:1000 /state /keytabs /tickets
+COPY --chown=1000:1000 infra/kerberos/ /app/
+USER 1000:1000
+ENTRYPOINT ["sh", "/app/start.sh"]

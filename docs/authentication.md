@@ -1,6 +1,7 @@
 # Certificate authentication and browser operation
 
 This document explains the implemented identity and access boundaries.
+The [certificate-free lessons guide](certificate-free-lessons.md) describes the separate port 8543 entrance and password/OTP implementation, with [60 passing local Chrome/Edge cases](completion/30-authentication-lessons.md).
 Use the [project terminology dictionary](project-terminology.md) and [writing guide](writing-guide.md) with this document.
 See [Mermaid workflows](workflows.md) for expanded request and certificate lifecycle diagrams.
 The [teaching guide](teaching-guide.md) gives copyable learner procedures.

@@ -2,6 +2,15 @@ FROM node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480
 WORKDIR /app
 RUN mkdir -p /matrix-key /test-secrets && chown 1000:1000 /matrix-key /test-secrets
 COPY --chown=1000:1000 infra/keycloak/bootstrap.mjs /app/bootstrap.mjs
+COPY --chown=1000:1000 infra/keycloak/password-otp.mjs /app/password-otp.mjs
+COPY --chown=1000:1000 infra/keycloak/lessons.mjs infra/keycloak/lessons.json /app/
+COPY --chown=1000:1000 infra/keycloak/federation.mjs /app/federation.mjs
+COPY --chown=1000:1000 infra/keycloak/kerberos.mjs /app/kerberos.mjs
+COPY --chown=1000:1000 infra/keycloak/passkey-user.mjs infra/keycloak/auth-lesson-fixture.mjs /app/
+COPY --chown=1000:1000 infra/keycloak/provider-user.mjs /app/provider-user.mjs
+COPY --chown=1000:1000 infra/keycloak/lesson-admin.mjs /app/lesson-admin.mjs
+COPY --chown=1000:1000 infra/keycloak/otp-fixture.mjs /app/otp-fixture.mjs
+COPY --chown=1000:1000 infra/keycloak/otp-user.mjs /app/otp-user.mjs
 COPY --chown=1000:1000 infra/keycloak/operator.mjs /app/operator.mjs
 COPY --chown=1000:1000 infra/keycloak/password-input.mjs /app/password-input.mjs
 COPY --chown=1000:1000 infra/keycloak/teaching-fixture.mjs /app/teaching-fixture.mjs

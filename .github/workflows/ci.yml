@@ -409,9 +409,75 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+  password-otp:
+    name: Certificate-free password and OTP
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      LAB_PROJECT: magic-shop-otp-ci-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Run Chrome and Edge password and OTP lessons
+        run: sh testing/run-password-otp.sh
+      - name: Scan credential-safe reports
+        id: otp_scan
+        if: always()
+        run: |
+          docker run --rm --platform linux/amd64 --network none --entrypoint node \
+            -v "$PWD/artifacts/password-otp/$LAB_PROJECT:/work/artifacts/password-otp:ro" magic-shop-runner:03 \
+            /work/testing/container/check-artifacts.mjs /work/artifacts/password-otp
+      - name: Upload scanned lesson reports
+        if: always() && steps.otp_scan.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: password-otp-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/password-otp/${{ env.LAB_PROJECT }}/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Remove disposable stack on failure or cancellation
+        if: always()
+        run: |
+          export LAB_OTP_REPORT_DIR="$PWD/artifacts/password-otp/$LAB_PROJECT"
+          docker compose -f infra/compose.yaml -f infra/otp.compose.yaml --profile '*' down --volumes --remove-orphans --timeout 10
+
+  auth-lessons:
+    name: Passkeys, OIDC, SAML and Kerberos lessons
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    env:
+      LAB_PROJECT: magic-shop-auth-ci-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Run real Chrome and Edge lesson matrix
+        run: sh testing/run-auth-lessons.sh
+      - name: Scan credential-safe reports
+        id: auth_scan
+        if: always()
+        run: |
+          docker run --rm --platform linux/amd64 --network none --entrypoint node \
+            -v "$PWD/artifacts/auth-lessons/$LAB_PROJECT:/work/artifacts/auth-lessons:ro" magic-shop-runner:03 \
+            /work/testing/container/check-artifacts.mjs /work/artifacts/auth-lessons
+      - name: Upload scanned lesson reports
+        if: always() && steps.auth_scan.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: auth-lessons-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/auth-lessons/${{ env.LAB_PROJECT }}/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Remove disposable stack on failure or cancellation
+        if: always()
+        run: |
+          export LAB_AUTH_REPORT_DIR="$PWD/artifacts/auth-lessons/$LAB_PROJECT"
+          docker compose -f infra/compose.yaml -f infra/auth-lessons.compose.yaml --profile '*' down --volumes --remove-orphans --timeout 10
+
   evidence-gates:
     name: Require independent live, consumer and fault gates
-    needs: [integration, certificate-password, consumer, dependency-faults, regional]
+    needs: [integration, certificate-password, password-otp, auth-lessons, consumer, dependency-faults, regional]
     if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 5

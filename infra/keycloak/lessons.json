@@ -1,0 +1,315 @@
+{
+  "authenticationFlows": [
+    {
+      "id": "passkeys-browser",
+      "alias": "passkeys-browser",
+      "providerId": "basic-flow",
+      "topLevel": true,
+      "builtIn": false,
+      "authenticationExecutions": [
+        {
+          "authenticator": "auth-username-form",
+          "requirement": "REQUIRED",
+          "priority": 5,
+          "authenticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticator": "webauthn-authenticator-passwordless",
+          "requirement": "REQUIRED",
+          "priority": 10,
+          "authenticatorFlow": false,
+          "userSetupAllowed": false
+        }
+      ]
+    },
+    {
+      "id": "passkeys-enroll-browser",
+      "alias": "passkeys-enroll-browser",
+      "providerId": "basic-flow",
+      "topLevel": true,
+      "builtIn": false,
+      "authenticationExecutions": [
+        {
+          "authenticator": "auth-username-password-form",
+          "requirement": "REQUIRED",
+          "priority": 10,
+          "authenticatorFlow": false,
+          "userSetupAllowed": false
+        }
+      ]
+    },
+    {
+      "id": "oidc-browser",
+      "alias": "oidc-browser",
+      "providerId": "basic-flow",
+      "topLevel": true,
+      "builtIn": false,
+      "authenticationExecutions": [
+        {
+          "authenticator": "identity-provider-redirector",
+          "requirement": "REQUIRED",
+          "priority": 10,
+          "authenticatorFlow": false,
+          "userSetupAllowed": false,
+          "authenticatorConfig": "oidc-lesson-redirect"
+        }
+      ]
+    },
+    {
+      "id": "saml-browser",
+      "alias": "saml-browser",
+      "providerId": "basic-flow",
+      "topLevel": true,
+      "builtIn": false,
+      "authenticationExecutions": [
+        {
+          "authenticator": "identity-provider-redirector",
+          "requirement": "REQUIRED",
+          "priority": 10,
+          "authenticatorFlow": false,
+          "userSetupAllowed": false,
+          "authenticatorConfig": "saml-lesson-redirect"
+        }
+      ]
+    },
+    {
+      "id": "kerberos-browser",
+      "alias": "kerberos-browser",
+      "providerId": "basic-flow",
+      "topLevel": true,
+      "builtIn": false,
+      "authenticationExecutions": [
+        {
+          "authenticator": "auth-spnego",
+          "requirement": "REQUIRED",
+          "priority": 10,
+          "authenticatorFlow": false,
+          "userSetupAllowed": false
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "passkeys-spa",
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "defaultClientScopes": [
+        "basic",
+        "profile"
+      ],
+      "optionalClientScopes": [],
+      "redirectUris": [
+        "https://shop.magic.test:8543/teaching/passkeys/callback"
+      ],
+      "webOrigins": [
+        "https://shop.magic.test:8543"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "https://shop.magic.test:8543/teaching/passkeys"
+      },
+      "authenticationFlowBindingOverrides": {
+        "browser": "passkeys-browser"
+      },
+      "protocolMappers": [
+        {
+          "name": "lesson-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.custom.audience": "passkeys-lesson",
+            "access.token.claim": "true",
+            "id.token.claim": "false"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "passkeys-enroll-spa",
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "defaultClientScopes": [
+        "basic",
+        "profile"
+      ],
+      "optionalClientScopes": [],
+      "redirectUris": [
+        "https://shop.magic.test:8543/teaching/passkeys/enroll/callback"
+      ],
+      "webOrigins": [
+        "https://shop.magic.test:8543"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "https://shop.magic.test:8543/teaching/passkeys/enroll"
+      },
+      "authenticationFlowBindingOverrides": {
+        "browser": "passkeys-enroll-browser"
+      },
+      "protocolMappers": [
+        {
+          "name": "lesson-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.custom.audience": "passkeys-enroll-lesson",
+            "access.token.claim": "true",
+            "id.token.claim": "false"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "oidc-spa",
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "defaultClientScopes": [
+        "basic",
+        "profile"
+      ],
+      "optionalClientScopes": [],
+      "redirectUris": [
+        "https://shop.magic.test:8543/teaching/oidc/callback"
+      ],
+      "webOrigins": [
+        "https://shop.magic.test:8543"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "https://shop.magic.test:8543/teaching/oidc"
+      },
+      "authenticationFlowBindingOverrides": {
+        "browser": "oidc-browser"
+      },
+      "protocolMappers": [
+        {
+          "name": "lesson-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.custom.audience": "oidc-lesson",
+            "access.token.claim": "true",
+            "id.token.claim": "false"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "saml-spa",
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "defaultClientScopes": [
+        "basic",
+        "profile"
+      ],
+      "optionalClientScopes": [],
+      "redirectUris": [
+        "https://shop.magic.test:8543/teaching/saml/callback"
+      ],
+      "webOrigins": [
+        "https://shop.magic.test:8543"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "https://shop.magic.test:8543/teaching/saml"
+      },
+      "authenticationFlowBindingOverrides": {
+        "browser": "saml-browser"
+      },
+      "protocolMappers": [
+        {
+          "name": "lesson-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.custom.audience": "saml-lesson",
+            "access.token.claim": "true",
+            "id.token.claim": "false"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "kerberos-spa",
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "defaultClientScopes": [
+        "basic",
+        "profile"
+      ],
+      "optionalClientScopes": [],
+      "redirectUris": [
+        "https://shop.magic.test:8543/teaching/kerberos/callback"
+      ],
+      "webOrigins": [
+        "https://shop.magic.test:8543"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "https://shop.magic.test:8543/teaching/kerberos"
+      },
+      "authenticationFlowBindingOverrides": {
+        "browser": "kerberos-browser"
+      },
+      "protocolMappers": [
+        {
+          "name": "lesson-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.custom.audience": "kerberos-lesson",
+            "access.token.claim": "true",
+            "id.token.claim": "false"
+          }
+        }
+      ]
+    }
+  ],
+  "authenticatorConfig": [
+    {
+      "alias": "oidc-lesson-redirect",
+      "config": {
+        "defaultProvider": "lesson-oidc"
+      }
+    },
+    {
+      "alias": "saml-lesson-redirect",
+      "config": {
+        "defaultProvider": "lesson-saml"
+      }
+    }
+  ],
+  "realmPolicy": {
+    "webAuthnPolicyPasswordlessRpId": "auth.magic.test",
+    "webAuthnPolicyPasswordlessRpEntityName": "Magic Shop lessons",
+    "webAuthnPolicyPasswordlessSignatureAlgorithms": [
+      "ES256"
+    ],
+    "webAuthnPolicyPasswordlessRequireResidentKey": "Yes",
+    "webAuthnPolicyPasswordlessUserVerificationRequirement": "required",
+    "webAuthnPolicyPasswordlessAttestationConveyancePreference": "none",
+    "webAuthnPolicyPasswordlessCreateTimeout": 10
+  }
+}

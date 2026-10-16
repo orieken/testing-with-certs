@@ -48,7 +48,35 @@
         "userSetupAllowed": false
       }
     ]
+  },
+  {
+    "id": "password-otp-browser",
+    "alias": "password-otp-browser",
+    "providerId": "basic-flow",
+    "topLevel": true,
+    "builtIn": false,
+    "authenticationExecutions": [
+      {
+        "authenticator": "auth-username-password-form",
+        "requirement": "REQUIRED",
+        "priority": 10,
+        "authenticatorFlow": false,
+        "userSetupAllowed": true
+      },
+      {
+        "authenticator": "auth-otp-form",
+        "requirement": "REQUIRED",
+        "priority": 20,
+        "authenticatorFlow": false,
+        "userSetupAllowed": true
+      }
+    ]
   }],
+  "otpPolicyType": "totp",
+  "otpPolicyAlgorithm": "HmacSHA1",
+  "otpPolicyDigits": 6,
+  "otpPolicyPeriod": 30,
+  "otpPolicyLookAheadWindow": 1,
   "browserFlow": "certificate-browser",
   "authenticatorConfig": [{"alias":"certificate-config","config":{
     "x509-cert-auth.mapping-source-selection": "Subject's Common Name",
@@ -147,6 +175,45 @@
         "protocolMapper": "oidc-audience-mapper",
         "config": {
           "included.custom.audience": "insights-api",
+          "access.token.claim": "true",
+          "id.token.claim": "false"
+        }
+      }
+    ]
+  },
+  {
+    "clientId": "password-otp-spa",
+    "protocol": "openid-connect",
+    "publicClient": true,
+    "standardFlowEnabled": true,
+    "directAccessGrantsEnabled": false,
+    "implicitFlowEnabled": false,
+    "serviceAccountsEnabled": false,
+    "defaultClientScopes": [
+      "basic",
+      "profile"
+    ],
+    "optionalClientScopes": [],
+    "redirectUris": [
+      "https://shop.magic.test:8543/teaching/password-otp/callback"
+    ],
+    "webOrigins": [
+      "https://shop.magic.test:8543"
+    ],
+    "attributes": {
+      "pkce.code.challenge.method": "S256",
+      "post.logout.redirect.uris": "https://shop.magic.test:8543/teaching/password-otp"
+    },
+    "authenticationFlowBindingOverrides": {
+      "browser": "password-otp-browser"
+    },
+    "protocolMappers": [
+      {
+        "name": "lesson-audience",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-audience-mapper",
+        "config": {
+          "included.custom.audience": "password-otp-lesson",
           "access.token.claim": "true",
           "id.token.claim": "false"
         }

@@ -3,7 +3,10 @@ import { createPinia } from 'pinia';
 import './styles.css';
 import 'leaflet/dist/leaflet.css';
 
-if (['/teaching/certificate-password', '/teaching/certificate-password/callback'].includes(window.location.pathname)) {
+if (window.location.origin === 'https://shop.magic.test:8543') {
+  const { mountCertificateFree } = await import('./teaching/certificate-free/mount');
+  await mountCertificateFree();
+} else if (['/teaching/certificate-password', '/teaching/certificate-password/callback'].includes(window.location.pathname)) {
   const { mountTeaching } = await import('./teaching/mount');
   await mountTeaching();
 } else {

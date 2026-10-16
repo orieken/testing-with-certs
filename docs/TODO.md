@@ -1,5 +1,31 @@
 # Implementation todo list
 
+## Additional authentication methods — 2026-10-15
+
+Current coverage: X.509/mTLS user login with OIDC Authorization Code + PKCE, a separate certificate + password lesson, and OAuth client credentials with service mTLS are implemented. Certificate/password has a recorded 36-case native Chrome/Edge × Playwright/Cucumber matrix; see [authentication details](authentication.md), [coverage matrix](teaching-coverage.md), and [completion 18](completion/18-native-certificate-password-ci.md). Standalone mocked OIDC journeys do not establish real external-provider federation coverage.
+
+Implement the remaining methods as separate teaching clients/routes. Preserve the certificate-required shop and its API certificate/token pairing checks. Provide a separate gateway entry point for certificate-free lessons; lesson tokens must remain excluded from business APIs unless that access is explicitly designed and tested.
+
+2026-10-16 live progress: all five method implementations are present. Fresh disposable runs passed 60/60 real Chrome/Edge cases locally on Apple Silicon with Linux amd64 browser emulation. Credential-safe report scans and complete project cleanup passed. [Completion 30](completion/30-authentication-lessons.md) records commands, versions, fixes, reports, and limits. Independent native CI and additional acceptance cases below remain open; the implementation items are no longer a request to build the flows from scratch.
+
+| Delivered method | Local browser evidence | Remaining acceptance |
+| --- | --- | --- |
+| Password + TOTP | 14/14 passed | Native CI and shared follow-ups |
+| Passkey enrollment/login | 14/14 passed | Native CI; physical devices remain outside virtual-authenticator evidence |
+| Controlled external OIDC | 10/10 passed | Native CI; organizational-provider compatibility is not established |
+| SAML | 14/14 passed | Independently signed wrong-audience/recipient/expired assertions; native CI |
+| Kerberos/SPNEGO | 8/8 passed | Wrong-service-principal tickets; native CI |
+
+
+- [ ] **AUTH-NEXT-01 — Password + TOTP.** Add a dedicated Keycloak flow, isolated test users, and controlled OTP enrollment. Generate codes from test-only secrets inside the runner; cover successful login, incorrect password, incorrect/expired OTP, disabled users, logout, and session isolation in Playwright. Keep secrets out of reports and recordings.
+- [ ] **AUTH-NEXT-02 — WebAuthn/passkeys.** Add a separate registration/login lesson and Chromium virtual-authenticator fixtures for Chrome and Edge. Cover registration, successful login, missing/wrong credentials, disabled users, logout, and fresh-context credential/session isolation. Explicitly distinguish virtual-authenticator evidence from physical key or biometric verification; document supported browser scope.
+- [ ] **AUTH-NEXT-03 — External OIDC federation.** Add a controlled second identity-provider container and configure Keycloak brokering. Exercise real browser redirects, identity mapping, successful/rejected login, disabled users, callback/state failures, logout behavior, and session isolation. Keep live federation evidence separate from existing mocked OIDC examples.
+- [ ] **AUTH-NEXT-04 — SAML 2.0 SSO.** Add a controlled SAML identity provider, metadata/signing-certificate provisioning, and a separate Keycloak broker/client lesson. Exercise successful/rejected login, identity/role mapping, invalid signature/audience/recipient and expired assertion rejection, logout behavior, and session isolation. Use protocol-level fixtures where browser interaction alone cannot produce invalid assertions.
+- [ ] **AUTH-NEXT-05 — Kerberos/SPNEGO.** Add a containerized KDC, deterministic DNS/hostnames, test principals, runner ticket provisioning, and narrowly scoped browser integrated-auth policies. Cover valid ticket login, absent/expired/wrong-principal tickets, disabled-user behavior, and fresh-profile isolation. Record Linux Chrome/Edge support and any platform limitations explicitly.
+- [ ] **AUTH-NEXT-06 — Shared acceptance and CI.** For every new lesson, verify token identity and intended audience, reject lesson tokens at business APIs, test applicable authorization failures, and publish scanned Playwright HTML/JUnit/video evidence with reliable cleanup. Add native CI jobs and update the authentication guide and coverage matrix only after observed passes. Add Cucumber parity using shared models where the method supports the existing runner pattern.
+
+The requested implementation order is complete through Kerberos. The unchecked acceptance items retain their original full requirements until remaining negative fixtures and native CI evidence are observed.
+
 Status reconciled by TEST-04 on 2026-10-10 (America/Chicago): Prompts 01–13 retain their recorded local evidence. Native run [38097316475](https://github.com/orieken/testing-with-certs/actions/runs/38097316475) passed the complete existing workflow, including live contracts/security, all eight customer/admin browser selections, the separate 36-case certificate/password job, scanned/readable text uploads and cleanup. [Completion 25](completion/25-pr-base-contract-evidence.md) records actual unchanged/additive/breaking PR-base acceptance/rejection against committed main; temporary probe mutations were reverted and their draft PRs closed without merging. TEST-03/05–10 now also have their named native consumer/fault/regional scenarios observed under TEST-11 in [completion 26](completion/26-independent-ci-evidence.md), separately from the required live-provider gate. Native manual viewer/operator and literal clean-checkout/repeat-startup remain unverified. Historical failures and limitations remain in their original completion notes.
 
 ## Planning baseline

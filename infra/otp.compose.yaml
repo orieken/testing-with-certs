@@ -1,0 +1,32 @@
+services:
+  otp-fixture:
+    image: magic-shop-realm-bootstrap:04
+    user: "1000:1000"
+    entrypoint: [node, /app/otp-fixture.mjs]
+    environment:
+      LAB_PROJECT: ${LAB_PROJECT:?Set a disposable magic-shop-otp project}
+      NODE_EXTRA_CA_CERTS: /trust/server-ca.pem
+    volumes:
+      - public-trust:/trust:ro
+      - auth-secret-admin:/secrets/admin:ro
+      - otp-secrets:/test-secrets
+    networks: [front]
+  otp-tests:
+    image: magic-shop-runner:03
+    platform: linux/amd64
+    user: "1000:1000"
+    environment:
+      LAB_BROWSER: ${LAB_BROWSER:-chrome}
+      NODE_EXTRA_CA_CERTS: /public/server-ca.pem
+    volumes:
+      - public-trust:/public:ro
+      - cert-customer-waterdeep:/identity-customer:ro
+      - otp-secrets:/test-secrets:ro
+      - otp-home:/home/runner
+      - otp-tmp:/tmp
+      - ${LAB_OTP_REPORT_DIR:?Set OTP report directory}:/work/artifacts/password-otp
+    networks: [front]
+volumes:
+  otp-secrets: {}
+  otp-home: {}
+  otp-tmp: {}

@@ -1,5 +1,7 @@
 # Magic Shop certificate-authentication teaching prototype
 
+The [certificate-free authentication lessons](certificate-free-lessons.md) cover password/OTP, passkeys, OIDC, SAML, and Kerberos through separate entry pages. All 60 new Chrome/Edge cases passed locally; [completion 30](completion/30-authentication-lessons.md) records the evidence and remaining limits.
+
 New to the lab? Use [Get started with certificate tests](getting-started.md) to start the containers and run your first real-login test. The [project pitch and current gaps](project-pitch.md) provides a short explanation and an evidence-based limitations table.
 
 Start with the [plain-language project guides](plain-language/README.md) for an ASD-STE100-inspired explanation of the system, authentication, tests, and evidence. These guides use the requested approximate style target, with necessary software terms retained.
