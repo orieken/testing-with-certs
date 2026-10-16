@@ -10,7 +10,8 @@ test('reports reject passkey, OTP and Kerberos credentials before upload', async
   try {
     await writeFile(join(root, 'results.json'), JSON.stringify({ name: 'passkeys:enrollment', status: 'passed' }));
     assert.equal(await scanArtifacts(root, { requireMountedPath: false }), 1);
-    for (const [name, body] of [['http.keytab', 'binary-fixture'], ['valid-cache', 'binary-fixture'],
+    for (const [name, body] of [['http.keytab', 'binary-fixture'], ['valid-cache', 'binary-fixture'], ['wrong-service-cache', 'binary-fixture'],
+      ['headers.txt', `Authorization: Negotiate ${'A'.repeat(48)}`],
       ['auth-users.json', '[]'], ['credentials.json', '{"privateKey":"test-key"}'],
       ['enrollment.json', '{"totpSecret":"test-key"}'], ['token.json', '{"access_token":"test-token"}']]) {
       const path = join(root, name);

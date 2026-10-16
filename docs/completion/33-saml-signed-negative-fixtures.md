@@ -22,6 +22,6 @@ The pinned [Keycloak 26.4.0 SAML broker source](https://github.com/keycloak/keyc
 
 1. Install the frozen workspace dependencies and run `node --test testing/teaching/saml-fixture.test.mjs`.
 2. Build the current runner and start a fresh disposable authentication project.
-3. Run the four `saml:signed-*` cases in real Chrome and Edge, then the full lesson matrix. The expanded full matrix should contain 54 cases (23 passkey/federation plus four Kerberos cases per browser), up from 46.
+3. Run the four `saml:signed-*` cases in real Chrome and Edge, then the full lesson matrix. With the subsequent wrong-service Kerberos addition in completion 34, the expanded full matrix should contain 56 cases (23 passkey/federation plus five Kerberos cases per browser), up from the original 46.
 4. Inspect the positive control and each negative outcome independently. Resolve any actual broker validation gap before claiming completion.
 5. Scan safe reports, verify fixture/resource cleanup, repeat in native CI, and update observed coverage only after passes.

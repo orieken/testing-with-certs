@@ -2,8 +2,8 @@ import { lstat, readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const forbiddenName = /(?:\.key|\.keytab|\.p12|\.pfx|\.pem|\.crt|\.crl|\.har|trace\.zip|(?:valid|expired)-cache|krb5cc[^/]*|auth-users\.json|otp\.json|passwords\.json|storage[-_]?state|client[-_]?secret|viewer[-_]?password)$/i;
-const forbiddenText = /-----BEGIN (?:RSA |EC |ENCRYPTED )?PRIVATE KEY-----|"(?:access_token|refresh_token|id_token|privateKey|totpSecret|secretData)"\s*:|Bearer\s+eyJ[A-Za-z0-9_-]{20,}|[?&]code=[A-Za-z0-9_-]{16,}/;
+const forbiddenName = /(?:\.key|\.keytab|\.p12|\.pfx|\.pem|\.crt|\.crl|\.har|trace\.zip|(?:valid|expired|wrong-service)-cache|krb5cc[^/]*|auth-users\.json|otp\.json|passwords\.json|storage[-_]?state|client[-_]?secret|viewer[-_]?password)$/i;
+const forbiddenText = /-----BEGIN (?:RSA |EC |ENCRYPTED )?PRIVATE KEY-----|"(?:access_token|refresh_token|id_token|privateKey|totpSecret|secretData)"\s*:|Bearer\s+eyJ[A-Za-z0-9_-]{20,}|Negotiate\s+[A-Za-z0-9+/=]{24,}|[?&]code=[A-Za-z0-9_-]{16,}/;
 const textFile = /\.(?:json|jsonl|xml|html|txt|md)$/i;
 export async function scanArtifacts(root, { requireMountedPath = true } = {}) {
   if (requireMountedPath && !root?.startsWith('/work/artifacts/')) throw new Error('Expected a mounted local artifact directory');

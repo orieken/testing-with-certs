@@ -201,6 +201,7 @@ The existing certificate/password regression also passed 36/36 cases across both
 Independent native Ubuntu CI subsequently passed the same 60 cases, scanned uploads, and teardown; see [completion 31](completion/31-native-authentication-ci.md). The manual viewer remains unverified.
 
 Local automated login acceptance passed for every new method. Broader acceptance remains open for the cases below.
-Additional work remains for independently signed wrong-audience/expired SAML assertions, Kerberos wrong-service-principal tickets,
+The expanded Kerberos matrix, including actual wrong-service-principal ticket rejection, subsequently passed 10/10 locally; [completion 34](completion/34-kerberos-wrong-service.md) records the cached-image versions, evidence, and pending native repetition.
+Additional work remains for independently signed SAML negative assertion verification,
 passkey physical-device checks, broader session/refresh negatives, Cucumber parity, and cancellation-cleanup CI probes.
 See [the implementation TODO list](TODO.md) for remaining acceptance requirements.

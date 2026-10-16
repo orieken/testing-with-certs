@@ -7,7 +7,7 @@ const names = new Set([
   'saml:modified-signed-response',
   'saml:response-replay',
   ...['control', 'wrong-audience', 'wrong-recipient', 'expired'].map(value => `saml:signed-${value}`),
-  ...['valid-ticket', 'missing-ticket', 'expired-ticket', 'disabled-user'].map(value => `kerberos:${value}`),
+  ...['valid-ticket', 'missing-ticket', 'expired-ticket', 'wrong-service-ticket', 'disabled-user'].map(value => `kerberos:${value}`),
 ]);
 
 export default class AuthenticationLessonReporter {
