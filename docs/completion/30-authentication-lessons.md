@@ -2,7 +2,7 @@
 
 All 60 new authentication cases passed in real Chrome and Edge on fresh disposable stacks.
 This is local Apple Silicon evidence with Linux amd64 browser runners under emulation.
-It is not an independent native Linux CI result.
+It is not an independent native Linux CI result. Subsequent [completion 31](31-native-authentication-ci.md) records the independent native run.
 
 | Method | Chrome | Edge | Total |
 | --- | --- | --- | --- |

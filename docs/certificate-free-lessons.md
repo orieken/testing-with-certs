@@ -198,7 +198,7 @@ Base and lesson-overlay Compose validation and architecture checks passed.
 On 2026-10-16, Docker became available. Fresh disposable stacks passed all 60 new Chrome/Edge cases, report scans, and complete cleanup.
 The existing certificate/password regression also passed 36/36 cases across both browsers and runners.
 [Completion 30](completion/30-authentication-lessons.md) records the observed results and runtime corrections.
-The manual viewer and independent native CI remain unverified.
+Independent native Ubuntu CI subsequently passed the same 60 cases, scanned uploads, and teardown; see [completion 31](completion/31-native-authentication-ci.md). The manual viewer remains unverified.
 
 Local automated login acceptance passed for every new method. Broader acceptance remains open for the cases below.
 Additional work remains for independently signed wrong-audience/expired SAML assertions, Kerberos wrong-service-principal tickets,
