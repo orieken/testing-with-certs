@@ -202,6 +202,7 @@ Independent native Ubuntu CI subsequently passed the same 60 cases, scanned uplo
 
 Local automated login acceptance passed for every new method. Broader acceptance remains open for the cases below.
 The expanded Kerberos matrix, including actual wrong-service-principal ticket rejection, subsequently passed 10/10 locally; [completion 34](completion/34-kerberos-wrong-service.md) records the cached-image versions, evidence, and pending native repetition.
-Additional work remains for independently signed SAML negative assertion verification,
+The expanded full suite subsequently passed 56/56 locally, including signed SAML audience/recipient/expiry checks. A lesson-only recipient mapper was necessary because pinned upstream accepted the wrong-recipient fixture; see [completion 35](completion/35-saml-recipient-matrix.md).
+Additional work remains for native repetition of the expanded suite and recipient guard,
 passkey physical-device checks, broader session/refresh negatives, Cucumber parity, and cancellation-cleanup CI probes.
 See [the implementation TODO list](TODO.md) for remaining acceptance requirements.

@@ -1,8 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 
-const names = ['certificate-free entrance and route boundaries', 'enrollment and lesson audience denied at business APIs',
-  'wrong password', 'incorrect and expired codes', 'disabled user',
-  'successful login, logout and cookie cannot skip factors', 'fresh profile and second account isolation'];
+import { otpCaseNames as names } from '../teaching/auth-matrix.mjs';
 
 export default class OtpReporter {
   cases = [];

@@ -58,7 +58,7 @@ const operatorBuild = readFileSync(resolve(root, 'operator/build.sh'), 'utf8');
 if (!operatorBuild.includes('docker run --rm') || !/golang:1\.26\.0-bookworm@sha256:[a-f0-9]{64}/.test(operatorBuild)) throw new Error('Operator builder must use a pinned Go container');
 if (/(?:^|\n)\s*(?:openssl|security|certutil|update-ca-certificates)\b/m.test(operatorBuild)) throw new Error('Operator builder invokes a host certificate tool');
 const forbidden = /NODE_TLS_REJECT_UNAUTHORIZED\s*=\s*0|ignoreHTTPSErrors\s*:\s*true|--ignore-certificate-errors|--allow-insecure-localhost|rejectUnauthorized\s*:\s*false|verify\s*=\s*False/;
-const textExtensions = /\.(?:ts|tsx|js|mjs|py|go|sh|yaml|yml)$/;
+const textExtensions = /\.(?:ts|tsx|js|mjs|py|go|java|sh|yaml|yml)$/;
 let inspected = 0;
 function inspect(directory) {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {

@@ -46,4 +46,7 @@ for browser in chrome msedge; do
 done
 docker run --rm --platform linux/amd64 --network none --entrypoint node \
   -v "$LAB_AUTH_REPORT_DIR:/work/artifacts/auth-lessons:ro" magic-shop-runner:03 \
+  /work/testing/reporting/check-auth-matrix.mjs auth-lessons /work/artifacts/auth-lessons
+docker run --rm --platform linux/amd64 --network none --entrypoint node \
+  -v "$LAB_AUTH_REPORT_DIR:/work/artifacts/auth-lessons:ro" magic-shop-runner:03 \
   /work/testing/container/check-artifacts.mjs /work/artifacts/auth-lessons

@@ -94,6 +94,15 @@ for (const method of ['oidc', 'saml']) {
     authenticationFlows: [flow, firstBroker], clients: [spec], identityProviders: [idp],
     authenticatorConfig: lessonSpecs.authenticatorConfig.filter(value => value.alias === `${method}-lesson-redirect`) });
   const broker = await lessonAdmin({ origin: brokerOrigin, realm: `lesson-${method}` });
+  if (method === 'saml') {
+    const mapper = { name: 'require-exact-recipient', identityProviderAlias: idp.alias,
+      identityProviderMapper: 'lesson-saml-recipient',
+      config: { recipient: `${brokerOrigin}/realms/lesson-saml/broker/lesson-saml/endpoint`, syncMode: 'INHERIT' } };
+    const mappers = await broker('GET', `/identity-provider/instances/${idp.alias}/mappers`);
+    if (!mappers.length) await broker('POST', `/identity-provider/instances/${idp.alias}/mappers`, mapper, 201);
+    else if (mappers.length !== 1 || mappers[0].identityProviderMapper !== mapper.identityProviderMapper ||
+      mappers[0].config?.recipient !== mapper.config.recipient) throw new Error('SAML recipient mapper drift');
+  }
   const currentRealm = await broker('GET', '');
   if (currentRealm.browserFlow !== flow.alias) throw new Error('Broker browser flow drift');
   await ensureClient(broker, spec, await ensureFlow(broker, flow));

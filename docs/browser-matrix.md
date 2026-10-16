@@ -40,6 +40,17 @@ shopkeeper or recorded-UI requests are rejected. To select exactly one suite run
 provide OS, browser, runner, user and suite. For example, the final command above
 selects one UBI9 Chrome Cucumber teaching run.
 
+## Authentication lessons
+
+The protocol-specific lessons use separate commands and are not included in the 28 `./lab matrix` certificate-shop selections above:
+
+```sh
+LAB_PROJECT=magic-shop-auth-NAME sh testing/run-auth-lessons.sh
+LAB_PROJECT=magic-shop-otp-NAME sh testing/run-password-otp.sh
+```
+
+Use a fresh disposable project name for each run. The current inventory requires 56 passkey/OIDC/SAML/Kerberos cases and 14 password/TOTP cases across Chrome and Edge. Both commands check exact case completeness before credential scans. New-method Cucumber and UBI9 parity are not established by these Linux Bookworm Playwright runners. The [authentication protocol matrix](teaching-coverage.md#authentication-protocol-matrix) records local versus native passes and remaining acceptance; cached-image versions are identified in each completion note.
+
 ## Reports and recordings
 
 New teaching and recorded-UI report names include OS, runner, browser and user.

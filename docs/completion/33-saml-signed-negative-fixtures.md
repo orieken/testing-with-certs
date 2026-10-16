@@ -1,4 +1,6 @@
-# Signed SAML negative fixtures — implementation in progress
+# Signed SAML negative fixtures — initial implementation attempt
+
+Subsequent [completion 35](35-saml-recipient-matrix.md) records the observed recipient gap, lesson-specific fix, and passing expanded local matrix. The blocked attempt below is retained as historical evidence.
 
 This increment adds four browser cases: an unchanged re-signed positive control, wrong assertion audience, wrong `SubjectConfirmationData.Recipient`, and expired assertion conditions/confirmation. They are not yet observed browser passes. Prior native evidence in completion 31 remains the original seven SAML cases per browser.
 

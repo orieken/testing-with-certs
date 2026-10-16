@@ -4,6 +4,21 @@ The subsequent [Kerberos wrong-service increment](completion/34-kerberos-wrong-s
 
 2026-10-16 addition: the certificate-free lessons passed 60/60 cases locally in real Chrome/Edge: 14 password/OTP and 46 passkey/OIDC/SAML/Kerberos cases. Report scanning and complete project cleanup passed. The original evidence is local Apple Silicon with Linux amd64 browser emulation. [Completion 31](completion/31-native-authentication-ci.md) subsequently records all 60 cases passing independently on native Ubuntu CI. Fifteen focused tests, UI type checking/build, Compose validation, and architecture checks passed. See [completion 30](completion/30-authentication-lessons.md) for reports, runtime fixes, and remaining protocol-negative/manual/Cucumber gaps.
 
+## Authentication protocol matrix
+
+These are observed Playwright cases per method across the linked runs. Local results use real Linux amd64 Chrome/Edge under Apple Silicon emulation. The current 56-case full lesson run passed; the separate TOTP suite retains its 14-case evidence. Native CI below is the historical 60-case baseline, not a pass for the new recipient extension or matrix gates. New-method Cucumber parity remains open.
+
+| Method | Chrome local | Edge local | Historical native CI | Evidence / remaining work |
+| --- | --- | --- | --- | --- |
+| Password + TOTP | 7/7 | 7/7 | 14/14 | [Acceptance audit](completion/32-password-otp-acceptance.md); shared follow-ups remain. |
+| Passkey enrollment/login | 7/7 | 7/7 | 14/14 | [Completion 31](completion/31-native-authentication-ci.md); physical-device coverage remains open. |
+| Controlled external OIDC | 5/5 | 5/5 | 10/10 | [Completion 31](completion/31-native-authentication-ci.md); organizational-provider compatibility remains open. |
+| SAML | 11/11 | 11/11 | 14/14 baseline | [Completion 35](completion/35-saml-recipient-matrix.md); signed control/audience/recipient/expiry cases now pass with the lesson recipient guard. Native repetition pending. |
+| Kerberos/SPNEGO | 5/5 | 5/5 | 8/8 baseline | [Completion 34](completion/34-kerberos-wrong-service.md) and [full rerun](completion/35-saml-recipient-matrix.md); wrong-service case passed locally, native repetition pending. |
+| Total across linked runs | 35/35 | 35/35 | 60/60 baseline | 56 cases passed in the current full lesson run plus 14 prior TOTP cases. Ten added browser cases and the recipient guard need native repetition. |
+
+The executable case inventory is [auth-matrix.mjs](../testing/teaching/auth-matrix.mjs). The full lesson runner now requires **56 cases** (23 passkey/federation + four main Kerberos + one disabled-user case per browser). Password/TOTP separately requires **14 cases**, for a combined observed local total of **70** across those runs. The [matrix gate](../testing/reporting/check-auth-matrix.mjs) rejects missing, extra, duplicate, unknown, skipped, failed, wrong-browser, wrong-phase, and wrong-provenance reports. The runner scripts invoke it before scanning/uploading evidence. This inventory does not convert planned or failed cases into observed passes.
+
 Historical Prompt 11 baseline on 2026-10-08 (current reconciliation below): the shared Playwright Test/Cucumber customer and admin journeys passed in real Chrome and Edge on Apple Silicon amd64 emulation. The Playwright Test shopkeeper inventory journey also passed in both branded browsers. The browserless contract command passed 17 tests and all 23 required operation/status entries. **Observed** means the named requirement was checked at its designated level; **partial** means at least one required variant remains; **open** means this increment has no passing acceptance result. Historical spike results are identified as such rather than promoted to a full-stack pass.
 
 | ID | Status | Evidence or missing check |

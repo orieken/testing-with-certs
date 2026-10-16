@@ -34,4 +34,7 @@ for browser in chrome msedge; do
 done
 docker run --rm --platform linux/amd64 --network none --entrypoint node \
   -v "$LAB_OTP_REPORT_DIR:/work/artifacts/password-otp:ro" magic-shop-runner:03 \
+  /work/testing/reporting/check-auth-matrix.mjs password-otp /work/artifacts/password-otp
+docker run --rm --platform linux/amd64 --network none --entrypoint node \
+  -v "$LAB_OTP_REPORT_DIR:/work/artifacts/password-otp:ro" magic-shop-runner:03 \
   /work/testing/container/check-artifacts.mjs /work/artifacts/password-otp

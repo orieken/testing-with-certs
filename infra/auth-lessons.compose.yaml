@@ -12,7 +12,10 @@ services:
     depends_on:
       lesson-kdc: {condition: service_healthy}
   lesson-provider:
-    image: quay.io/keycloak/keycloak:26.4.0@sha256:5f3fb534cde6bf006d79f5912473e5d2c828c707cdfc52e16972803aca9d43dd
+    build:
+      context: ..
+      dockerfile: infra/auth-lessons/Provider.Containerfile
+    image: magic-shop-lesson-provider:01
     user: "1000:0"
     entrypoint: [bash, /app/provider.sh]
     environment:

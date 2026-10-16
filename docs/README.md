@@ -1,6 +1,6 @@
 # Magic Shop certificate-authentication teaching prototype
 
-The [certificate-free authentication lessons](certificate-free-lessons.md) cover password/OTP, passkeys, OIDC, SAML, and Kerberos through separate entry pages. All 60 new Chrome/Edge cases passed locally and in native Ubuntu CI; [completion 31](completion/31-native-authentication-ci.md) records the native evidence and remaining limits.
+The [certificate-free authentication lessons](certificate-free-lessons.md) cover password/OTP, passkeys, OIDC, SAML, and Kerberos through separate entry pages. The [current protocol matrix](teaching-coverage.md#authentication-protocol-matrix) records 70 local Chrome/Edge passes across runs and a historical 60-case native CI baseline. [Completion 35](completion/35-saml-recipient-matrix.md) records the SAML recipient fix, expanded 56-case lesson run, and pending native repetition.
 
 New to the lab? Use [Get started with certificate tests](getting-started.md) to start the containers and run your first real-login test. The [project pitch and current gaps](project-pitch.md) provides a short explanation and an evidence-based limitations table.
 

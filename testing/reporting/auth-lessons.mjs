@@ -1,14 +1,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 
-const names = new Set([
-  ...['enrollment', 'login-and-logout', 'missing-credential', 'invalid-signature', 'disabled-user', 'unconfigured-user', 'account-isolation'].map(value => `passkeys:${value}`),
-  ...['oidc', 'saml'].flatMap(method => ['login-audience-and-logout', 'disabled-provider-user',
-    'callback-state-rejection', 'cross-protocol-provider-rejection', 'broker-state-rejection'].map(value => `${method}:${value}`)),
-  'saml:modified-signed-response',
-  'saml:response-replay',
-  ...['control', 'wrong-audience', 'wrong-recipient', 'expired'].map(value => `saml:signed-${value}`),
-  ...['valid-ticket', 'missing-ticket', 'expired-ticket', 'wrong-service-ticket', 'disabled-user'].map(value => `kerberos:${value}`),
-]);
+import { authPhases } from '../teaching/auth-matrix.mjs';
+const names = new Set(Object.values(authPhases).flat());
 
 export default class AuthenticationLessonReporter {
   cases = [];
