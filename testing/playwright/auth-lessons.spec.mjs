@@ -179,3 +179,38 @@ test('saml:response-replay', async ({ page }) => {
     headers: { 'content-type': 'application/x-www-form-urlencoded' } });
   expect(replay.status()).toBe(400);
 });
+
+for (const variant of ['control', 'wrong-audience', 'wrong-recipient', 'expired']) {
+  test(`saml:signed-${variant}`, async ({ page, playwright }) => {
+    const { resignSamlResponse } = await import('../teaching/saml-fixture.mjs');
+    const key = { privateKey: readFileSync('/saml-fixture/private.pem', 'utf8'),
+      certificate: readFileSync('/saml-fixture/certificate.pem', 'utf8') };
+    let transformed = 0;
+    let tokenIssued = false;
+    page.on('response', response => {
+      if (response.url().includes('/realms/lesson-saml/protocol/openid-connect/token') && response.status() === 200) tokenIssued = true;
+    });
+    await page.route('**/realms/lesson-saml/broker/lesson-saml/endpoint*', async route => {
+      const body = new URLSearchParams(route.request().postData() ?? '');
+      if (body.has('SAMLResponse')) {
+        // Neither the assertion nor signing material enters assertions or reporter diagnostics.
+        const xml = resignSamlResponse(Buffer.from(body.get('SAMLResponse'), 'base64').toString(), variant, key);
+        body.set('SAMLResponse', Buffer.from(xml).toString('base64'));
+        transformed++;
+        await route.continue({ postData: body.toString() });
+      } else await route.continue();
+    });
+    const token = variant === 'control' ? captureToken(page, 'lesson-saml') : undefined;
+    await providerLogin(page, 'saml');
+    await expect.poll(() => transformed).toBe(1);
+    if (variant === 'control') {
+      await expect(page.getByTestId('lesson-user')).toHaveText('saml-test-user');
+      await checkLessonToken(playwright, await token, 'saml');
+    } else {
+      await expect(page.locator('#kc-error-message')).toBeVisible();
+      await expect(page.getByTestId('lesson-user')).toHaveCount(0);
+      expect(new URL(page.url()).pathname).toBe('/realms/lesson-saml/broker/lesson-saml/endpoint');
+      expect(tokenIssued).toBe(false);
+    }
+  });
+}

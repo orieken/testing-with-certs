@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { randomBytes } from 'node:crypto';
+import { ensureSamlFixtureKey } from './saml-fixture-key.mjs';
 import { lessonAdmin } from './lesson-admin.mjs';
 import { lessonSpecs, ensureClient, ensureFlow } from './lessons.mjs';
 
@@ -61,9 +62,7 @@ await client({ clientId: `${brokerOrigin}/realms/lesson-saml`, protocol: 'saml',
     'saml_name_id_format': 'username', 'saml.force.name.id.format': 'true',
     'saml_single_logout_service_url_post': `${brokerOrigin}/realms/lesson-saml/broker/lesson-saml/endpoint`,
     'saml.client.signature': 'false' } });
-const keys = await provider('GET', '/keys');
-const signing = keys.keys.find(value => value.status === 'ACTIVE' && value.type === 'RSA' && value.use === 'SIG' && value.certificate);
-if (!signing) throw new Error('Provider RSA signing certificate missing');
+const signing = await ensureSamlFixtureKey(provider);
 
 for (const method of ['oidc', 'saml']) {
   const flow = lessonSpecs.authenticationFlows.find(value => value.alias === `${method}-browser`);

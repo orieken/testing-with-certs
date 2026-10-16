@@ -26,6 +26,7 @@ for (const [name, mounts] of Object.entries({
   'runner-manual': ['selected-user', 'public-trust']
 })) requireMounts(name, mounts);
 for (const [name, service] of Object.entries(services)) {
+  if (sources(name).includes('saml-fixture-key') && !['auth-lesson-setup', 'auth-lesson-tests'].includes(name)) throw new Error(`${name} mounts the lesson SAML signing key`);
   if (name !== 'pki' && sources(name).includes('ca-state')) throw new Error(`${name} mounts CA signing state`);
   if (service.privileged) throw new Error(`${name} is privileged`);
   if ((service.volumes ?? []).some((entry) => String(entry.source).includes('docker.sock'))) throw new Error(`${name} mounts Docker socket`);

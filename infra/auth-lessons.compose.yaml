@@ -61,6 +61,7 @@ services:
       - public-trust:/trust:ro
       - auth-secret-admin:/secrets/admin:ro
       - auth-lesson-secrets:/test-secrets
+      - saml-fixture-key:/saml-fixture
     networks: [front]
     depends_on:
       realm-bootstrap: {condition: service_completed_successfully}
@@ -88,6 +89,7 @@ services:
       - public-trust:/public:ro
       - cert-customer-waterdeep:/identity-customer:ro
       - auth-lesson-secrets:/test-secrets:ro
+      - saml-fixture-key:/saml-fixture:ro
       - auth-lesson-home:/home/runner
       - auth-lesson-tmp:/tmp
       - kerberos-tickets:/tickets
@@ -115,6 +117,7 @@ services:
     depends_on:
       auth-lesson-setup: {condition: service_completed_successfully}
 volumes:
+  saml-fixture-key: {}
   lesson-provider-data: {}
   kerberos-state: {}
   kerberos-server-keytab: {}

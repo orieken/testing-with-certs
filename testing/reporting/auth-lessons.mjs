@@ -6,6 +6,7 @@ const names = new Set([
     'callback-state-rejection', 'cross-protocol-provider-rejection', 'broker-state-rejection'].map(value => `${method}:${value}`)),
   'saml:modified-signed-response',
   'saml:response-replay',
+  ...['control', 'wrong-audience', 'wrong-recipient', 'expired'].map(value => `saml:signed-${value}`),
   ...['valid-ticket', 'missing-ticket', 'expired-ticket', 'disabled-user'].map(value => `kerberos:${value}`),
 ]);
 
