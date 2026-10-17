@@ -7,6 +7,7 @@ export const samlCaseNames = [
     'saml:modified-signed-response', 'saml:response-replay',
     ...['control', 'wrong-audience', 'wrong-recipient', 'expired'].map(value => `saml:signed-${value}`),
 ];
+export const kerberosCaseNames = ['valid-ticket', 'missing-ticket', 'expired-ticket', 'wrong-service-ticket', 'disabled-user'].map(value => `kerberos:${value}`);
 export const authPhases = {
   'passkeys-federation': [
     ...passkeyCaseNames,
@@ -16,7 +17,9 @@ export const authPhases = {
   'passkeys-cucumber': passkeyCaseNames,
   'oidc-cucumber': oidcCaseNames,
   'saml-cucumber': samlCaseNames,
-  kerberos: ['valid-ticket', 'missing-ticket', 'expired-ticket', 'wrong-service-ticket'].map(value => `kerberos:${value}`),
+  kerberos: kerberosCaseNames.filter(name => name !== 'kerberos:disabled-user'),
+  'kerberos-cucumber': kerberosCaseNames.filter(name => name !== 'kerberos:disabled-user'),
+  'kerberos-cucumber-disabled': ['kerberos:disabled-user'],
   'kerberos-disabled': ['kerberos:disabled-user'],
 };
 export const otpCaseNames = ['certificate-free entrance and route boundaries', 'enrollment and lesson audience denied at business APIs',

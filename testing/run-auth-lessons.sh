@@ -36,9 +36,14 @@ for browser in chrome msedge; do
   compose exec -T lesson-kdc sh /app/tickets.sh
   compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e LAB_AUTH_SUITE=kerberos auth-lesson-tests \
     sh -c 'cd /work/testing && ./node_modules/.bin/playwright test --config playwright.auth-lessons.config.mjs'
+  compose exec -T lesson-kdc sh /app/tickets.sh
+  compose run --rm --no-deps -e "LAB_BROWSER=$browser" auth-lesson-tests \
+    sh -c 'cd /work/testing && ./node_modules/.bin/cucumber-js --import cucumber/kerberos.mjs cucumber/features/kerberos.feature --tags "not @disabled" --format ./reporting/kerberos-cucumber.mjs --order random'
   compose run --rm --no-deps auth-lesson-fixture kerberos-disable
   compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e LAB_AUTH_SUITE=kerberos -e LAB_KERBEROS_DISABLED=1 auth-lesson-tests \
     sh -c 'cd /work/testing && ./node_modules/.bin/playwright test --config playwright.auth-lessons.config.mjs'
+  compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e LAB_KERBEROS_DISABLED=1 auth-lesson-tests \
+    sh -c 'cd /work/testing && ./node_modules/.bin/cucumber-js --import cucumber/kerberos.mjs cucumber/features/kerberos.feature --tags @disabled --format ./reporting/kerberos-cucumber.mjs --order random'
   compose run --rm --no-deps auth-lesson-fixture kerberos-enable
   compose run --rm --no-deps auth-lesson-fixture finish
   compose run --rm --no-deps auth-lesson-fixture verify

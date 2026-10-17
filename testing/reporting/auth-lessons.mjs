@@ -30,7 +30,7 @@ export default class AuthenticationLessonReporter {
     this.cases.push(entry);
     console.log(`${process.env.LAB_BROWSER} ${entry.name}: ${entry.status}`);
     if (entry.status === 'failed') {
-      const location = result.error?.stack?.match(/(?:(?:auth-lessons|kerberos)\.spec|passkeys|oidc|saml)\.mjs:(\d+):(\d+)/);
+      const location = result.error?.stack?.match(/(?:(?:auth-lessons|kerberos)\.spec|passkeys|oidc|saml|kerberos)\.mjs:(\d+):(\d+)/);
       if (location) console.log(`Failure at test line ${location[1]}:${location[2]}; credential-bearing diagnostics withheld.`);
     }
   }

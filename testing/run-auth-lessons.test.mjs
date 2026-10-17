@@ -15,6 +15,8 @@ function run(options = {}) {
 echo "$*" >> "$PROBE_ROOT/calls"
 case "$*" in
   *" ls -q "*|"ps -aq "*) if [ "\${PROBE_EXISTING:-0}" = 1 ]; then echo existing; fi;;
+  *"LAB_KERBEROS_DISABLED=1"*"cucumber/kerberos.mjs"*) exit "\${PROBE_KERBEROS_DISABLED_FAIL:-0}";;
+  *"cucumber/kerberos.mjs"*) exit "\${PROBE_KERBEROS_FAIL:-0}";;
   *"LAB_CUCUMBER_METHOD=saml"*) exit "\${PROBE_SAML_FAIL:-0}";;
   *"LAB_CUCUMBER_METHOD=oidc"*) exit "\${PROBE_OIDC_FAIL:-0}";;
   *"cucumber-js"*) exit "\${PROBE_CUCUMBER_FAIL:-0}";;
@@ -48,10 +50,13 @@ test('both browsers execute passkey/federation and valid/disabled Kerberos phase
   assert.equal(result.status, 0);
   assert.equal((result.calls.match(/playwright.auth-lessons.config.mjs/g) ?? []).length, 6);
   assert.equal((result.calls.match(/auth-lesson-fixture kerberos-disable/g) ?? []).length, 2);
-  assert.equal((result.calls.match(/cucumber-js/g) ?? []).length, 6);
+  assert.equal((result.calls.match(/cucumber-js/g) ?? []).length, 10);
   assert.match(result.calls, /--order random/);
   assert.equal((result.calls.match(/LAB_CUCUMBER_METHOD=oidc/g) ?? []).length, 2);
   assert.equal((result.calls.match(/LAB_CUCUMBER_METHOD=saml/g) ?? []).length, 2);
+  assert.equal((result.calls.match(/cucumber\/kerberos.mjs/g) ?? []).length, 4);
+  assert.match(result.calls, /--tags "not @disabled"/);
+  assert.match(result.calls, /--tags @disabled/);
   assert.match(result.calls, /check-artifacts.mjs/);
 });
 
@@ -84,4 +89,22 @@ test('SAML Cucumber failure cleans fixtures and prevents the next browser select
   assert.match(result.calls, /auth-lesson-fixture verify/);
   assert.match(result.calls, /--profile \* down --volumes --remove-orphans/);
   assert.doesNotMatch(result.calls, /LAB_BROWSER=msedge/);
+});
+
+test('Kerberos Cucumber failure cleans the project before any disabled-user phase', () => {
+  const result = run({ PROBE_KERBEROS_FAIL: '23' });
+  assert.equal(result.status, 23);
+  assert.match(result.calls, /auth-lesson-fixture finish/);
+  assert.match(result.calls, /auth-lesson-fixture verify/);
+  assert.match(result.calls, /--profile \* down --volumes --remove-orphans/);
+  assert.doesNotMatch(result.calls, /kerberos-disable|LAB_BROWSER=msedge/);
+});
+test('disabled Kerberos Cucumber failure disposes the isolated disabled-account realm', () => {
+  const result = run({ PROBE_KERBEROS_DISABLED_FAIL: '25' });
+  assert.equal(result.status, 25);
+  assert.match(result.calls, /auth-lesson-fixture kerberos-disable/);
+  assert.match(result.calls, /auth-lesson-fixture finish/);
+  assert.match(result.calls, /auth-lesson-fixture verify/);
+  assert.match(result.calls, /--profile \* down --volumes --remove-orphans/);
+  assert.doesNotMatch(result.calls, /kerberos-enable|LAB_BROWSER=msedge/);
 });
