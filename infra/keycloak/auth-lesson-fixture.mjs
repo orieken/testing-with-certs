@@ -13,7 +13,7 @@ const saml = await lessonAdmin({ origin: 'https://shop.magic.test:9643', realm: 
 const admins = { local, provider, oidc, saml };
 const statePath = '/test-secrets/auth-users.json';
 const specs = [
-  { username: 'passkeys-test-user', target: 'local', requiredActions: ['webauthn-register-passwordless'] },
+  ...['enrollment', 'login', 'missing', 'signature', 'isolation', 'second'].map(name => ({ username: `passkeys-test-${name}`, target: 'local', requiredActions: ['webauthn-register-passwordless'] })),
   { username: 'passkeys-test-other', target: 'local', requiredActions: ['webauthn-register-passwordless'] },
   { username: 'passkeys-test-disabled', target: 'local', enabled: false },
   ...['oidc', 'saml'].flatMap(method => [

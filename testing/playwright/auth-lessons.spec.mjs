@@ -1,118 +1,15 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
-import { startLesson, captureToken, checkLessonToken, virtualAuthenticator, lessonOrigin } from '../teaching/auth-lessons.mjs';
+import { startLesson, captureToken, checkLessonToken, lessonOrigin } from '../teaching/auth-lessons.mjs';
+
+import { checkPasskey } from '../teaching/passkeys.mjs';
+import { passkeyCaseNames } from '../teaching/auth-matrix.mjs';
 
 const users = JSON.parse(readFileSync('/test-secrets/auth-users.json', 'utf8'));
 const passwordFor = name => users.find(value => value.username === name).password;
-let passkeyCredentials;
-
-async function passkeyName(page, name = 'passkeys-test-user') {
-  await startLesson(page, 'passkeys', 'Sign in with a passkey');
-  await page.locator('#username').fill(name);
-  await page.locator('#kc-login').click();
+for (const name of passkeyCaseNames) {
+  test(name, async ({ browser, playwright }) => checkPasskey(browser, name, playwright));
 }
-
-test.describe.serial('Passkeys', () => {
-  test('passkeys:enrollment', async ({ page, context, playwright }) => {
-    page.on('dialog', dialog => dialog.accept('Lesson test passkey'));
-    const authenticator = await virtualAuthenticator(context, page);
-    const token = captureToken(page);
-    await startLesson(page, 'passkeys/enroll', 'Enroll a passkey');
-    await page.locator('#username').fill('passkeys-test-user');
-    await page.locator('#password').fill(passwordFor('passkeys-test-user'));
-    await page.locator('#kc-login').click();
-    await page.locator('#registerWebAuthn').click();
-    await expect(page.getByTestId('lesson-user')).toHaveText('passkeys-test-user');
-    await checkLessonToken(playwright, await token, 'passkeys-enroll');
-    passkeyCredentials = await authenticator.credentials();
-    expect(passkeyCredentials.length).toBe(1);
-    expect(passkeyCredentials[0].rpId).toBe('auth.magic.test');
-  });
-
-  test('passkeys:login-and-logout', async ({ page, context, playwright }) => {
-    await virtualAuthenticator(context, page, passkeyCredentials);
-    const token = captureToken(page);
-    await passkeyName(page);
-    await expect(page.locator('#password')).toHaveCount(0);
-    await page.locator('#authenticateWebAuthnButton').click();
-    await expect(page.getByTestId('lesson-user')).toHaveText('passkeys-test-user');
-    await checkLessonToken(playwright, await token, 'passkeys');
-    await page.getByRole('button', { name: 'Sign out of lesson' }).click();
-    await expect(page.getByRole('button', { name: 'Sign in with a passkey' })).toBeVisible();
-    await page.reload();
-    await expect(page.getByTestId('lesson-user')).toHaveCount(0);
-  });
-
-  test('passkeys:missing-credential', async ({ page, context }) => {
-    await virtualAuthenticator(context, page);
-    await passkeyName(page);
-    await page.locator('#authenticateWebAuthnButton').click();
-    await expect(page.locator('#kc-error-message, #kc-feedback-text, #kc-error-credential-form').first()).toBeVisible({ timeout: 30_000 });
-    await expect(page.getByTestId('lesson-user')).toHaveCount(0);
-  });
-
-  test('passkeys:invalid-signature', async ({ page, context }) => {
-    await virtualAuthenticator(context, page, passkeyCredentials);
-    let signatureChanged = false;
-    await page.route('**/login-actions/authenticate?*', async route => {
-      const body = new URLSearchParams(route.request().postData() ?? '');
-      if (body.has('signature')) {
-        const bytes = Buffer.from(body.get('signature'), 'base64url');
-        bytes[bytes.length - 1] ^= 1;
-        body.set('signature', bytes.toString('base64url'));
-        signatureChanged = true;
-        await route.continue({ postData: body.toString() });
-      } else await route.continue();
-    });
-    await passkeyName(page);
-    await page.locator('#authenticateWebAuthnButton').click();
-    try {
-      await expect(page.locator('#kc-error-message, #kc-feedback-text, #kc-error-credential-form').first()).toBeVisible({ timeout: 30_000 });
-    } catch (error) {
-      console.log(`Passkey rejection state: ${JSON.stringify({ signatureChanged,
-        errorMessage: await page.locator('#kc-error-message').isVisible(),
-        feedback: await page.locator('#kc-feedback-text').isVisible(),
-        credentialError: await page.locator('#kc-error-credential-form').isVisible(),
-        identity: await page.getByTestId('lesson-user').count() > 0,
-        authenticationButton: await page.locator('#authenticateWebAuthnButton').isVisible(),
-      })}`);
-      throw error;
-    }
-    expect(signatureChanged).toBe(true);
-    await expect(page.getByTestId('lesson-user')).toHaveCount(0);
-  });
-
-  test('passkeys:disabled-user', async ({ page, context }) => {
-    await virtualAuthenticator(context, page, passkeyCredentials);
-    await passkeyName(page, 'passkeys-test-disabled');
-    await expect(page.getByText('Account is disabled, contact your administrator.', { exact: true })).toBeVisible();
-    await expect(page.locator('#authenticateWebAuthnButton')).toHaveCount(0);
-  });
-
-  test('passkeys:unconfigured-user', async ({ page, context }) => {
-    await virtualAuthenticator(context, page);
-    await passkeyName(page, 'passkeys-test-other');
-    // Merely naming an account must never allow enrollment without its setup password.
-    await expect(page.locator('#registerWebAuthn')).toHaveCount(0);
-    const authenticate = page.locator('#authenticateWebAuthnButton');
-    if (await authenticate.isVisible()) await authenticate.click();
-    await expect(page.locator('#kc-error-message, #kc-feedback-text, #kc-error-credential-form').first()).toBeVisible({ timeout: 30_000 });
-    await expect(page.getByTestId('lesson-user')).toHaveCount(0);
-  });
-
-  test('passkeys:account-isolation', async ({ page, context }) => {
-    page.on('dialog', dialog => dialog.accept('Second lesson passkey'));
-    await virtualAuthenticator(context, page, passkeyCredentials);
-    await page.goto(`${lessonOrigin}/teaching/passkeys`);
-    await expect(page.getByTestId('lesson-user')).toHaveCount(0);
-    await startLesson(page, 'passkeys/enroll', 'Enroll a passkey');
-    await page.locator('#username').fill('passkeys-test-other');
-    await page.locator('#password').fill(passwordFor('passkeys-test-other'));
-    await page.locator('#kc-login').click();
-    await page.locator('#registerWebAuthn').click();
-    await expect(page.getByTestId('lesson-user')).toHaveText('passkeys-test-other');
-  });
-});
 
 async function providerLogin(page, method, kind = 'user') {
   const title = method === 'oidc' ? 'Sign in with OpenID Connect' : 'Sign in with SAML';
