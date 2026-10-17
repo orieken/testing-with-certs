@@ -66,7 +66,18 @@ test.describe.serial('Passkeys', () => {
     });
     await passkeyName(page);
     await page.locator('#authenticateWebAuthnButton').click();
-    await expect(page.locator('#kc-error-message, #kc-feedback-text, #kc-error-credential-form').first()).toBeVisible({ timeout: 30_000 });
+    try {
+      await expect(page.locator('#kc-error-message, #kc-feedback-text, #kc-error-credential-form').first()).toBeVisible({ timeout: 30_000 });
+    } catch (error) {
+      console.log(`Passkey rejection state: ${JSON.stringify({ signatureChanged,
+        errorMessage: await page.locator('#kc-error-message').isVisible(),
+        feedback: await page.locator('#kc-feedback-text').isVisible(),
+        credentialError: await page.locator('#kc-error-credential-form').isVisible(),
+        identity: await page.getByTestId('lesson-user').count() > 0,
+        authenticationButton: await page.locator('#authenticateWebAuthnButton').isVisible(),
+      })}`);
+      throw error;
+    }
     expect(signatureChanged).toBe(true);
     await expect(page.getByTestId('lesson-user')).toHaveCount(0);
   });
