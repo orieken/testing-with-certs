@@ -55,14 +55,17 @@ for (const kind of disabled ? ['disabled-user'] : ['valid-ticket', 'missing-tick
         await expect(page.getByRole('button', { name: 'Sign in with Kerberos' })).toBeVisible();
       } else {
         await startLesson(page, 'kerberos', 'Sign in with Kerberos').catch(() => {});
+        if (kind === 'wrong-service-ticket') {
+          // The tracked 400/401 is the rejection evidence; its error page need not have rendered yet.
+          await expect.poll(() => wrongServiceRejected).toBe(true);
+          expect(wrongServiceSubmitted).toBeGreaterThan(0);
+        } else {
+          await expect.poll(async () => challenged ||
+            await page.locator('#kc-error-message, #kc-feedback-text').isVisible()).toBe(true);
+        }
         await expect(page.getByTestId('lesson-user')).toHaveCount(0);
         await expect(page.locator('input[type=password]')).toHaveCount(0);
-        expect(challenged || await page.locator('#kc-error-message, #kc-feedback-text').isVisible()).toBe(true);
         expect(issued).toBe(false);
-        if (kind === 'wrong-service-ticket') {
-          expect(wrongServiceSubmitted).toBeGreaterThan(0);
-          expect(wrongServiceRejected).toBe(true);
-        }
       }
     } finally { await context.close(); rmSync(profile, { recursive: true, force: true }); }
   });
