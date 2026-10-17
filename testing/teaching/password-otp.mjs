@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { totp } from './totp.mjs';
-import { otpCaseNames } from './auth-matrix.mjs';
+import { otpCaseNames, otpSessionCaseNames } from './auth-matrix.mjs';
 import { checkLessonToken } from './auth-lessons.mjs';
 
 const origin = 'https://shop.magic.test:8543';
@@ -9,7 +9,8 @@ const path = '/teaching/password-otp';
 
 // Each invocation owns its context, enrollment key, and OTP reuse window.
 export async function checkPasswordOtp(browser, name, playwright) {
-  if (!otpCaseNames.includes(name)) throw new Error('Unknown password/OTP check');
+  if (![...otpCaseNames, ...otpSessionCaseNames].includes(name)) throw new Error('Unknown password/OTP check');
+  if (otpSessionCaseNames.includes(name) !== (process.env.LAB_OTP_LIFECYCLE === '1')) throw new Error('Wrong OTP fixture phase');
   const fixtures = JSON.parse(readFileSync('/test-secrets/otp.json', 'utf8'));
   let context = await browser.newContext();
   let page = await context.newPage();
@@ -46,8 +47,99 @@ export async function checkPasswordOtp(browser, name, playwright) {
     await page.locator('#kc-login').click();
     if (timestamp > Date.now() - 30_000) lastUsedStep = Math.floor(timestamp / 30_000);
   }
+  const tokenEndpoint = 'https://auth.magic.test:9443/realms/magic-shop/protocol/openid-connect/token';
+  let browserRefreshes = 0;
+  page.on('request', request => {
+    if (request.url() === tokenEndpoint && new URLSearchParams(request.postData() ?? '').get('grant_type') === 'refresh_token') browserRefreshes++;
+  });
+  function captureSession() {
+    const response = page.waitForResponse(value => value.url() === tokenEndpoint && value.request().method() === 'POST' && value.status() === 200);
+    void response.catch(() => {});
+    return response.then(value => value.json());
+  }
+  const claims = token => JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
+  async function session(username) {
+    const pending = captureSession();
+    const key = await enroll(username);
+    const tokens = await pending;
+    expect(typeof tokens.access_token).toBe('string');
+    expect(typeof tokens.refresh_token).toBe('string');
+    expect(tokens.expires_in).toBe(20);
+    expect(tokens.refresh_expires_in > 0 && tokens.refresh_expires_in <= 45).toBe(true);
+    return { key, tokens };
+  }
+  const refresh = (tokens, clientId = 'password-otp-spa') => context.request.post(tokenEndpoint, {
+    form: { grant_type: 'refresh_token', client_id: clientId, refresh_token: tokens.refresh_token },
+  });
+  async function refreshed(tokens, username) {
+    const response = await refresh(tokens);
+    expect(response.status()).toBe(200);
+    const next = await response.json();
+    expect(typeof next.access_token).toBe('string');
+    expect(next.access_token !== tokens.access_token).toBe(true);
+    expect(claims(next.access_token).sub === claims(tokens.access_token).sub).toBe(true);
+    expect(claims(next.access_token).preferred_username).toBe(username);
+    await checkLessonToken(playwright, next.access_token, 'password-otp');
+  }
+  async function rejectedRefresh(tokens, clientId) {
+    const response = await refresh(tokens, clientId);
+    expect(response.status()).toBe(400);
+    const error = await response.json();
+    expect(error.error).toBe('invalid_grant');
+  }
   try {
     switch (name) {
+      case 'access-token expiry clears lesson and requires both factors': {
+        const username = 'otp-test-expiry';
+        const { key, tokens } = await session(username);
+        const remaining = claims(tokens.access_token).exp * 1000 - Date.now();
+        expect(remaining > 5000).toBe(true);
+        await page.waitForTimeout(Math.max(0, remaining - 3000));
+        await expect(page.getByTestId('otp-user')).toHaveText(username);
+        await expect(page.getByTestId('otp-user')).toHaveCount(0, { timeout: 10_000 });
+        await expect(page.getByRole('button', { name: 'Sign in with password and code' })).toBeVisible();
+        expect(browserRefreshes).toBe(0);
+        const next = captureSession();
+        await password(username);
+        await expect(page.locator('#otp')).toBeVisible();
+        await code(key);
+        await expect(page.getByTestId('otp-user')).toHaveText(username);
+        await checkLessonToken(playwright, (await next).access_token, 'password-otp');
+        break;
+      }
+      case 'refresh preserves identity and lesson audience': {
+        const username = 'otp-test-refresh';
+        const { tokens } = await session(username);
+        await refreshed(tokens, username);
+        await expect(page.getByTestId('otp-user')).toHaveText(username);
+        expect(browserRefreshes).toBe(0);
+        break;
+      }
+      case 'logout invalidates refresh token': {
+        const { tokens } = await session('otp-test-logout');
+        await page.getByRole('button', { name: 'Sign out of lesson' }).click();
+        await expect(page.getByRole('button', { name: 'Sign in with password and code' })).toBeVisible();
+        await rejectedRefresh(tokens);
+        await page.reload(); await expect(page.getByTestId('otp-user')).toHaveCount(0);
+        expect(browserRefreshes).toBe(0);
+        break;
+      }
+      case 'refresh token cannot be used by another client': {
+        const username = 'otp-test-binding';
+        const { tokens } = await session(username);
+        await rejectedRefresh(tokens, 'passkeys-spa');
+        // A successful same-token control proves the mismatch was not an expired fixture.
+        await refreshed(tokens, username);
+        break;
+      }
+      case 'expired session rejects refresh': {
+        const { tokens } = await session('otp-test-session-expiry');
+        await page.waitForTimeout(tokens.refresh_expires_in * 1000 + 1500);
+        await rejectedRefresh(tokens);
+        await expect(page.getByTestId('otp-user')).toHaveCount(0);
+        expect(browserRefreshes).toBe(0);
+        break;
+      }
       case 'certificate-free entrance and route boundaries': {
         await page.goto(`${origin}/teaching`);
         await expect(page.getByRole('heading', { name: 'Authentication lessons', exact: true })).toBeVisible();

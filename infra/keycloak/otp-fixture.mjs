@@ -1,18 +1,22 @@
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { randomBytes } from 'node:crypto';
+import { startOtpSessionPolicy, finishOtpSessionPolicy, verifyOtpSessionPolicy } from './otp-session-policy.mjs';
 import { lessonAdmin } from './lesson-admin.mjs';
 
 const action = process.argv[2];
-if (!['start', 'finish', 'verify'].includes(action)) throw new Error('Expected start, finish or verify');
+if (!['start', 'start-lifecycle', 'finish', 'verify'].includes(action)) throw new Error('Expected start, finish or verify');
 if (!/^magic-shop-otp-[a-z0-9-]+$/.test(process.env.LAB_PROJECT ?? '')) throw new Error('OTP fixtures require a disposable magic-shop-otp-* project');
 const statePath = '/test-secrets/otp.json';
+const policyPath = '/test-secrets/otp-session-policy.json';
 const names = ['otp-test-audience', 'otp-test-password', 'otp-test-codes', 'otp-test-disabled',
-  'otp-test-session', 'otp-test-isolation', 'otp-test-enroll'];
+  'otp-test-session', 'otp-test-isolation', 'otp-test-enroll',
+  'otp-test-expiry', 'otp-test-refresh', 'otp-test-logout', 'otp-test-binding', 'otp-test-session-expiry'];
 const admin = await lessonAdmin();
 const find = name => admin('GET', `/users?username=${name}&exact=true&max=2`);
-if (action === 'start') {
+if (action === 'start' || action === 'start-lifecycle') {
   if (existsSync(statePath)) throw new Error('Prior OTP fixture state remains');
   for (const name of names) if ((await find(name)).length) throw new Error('Existing OTP fixture user retained; use a fresh disposable project');
+  if (action === 'start-lifecycle') await startOtpSessionPolicy(admin, policyPath);
   const entries = names.map(username => ({ username, password: randomBytes(32).toString('base64url') }));
   // Persist names before any mutation so partial setup can be removed safely.
   writeFileSync(statePath, JSON.stringify(entries), { mode: 0o600, flag: 'wx' });
@@ -22,6 +26,7 @@ if (action === 'start') {
   }
   console.log('Dedicated OTP fixtures created; secrets remain inside the test volume.');
 } else if (action === 'finish') {
+  await finishOtpSessionPolicy(admin, policyPath);
   if (existsSync(statePath)) {
     const entries = JSON.parse(readFileSync(statePath, 'utf8'));
     if (entries.length !== names.length || entries.some((value, index) => value.username !== names[index])) throw new Error('Unexpected fixture state');
@@ -35,6 +40,7 @@ if (action === 'start') {
   console.log('OTP fixture users and secret file removed.');
 } else {
   if (existsSync(statePath)) throw new Error('OTP secret file remains');
+  await verifyOtpSessionPolicy(admin, policyPath);
   for (const name of names) if ((await find(name)).length) throw new Error('OTP fixture user remains');
   console.log('OTP fixture cleanup verified.');
 }

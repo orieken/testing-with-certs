@@ -14,6 +14,7 @@ function run(options={}) {
 echo "$*" >> "$PROBE_ROOT/calls"
 case "$*" in
   "ps -aq "*|"volume ls -q "*|"network ls -q "*) if [ "\${PROBE_EXISTING:-0}" = 1 ]; then echo existing; fi;;
+  *"LAB_OTP_LIFECYCLE=1"*"cucumber-js"*) exit "\${PROBE_SESSION_FAILURE:-0}";;
   *"cucumber-js"*) exit "\${PROBE_FAILURE:-0}";;
 esac
 `,{mode:0o755});
@@ -30,4 +31,17 @@ test('Cucumber failure preserves status, skips later selections, and cleans the 
   const result=run({PROBE_FAILURE:'17'});assert.equal(result.status,17);
   assert.match(result.calls,/cucumber-js/);assert.match(result.calls,/otp-fixture finish/);assert.match(result.calls,/otp-fixture verify/);
   assert.match(result.calls,/--profile \* down --volumes --remove-orphans/);assert.doesNotMatch(result.calls,/LAB_BROWSER=msedge/);
+});
+
+test('OTP lifecycle failure preserves status and cleans its policy and fixtures through the exit trap',()=>{
+  const result=run({PROBE_SESSION_FAILURE:'19'});assert.equal(result.status,19);
+  assert.match(result.calls,/otp-fixture start-lifecycle/);
+  assert.match(result.calls,/otp-fixture finish/);assert.match(result.calls,/otp-fixture verify/);
+  assert.match(result.calls,/--profile \* down --volumes --remove-orphans/);assert.doesNotMatch(result.calls,/LAB_BROWSER=msedge/);
+});
+test('OTP baseline and lifecycle phases run in both browsers and frameworks',()=>{
+  const result=run();assert.equal(result.status,0);
+  assert.equal((result.calls.match(/otp-fixture start-lifecycle/g)??[]).length,4);
+  assert.equal((result.calls.match(/LAB_OTP_LIFECYCLE=1/g)??[]).length,4);
+  assert.equal((result.calls.match(/LAB_OTP_LIFECYCLE=0/g)??[]).length,4);
 });

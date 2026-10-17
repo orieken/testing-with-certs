@@ -28,3 +28,10 @@ export const otpCaseNames = ['certificate-free entrance and route boundaries', '
   'successful login, logout and cookie cannot skip factors', 'fresh profile and second account isolation'];
 
 export const otpRunners = ['playwright', 'cucumber'];
+
+export const otpSessionCaseNames = ['access-token expiry clears lesson and requires both factors',
+  'refresh preserves identity and lesson audience', 'logout invalidates refresh token',
+  'refresh token cannot be used by another client', 'expired session rejects refresh'];
+export const otpPhases = Object.fromEntries(otpRunners.flatMap(runner => [
+  [runner, otpCaseNames], [`${runner}-lifecycle`, otpSessionCaseNames],
+]));

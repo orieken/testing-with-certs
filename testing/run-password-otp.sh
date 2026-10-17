@@ -25,18 +25,24 @@ trap 'exit 143' TERM
 ./lab up
 docker compose -f infra/compose.yaml --profile test build runner-test
 for browser in chrome msedge; do
-  for runner in playwright cucumber; do
-    compose run --rm --no-deps otp-fixture start
+  for phase in baseline lifecycle; do
+   for runner in playwright cucumber; do
+    fixture_action=start
+    lifecycle=0
+    feature=password-otp
+    if [ "$phase" = lifecycle ]; then fixture_action=start-lifecycle; lifecycle=1; feature=password-otp-session; fi
+    compose run --rm --no-deps otp-fixture "$fixture_action"
     if [ "$runner" = playwright ]; then
-      compose run --rm --no-deps -e "LAB_BROWSER=$browser" otp-tests \
+      compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e "LAB_OTP_LIFECYCLE=$lifecycle" -e "LAB_OTP_FEATURE=$feature" otp-tests \
         sh -c 'cd /work/testing && ./node_modules/.bin/playwright test --config playwright.otp.config.mjs'
     else
-      compose run --rm --no-deps -e "LAB_BROWSER=$browser" otp-tests \
-        sh -c 'cd /work/testing && ./node_modules/.bin/cucumber-js --import cucumber/password-otp.mjs cucumber/features/password-otp.feature --format ./reporting/otp-cucumber.mjs --order random'
+      compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e "LAB_OTP_LIFECYCLE=$lifecycle" -e "LAB_OTP_FEATURE=$feature" otp-tests \
+        sh -c 'cd /work/testing && ./node_modules/.bin/cucumber-js --import cucumber/password-otp.mjs "cucumber/features/$LAB_OTP_FEATURE.feature" --format ./reporting/otp-cucumber.mjs --order random'
     fi
     compose run --rm --no-deps otp-fixture finish
     compose run --rm --no-deps otp-fixture verify
     docker volume rm "${LAB_PROJECT}_otp-home" "${LAB_PROJECT}_otp-tmp" >/dev/null
+   done
   done
 done
 

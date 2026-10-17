@@ -2,11 +2,11 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { authPhases, otpCaseNames, otpRunners } from '../teaching/auth-matrix.mjs';
+import { authPhases, otpPhases } from '../teaching/auth-matrix.mjs';
 
 export function checkAuthMatrix(suite, root) {
   assert.ok(['auth-lessons', 'password-otp'].includes(suite), 'Unknown authentication suite');
-  const phases = suite === 'auth-lessons' ? authPhases : Object.fromEntries(otpRunners.map(runner => [runner, otpCaseNames]));
+  const phases = suite === 'auth-lessons' ? authPhases : otpPhases;
   let count = 0;
   for (const browser of ['chrome', 'msedge']) for (const [phase, expected] of Object.entries(phases)) {
     const selection = `${browser}-${phase}`;
@@ -14,7 +14,10 @@ export function checkAuthMatrix(suite, root) {
     assert.equal(report.evidence, suite === 'auth-lessons' ? 'live-authentication-lessons' : 'live-password-otp', 'Wrong evidence provenance');
     assert.equal(report.browser, browser, 'Wrong browser');
     if (suite === 'auth-lessons') assert.equal(report.phase, phase, 'Wrong phase');
-    else assert.equal(report.runner, phase, 'Wrong runner');
+    else {
+      assert.equal(report.runner, phase.split('-')[0], 'Wrong runner');
+      assert.equal(report.phase, phase.endsWith('-lifecycle') ? 'lifecycle' : 'baseline', 'Wrong OTP phase');
+    }
     assert.ok(Array.isArray(report.cases), 'Missing cases');
     assert.equal(report.cases.length, expected.length, 'Missing or extra cases');
     assert.equal(new Set(report.cases.map(value => value.name)).size, expected.length, 'Duplicate cases');
