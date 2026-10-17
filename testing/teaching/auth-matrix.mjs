@@ -13,3 +13,5 @@ export const authPhases = {
 export const otpCaseNames = ['certificate-free entrance and route boundaries', 'enrollment and lesson audience denied at business APIs',
   'wrong password', 'incorrect and expired codes', 'disabled user',
   'successful login, logout and cookie cannot skip factors', 'fresh profile and second account isolation'];
+
+export const otpRunners = ['playwright', 'cucumber'];

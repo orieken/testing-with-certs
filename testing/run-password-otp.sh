@@ -25,13 +25,21 @@ trap 'exit 143' TERM
 ./lab up
 docker compose -f infra/compose.yaml --profile test build runner-test
 for browser in chrome msedge; do
-  compose run --rm --no-deps otp-fixture start
-  compose run --rm --no-deps -e "LAB_BROWSER=$browser" otp-tests \
-    sh -c 'cd /work/testing && ./node_modules/.bin/playwright test --config playwright.otp.config.mjs'
-  compose run --rm --no-deps otp-fixture finish
-  compose run --rm --no-deps otp-fixture verify
-  docker volume rm "${LAB_PROJECT}_otp-home" "${LAB_PROJECT}_otp-tmp" >/dev/null
+  for runner in playwright cucumber; do
+    compose run --rm --no-deps otp-fixture start
+    if [ "$runner" = playwright ]; then
+      compose run --rm --no-deps -e "LAB_BROWSER=$browser" otp-tests \
+        sh -c 'cd /work/testing && ./node_modules/.bin/playwright test --config playwright.otp.config.mjs'
+    else
+      compose run --rm --no-deps -e "LAB_BROWSER=$browser" otp-tests \
+        sh -c 'cd /work/testing && ./node_modules/.bin/cucumber-js --import cucumber/password-otp.mjs cucumber/features/password-otp.feature --format ./reporting/otp-cucumber.mjs --order random'
+    fi
+    compose run --rm --no-deps otp-fixture finish
+    compose run --rm --no-deps otp-fixture verify
+    docker volume rm "${LAB_PROJECT}_otp-home" "${LAB_PROJECT}_otp-tmp" >/dev/null
+  done
 done
+
 docker run --rm --platform linux/amd64 --network none --entrypoint node \
   -v "$LAB_OTP_REPORT_DIR:/work/artifacts/password-otp:ro" magic-shop-runner:03 \
   /work/testing/reporting/check-auth-matrix.mjs password-otp /work/artifacts/password-otp

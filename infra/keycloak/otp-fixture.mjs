@@ -6,7 +6,8 @@ const action = process.argv[2];
 if (!['start', 'finish', 'verify'].includes(action)) throw new Error('Expected start, finish or verify');
 if (!/^magic-shop-otp-[a-z0-9-]+$/.test(process.env.LAB_PROJECT ?? '')) throw new Error('OTP fixtures require a disposable magic-shop-otp-* project');
 const statePath = '/test-secrets/otp.json';
-const names = ['otp-test-user', 'otp-test-disabled', 'otp-test-enroll'];
+const names = ['otp-test-audience', 'otp-test-password', 'otp-test-codes', 'otp-test-disabled',
+  'otp-test-session', 'otp-test-isolation', 'otp-test-enroll'];
 const admin = await lessonAdmin();
 const find = name => admin('GET', `/users?username=${name}&exact=true&max=2`);
 if (action === 'start') {

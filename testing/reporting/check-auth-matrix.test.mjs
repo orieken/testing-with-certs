@@ -4,23 +4,23 @@ import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { checkAuthMatrix } from './check-auth-matrix.mjs';
-import { authPhases, otpCaseNames } from '../teaching/auth-matrix.mjs';
+import { authPhases, otpCaseNames, otpRunners } from '../teaching/auth-matrix.mjs';
 
 test('authentication gates require every case, browser, phase and correct provenance', () => {
   for (const suite of ['auth-lessons', 'password-otp']) {
     const root = mkdtempSync(join(tmpdir(), 'auth-matrix-'));
     const reports = [];
     try {
-      const phases = suite === 'auth-lessons' ? authPhases : { otp: otpCaseNames };
+      const phases = suite === 'auth-lessons' ? authPhases : Object.fromEntries(otpRunners.map(runner => [runner, otpCaseNames]));
       for (const browser of ['chrome', 'msedge']) for (const [phase, names] of Object.entries(phases)) {
-        const directory = join(root, suite === 'auth-lessons' ? `${browser}-${phase}` : browser);
+        const directory = join(root, `${browser}-${phase}`);
         mkdirSync(directory);
-        const data = { browser, phase, evidence: suite === 'auth-lessons' ? 'live-authentication-lessons' : 'live-password-otp',
+        const data = { browser, phase, runner:phase, evidence: suite === 'auth-lessons' ? 'live-authentication-lessons' : 'live-password-otp',
           cases: names.map(name => ({ name, status: 'passed' })) };
         const path = join(directory, 'results.json');
         writeFileSync(path, JSON.stringify(data)); reports.push({ path, data });
       }
-      assert.equal(checkAuthMatrix(suite, root), suite === 'auth-lessons' ? 56 : 14);
+      assert.equal(checkAuthMatrix(suite, root), suite === 'auth-lessons' ? 56 : 28);
       for (const {path, data} of reports) {
         for (const mutate of [value => value.cases.pop(), value => value.cases.push(value.cases[0]),
           value => { value.cases[0].name = 'unknown'; }, value => { value.cases[0].status = 'skipped'; },
@@ -35,6 +35,9 @@ test('authentication gates require every case, browser, phase and correct proven
         }
         if (suite === 'auth-lessons') {
           writeFileSync(path, JSON.stringify({...data, phase:'wrong'})); assert.throws(() => checkAuthMatrix(suite, root));
+        }
+        if (suite === 'password-otp') {
+          writeFileSync(path, JSON.stringify({...data, runner:'wrong'})); assert.throws(() => checkAuthMatrix(suite, root));
         }
         writeFileSync(path, JSON.stringify(data));
       }
