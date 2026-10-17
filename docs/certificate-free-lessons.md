@@ -207,6 +207,7 @@ The full 56-case suite and separate 14-case TOTP suite subsequently passed in na
 Password/TOTP subsequently passed 28/28 cases across Chrome/Edge and Playwright/Cucumber, locally and natively. The complete native authentication inventory passed 84/84; see [completion 37](completion/37-password-otp-cucumber.md).
 Passkey parity subsequently passed 28/28 across both runners and browsers; the full protocol suite passed 70/70 and the combined native authentication inventory passed 98/98. See [completion 38](completion/38-passkey-cucumber.md).
 Controlled OIDC parity subsequently passed 20/20 across both runners and browsers; the full protocol suite passed 80/80 and the combined native authentication inventory passed 108/108. See [completion 39](completion/39-oidc-cucumber.md).
+SAML parity subsequently passed 44/44 across both runners and browsers; the full protocol suite passed 102/102 and the combined native authentication inventory passed 130/130. See [completion 40](completion/40-saml-cucumber.md).
 Additional work remains for
-passkey physical-device checks, broader session/refresh negatives, Cucumber parity for SAML/Kerberos, and cancellation-cleanup CI probes.
+passkey physical-device checks, broader session/refresh negatives, Cucumber parity for Kerberos, and cancellation-cleanup CI probes.
 See [the implementation TODO list](TODO.md) for remaining acceptance requirements.

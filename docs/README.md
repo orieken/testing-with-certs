@@ -1,6 +1,6 @@
 # Magic Shop certificate-authentication teaching prototype
 
-The [certificate-free authentication lessons](certificate-free-lessons.md) cover password/OTP, passkeys, OIDC, SAML, and Kerberos through separate entry pages. The [current protocol matrix](teaching-coverage.md#authentication-protocol-matrix) records 108 local Chrome/Edge executions across runs and 108 independent native passes. [Completion 39](completion/39-oidc-cucumber.md) adds controlled external OIDC Cucumber parity with fresh contexts, safe reports, and remaining acceptance.
+The [certificate-free authentication lessons](certificate-free-lessons.md) cover password/OTP, passkeys, OIDC, SAML, and Kerberos through separate entry pages. The [current protocol matrix](teaching-coverage.md#authentication-protocol-matrix) records 130 local Chrome/Edge executions across runs and 130 independent native passes. [Completion 40](completion/40-saml-cucumber.md) adds SAML Cucumber parity, including signed-assertion checks, safe reports, and remaining acceptance.
 
 New to the lab? Use [Get started with certificate tests](getting-started.md) to start the containers and run your first real-login test. The [project pitch and current gaps](project-pitch.md) provides a short explanation and an evidence-based limitations table.
 
