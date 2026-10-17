@@ -1,7 +1,7 @@
 # Certificate authentication and browser operation
 
 This document explains the implemented identity and access boundaries.
-The [certificate-free lessons guide](certificate-free-lessons.md) describes the separate port 8543 entrance and password/OTP implementation, with a [current protocol matrix](teaching-coverage.md#authentication-protocol-matrix) of 70 local passes across runs and 70 native passes. [Completion 36](completion/36-native-expanded-authentication.md) records native verification of the SAML recipient guard, expanded cases, and exact-count gates.
+The [certificate-free lessons guide](certificate-free-lessons.md) describes the separate port 8543 entrance and password/OTP implementation, with a [current protocol matrix](teaching-coverage.md#authentication-protocol-matrix) of 84 local passes across runs and 84 native passes. [Completion 37](completion/37-password-otp-cucumber.md) records Password/TOTP Cucumber parity and native verification of the expanded matrix.
 Use the [project terminology dictionary](project-terminology.md) and [writing guide](writing-guide.md) with this document.
 See [Mermaid workflows](workflows.md) for expanded request and certificate lifecycle diagrams.
 The [teaching guide](teaching-guide.md) gives copyable learner procedures.
