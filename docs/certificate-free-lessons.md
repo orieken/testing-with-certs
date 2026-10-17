@@ -209,6 +209,7 @@ Passkey parity subsequently passed 28/28 across both runners and browsers; the f
 Controlled OIDC parity subsequently passed 20/20 across both runners and browsers; the full protocol suite passed 80/80 and the combined native authentication inventory passed 108/108. See [completion 39](completion/39-oidc-cucumber.md).
 SAML parity subsequently passed 44/44 across both runners and browsers; the full protocol suite passed 102/102 and the combined native authentication inventory passed 130/130. See [completion 40](completion/40-saml-cucumber.md).
 Kerberos parity subsequently passed 20/20 across both runners and browsers; the full protocol suite passed 112/112 and the combined native authentication inventory passed 140/140. All five methods now have both-runner evidence. See [completion 41](completion/41-kerberos-cucumber.md).
+Scoped SAML role mapping subsequently passed: exact reviewer value, absent/unrecognized attributes, and role withdrawal in a later signed assertion. The SAML suite passed 60/60 and the full native authentication inventory passed 156/156; lesson tokens still fail at all three business APIs. [Completion 42](completion/42-saml-role-mapping.md) records the scope and evidence.
 Additional work remains for
-passkey physical-device checks, broader session/refresh negatives, SAML role mapping and cancellation-cleanup CI probes.
+passkey physical-device checks, broader session/refresh negatives, existing-token revocation and cancellation-cleanup CI probes.
 See [the implementation TODO list](TODO.md) for remaining acceptance requirements.
