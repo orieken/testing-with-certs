@@ -213,3 +213,5 @@ Scoped SAML role mapping subsequently passed: exact reviewer value, absent/unrec
 Additional work remains for
 passkey physical-device checks, broader session/refresh negatives, existing-token revocation and cancellation-cleanup CI probes.
 See [the implementation TODO list](TODO.md) for remaining acceptance requirements.
+
+Password/TOTP session and refresh acceptance subsequently passed 48/48 baseline/lifecycle executions locally and natively. The browser clears sign-in at access-token expiry and requires both factors again; private protocol checks cover successful refresh, logout invalidation, client binding, and actual session expiry. Only disposable lifecycle fixtures shorten this client’s lifetimes, then verify restoration. No automatic browser refresh feature was added. [Completion 43](completion/43-password-otp-session-refresh.md) records independently checked reports, cleanup, and the successful full-workflow regression retry.

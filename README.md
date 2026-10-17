@@ -53,3 +53,5 @@ client certificate **and** the account password, collected directly by Keycloak.
 36-check Chrome/Edge × Playwright/Cucumber workflow, temporary credential cleanup
 and opt-in local video recording. [Completion 15](docs/completion/15-certificate-password-view.md)
 records local evidence and the remaining manual/native Linux dependencies.
+
+Password/TOTP baseline and session/refresh acceptance passed 48/48 locally and natively across Chrome/Edge and Playwright/Cucumber. See [completion 43](docs/completion/43-password-otp-session-refresh.md) and the [authentication matrix](docs/teaching-coverage.md#authentication-protocol-matrix) for evidence, the successful workflow retry, and remaining scope.
