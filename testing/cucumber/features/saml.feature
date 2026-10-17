@@ -17,3 +17,7 @@ Feature: Controlled SAML federation and signed assertion boundaries
       | saml:signed-wrong-audience             |
       | saml:signed-wrong-recipient            |
       | saml:signed-expired                    |
+      | saml:role-mapped                       |
+      | saml:role-absent                       |
+      | saml:role-unrecognized                 |
+      | saml:role-withdrawn-on-login            |

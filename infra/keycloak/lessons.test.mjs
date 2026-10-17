@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { ensureLessons, lessonSpecs } from './lessons.mjs';
+import { ensureLessons, ensureClient, lessonSpecs } from './lessons.mjs';
 
 function fixture() {
   const state = { realm: {}, flows: [], executions: new Map(), clients: [], writes: 0, registration: false };
@@ -33,7 +33,8 @@ function fixture() {
     const client = /^\/clients\/([^/]+)(.*)$/.exec(path);
     if (client) {
       const value = state.clients.find(entry => entry.id === client[1]);
-      if (!client[2]) return copy(value);
+      if (!client[2]) { if (method === 'PUT') Object.assign(value, body); return copy(value); }
+      if (client[2] === '/protocol-mappers/models' && method === 'POST') { value.protocolMappers.push(copy(body)); return; }
       if (client[2] === '/default-client-scopes') return [{ name: 'basic' }, { name: 'profile' }];
       if (client[2] === '/optional-client-scopes') return [];
     }
@@ -71,7 +72,7 @@ test('a cookie alternative or changed lesson audience fails closed', async () =>
   await assert.rejects(ensureLessons(admin), /flow drift/);
   state.executions.get('passkeys-browser').pop();
   state.clients[0].protocolMappers[0].config['included.custom.audience'] = 'catalog-api';
-  await assert.rejects(ensureLessons(admin), /audience drift/);
+  await assert.rejects(ensureLessons(admin), /mapper drift/);
 });
 
 test('every lesson callback is exact, routed, and has no business audience', () => {
@@ -87,6 +88,24 @@ test('every lesson callback is exact, routed, and has no business audience', () 
     assert.equal(client.directAccessGrantsEnabled, false);
     assert.deepEqual(client.defaultClientScopes, ['basic', 'profile']);
     assert.deepEqual(client.optionalClientScopes, []);
-    assert(client.protocolMappers.every(value => value.config['included.custom.audience'].endsWith('-lesson')));
+    const audiences = client.protocolMappers.filter(value => value.protocolMapper === 'oidc-audience-mapper');
+    assert.equal(audiences.length, 1);
+    assert(audiences[0].config['included.custom.audience'].endsWith('-lesson'));
+    if (client.clientId === 'saml-spa') {
+      assert.equal(client.fullScopeAllowed, false);
+      assert.equal(client.protocolMappers[1].config['usermodel.clientRoleMapping.clientId'], 'saml-spa');
+      assert.equal(client.protocolMappers[1].config['claim.name'], 'lesson_roles');
+    } else assert.equal(client.protocolMappers.length, 1);
   }
+});
+
+test('SAML client migration tightens scope and adds only the explicit lesson role claim idempotently', async () => {
+  const {state, admin} = fixture();
+  const spec = lessonSpecs.clients.find(value => value.clientId === 'saml-spa');
+  state.clients.push({ ...structuredClone(spec), id: 'saml-spa', fullScopeAllowed: true,
+    protocolMappers: [structuredClone(spec.protocolMappers[0])], authenticationFlowBindingOverrides: { browser: 'flow' } });
+  await ensureClient(admin, spec, 'flow');
+  assert.equal(state.clients[0].fullScopeAllowed, false);
+  assert.equal(state.clients[0].protocolMappers.length, 2);
+  const writes = state.writes; await ensureClient(admin, spec, 'flow'); assert.equal(state.writes, writes);
 });

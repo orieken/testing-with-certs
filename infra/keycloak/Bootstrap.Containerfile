@@ -4,7 +4,7 @@ RUN mkdir -p /matrix-key /test-secrets /saml-fixture && chown 1000:1000 /matrix-
 COPY --chown=1000:1000 infra/keycloak/bootstrap.mjs /app/bootstrap.mjs
 COPY --chown=1000:1000 infra/keycloak/password-otp.mjs /app/password-otp.mjs
 COPY --chown=1000:1000 infra/keycloak/lessons.mjs infra/keycloak/lessons.json /app/
-COPY --chown=1000:1000 infra/keycloak/federation.mjs infra/keycloak/saml-fixture-key.mjs /app/
+COPY --chown=1000:1000 infra/keycloak/federation.mjs infra/keycloak/saml-fixture-key.mjs infra/keycloak/saml-roles.mjs /app/
 COPY --chown=1000:1000 infra/keycloak/kerberos.mjs /app/kerberos.mjs
 COPY --chown=1000:1000 infra/keycloak/passkey-user.mjs infra/keycloak/auth-lesson-fixture.mjs /app/
 COPY --chown=1000:1000 infra/keycloak/provider-user.mjs /app/provider-user.mjs

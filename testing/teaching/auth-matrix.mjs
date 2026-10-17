@@ -2,6 +2,7 @@
 export const passkeyCaseNames = ['enrollment', 'login-and-logout', 'missing-credential', 'invalid-signature', 'disabled-user', 'unconfigured-user', 'account-isolation'].map(value => `passkeys:${value}`);
 export const oidcCaseNames = ['login-audience-and-logout', 'disabled-provider-user', 'callback-state-rejection', 'cross-protocol-provider-rejection', 'broker-state-rejection'].map(value => `oidc:${value}`);
 export const samlCaseNames = [
+  ...['mapped', 'absent', 'unrecognized', 'withdrawn-on-login'].map(value => `saml:role-${value}`),
   ...['saml'].flatMap(method => ['login-audience-and-logout', 'disabled-provider-user',
       'callback-state-rejection', 'cross-protocol-provider-rejection', 'broker-state-rejection'].map(value => `${method}:${value}`)),
     'saml:modified-signed-response', 'saml:response-replay',

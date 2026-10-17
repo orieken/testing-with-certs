@@ -127,12 +127,52 @@ for (const variant of ['control', 'wrong-audience', 'wrong-recipient', 'expired'
   });
 }
 
+const roleClaims = token => JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString()).lesson_roles ?? [];
+for (const kind of ['mapped', 'absent', 'unrecognized']) {
+  defineCheck(`saml:role-${kind}`, async ({ page, playwright }) => {
+    const token = captureToken(page, 'lesson-saml');
+    await providerLogin(page, 'saml', `role-${kind}`);
+    await expect(page.getByTestId('lesson-user')).toHaveText(`saml-test-role-${kind}`);
+    const value = await token;
+    expect(roleClaims(value)).toEqual(kind === 'mapped' ? ['lesson-reviewer'] : []);
+    await checkLessonToken(playwright, value, 'saml');
+  });
+}
+defineCheck('saml:role-withdrawn-on-login', async ({ page, playwright, browser }) => {
+  const token = captureToken(page, 'lesson-saml');
+  await providerLogin(page, 'saml', 'role-withdrawn');
+  await expect(page.getByTestId('lesson-user')).toHaveText('saml-test-role-withdrawn');
+  expect(roleClaims(await token)).toEqual(['lesson-reviewer']);
+  const next = await browser.newContext();
+  try {
+    const second = await next.newPage();
+    const { resignSamlResponse } = await import('./saml-fixture.mjs');
+    const key = { privateKey: readFileSync('/saml-fixture/private.pem', 'utf8'), certificate: readFileSync('/saml-fixture/certificate.pem', 'utf8') };
+    let transformed = 0;
+    await second.route('**/realms/lesson-saml/broker/lesson-saml/endpoint*', async route => {
+      const body = new URLSearchParams(route.request().postData() ?? '');
+      if (body.has('SAMLResponse')) {
+        const xml = resignSamlResponse(Buffer.from(body.get('SAMLResponse'), 'base64').toString(), 'without-lesson-role', key);
+        body.set('SAMLResponse', Buffer.from(xml).toString('base64')); transformed++;
+        await route.continue({ postData: body.toString() });
+      } else await route.continue();
+    });
+    const updated = captureToken(second, 'lesson-saml');
+    await providerLogin(second, 'saml', 'role-withdrawn');
+    await expect(second.getByTestId('lesson-user')).toHaveText('saml-test-role-withdrawn');
+    expect(transformed).toBe(1);
+    const value = await updated;
+    expect(roleClaims(value)).toEqual([]);
+    await checkLessonToken(playwright, value, 'saml');
+  } finally { await next.close(); }
+});
+
 // Every invocation owns its browser context, assertions, and signing material.
 export async function checkSaml(browser, name, playwright) {
   if (!samlCaseNames.includes(name) || !checks.has(name)) throw new Error('Unknown SAML check');
   const context = await browser.newContext();
   try {
     const page = await context.newPage();
-    await checks.get(name)({ page, playwright });
+    await checks.get(name)({ page, playwright, browser });
   } finally { await context.close(); }
 }

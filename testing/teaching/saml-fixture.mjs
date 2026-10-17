@@ -14,7 +14,7 @@ const one = (node, namespace, name) => {
 
 // Valid fixtures are captured only from this disposable IdP. Do not use as a general SAML validator.
 export function resignSamlResponse(xml, variant, { privateKey, certificate }) {
-  if (!['control', 'wrong-audience', 'wrong-recipient', 'expired'].includes(variant)) throw new Error('Unknown SAML fixture variant');
+  if (!['control', 'wrong-audience', 'wrong-recipient', 'expired', 'without-lesson-role'].includes(variant)) throw new Error('Unknown SAML fixture variant');
   if (typeof xml !== 'string' || xml.length > 100_000 || /<!DOCTYPE|<!ENTITY/i.test(xml)) throw new Error('Invalid SAML fixture input');
   const document = new DOMParser().parseFromString(xml, 'application/xml');
   const response = one(document, protocol, 'Response');
@@ -22,6 +22,11 @@ export function resignSamlResponse(xml, variant, { privateKey, certificate }) {
   const audience = one(assertion, saml, 'Audience');
   const confirmation = one(assertion, saml, 'SubjectConfirmationData');
   const conditions = one(assertion, saml, 'Conditions');
+  if (variant === 'without-lesson-role') {
+    const attributes = Array.from(assertion.getElementsByTagNameNS(saml, 'Attribute')).filter(value => value.getAttribute('Name') === 'lesson-role');
+    if (attributes.length !== 1) throw new Error('Expected exactly one lesson role attribute');
+    attributes[0].parentNode.removeChild(attributes[0]);
+  }
   if (variant === 'wrong-audience') audience.textContent = 'https://wrong-audience.lesson.invalid/';
   if (variant === 'wrong-recipient') confirmation.setAttribute('Recipient', 'https://wrong-recipient.lesson.invalid/');
   if (variant === 'expired') {

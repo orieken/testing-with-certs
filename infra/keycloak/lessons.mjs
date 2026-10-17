@@ -54,7 +54,19 @@ export async function ensureClient(admin, spec, flowId) {
     await admin('POST', '/clients', { ...spec, authenticationFlowBindingOverrides: { browser: flowId } }, 201);
     return;
   }
-  const current = await admin('GET', `/clients/${listing[0].id}`);
+  let current = await admin('GET', `/clients/${listing[0].id}`);
+  if (spec.clientId === 'saml-spa') {
+    if (current.fullScopeAllowed === true) {
+      await admin('PUT', `/clients/${current.id}`, { ...current, fullScopeAllowed: false }, 204);
+      current.fullScopeAllowed = false;
+    }
+    const roleMapper = spec.protocolMappers.find(value => value.name === 'saml-lesson-roles');
+    if (current.protocolMappers?.length === 1 && current.protocolMappers[0].protocolMapper === 'oidc-audience-mapper') {
+      await admin('POST', `/clients/${current.id}/protocol-mappers/models`, roleMapper, 201);
+      current = await admin('GET', `/clients/${current.id}`);
+    }
+    assert(current.fullScopeAllowed === false, 'SAML role scope must be explicit');
+  }
   const fields = ['publicClient', 'standardFlowEnabled', 'directAccessGrantsEnabled', 'implicitFlowEnabled',
     'serviceAccountsEnabled', 'redirectUris', 'webOrigins'];
   assert(fields.every(key => same(current[key], spec[key])) &&
@@ -62,12 +74,12 @@ export async function ensureClient(admin, spec, flowId) {
     Object.entries(spec.attributes).every(([key, value]) => current.attributes?.[key] === value),
   `Lesson client drift: ${spec.clientId}`);
   const mappers = current.protocolMappers ?? [];
-  const expectedMapper = spec.protocolMappers[0].config;
-  const mapperConfig = mappers[0]?.config ?? {};
-  assert(mappers.length === 1 && mappers[0].protocolMapper === 'oidc-audience-mapper' &&
-    Object.entries(expectedMapper).every(([key, value]) => mapperConfig[key] === value) &&
-    Object.entries(mapperConfig).every(([key, value]) => key in expectedMapper || (key === 'userinfo.token.claim' && value === 'false')),
-  `Lesson audience drift: ${spec.clientId}`);
+  assert(mappers.length === spec.protocolMappers.length && spec.protocolMappers.every(expected => {
+    const found = mappers.filter(value => value.name === expected.name);
+    return found.length === 1 && found[0].protocolMapper === expected.protocolMapper &&
+      Object.entries(expected.config).every(([key, value]) => found[0].config?.[key] === value) &&
+      Object.entries(found[0].config ?? {}).every(([key, value]) => key in expected.config || (key === 'userinfo.token.claim' && value === 'false'));
+  }), `Lesson mapper drift: ${spec.clientId}`);
   let defaults = await admin('GET', `/clients/${current.id}/default-client-scopes`);
   if (defaults.length === 1 && defaults[0].name === 'profile') {
     const scopes = await admin('GET', '/client-scopes');

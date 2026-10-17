@@ -13,6 +13,8 @@ const saml = await lessonAdmin({ origin: 'https://shop.magic.test:9643', realm: 
 const admins = { local, provider, oidc, saml };
 const statePath = '/test-secrets/auth-users.json';
 const specs = [
+  ...['mapped', 'absent', 'unrecognized', 'withdrawn'].map(kind => ({ username: `saml-test-role-${kind}`, target: 'provider',
+    attributes: kind === 'absent' ? {} : { lesson_role: [kind === 'unrecognized' ? 'administrator' : 'reviewer'] } })),
   ...['enrollment', 'login', 'missing', 'signature', 'isolation', 'second'].map(name => ({ username: `passkeys-test-${name}`, target: 'local', requiredActions: ['webauthn-register-passwordless'] })),
   { username: 'passkeys-test-other', target: 'local', requiredActions: ['webauthn-register-passwordless'] },
   { username: 'passkeys-test-disabled', target: 'local', enabled: false },
@@ -35,7 +37,7 @@ if (action.startsWith('kerberos-')) {
   writeFileSync(statePath, JSON.stringify(entries), { mode: 0o600, flag: 'wx' });
   for (const entry of entries) await admins[entry.target]('POST', '/users', {
     username: entry.username, email: `${entry.username}@lesson.invalid`, enabled: entry.enabled !== false,
-    requiredActions: entry.requiredActions ?? [],
+    requiredActions: entry.requiredActions ?? [], attributes: entry.attributes ?? {},
     credentials: [{ type: 'password', temporary: false, value: entry.password }],
   }, 201);
   console.log('Dedicated passkey and provider fixture accounts created; values withheld.');
@@ -57,8 +59,9 @@ if (action.startsWith('kerberos-')) {
 } else {
   if (existsSync(statePath)) throw new Error('Fixture secret file remains');
   for (const spec of specs) if ((await find(admins[spec.target], spec.username)).length) throw new Error('Fixture account remains');
-  for (const [method, admin] of [['oidc', oidc], ['saml', saml]]) {
-    if ((await find(admin, `${method}-test-user`)).length) throw new Error('Broker fixture user remains');
+  for (const spec of specs.filter(value => value.target === 'provider')) {
+    const broker = spec.username.startsWith('oidc-') ? oidc : saml;
+    if ((await find(broker, spec.username)).length) throw new Error('Broker fixture user remains');
   }
   console.log('Authentication lesson fixture cleanup verified.');
 }

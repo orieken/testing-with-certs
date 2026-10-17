@@ -31,3 +31,15 @@ test('fixture inputs reject unsupported variants, external entities and ambiguou
   assert.throws(() => resignSamlResponse(`<!DOCTYPE fixture>${xml}`, 'control', key));
   assert.throws(() => resignSamlResponse(xml.replace('</p:Response>', '<a:Assertion xmlns:a="urn:oasis:names:tc:SAML:2.0:assertion"/></p:Response>'), 'control', key));
 });
+
+test('role-withdrawal fixture removes only the role attribute and retains valid signatures', () => {
+  const input = xml.replace('</a:Assertion>', '<a:AttributeStatement><a:Attribute Name="lesson-role"><a:AttributeValue>reviewer</a:AttributeValue></a:Attribute><a:Attribute Name="unrelated"><a:AttributeValue>retained</a:AttributeValue></a:Attribute></a:AttributeStatement></a:Assertion>');
+  const output = resignSamlResponse(input, 'without-lesson-role', key);
+  verifyFixtureSignatures(output, key.certificate);
+  const doc = new DOMParser().parseFromString(output, 'application/xml');
+  const attributes = Array.from(doc.getElementsByTagNameNS('urn:oasis:names:tc:SAML:2.0:assertion', 'Attribute'));
+  assert.deepEqual(attributes.map(value => value.getAttribute('Name')), ['unrelated']);
+  assert.equal(element(doc, 'NameID').textContent, 'fixture-user');
+  assert.equal(doc.documentElement.getAttribute('InResponseTo'), 'request');
+  assert.throws(() => resignSamlResponse(xml, 'without-lesson-role', key));
+});
