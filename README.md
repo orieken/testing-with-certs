@@ -54,4 +54,4 @@ client certificate **and** the account password, collected directly by Keycloak.
 and opt-in local video recording. [Completion 15](docs/completion/15-certificate-password-view.md)
 records local evidence and the remaining manual/native Linux dependencies.
 
-Password/TOTP baseline and session/refresh acceptance passed 48/48 locally and natively across Chrome/Edge and Playwright/Cucumber. See [completion 43](docs/completion/43-password-otp-session-refresh.md) and the [authentication matrix](docs/teaching-coverage.md#authentication-protocol-matrix) for evidence, the successful workflow retry, and remaining scope.
+Password/TOTP and passkey baseline/session/refresh acceptance each passed 48/48 locally and natively across Chrome/Edge and Playwright/Cucumber. The full native authentication matrix passed 196/196, with all 15 workflow jobs green on the first attempt. See [completion 44](docs/completion/44-passkey-session-refresh.md) and the [authentication matrix](docs/teaching-coverage.md#authentication-protocol-matrix) for evidence and remaining scope.
