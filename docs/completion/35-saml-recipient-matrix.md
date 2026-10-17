@@ -1,5 +1,7 @@
 # SAML recipient fix and expanded authentication matrix — 2026-10-16
 
+Subsequent [completion 36](36-native-expanded-authentication.md) records the expanded 70-case native pass, including the recipient guard, wrong-service ticket case, and exact-count gates. The local evidence and limitations below remain historical.
+
 The live signed fixtures confirmed a missing check in the pinned Keycloak 26.4.0 lesson broker: a correctly signed assertion with an incorrect `SubjectConfirmationData.Recipient` completed login. The unchanged re-signed control succeeded, while wrong-audience and expired variants were rejected. This was a measured recipient-validation gap, not a signature-fixture failure.
 
 ## Fix and regression evidence

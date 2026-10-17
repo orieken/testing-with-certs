@@ -1,5 +1,7 @@
 # Kerberos wrong-service ticket rejection — 2026-10-16
 
+Subsequent [completion 36](36-native-expanded-authentication.md) records the expanded 70-case native pass, including the recipient guard, wrong-service ticket case, and exact-count gates. The local evidence and limitations below remain historical.
+
 The expanded Kerberos matrix passed 10/10 cases in real Chrome and Edge on a fresh local Apple Silicon lab with Linux amd64 browser emulation. Each browser passed valid, missing, expired, wrong-service, and disabled-user cases. This is new local evidence; native CI for the added wrong-service case remains pending. The original eight native cases retain their evidence in completion 31.
 
 ## What the negative case proves
