@@ -49,7 +49,7 @@ LAB_PROJECT=magic-shop-auth-NAME sh testing/run-auth-lessons.sh
 LAB_PROJECT=magic-shop-otp-NAME sh testing/run-password-otp.sh
 ```
 
-Use a fresh disposable project name for each run. The current inventory requires 56 passkey/OIDC/SAML/Kerberos Playwright cases and 28 password/TOTP cases across Chrome/Edge and Playwright/Cucumber. Both commands check exact case completeness before credential scans. Password/TOTP Cucumber parity passed locally and natively in [completion 37](completion/37-password-otp-cucumber.md); the other new methods still have no Cucumber evidence. UBI9 parity is not established by these Bookworm lesson runners. The [authentication protocol matrix](teaching-coverage.md#authentication-protocol-matrix) records local versus native passes and remaining acceptance; cached-image versions are identified in each completion note.
+Use a fresh disposable project name for each run. The current inventory requires 70 protocol executions (56 Playwright passkey/OIDC/SAML/Kerberos and 14 Cucumber passkey) and 28 password/TOTP executions across Chrome/Edge and Playwright/Cucumber. Both commands check exact case completeness before credential scans. Password/TOTP Cucumber parity passed locally and natively in [completion 37](completion/37-password-otp-cucumber.md); passkey parity also passed in [completion 38](completion/38-passkey-cucumber.md). OIDC, SAML, and Kerberos still have no Cucumber evidence. UBI9 parity is not established by these Bookworm lesson runners. The [authentication protocol matrix](teaching-coverage.md#authentication-protocol-matrix) records local versus native passes and remaining acceptance; cached-image versions are identified in each completion note.
 
 ## Reports and recordings
 

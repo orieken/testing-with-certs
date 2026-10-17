@@ -205,6 +205,7 @@ The expanded Kerberos matrix, including actual wrong-service-principal ticket re
 The expanded full suite subsequently passed 56/56 locally, including signed SAML audience/recipient/expiry checks. A lesson-only recipient mapper was necessary because pinned upstream accepted the wrong-recipient fixture; see [completion 35](completion/35-saml-recipient-matrix.md).
 The full 56-case suite and separate 14-case TOTP suite subsequently passed in native Ubuntu CI with exact-count gates and scanned uploads; see [completion 36](completion/36-native-expanded-authentication.md).
 Password/TOTP subsequently passed 28/28 cases across Chrome/Edge and Playwright/Cucumber, locally and natively. The complete native authentication inventory passed 84/84; see [completion 37](completion/37-password-otp-cucumber.md).
+Passkey parity subsequently passed 28/28 across both runners and browsers; the full protocol suite passed 70/70 and the combined native authentication inventory passed 98/98. See [completion 38](completion/38-passkey-cucumber.md).
 Additional work remains for
-passkey physical-device checks, broader session/refresh negatives, Cucumber parity for passkeys/OIDC/SAML/Kerberos, and cancellation-cleanup CI probes.
+passkey physical-device checks, broader session/refresh negatives, Cucumber parity for OIDC/SAML/Kerberos, and cancellation-cleanup CI probes.
 See [the implementation TODO list](TODO.md) for remaining acceptance requirements.
