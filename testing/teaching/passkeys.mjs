@@ -83,9 +83,13 @@ export async function checkPasskey(browser, name, playwright) {
         });
         await identify('passkeys-test-signature');
         await page.locator('#authenticateWebAuthnButton').click();
-        try { await rejected(); }
+        try {
+          await expect.poll(() => signatureChanged, { timeout: 30_000 }).toBe(true);
+          await rejected();
+        }
         catch (error) {
           console.log(`Passkey rejection state: ${JSON.stringify({ signatureChanged,
+            focused: await page.evaluate(() => document.hasFocus()),
             errorMessage: await page.locator('#kc-error-message').isVisible(),
             feedback: await page.locator('#kc-feedback-text').isVisible(),
             credentialError: await page.locator('#kc-error-credential-form').isVisible(),
