@@ -13,7 +13,12 @@ async function fixture(run) {
   async function admin(method, endpoint, body) {
     if (endpoint === '/clients?clientId=password-otp-spa&max=2') return [{ id: state.id }];
     assert.equal(endpoint, '/clients/otp-client');
-    if (method === 'PUT') { if (fail) throw new Error('Intentional mutation failure'); Object.assign(state, structuredClone(body)); }
+    if (method === 'PUT') {
+      if (fail) throw new Error('Intentional mutation failure');
+      const attributes = { ...state.attributes };
+      for (const [key,value] of Object.entries(body.attributes)) { if (value === null) delete attributes[key]; else attributes[key] = value; }
+      Object.assign(state, structuredClone(body), { attributes });
+    }
     return structuredClone(state);
   }
   try { await run({ admin, path, state, original, fail: value => { fail = value; } }); }

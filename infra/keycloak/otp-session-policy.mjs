@@ -22,7 +22,8 @@ export async function finishOtpSessionPolicy(admin, path) {
   const attributes = { ...current.attributes };
   for (const [key, value] of Object.entries(policy)) {
     if (attributes[key] !== undefined && attributes[key] !== value) throw new Error('OTP session fixture policy drift');
-    delete attributes[key];
+    // Keycloak merges client attributes; null explicitly removes an owned override.
+    attributes[key] = null;
   }
   await admin('PUT', `/clients/${current.id}`, { ...current, attributes }, 204);
   await verifyOtpSessionPolicy(admin);
