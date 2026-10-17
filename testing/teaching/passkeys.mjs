@@ -1,17 +1,26 @@
 import { expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { startLesson, captureToken, checkLessonToken, virtualAuthenticator, lessonOrigin } from './auth-lessons.mjs';
-import { passkeyCaseNames } from './auth-matrix.mjs';
+import { passkeyCaseNames, passkeySessionCaseNames } from './auth-matrix.mjs';
 
 // Virtual credentials and browser state belong to one check and never enter reports.
 export async function checkPasskey(browser, name, playwright) {
-  if (!passkeyCaseNames.includes(name)) throw new Error('Unknown passkey check');
+  if (![...passkeyCaseNames, ...passkeySessionCaseNames].includes(name)) throw new Error('Unknown passkey check');
+  if (passkeySessionCaseNames.includes(name) !== (process.env.LAB_AUTH_SUITE === 'passkeys-lifecycle')) throw new Error('Wrong passkey fixture phase');
+  const tokenEndpoint = 'https://auth.magic.test:9443/realms/magic-shop/protocol/openid-connect/token';
+  let browserRefreshes = 0;
+  let assertions = 0;
   const users = JSON.parse(readFileSync('/test-secrets/auth-users.json', 'utf8'));
   let context;
   let page;
   async function fresh(credentials = []) {
     await context?.close();
     context = await browser.newContext(); page = await context.newPage();
+    page.on('request', request => {
+      const body = new URLSearchParams(request.postData() ?? '');
+      if (request.url() === tokenEndpoint && body.get('grant_type') === 'refresh_token') browserRefreshes++;
+      if (request.url().includes('/login-actions/authenticate?') && body.has('signature')) assertions++;
+    });
     page.on('dialog', dialog => dialog.accept('Lesson test passkey'));
     return virtualAuthenticator(context, page, credentials);
   }
@@ -41,8 +50,96 @@ export async function checkPasskey(browser, name, playwright) {
     await expect(page.locator('#kc-error-message:visible, #kc-feedback-text:visible, #kc-error-credential-form:visible').first()).toBeVisible({ timeout: 30_000 });
     await expect(page.getByTestId('lesson-user')).toHaveCount(0);
   }
+  const claims = token => JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
+  async function login(username) {
+    const response = page.waitForResponse(value => value.url() === tokenEndpoint && value.request().method() === 'POST' && value.status() === 200);
+    void response.catch(() => {});
+    const previousAssertions = assertions;
+    await identify(username);
+    await expect(page.locator('#password')).toHaveCount(0);
+    await page.locator('#authenticateWebAuthnButton').click();
+    await expect(page.getByTestId('lesson-user')).toHaveText(username);
+    expect(assertions > previousAssertions).toBe(true);
+    const tokens = await (await response).json();
+    expect(typeof tokens.access_token).toBe('string');
+    expect(typeof tokens.refresh_token).toBe('string');
+    expect(tokens.expires_in).toBe(20);
+    expect(tokens.refresh_expires_in > 0 && tokens.refresh_expires_in <= 45).toBe(true);
+    await checkLessonToken(playwright, tokens.access_token, 'passkeys');
+    return tokens;
+  }
+  async function session(username) {
+    const credentials = await enroll(username);
+    await fresh(credentials);
+    return login(username);
+  }
+  const refresh = (tokens, clientId = 'passkeys-spa') => context.request.post(tokenEndpoint, {
+    form: { grant_type: 'refresh_token', client_id: clientId, refresh_token: tokens.refresh_token },
+  });
+  async function refreshed(tokens, username) {
+    const response = await refresh(tokens);
+    expect(response.status()).toBe(200);
+    const next = await response.json();
+    expect(typeof next.access_token).toBe('string');
+    expect(next.access_token !== tokens.access_token).toBe(true);
+    expect(claims(next.access_token).sub === claims(tokens.access_token).sub).toBe(true);
+    expect(claims(next.access_token).preferred_username).toBe(username);
+    await checkLessonToken(playwright, next.access_token, 'passkeys');
+  }
+  async function rejectedRefresh(tokens, clientId) {
+    const response = await refresh(tokens, clientId);
+    expect(response.status()).toBe(400);
+    expect((await response.json()).error).toBe('invalid_grant');
+  }
   try {
     switch (name) {
+      case 'passkeys:access-expiry-requires-passkey': {
+        const username = 'passkeys-test-expiry';
+        const tokens = await session(username);
+        const remaining = claims(tokens.access_token).exp * 1000 - Date.now();
+        expect(remaining > 5000).toBe(true);
+        await page.waitForTimeout(Math.max(0, remaining - 3000));
+        await expect(page.getByTestId('lesson-user')).toHaveText(username);
+        await expect(page.getByTestId('lesson-user')).toHaveCount(0, { timeout: 10_000 });
+        await expect(page.getByRole('button', { name: 'Sign in with a passkey', exact: true })).toBeVisible();
+        expect(browserRefreshes).toBe(0);
+        // Same browser and provider cookies: a new signed passkey assertion is mandatory.
+        await login(username);
+        break;
+      }
+      case 'passkeys:refresh-preserves-identity': {
+        const username = 'passkeys-test-refresh';
+        const tokens = await session(username);
+        await refreshed(tokens, username);
+        await expect(page.getByTestId('lesson-user')).toHaveText(username);
+        expect(browserRefreshes).toBe(0);
+        break;
+      }
+      case 'passkeys:logout-invalidates-refresh': {
+        const tokens = await session('passkeys-test-logout');
+        await page.getByRole('button', { name: 'Sign out of lesson' }).click();
+        await expect(page.getByRole('button', { name: 'Sign in with a passkey', exact: true })).toBeVisible();
+        await rejectedRefresh(tokens);
+        await page.reload(); await expect(page.getByTestId('lesson-user')).toHaveCount(0);
+        expect(browserRefreshes).toBe(0);
+        break;
+      }
+      case 'passkeys:refresh-client-binding': {
+        const username = 'passkeys-test-binding';
+        const tokens = await session(username);
+        await rejectedRefresh(tokens, 'password-otp-spa');
+        // Same-token successful control rules out expiry as the mismatch rejection cause.
+        await refreshed(tokens, username);
+        break;
+      }
+      case 'passkeys:session-expiry-rejects-refresh': {
+        const tokens = await session('passkeys-test-session-expiry');
+        await page.waitForTimeout(tokens.refresh_expires_in * 1000 + 1500);
+        await rejectedRefresh(tokens);
+        await expect(page.getByTestId('lesson-user')).toHaveCount(0);
+        expect(browserRefreshes).toBe(0);
+        break;
+      }
       case 'passkeys:enrollment': {
         await enroll('passkeys-test-enrollment', true);
         break;

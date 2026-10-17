@@ -1,5 +1,6 @@
 // One source for expected browser/report cases. Add new scenarios here with their tests.
 export const passkeyCaseNames = ['enrollment', 'login-and-logout', 'missing-credential', 'invalid-signature', 'disabled-user', 'unconfigured-user', 'account-isolation'].map(value => `passkeys:${value}`);
+export const passkeySessionCaseNames = ['access-expiry-requires-passkey', 'refresh-preserves-identity', 'logout-invalidates-refresh', 'refresh-client-binding', 'session-expiry-rejects-refresh'].map(value => `passkeys:${value}`);
 export const oidcCaseNames = ['login-audience-and-logout', 'disabled-provider-user', 'callback-state-rejection', 'cross-protocol-provider-rejection', 'broker-state-rejection'].map(value => `oidc:${value}`);
 export const samlCaseNames = [
   ...['mapped', 'absent', 'unrecognized', 'withdrawn-on-login'].map(value => `saml:role-${value}`),
@@ -16,6 +17,8 @@ export const authPhases = {
     ...samlCaseNames,
   ],
   'passkeys-cucumber': passkeyCaseNames,
+  'passkeys-lifecycle': passkeySessionCaseNames,
+  'passkeys-lifecycle-cucumber': passkeySessionCaseNames,
   'oidc-cucumber': oidcCaseNames,
   'saml-cucumber': samlCaseNames,
   kerberos: kerberosCaseNames.filter(name => name !== 'kerberos:disabled-user'),
