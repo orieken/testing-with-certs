@@ -443,7 +443,7 @@ jobs:
           docker compose -f infra/compose.yaml -f infra/otp.compose.yaml --profile '*' down --volumes --remove-orphans --timeout 10
 
   auth-lessons:
-    name: Passkeys in both runners, OIDC, SAML and Kerberos lessons
+    name: Passkeys and OIDC in both runners, SAML and Kerberos lessons
     runs-on: ubuntu-24.04
     timeout-minutes: 75
     env:

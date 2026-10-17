@@ -3,7 +3,8 @@ import { readFileSync } from 'node:fs';
 import { startLesson, captureToken, checkLessonToken, lessonOrigin } from '../teaching/auth-lessons.mjs';
 
 import { checkPasskey } from '../teaching/passkeys.mjs';
-import { passkeyCaseNames } from '../teaching/auth-matrix.mjs';
+import { checkOidc } from '../teaching/oidc.mjs';
+import { passkeyCaseNames, oidcCaseNames } from '../teaching/auth-matrix.mjs';
 
 const users = JSON.parse(readFileSync('/test-secrets/auth-users.json', 'utf8'));
 const passwordFor = name => users.find(value => value.username === name).password;
@@ -21,7 +22,11 @@ async function providerLogin(page, method, kind = 'user') {
   await page.locator('#kc-login').click();
 }
 
-for (const method of ['oidc', 'saml']) {
+for (const name of oidcCaseNames) {
+  test(name, async ({ browser, playwright }) => checkOidc(browser, name, playwright));
+}
+
+for (const method of ['saml']) {
   test(`${method}:login-audience-and-logout`, async ({ page, playwright }) => {
     const token = captureToken(page, `lesson-${method}`);
     await providerLogin(page, method);

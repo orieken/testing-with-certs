@@ -43,12 +43,14 @@ for browser in chrome msedge; do
   compose run --rm --no-deps auth-lesson-fixture finish
   compose run --rm --no-deps auth-lesson-fixture verify
   docker volume rm "${LAB_PROJECT}_auth-lesson-home" "${LAB_PROJECT}_auth-lesson-tmp" >/dev/null
-  compose run --rm --no-deps auth-lesson-fixture start
-  compose run --rm --no-deps -e "LAB_BROWSER=$browser" auth-lesson-tests \
-    sh -c 'cd /work/testing && ./node_modules/.bin/cucumber-js --import cucumber/passkeys.mjs cucumber/features/passkeys.feature --format ./reporting/passkeys-cucumber.mjs --order random'
-  compose run --rm --no-deps auth-lesson-fixture finish
-  compose run --rm --no-deps auth-lesson-fixture verify
-  docker volume rm "${LAB_PROJECT}_auth-lesson-home" "${LAB_PROJECT}_auth-lesson-tmp" >/dev/null
+  for method in passkeys oidc; do
+    compose run --rm --no-deps auth-lesson-fixture start
+    compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e "LAB_CUCUMBER_METHOD=$method" auth-lesson-tests \
+      sh -c 'cd /work/testing && ./node_modules/.bin/cucumber-js --import "cucumber/$LAB_CUCUMBER_METHOD.mjs" "cucumber/features/$LAB_CUCUMBER_METHOD.feature" --format "./reporting/$LAB_CUCUMBER_METHOD-cucumber.mjs" --order random'
+    compose run --rm --no-deps auth-lesson-fixture finish
+    compose run --rm --no-deps auth-lesson-fixture verify
+    docker volume rm "${LAB_PROJECT}_auth-lesson-home" "${LAB_PROJECT}_auth-lesson-tmp" >/dev/null
+  done
 done
 docker run --rm --platform linux/amd64 --network none --entrypoint node \
   -v "$LAB_AUTH_REPORT_DIR:/work/artifacts/auth-lessons:ro" magic-shop-runner:03 \

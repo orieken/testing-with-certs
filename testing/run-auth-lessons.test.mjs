@@ -15,6 +15,7 @@ function run(options = {}) {
 echo "$*" >> "$PROBE_ROOT/calls"
 case "$*" in
   *" ls -q "*|"ps -aq "*) if [ "\${PROBE_EXISTING:-0}" = 1 ]; then echo existing; fi;;
+  *"LAB_CUCUMBER_METHOD=oidc"*) exit "\${PROBE_OIDC_FAIL:-0}";;
   *"cucumber-js"*) exit "\${PROBE_CUCUMBER_FAIL:-0}";;
   *"playwright.auth-lessons.config.mjs"*) exit "\${PROBE_FAIL:-0}";;
 esac
@@ -46,14 +47,26 @@ test('both browsers execute passkey/federation and valid/disabled Kerberos phase
   assert.equal(result.status, 0);
   assert.equal((result.calls.match(/playwright.auth-lessons.config.mjs/g) ?? []).length, 6);
   assert.equal((result.calls.match(/auth-lesson-fixture kerberos-disable/g) ?? []).length, 2);
-  assert.equal((result.calls.match(/cucumber-js/g) ?? []).length, 2);
+  assert.equal((result.calls.match(/cucumber-js/g) ?? []).length, 4);
   assert.match(result.calls, /--order random/);
+  assert.equal((result.calls.match(/LAB_CUCUMBER_METHOD=oidc/g) ?? []).length, 2);
   assert.match(result.calls, /check-artifacts.mjs/);
 });
 
 test('Cucumber failure preserves exit status and still cleans its fixtures and project', () => {
   const result = run({ PROBE_CUCUMBER_FAIL: '17' });
   assert.equal(result.status, 17);
+  assert.match(result.calls, /auth-lesson-fixture finish/);
+  assert.match(result.calls, /auth-lesson-fixture verify/);
+  assert.match(result.calls, /--profile \* down --volumes --remove-orphans/);
+  assert.doesNotMatch(result.calls, /LAB_BROWSER=msedge/);
+});
+
+test('OIDC Cucumber failure cleans fixtures and prevents the next browser selection', () => {
+  const result = run({ PROBE_OIDC_FAIL: '19' });
+  assert.equal(result.status, 19);
+  assert.match(result.calls, /LAB_CUCUMBER_METHOD=passkeys/);
+  assert.match(result.calls, /LAB_CUCUMBER_METHOD=oidc/);
   assert.match(result.calls, /auth-lesson-fixture finish/);
   assert.match(result.calls, /auth-lesson-fixture verify/);
   assert.match(result.calls, /--profile \* down --volumes --remove-orphans/);
