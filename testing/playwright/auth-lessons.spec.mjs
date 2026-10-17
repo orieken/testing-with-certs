@@ -53,18 +53,21 @@ test.describe.serial('Passkeys', () => {
 
   test('passkeys:invalid-signature', async ({ page, context }) => {
     await virtualAuthenticator(context, page, passkeyCredentials);
+    let signatureChanged = false;
     await page.route('**/login-actions/authenticate?*', async route => {
       const body = new URLSearchParams(route.request().postData() ?? '');
       if (body.has('signature')) {
         const bytes = Buffer.from(body.get('signature'), 'base64url');
         bytes[bytes.length - 1] ^= 1;
         body.set('signature', bytes.toString('base64url'));
+        signatureChanged = true;
         await route.continue({ postData: body.toString() });
       } else await route.continue();
     });
     await passkeyName(page);
     await page.locator('#authenticateWebAuthnButton').click();
-    await expect(page.locator('#kc-error-message, #kc-feedback-text, #kc-error-credential-form').first()).toBeVisible();
+    await expect(page.locator('#kc-error-message, #kc-feedback-text, #kc-error-credential-form').first()).toBeVisible({ timeout: 30_000 });
+    expect(signatureChanged).toBe(true);
     await expect(page.getByTestId('lesson-user')).toHaveCount(0);
   });
 
