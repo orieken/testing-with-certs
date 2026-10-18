@@ -81,3 +81,6 @@ Certificate-shop Cucumber recording metadata was validated in all eight Debian/U
 
 
 [Completion 55](completion/55-passkey-safe-diagnostics.md) adds allowlisted passkey diagnostic forwarding and saved events in both runners. Two fresh local baseline rounds passed 56/56 browser/runner executions, including delayed-module enrollment and mandatory altered-signature rejection. These repetitions add 96 videos, bringing the gallery to 1,268; they add no unique auth cases and establish no new native CI acceptance. Current-source native diagnostic verification remains open.
+
+
+[Completion 56](completion/56-native-passkey-diagnostics.md) verifies source `600450a` in native run 39155716616: all 15 jobs passed in attempt 1, with 212/212 protocol and 48/48 OTP executions, plus the separate 36/36 certificate/password regression. All 48 passkey baseline/lifecycle executions and 128 saved diagnostic events were independently checked against native logs. Scanned recording bundles add 420 files; the gallery now has 1,688 videos across 182 selections. Historical failure-cause and virtual-authenticator scope limits remain explicit.

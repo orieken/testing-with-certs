@@ -15,3 +15,5 @@ The first disposable attempt, `magic-shop-auth-passkey-reliability-20261018`, st
 Ten reporting/diagnostic tests passed on the host and in the pinned runner's Node runtime. They cover secret-canary rejection, partial stdout lines, mismatched test attribution, invalid/oversized output, actual reporter forwarding, complete repeat selections, and unsafe saved diagnostic rejection. The two new test files are included in the native workspace build test list. Both round scans passed (133 entries each); the final accepted bundle and combined gallery were scanned again after indexing.
 
 The gallery imports only the accepted repeat root and now contains **134 selections, 1,268 videos**, and the existing six disabled case entries. Every video source link resolves to a real file. Historical unlinked clips and earlier failed/partial runs retain their original status and are not relabeled as accepted evidence.
+
+Follow-up: [completion 56](56-native-passkey-diagnostics.md) subsequently verifies the diagnostics in native CI at the same runtime source, closing that next TODO.
