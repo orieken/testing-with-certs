@@ -127,8 +127,19 @@ func saveMatrix(path string, m matrixManifest) error {
 			return err
 		}
 		row.AuthType = matrixAuthType(*row)
+		availableCount := len(videos)
+		found := map[string]bool{}
+		for _, v := range videos {
+			found[v.Path] = true
+		}
+		for _, v := range row.Videos {
+			if !found[v.Path] {
+				videos = append(videos, v)
+				found[v.Path] = true
+			}
+		}
 		row.Videos = videos
-		row.VideoCount = len(videos)
+		row.VideoCount = availableCount
 		relative, err := filepath.Rel(filepath.Dir(path), report)
 		if err != nil {
 			return err

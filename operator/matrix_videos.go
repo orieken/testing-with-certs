@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -27,7 +28,7 @@ type matrixGalleryRow struct {
 	AuthType, AuthLabel              string
 	Videos                           []matrixGalleryVideo
 }
-type matrixGalleryVideo struct{ Label, URL, Spec, Name, Status string }
+type matrixGalleryVideo struct{ Label, URL, Spec, Name, Status, Availability string }
 
 func localReportURL(base, target string) (string, error) {
 	relative, err := filepath.Rel(base, target)
@@ -106,6 +107,27 @@ func saveMatrixHTML(path string, m matrixManifest) error {
 		if row.Runner == "cucumber" {
 			fallback = cucumberSpec(report)
 		}
+		available := map[string]bool{}
+		for _, v := range videos {
+			available[v.Path] = true
+		}
+		for _, v := range row.Videos {
+			if !available[v.Path] {
+				clean := filepath.ToSlash(filepath.Clean(filepath.FromSlash(v.Path)))
+				if clean != v.Path || filepath.IsAbs(v.Path) || clean == ".." || strings.HasPrefix(clean, "../") {
+					return fmt.Errorf("invalid saved video path")
+				}
+				videos = append(videos, v)
+				available[v.Path] = false
+			}
+		}
+		for path := range cases {
+			if _, exists := available[path]; !exists {
+				videos = append(videos, matrixVideo{Path: path})
+				available[path] = false
+			}
+		}
+		sort.Slice(videos, func(i, j int) bool { return videos[i].Path < videos[j].Path })
 		for _, video := range videos {
 			link, err := localReportURL(filepath.Dir(path), filepath.Join(report, filepath.FromSlash(video.Path)))
 			if err != nil {
@@ -115,7 +137,12 @@ func saveMatrixHTML(path string, m matrixManifest) error {
 			if !ok {
 				metadata = videoCase{fallback, "Recording without scenario metadata", "unlinked"}
 			}
-			gallery.Videos = append(gallery.Videos, matrixGalleryVideo{Label: video.Path, URL: link, Spec: metadata.Spec, Name: metadata.Name, Status: metadata.Status})
+			availability := "available"
+			if !available[video.Path] {
+				link = ""
+				availability = "Missing or expired recording"
+			}
+			gallery.Videos = append(gallery.Videos, matrixGalleryVideo{Availability: availability, Label: video.Path, URL: link, Spec: metadata.Spec, Name: metadata.Name, Status: metadata.Status})
 		}
 		rows = append(rows, gallery)
 	}
@@ -136,7 +163,11 @@ func saveMatrixHTML(path string, m matrixManifest) error {
 	}{m, rows, func() int {
 		total := 0
 		for _, r := range rows {
-			total += len(r.Videos)
+			for _, v := range r.Videos {
+				if v.URL != "" {
+					total++
+				}
+			}
 		}
 		return total
 	}(), matrixAuthOptions(rows)})

@@ -45,7 +45,7 @@ func TestRecordedVideoCaseIndex(t *testing.T) {
 	if err != nil || cases["one.webm"].Name != "saml:refresh-preserves-role" {
 		t.Fatalf("wrong case metadata %v %v", cases, err)
 	}
-	if _, err := matrixVideoCases(root, nil); err == nil {
-		t.Fatal("accepted missing video")
+	if cases, err := matrixVideoCases(root, nil); err != nil || cases["one.webm"].Name != "saml:refresh-preserves-role" {
+		t.Fatal("missing video lost its saved case metadata")
 	}
 }

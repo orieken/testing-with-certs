@@ -70,13 +70,13 @@ func matrixVideoCases(root string, videos []matrixVideo) (map[string]videoCase, 
 		if json.Unmarshal(index, &recorded) != nil || recorded.Evidence != "verified-authentication-video-cases" {
 			return nil, fmt.Errorf("invalid recording index")
 		}
-		available := map[string]bool{}
-		for _, v := range videos {
-			available[v.Path] = true
-		}
 		for _, c := range recorded.Cases {
-			if !available[c.Path] {
-				return nil, fmt.Errorf("recording index file missing")
+			clean := filepath.ToSlash(filepath.Clean(filepath.FromSlash(c.Path)))
+			if c.Path == "" || clean != c.Path || filepath.IsAbs(c.Path) || clean == ".." || strings.HasPrefix(clean, "../") {
+				return nil, fmt.Errorf("invalid recording index path")
+			}
+			if _, exists := mapped[c.Path]; exists {
+				return nil, fmt.Errorf("duplicate recording index path")
 			}
 			mapped[c.Path] = videoCase{c.Spec, c.Name, videoResult(c.Status)}
 		}

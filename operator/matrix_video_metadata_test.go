@@ -70,3 +70,51 @@ func TestAmbiguousVideoCopiesStayUnlinked(t *testing.T) {
 		t.Fatal("lost explicit skipped result")
 	}
 }
+
+func TestMissingIndexedRecordingRetainsCase(t *testing.T) {
+	root := t.TempDir()
+	os.WriteFile(filepath.Join(root, "video-cases.json"), []byte(`{"evidence":"verified-authentication-video-cases","cases":[{"path":"videos/expired.webm","name":"Exact scenario","spec":"login.feature","status":"passed"}]}`), 0600)
+	cases, err := matrixVideoCases(root, nil)
+	if err != nil || cases["videos/expired.webm"].Name != "Exact scenario" {
+		t.Fatalf("lost missing case: %v %v", cases, err)
+	}
+	manifest := matrixManifest{Rows: []matrixRow{{Report: root, Runner: "cucumber", Status: "passed"}}}
+	if err := saveMatrixHTML(filepath.Join(root, "matrix.json"), manifest); err != nil {
+		t.Fatal(err)
+	}
+	html, _ := os.ReadFile(filepath.Join(root, "matrix.html"))
+	if !bytes.Contains(html, []byte("Missing or expired recording")) || !bytes.Contains(html, []byte("Exact scenario")) || bytes.Contains(html, []byte("<source src=")) {
+		t.Fatal("missing recording must retain identity without a broken player")
+	}
+	os.MkdirAll(filepath.Join(root, "videos"), 0700)
+	os.WriteFile(filepath.Join(root, "videos", "expired.webm"), []byte("restored"), 0600)
+	if err := saveMatrixHTML(filepath.Join(root, "matrix.json"), manifest); err != nil {
+		t.Fatal(err)
+	}
+	html, _ = os.ReadFile(filepath.Join(root, "matrix.html"))
+	if !bytes.Contains(html, []byte("<source src=")) || bytes.Contains(html, []byte("Missing or expired recording")) {
+		t.Fatal("restored recording must become playable")
+	}
+}
+
+func TestRecordingIndexRejectsEscapingPath(t *testing.T) {
+	root := t.TempDir()
+	os.WriteFile(filepath.Join(root, "video-cases.json"), []byte(`{"evidence":"verified-authentication-video-cases","cases":[{"path":"../outside.webm"}]}`), 0600)
+	if _, err := matrixVideoCases(root, nil); err == nil {
+		t.Fatal("accepted escaping path")
+	}
+}
+
+func TestRebuildKeepsMissingManifestPaths(t *testing.T) {
+	root := t.TempDir()
+	report := filepath.Join(root, "gone")
+	path := filepath.Join(root, "matrix.json")
+	m := matrixManifest{Rows: []matrixRow{{Report: report, Videos: []matrixVideo{{Path: "videos/saved.webm"}}, Status: "passed"}}}
+	if err := saveMatrix(path, m); err != nil {
+		t.Fatal(err)
+	}
+	data, _ := os.ReadFile(path)
+	if !bytes.Contains(data, []byte("videos/saved.webm")) || !bytes.Contains(data, []byte(`"video_count": 0`)) {
+		t.Fatalf("lost missing path or incorrect available count: %s", data)
+	}
+}

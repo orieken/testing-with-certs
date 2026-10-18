@@ -44,7 +44,7 @@ func TestMatrixVideoGalleryAndRelocation(t *testing.T) {
 	}
 	page, _ := os.ReadFile(filepath.Join(dir, "matrix.html"))
 	s := string(page)
-	for _, want := range []string{"4 available videos", "popup.MP4", "a%20%23%20&amp;%20name.webm", "Report folder missing or expired", "preload=\"none\"", "download>Download", "&lt;script&gt;"} {
+	for _, want := range []string{"4 recording entries", "popup.MP4", "a%20%23%20&amp;%20name.webm", "Report folder missing or expired", "preload=\"none\"", "download>Download", "&lt;script&gt;"} {
 		if !strings.Contains(s, want) {
 			t.Fatalf("missing %q in gallery", want)
 		}
