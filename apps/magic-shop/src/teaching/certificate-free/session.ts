@@ -58,7 +58,8 @@ export async function signIn(): Promise<void> {
   busy.value = true;
   error.value = null;
   try {
-    await keycloak.login({ redirectUri: `${lessonOrigin}${lessonPath}/callback`, scope: 'openid profile', prompt: 'login',
+    await keycloak.login({ redirectUri: `${lessonOrigin}${lessonPath}/callback`, scope: 'openid profile',
+      ...(activeLesson?.id.startsWith('authentik-') ? {} : { prompt: 'login' as const }),
       ...(activeLesson?.id === 'passkeys-enroll' ? { action: 'webauthn-register-passwordless' } : {}) });
   } catch {
     busy.value = false;

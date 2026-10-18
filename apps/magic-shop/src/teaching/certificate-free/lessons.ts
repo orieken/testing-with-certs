@@ -14,13 +14,15 @@ export const lessons = [
   { id: 'saml', title: 'SAML single sign-on',
     description: 'Continue to the lesson SAML provider. Keycloak checks its signed response before returning you here.',
     button: 'Sign in with SAML' },
+  { id: 'authentik-oidc', title: 'authentik OpenID Connect', description: 'Sign in through the dedicated authentik provider.', button: 'Sign in with authentik OIDC' },
+  { id: 'authentik-saml', title: 'authentik SAML', description: 'Use the authentik SAML provider for this lesson.', button: 'Sign in with authentik SAML' },
   { id: 'kerberos', title: 'Kerberos integrated login',
     description: 'Use the Kerberos ticket in your lab browser session. This lesson requires the Kerberos runner and has no password fallback.',
     button: 'Sign in with Kerberos' },
 ].map(value => ({ ...value, path: value.path ?? `/teaching/${value.id}`, clientId: `${value.id}-spa`,
     audience: value.id === 'password-otp' ? 'password-otp-lesson' : `${value.id}-lesson`,
-    realm: ['oidc', 'saml', 'kerberos'].includes(value.id) ? `lesson-${value.id}` : 'magic-shop',
-    authUrl: ['oidc', 'saml'].includes(value.id) ? 'https://shop.magic.test:9643' : 'https://auth.magic.test:9443' }));
+    realm: ['oidc', 'saml', 'kerberos', 'authentik-oidc', 'authentik-saml'].includes(value.id) ? `lesson-${value.id}` : 'magic-shop',
+    authUrl: ['oidc', 'saml', 'authentik-oidc', 'authentik-saml'].includes(value.id) ? 'https://shop.magic.test:9643' : 'https://auth.magic.test:9443' }));
 
 export function lessonForPath(path: string) {
   return lessons.find(value => path === value.path || path === `${value.path}/callback`);

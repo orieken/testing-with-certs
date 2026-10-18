@@ -1,3 +1,4 @@
+import { authentikCaseNames } from './provider-matrix.mjs';
 import { mkdirSync, renameSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash, randomUUID } from 'node:crypto';
 import { join, relative } from 'node:path';
@@ -5,7 +6,7 @@ import { authPhases, otpCaseNames, otpSessionCaseNames } from './auth-matrix.mjs
 
 const certificateCases = ['success', 'wrong-password', 'missing', 'wrong', 'disabled', 'unknown', 'unconfigured', 'cookies', 'shop'];
 export function recordingSelection(name, method) {
-  const allowed = method === 'password-totp' ? [...otpCaseNames, ...otpSessionCaseNames] :
+  const allowed = method.startsWith('authentik-') ? authentikCaseNames.filter(name => name.startsWith(`${method}:`)) : method === 'password-totp' ? [...otpCaseNames, ...otpSessionCaseNames] :
     method === 'certificate-password' ? certificateCases : Object.values(authPhases).flat().filter(value => value.startsWith(`${method}:`));
   if (!allowed.includes(name)) throw new Error('Unknown recording case');
   const browser = process.env.LAB_BROWSER;
@@ -73,7 +74,7 @@ export async function withAuthRecording(browser, playwright, name, method, run) 
     if (!videos.length) throw new Error('Authentication recording missing');
     writeFileSync(join(directory, 'recording.json'), JSON.stringify({ evidence: 'live-authentication-recording',
       auth_type: method, name, browser: selection.browser, runner: selection.runner, phase: selection.phase, status,
-      spec: `teaching/${method === 'password-totp' ? 'password-otp' : method}.mjs`, videos: videos.map(value => value.split('\\').join('/')),
+      spec: method.startsWith('authentik-') ? 'teaching/authentik.mjs' : `teaching/${method === 'password-totp' ? 'password-otp' : method}.mjs`, videos: videos.map(value => value.split('\\').join('/')),
       privacy: 'provider-document-hidden-before-paint',
     }, null, 2));
   }
