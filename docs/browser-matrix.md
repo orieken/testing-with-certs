@@ -70,11 +70,24 @@ Matrix results live under:
 ```text
 artifacts/matrix/<timestamp>-os-<selection>-browser-<selection>-.../matrix.json
 artifacts/matrix/<same-selection>/matrix.md
+artifacts/matrix/<same-selection>/matrix.html
 artifacts/teaching/<timestamp>-os-<os>-<runner>-<browser>-<user>-teaching-<row>/
 artifacts/playwright/<timestamp>-os-<os>-playwright-<browser>-<user>-recorded-<row>/
 ```
 
-The JSON manifest and its readable Markdown table are updated after each suite. It records each selection, report path,
+The JSON manifest, readable Markdown table, and HTML video gallery are updated after each suite. Open `matrix.html` to play or download every nonempty WebM/MP4 under each selection, including multiple pages and HTML report copies. The gallery groups recordings by OS, browser, runner, user, suite, and run ID. Source paths are shown; old recordings without case metadata remain associated with their suite rather than a guessed scenario. Videos load only when played.
+
+Rebuild a gallery from an existing manifest without rerunning tests:
+
+```sh
+./lab matrix-report artifacts/matrix/<selection>/matrix.json
+```
+
+New manifest report paths are relative to the manifest, and video paths are relative to each suite report directory. To move or download artifacts, retain the `artifacts/matrix`, `artifacts/teaching`, and `artifacts/playwright` relative layout. Historical absolute paths are rebased onto the current checkout's artifacts tree when their original folders are absent. Missing folders and selections without recordings are labeled; rebuilding refreshes their availability. Symlinks and paths outside the artifact tree are rejected by the rebuild command. The report works as local HTML or through a local static server; copying only `matrix.html` does not include its videos.
+
+Separate authentication and certificate/password acceptance suites currently disable videos to avoid exporting credential material, and remain outside these 28 selections. This viewer does not turn on recording or change credential scans. Exact case metadata and safe recording for those separate suites remain tracked follow-ups. [Completion 48](completion/48-matrix-video-gallery.md) records validation against the saved matrix.
+
+The manifest records each selection and its available video paths. It also records report path,
 status, duration, recognized test summary and nonempty video-file count. A suite
 counts as successful only when its command passes and saved videos exist. Counts
 include report copies of video files and do not equal unique scenario counts.

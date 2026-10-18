@@ -10,9 +10,14 @@ import (
 func saveMatrixMarkdown(path string, m matrixManifest) error {
 	var report strings.Builder
 	fmt.Fprintf(&report, "# Browser container matrix\n\nStatus: **%s**. %d passed, %d failed, %d pending.\n\n", m.Status, m.Passed, m.Failed, len(m.Rows)-m.Passed-m.Failed)
+	report.WriteString("[Watch all saved videos](matrix.html)\n\n")
 	report.WriteString("| OS | Browser | Runner | User | Suite | Result | Video files | Report |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n")
 	for _, row := range m.Rows {
-		relative, err := filepath.Rel(filepath.Dir(path), row.Report)
+		reportPath := row.Report
+		if !filepath.IsAbs(reportPath) {
+			reportPath = filepath.Join(filepath.Dir(path), reportPath)
+		}
+		relative, err := filepath.Rel(filepath.Dir(path), reportPath)
 		if err != nil {
 			return err
 		}

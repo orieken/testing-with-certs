@@ -332,6 +332,8 @@ func (o operator) execute(args []string) (string, error) {
 		return "", errors.New("missing command")
 	}
 	switch args[0] {
+	case "matrix-report":
+		return o.matrixReport(args[1:])
 	case "matrix":
 		return o.matrix(args[1:])
 	case "status", "health", "healthcheck", "telemetry", "certs", "diagnose":

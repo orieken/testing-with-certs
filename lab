@@ -36,6 +36,7 @@ Usage: ./lab pki init|verify|renew USER|revoke USER [previous]|retire USER|migra
        ./lab test chrome|msedge [SEED_USER]
        ./lab test --runner playwright --suite contracts|security|package
        ./lab test --runner playwright|cucumber --browser chrome|msedge --user SEED_USER
+       ./lab matrix-report PATH/TO/matrix.json
        ./lab matrix [--os debian|ubi9|all] [--browser chrome|msedge|all] [--runner playwright|cucumber|all] [--user SEED_USER|all] [--suite teaching|recorded|all] [--plan]
        ./lab record chrome|msedge [SEED_USER]
        ./lab manual --user SEED_USER --browser chrome|msedge
@@ -88,6 +89,10 @@ valid_project "$project"
 export LAB_PROJECT="$project"
 
 case "${1:-}" in
+  matrix-report)
+    shift
+    exec "$root_dir/lab" operator matrix-report "$@"
+    ;;
   matrix)
     shift
     exec "$root_dir/lab" operator matrix "$@"

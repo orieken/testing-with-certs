@@ -43,3 +43,5 @@ The Go operator supports `./lab matrix` (also `./lab operator matrix`). Use
 `--plan` to preview, `--os ubi9` or `--os debian` for one OS, and optional
 browser/runner/user/suite filters for a specific selection. The Bubble Tea menu
 includes matrix actions. See [browser matrix commands and saved recordings](browser-matrix.md).
+
+Saved matrix runs include `matrix.html` with inline video players and download links. Use `./lab matrix-report artifacts/matrix/<selection>/matrix.json` to rebuild a saved gallery without running tests. Keep its sibling teaching/recorded artifact folders when moving reports. See [matrix video coverage and limits](completion/48-matrix-video-gallery.md).

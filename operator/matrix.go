@@ -15,19 +15,20 @@ import (
 
 type matrixSelection struct{ OS, Browser, Runner, User, Suite string }
 type matrixRow struct {
-	OS              string  `json:"os"`
-	Browser         string  `json:"browser"`
-	Runner          string  `json:"runner"`
-	User            string  `json:"user"`
-	Suite           string  `json:"suite"`
-	Image           string  `json:"image"`
-	RunID           string  `json:"run_id"`
-	Report          string  `json:"report"`
-	Status          string  `json:"status"`
-	Summary         string  `json:"summary,omitempty"`
-	Results         string  `json:"results,omitempty"`
-	DurationSeconds float64 `json:"duration_seconds"`
-	VideoCount      int     `json:"video_count"`
+	OS              string        `json:"os"`
+	Browser         string        `json:"browser"`
+	Runner          string        `json:"runner"`
+	User            string        `json:"user"`
+	Suite           string        `json:"suite"`
+	Image           string        `json:"image"`
+	RunID           string        `json:"run_id"`
+	Report          string        `json:"report"`
+	Status          string        `json:"status"`
+	Summary         string        `json:"summary,omitempty"`
+	Results         string        `json:"results,omitempty"`
+	DurationSeconds float64       `json:"duration_seconds"`
+	Videos          []matrixVideo `json:"videos,omitempty"`
+	VideoCount      int           `json:"video_count"`
 }
 type matrixManifest struct {
 	ID     string      `json:"id"`
@@ -107,26 +108,31 @@ func matrixMatches(s matrixSelection, row matrixRow) bool {
 	return match(s.OS, row.OS) && match(s.Browser, row.Browser) && match(s.Suite, row.Suite) && match(s.Runner, row.Runner) && match(s.User, row.User)
 }
 func countMatrixVideos(path string) (int, error) {
-	count := 0
-	err := filepath.WalkDir(path, func(path string, d os.DirEntry, err error) error {
+	videos, err := discoverMatrixVideos(path)
+	return len(videos), err
+}
+func saveMatrix(path string, m matrixManifest) error {
+	saved := m
+	saved.Rows = append([]matrixRow(nil), m.Rows...)
+	for i := range saved.Rows {
+		row := &saved.Rows[i]
+		report := row.Report
+		if !filepath.IsAbs(report) {
+			report = filepath.Join(filepath.Dir(path), report)
+		}
+		videos, err := discoverMatrixVideos(report)
+		if err != nil && !os.IsNotExist(err) {
+			return err
+		}
+		row.Videos = videos
+		row.VideoCount = len(videos)
+		relative, err := filepath.Rel(filepath.Dir(path), report)
 		if err != nil {
 			return err
 		}
-		if !d.IsDir() && strings.EqualFold(filepath.Ext(path), ".webm") {
-			info, e := d.Info()
-			if e != nil {
-				return e
-			}
-			if info.Size() > 0 {
-				count++
-			}
-		}
-		return nil
-	})
-	return count, err
-}
-func saveMatrix(path string, m matrixManifest) error {
-	data, err := json.MarshalIndent(m, "", "  ")
+		row.Report = filepath.ToSlash(relative)
+	}
+	data, err := json.MarshalIndent(saved, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -136,7 +142,10 @@ func saveMatrix(path string, m matrixManifest) error {
 	if err = os.Rename(path+".tmp", path); err != nil {
 		return err
 	}
-	return saveMatrixMarkdown(path, m)
+	if err := saveMatrixMarkdown(path, saved); err != nil {
+		return err
+	}
+	return saveMatrixHTML(path, saved)
 }
 func (o operator) matrix(args []string) (string, error) {
 	s, plan, err := parseMatrix(args)
@@ -181,7 +190,7 @@ func finishMatrix(path string, m matrixManifest) (string, error) {
 	if err := saveMatrix(path, m); err != nil {
 		return "", err
 	}
-	out := fmt.Sprintf("Matrix %s: %d passed, %d failed, %d pending.\nManifest: %s\n", m.Status, m.Passed, m.Failed, len(m.Rows)-m.Passed-m.Failed, path)
+	out := fmt.Sprintf("Matrix %s: %d passed, %d failed, %d pending.\nManifest: %s\nVideos: %s\n", m.Status, m.Passed, m.Failed, len(m.Rows)-m.Passed-m.Failed, path, filepath.Join(filepath.Dir(path), "matrix.html"))
 	if m.Status == "cancelled" {
 		return out, context.Canceled
 	}
