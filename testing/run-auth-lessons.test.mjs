@@ -15,6 +15,8 @@ function run(options = {}) {
 echo "$*" >> "$PROBE_ROOT/calls"
 case "$*" in
   *" ls -q "*|"ps -aq "*) if [ "\${PROBE_EXISTING:-0}" = 1 ]; then echo existing; fi;;
+  *"LAB_AUTH_SUITE=kerberos-lifecycle"*"playwright test"*) exit "\${PROBE_KERBEROS_LIFECYCLE_PW_FAIL:-0}";;
+  *"LAB_AUTH_SUITE=kerberos-lifecycle"*"cucumber-js"*) exit "\${PROBE_KERBEROS_LIFECYCLE_CUCUMBER_FAIL:-0}";;
   *"LAB_AUTH_SUITE=saml-lifecycle"*"playwright test"*) exit "\${PROBE_SAML_LIFECYCLE_PW_FAIL:-0}";;
   *"LAB_AUTH_SUITE=saml-lifecycle"*"cucumber-js"*) exit "\${PROBE_SAML_LIFECYCLE_CUCUMBER_FAIL:-0}";;
   *"LAB_AUTH_SUITE=oidc-lifecycle"*"playwright test"*) exit "\${PROBE_OIDC_LIFECYCLE_PW_FAIL:-0}";;
@@ -54,13 +56,13 @@ test('browser failure preserves failure status and still removes only the dispos
 test('both browsers execute passkey/federation and valid/disabled Kerberos phases', () => {
   const result = run();
   assert.equal(result.status, 0);
-  assert.equal((result.calls.match(/playwright.auth-lessons.config.mjs/g) ?? []).length, 12);
+  assert.equal((result.calls.match(/playwright.auth-lessons.config.mjs/g) ?? []).length, 14);
   assert.equal((result.calls.match(/auth-lesson-fixture kerberos-disable/g) ?? []).length, 2);
-  assert.equal((result.calls.match(/cucumber-js/g) ?? []).length, 16);
+  assert.equal((result.calls.match(/cucumber-js/g) ?? []).length, 18);
   assert.match(result.calls, /--order random/);
   assert.equal((result.calls.match(/auth-lesson-fixture start-passkeys-lifecycle/g) ?? []).length, 4);
-  assert.equal((result.calls.match(/auth-lesson-fixture finish/g) ?? []).length, 21);
-  assert.equal((result.calls.match(/auth-lesson-fixture verify/g) ?? []).length, 21);
+  assert.equal((result.calls.match(/auth-lesson-fixture finish/g) ?? []).length, 25);
+  assert.equal((result.calls.match(/auth-lesson-fixture verify/g) ?? []).length, 25);
   assert.equal((result.calls.match(/LAB_LIFECYCLE_METHOD=passkeys/g) ?? []).length, 4);
   assert.equal((result.calls.match(/LAB_LIFECYCLE_METHOD=oidc/g) ?? []).length, 4);
   assert.equal((result.calls.match(/LAB_LIFECYCLE_METHOD=saml/g) ?? []).length, 4);
@@ -71,6 +73,7 @@ test('both browsers execute passkey/federation and valid/disabled Kerberos phase
   assert.equal((result.calls.match(/cucumber\/kerberos.mjs/g) ?? []).length, 4);
   assert.match(result.calls, /--tags "not @disabled"/);
   assert.match(result.calls, /--tags @disabled/);
+  assert.equal((result.calls.match(/auth-lesson-fixture start-kerberos-lifecycle/g) ?? []).length, 4);
   assert.match(result.calls, /check-artifacts.mjs/);
 });
 
@@ -147,6 +150,16 @@ for (const runner of ['PW', 'CUCUMBER']) test(`SAML lifecycle ${runner} failure 
   const result = run({ [`PROBE_SAML_LIFECYCLE_${runner}_FAIL`]: '31' });
   assert.equal(result.status, 31);
   assert.match(result.calls, /auth-lesson-fixture start-saml-lifecycle/);
+  assert.match(result.calls, /auth-lesson-fixture finish/);
+  assert.match(result.calls, /auth-lesson-fixture verify/);
+  assert.match(result.calls, /--profile \* down --volumes --remove-orphans/);
+  assert.doesNotMatch(result.calls, /LAB_BROWSER=msedge/);
+});
+
+for (const runner of ['PW', 'CUCUMBER']) test(`Kerberos lifecycle ${runner} failure restores fixtures and tears down the project`, () => {
+  const result = run({ [`PROBE_KERBEROS_LIFECYCLE_${runner}_FAIL`]: '33' });
+  assert.equal(result.status, 33);
+  assert.match(result.calls, /auth-lesson-fixture start-kerberos-lifecycle/);
   assert.match(result.calls, /auth-lesson-fixture finish/);
   assert.match(result.calls, /auth-lesson-fixture verify/);
   assert.match(result.calls, /--profile \* down --volumes --remove-orphans/);

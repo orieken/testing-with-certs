@@ -4,7 +4,7 @@ import { lessonSessionPolicy } from './lesson-session-policy.mjs';
 import { lessonAdmin } from './lesson-admin.mjs';
 
 const action = process.argv[2];
-if (!['start', 'start-passkeys-lifecycle', 'start-oidc-lifecycle', 'start-saml-lifecycle', 'finish', 'verify', 'kerberos-disable', 'kerberos-enable'].includes(action)) throw new Error('Unknown authentication lesson fixture action');
+if (!['start', 'start-passkeys-lifecycle', 'start-oidc-lifecycle', 'start-saml-lifecycle', 'start-kerberos-lifecycle', 'finish', 'verify', 'kerberos-disable', 'kerberos-enable'].includes(action)) throw new Error('Unknown authentication lesson fixture action');
 if (!/^magic-shop-auth-[a-z0-9-]+$/.test(process.env.LAB_PROJECT ?? '')) throw new Error('Use a disposable magic-shop-auth-* project');
 const local = await lessonAdmin();
 const kerberos = await lessonAdmin({ realm: 'lesson-kerberos' });
@@ -18,6 +18,8 @@ const oidcPolicy = lessonSessionPolicy('oidc-spa');
 const oidcPolicyPath = '/test-secrets/oidc-session-policy.json';
 const samlPolicy = lessonSessionPolicy('saml-spa');
 const samlPolicyPath = '/test-secrets/saml-session-policy.json';
+const kerberosPolicy = lessonSessionPolicy('kerberos-spa');
+const kerberosPolicyPath = '/test-secrets/kerberos-session-policy.json';
 const statePath = '/test-secrets/auth-users.json';
 const specs = [
   ...['expiry', 'refresh', 'refresh-without-role', 'logout', 'binding', 'session-expiry'].map(kind => ({
@@ -42,19 +44,20 @@ if (action.startsWith('kerberos-')) {
   if (users.length !== 1) throw new Error('Authenticate Kerberos fixture once before toggling its imported account');
   await kerberos('PUT', `/users/${users[0].id}`, { enabled: action === 'kerberos-enable' }, 204);
   await kerberos('POST', `/users/${users[0].id}/logout`, undefined, 204);
-} else if (action === 'start' || action === 'start-passkeys-lifecycle' || action === 'start-oidc-lifecycle' || action === 'start-saml-lifecycle') {
+} else if (action === 'start' || action === 'start-passkeys-lifecycle' || action === 'start-oidc-lifecycle' || action === 'start-saml-lifecycle' || action === 'start-kerberos-lifecycle') {
   if (existsSync(statePath)) throw new Error('Prior authentication fixture remains');
   for (const spec of specs) if ((await find(admins[spec.target], spec.username)).length) throw new Error('Existing lesson account retained');
   if (action === 'start-passkeys-lifecycle') await policy.start(local, policyPath);
-  if (action === 'start-oidc-lifecycle' || action === 'start-saml-lifecycle') {
-    const broker = action === 'start-oidc-lifecycle' ? oidc : saml;
+  if (action === 'start-oidc-lifecycle' || action === 'start-saml-lifecycle' || action === 'start-kerberos-lifecycle') {
+    const broker = action === 'start-oidc-lifecycle' ? oidc : action === 'start-saml-lifecycle' ? saml : kerberos;
     // Use a real second public client in the selected broker realm for the binding negative.
     const control = await broker('GET', '/clients?clientId=account-console&max=2');
     if (control.length !== 1) throw new Error('Broker refresh control client missing or ambiguous');
     const client = await broker('GET', `/clients/${control[0].id}`);
     if (!client.enabled || !client.publicClient || !client.standardFlowEnabled || client.protocol !== 'openid-connect') throw new Error('Broker refresh control client drift');
     if (action === 'start-oidc-lifecycle') await oidcPolicy.start(oidc, oidcPolicyPath);
-    else await samlPolicy.start(saml, samlPolicyPath);
+    else if (action === 'start-saml-lifecycle') await samlPolicy.start(saml, samlPolicyPath);
+    else await kerberosPolicy.start(kerberos, kerberosPolicyPath);
   }
   const entries = specs.map(value => ({ ...value, password: randomBytes(32).toString('base64url') }));
   writeFileSync(statePath, JSON.stringify(entries), { mode: 0o600, flag: 'wx' });
@@ -65,6 +68,10 @@ if (action.startsWith('kerberos-')) {
   }, 201);
   console.log('Dedicated passkey and provider fixture accounts created; values withheld.');
 } else if (action === 'finish') {
+  await kerberosPolicy.finish(kerberos, kerberosPolicyPath);
+  const imported = await find(kerberos, 'lesson-kerberos');
+  if (imported.length > 1) throw new Error('Kerberos account ambiguous');
+  if (imported.length) await kerberos('POST', `/users/${imported[0].id}/logout`, undefined, 204);
   await policy.finish(local, policyPath);
   await oidcPolicy.finish(oidc, oidcPolicyPath);
   await samlPolicy.finish(saml, samlPolicyPath);
@@ -83,6 +90,10 @@ if (action.startsWith('kerberos-')) {
   }
   console.log('Passkey/provider fixture accounts and secret file removed.');
 } else {
+  await kerberosPolicy.verify(kerberos, kerberosPolicyPath);
+  const imported = await find(kerberos, 'lesson-kerberos');
+  if (imported.length > 1) throw new Error('Kerberos account ambiguous');
+  if (imported.length && (await kerberos('GET', `/users/${imported[0].id}/sessions`)).length) throw new Error('Kerberos fixture session remains');
   await policy.verify(local, policyPath);
   await oidcPolicy.verify(oidc, oidcPolicyPath);
   await samlPolicy.verify(saml, samlPolicyPath);

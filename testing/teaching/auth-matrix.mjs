@@ -11,6 +11,7 @@ export const samlCaseNames = [
     ...['control', 'wrong-audience', 'wrong-recipient', 'expired'].map(value => `saml:signed-${value}`),
 ];
 export const samlSessionCaseNames = ['access-expiry-reenters-federation', 'refresh-preserves-role', 'refresh-without-role', 'logout-invalidates-refresh', 'refresh-client-binding', 'session-expiry-rejects-refresh'].map(value => `saml:${value}`);
+export const kerberosSessionCaseNames = ['access-expiry-reenters-login', 'refresh-without-ticket-cache', 'logout-invalidates-refresh', 'refresh-client-binding', 'session-expiry-rejects-refresh'].map(value => `kerberos:${value}`);
 export const kerberosCaseNames = ['valid-ticket', 'missing-ticket', 'expired-ticket', 'wrong-service-ticket', 'disabled-user'].map(value => `kerberos:${value}`);
 export const authPhases = {
   'passkeys-federation': [
@@ -27,6 +28,8 @@ export const authPhases = {
   'saml-cucumber': samlCaseNames,
   'saml-lifecycle': samlSessionCaseNames,
   'saml-lifecycle-cucumber': samlSessionCaseNames,
+  'kerberos-lifecycle': kerberosSessionCaseNames,
+  'kerberos-lifecycle-cucumber': kerberosSessionCaseNames,
   kerberos: kerberosCaseNames.filter(name => name !== 'kerberos:disabled-user'),
   'kerberos-cucumber': kerberosCaseNames.filter(name => name !== 'kerberos:disabled-user'),
   'kerberos-cucumber-disabled': ['kerberos:disabled-user'],

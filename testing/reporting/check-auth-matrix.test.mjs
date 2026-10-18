@@ -20,7 +20,7 @@ test('authentication gates require every case, browser, phase and correct proven
         const path = join(directory, 'results.json');
         writeFileSync(path, JSON.stringify(data)); reports.push({ path, data });
       }
-      assert.equal(checkAuthMatrix(suite, root), suite === 'auth-lessons' ? 192 : 48);
+      assert.equal(checkAuthMatrix(suite, root), suite === 'auth-lessons' ? 212 : 48);
       for (const {path, data} of reports) {
         for (const mutate of [value => value.cases.pop(), value => value.cases.push(value.cases[0]),
           value => { value.cases[0].name = 'unknown'; }, value => { value.cases[0].status = 'skipped'; },

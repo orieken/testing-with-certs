@@ -56,8 +56,9 @@ for browser in chrome msedge; do
     compose run --rm --no-deps auth-lesson-fixture verify
     docker volume rm "${LAB_PROJECT}_auth-lesson-home" "${LAB_PROJECT}_auth-lesson-tmp" >/dev/null
   done
-  for method in passkeys oidc saml; do
+  for method in passkeys oidc saml kerberos; do
     for runner in playwright cucumber; do
+      if test "$method" = kerberos; then compose exec -T lesson-kdc sh /app/tickets.sh; fi
       compose run --rm --no-deps auth-lesson-fixture "start-$method-lifecycle"
       if test "$runner" = playwright; then
         compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e "LAB_AUTH_SUITE=$method-lifecycle" -e "LAB_LIFECYCLE_METHOD=$method" auth-lesson-tests \
