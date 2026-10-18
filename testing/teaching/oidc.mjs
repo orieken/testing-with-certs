@@ -24,11 +24,16 @@ export async function checkOidc(browser, name, playwright) {
     if (!account) throw new Error('Missing OIDC fixture account');
     await startLesson(page, 'oidc', 'Sign in with OpenID Connect');
     if (allowSso) {
-      await expect(page.locator('#username').or(page.getByTestId('lesson-user'))).toBeVisible();
+      await expect(page.locator('#username:visible, #password:visible').or(page.getByTestId('lesson-user')).first()).toBeVisible();
       if (await page.getByTestId('lesson-user').isVisible()) return;
     }
     await expect(page).toHaveURL(/^https:\/\/shop\.magic\.test:9643\/realms\/lesson-provider\//);
-    await page.locator('#username').fill(username);
+    if (!allowSso || await page.locator('#username').isVisible()) await page.locator('#username').fill(username);
+    else {
+      await expect(page.locator('#kc-attempted-username')).toHaveAttribute('readonly', '');
+      await expect(page.locator('#kc-attempted-username')).toHaveValue(username);
+      console.log('OIDC provider reauthentication: password-only form verified.');
+    }
     await page.locator('#password').fill(account.password);
     await page.locator('#kc-login').click();
   }
