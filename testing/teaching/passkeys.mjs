@@ -1,10 +1,11 @@
+import { withAuthRecording } from './auth-recording.mjs';
 import { expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { startLesson, captureToken, checkLessonToken, virtualAuthenticator, lessonOrigin } from './auth-lessons.mjs';
 import { passkeyCaseNames, passkeySessionCaseNames } from './auth-matrix.mjs';
 
 // Virtual credentials and browser state belong to one check and never enter reports.
-export async function checkPasskey(browser, name, playwright) {
+async function runcheckPasskey(browser, name, playwright) {
   if (![...passkeyCaseNames, ...passkeySessionCaseNames].includes(name)) throw new Error('Unknown passkey check');
   if (passkeySessionCaseNames.includes(name) !== (process.env.LAB_AUTH_SUITE === 'passkeys-lifecycle')) throw new Error('Wrong passkey fixture phase');
   const tokenEndpoint = 'https://auth.magic.test:9443/realms/magic-shop/protocol/openid-connect/token';
@@ -249,4 +250,8 @@ export async function checkPasskey(browser, name, playwright) {
       }
     }
   } finally { await context?.close(); }
+}
+
+export async function checkPasskey(browser, name, playwright) {
+  return withAuthRecording(browser, playwright, name, 'passkeys', (recorded, runtime) => runcheckPasskey(recorded, name, runtime));
 }

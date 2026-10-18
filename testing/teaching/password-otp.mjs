@@ -1,3 +1,4 @@
+import { withAuthRecording } from './auth-recording.mjs';
 import { expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { totp } from './totp.mjs';
@@ -8,7 +9,7 @@ const origin = 'https://shop.magic.test:8543';
 const path = '/teaching/password-otp';
 
 // Each invocation owns its context, enrollment key, and OTP reuse window.
-export async function checkPasswordOtp(browser, name, playwright) {
+async function runcheckPasswordOtp(browser, name, playwright) {
   if (![...otpCaseNames, ...otpSessionCaseNames].includes(name)) throw new Error('Unknown password/OTP check');
   if (otpSessionCaseNames.includes(name) !== (process.env.LAB_OTP_LIFECYCLE === '1')) throw new Error('Wrong OTP fixture phase');
   const fixtures = JSON.parse(readFileSync('/test-secrets/otp.json', 'utf8'));
@@ -215,4 +216,8 @@ export async function checkPasswordOtp(browser, name, playwright) {
       }
     }
   } finally { await context.close(); }
+}
+
+export async function checkPasswordOtp(browser, name, playwright) {
+  return withAuthRecording(browser, playwright, name, 'password-totp', (recorded, runtime) => runcheckPasswordOtp(recorded, name, runtime));
 }

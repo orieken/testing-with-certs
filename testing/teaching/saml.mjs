@@ -1,3 +1,4 @@
+import { withAuthRecording } from './auth-recording.mjs';
 import { expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { startLesson, captureToken, checkLessonToken, lessonOrigin } from './auth-lessons.mjs';
@@ -278,7 +279,7 @@ async function checkSamlLifecycle({ page, context, playwright }, name) {
 for (const name of samlSessionCaseNames) defineCheck(name, args => checkSamlLifecycle(args, name));
 
 // Every invocation owns its browser context, assertions, and signing material.
-export async function checkSaml(browser, name, playwright) {
+async function runcheckSaml(browser, name, playwright) {
   if (![...samlCaseNames, ...samlSessionCaseNames].includes(name) || !checks.has(name)) throw new Error('Unknown SAML check');
   if (samlSessionCaseNames.includes(name) !== (process.env.LAB_AUTH_SUITE === 'saml-lifecycle')) throw new Error('Wrong SAML fixture phase');
   const context = await browser.newContext();
@@ -286,4 +287,8 @@ export async function checkSaml(browser, name, playwright) {
     const page = await context.newPage();
     await checks.get(name)({ page, context, playwright, browser });
   } finally { await context.close(); }
+}
+
+export async function checkSaml(browser, name, playwright) {
+  return withAuthRecording(browser, playwright, name, 'saml', (recorded, runtime) => runcheckSaml(recorded, name, runtime));
 }

@@ -1,10 +1,11 @@
+import { withAuthRecording } from './auth-recording.mjs';
 import { expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { startLesson, captureToken, checkLessonToken, lessonOrigin } from './auth-lessons.mjs';
 import { oidcCaseNames, oidcSessionCaseNames } from './auth-matrix.mjs';
 
 // A scenario owns its context; credentials and tokens never enter reports.
-export async function checkOidc(browser, name, playwright) {
+async function runcheckOidc(browser, name, playwright) {
   if (![...oidcCaseNames, ...oidcSessionCaseNames].includes(name)) throw new Error('Unknown OIDC check');
   if (oidcSessionCaseNames.includes(name) !== (process.env.LAB_AUTH_SUITE === 'oidc-lifecycle')) throw new Error('Wrong OIDC fixture phase');
   const tokenEndpoint = 'https://shop.magic.test:9643/realms/lesson-oidc/protocol/openid-connect/token';
@@ -158,4 +159,8 @@ export async function checkOidc(browser, name, playwright) {
       }
     }
   } finally { await context.close(); }
+}
+
+export async function checkOidc(browser, name, playwright) {
+  return withAuthRecording(browser, playwright, name, 'oidc', (recorded, runtime) => runcheckOidc(recorded, name, runtime));
 }

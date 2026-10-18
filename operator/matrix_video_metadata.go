@@ -62,6 +62,27 @@ func videoDigest(path string) (string, error) {
 // Read only known metadata fields, never render report errors, steps, or token material.
 func matrixVideoCases(root string, videos []matrixVideo) (map[string]videoCase, error) {
 	mapped := map[string]videoCase{}
+	if index, err := os.ReadFile(filepath.Join(root, "video-cases.json")); err == nil {
+		var recorded struct {
+			Evidence string                                      `json:"evidence"`
+			Cases    []struct{ Path, Name, Spec, Status string } `json:"cases"`
+		}
+		if json.Unmarshal(index, &recorded) != nil || recorded.Evidence != "verified-authentication-video-cases" {
+			return nil, fmt.Errorf("invalid recording index")
+		}
+		available := map[string]bool{}
+		for _, v := range videos {
+			available[v.Path] = true
+		}
+		for _, c := range recorded.Cases {
+			if !available[c.Path] {
+				return nil, fmt.Errorf("recording index file missing")
+			}
+			mapped[c.Path] = videoCase{c.Spec, c.Name, videoResult(c.Status)}
+		}
+		return mapped, nil
+	}
+
 	data, err := os.ReadFile(filepath.Join(root, "html", "index.html"))
 	if os.IsNotExist(err) {
 		return mapped, nil

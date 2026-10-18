@@ -1,10 +1,11 @@
+import { withAuthRecording } from './auth-recording.mjs';
 import { expect } from '@playwright/test';
 import { mkdtempSync, copyFileSync, rmSync, existsSync } from 'node:fs';
 import { prepareKerberosProfile } from './prepare-kerberos.mjs';
 import { startLesson, checkLessonToken } from './auth-lessons.mjs';
 import { kerberosSessionCaseNames } from './auth-matrix.mjs';
 
-export async function checkKerberosSession(playwright, name) {
+async function runcheckKerberosSession(playwright, name) {
   if (!kerberosSessionCaseNames.includes(name) || process.env.LAB_AUTH_SUITE !== 'kerberos-lifecycle') throw new Error('Wrong Kerberos lifecycle selection');
   if (!['chrome', 'msedge'].includes(process.env.LAB_BROWSER)) throw new Error('Real Chrome or Edge required');
   const directory = mkdtempSync('/tmp/kerberos-lifecycle-');
@@ -107,4 +108,8 @@ export async function checkKerberosSession(playwright, name) {
   } finally {
     try { await context?.close(); } finally { rmSync(directory, { recursive: true, force: true }); }
   }
+}
+
+export async function checkKerberosSession(playwright, name) {
+  return withAuthRecording(undefined, playwright, name, 'kerberos', (_, runtime) => runcheckKerberosSession(runtime, name));
 }

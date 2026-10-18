@@ -54,3 +54,9 @@ for browser in chrome msedge; do
   # Keep the final volumes for the exit trap; other selections get a fresh HOME/tmp.
   if [ "$browser" = chrome ]; then remove_profiles; fi
 done
+
+if [ "${LAB_PASSWORD_REPORTS:-0}" = 1 ]; then
+  docker run --rm --platform linux/amd64 --network none --entrypoint node \
+    -v "$LAB_PASSWORD_REPORT_DIR:/work/artifacts/certificate-password-ci" magic-shop-runner:03 \
+    /work/testing/reporting/auth-recording-index.mjs certificate-password /work/artifacts/certificate-password-ci
+fi

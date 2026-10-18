@@ -1,3 +1,4 @@
+import { withAuthRecording } from './auth-recording.mjs';
 import { expect } from '@playwright/test';
 import { startLesson, captureToken, checkLessonToken } from './auth-lessons.mjs';
 import { execFileSync } from 'node:child_process';
@@ -5,7 +6,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { prepareKerberosProfile } from './prepare-kerberos.mjs';
 import { kerberosCaseNames } from './auth-matrix.mjs';
 
-export async function checkKerberos(playwright, name) {
+async function runcheckKerberos(playwright, name) {
   if (!kerberosCaseNames.includes(name)) throw new Error('Unknown Kerberos check');
   if (!['chrome', 'msedge'].includes(process.env.LAB_BROWSER)) throw new Error('Real Chrome or Edge required');
   const kind = name.slice('kerberos:'.length);
@@ -73,4 +74,8 @@ export async function checkKerberos(playwright, name) {
   } finally {
     try { await context?.close(); } finally { rmSync(profile, { recursive: true, force: true }); }
   }
+}
+
+export async function checkKerberos(playwright, name) {
+  return withAuthRecording(undefined, playwright, name, 'kerberos', (_, runtime) => runcheckKerberos(runtime, name));
 }

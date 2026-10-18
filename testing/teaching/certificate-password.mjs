@@ -1,3 +1,4 @@
+import { withAuthRecording } from './auth-recording.mjs';
 import { expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { createHash, randomBytes, createPublicKey, verify } from 'node:crypto';
@@ -72,7 +73,7 @@ async function accepted(context, page, username) {
   return token;
 }
 
-export async function checkCertificatePassword(browser, kind) {
+async function runcheckCertificatePassword(browser, kind) {
   const context = await contextFor(browser, '/identity-customer');
   try {
     const page = await context.newPage();
@@ -148,4 +149,8 @@ export async function checkCertificatePassword(browser, kind) {
       } finally { await denied.close(); }
     }
   } finally { await context.close(); }
+}
+
+export async function checkCertificatePassword(browser, kind, playwright) {
+  return withAuthRecording(browser, playwright, kind, 'certificate-password', (recorded, runtime) => runcheckCertificatePassword(recorded, kind, runtime));
 }

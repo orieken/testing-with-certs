@@ -29,6 +29,7 @@ trap 'exit 130' INT
 trap 'exit 143' TERM
 sh testing/start-auth-lessons.sh
 docker compose -f infra/compose.yaml --profile test build runner-test
+compose run --rm --no-deps auth-lesson-tests node /work/testing/teaching/auth-recording-privacy.mjs
 for browser in chrome msedge; do
   compose run --rm --no-deps auth-lesson-fixture start
   compose run --rm --no-deps -e "LAB_BROWSER=$browser" auth-lesson-tests \
@@ -76,6 +77,13 @@ done
 docker run --rm --platform linux/amd64 --network none --entrypoint node \
   -v "$LAB_AUTH_REPORT_DIR:/work/artifacts/auth-lessons:ro" magic-shop-runner:03 \
   /work/testing/reporting/check-auth-matrix.mjs auth-lessons /work/artifacts/auth-lessons
+docker run --rm --platform linux/amd64 --network none --entrypoint node \
+  -v "$LAB_AUTH_REPORT_DIR:/work/artifacts/auth-lessons:ro" magic-shop-runner:03 \
+  /work/testing/container/check-artifacts.mjs /work/artifacts/auth-lessons
+
+docker run --rm --platform linux/amd64 --network none --entrypoint node \
+  -v "$LAB_AUTH_REPORT_DIR:/work/artifacts/auth-lessons" magic-shop-runner:03 \
+  /work/testing/reporting/auth-recording-index.mjs auth-lessons /work/artifacts/auth-lessons
 docker run --rm --platform linux/amd64 --network none --entrypoint node \
   -v "$LAB_AUTH_REPORT_DIR:/work/artifacts/auth-lessons:ro" magic-shop-runner:03 \
   /work/testing/container/check-artifacts.mjs /work/artifacts/auth-lessons
