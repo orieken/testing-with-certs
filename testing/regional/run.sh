@@ -48,6 +48,7 @@ compose run --rm --no-deps runner-regional node --test /work/testing/regional/ev
 compose run --rm --no-deps runner-regional timeout 180s /work/testing/node_modules/.bin/playwright test --config /work/testing/regional/provider.config.mjs
 for browser in chrome msedge;do
  export LAB_BROWSER="$browser"
+ compose run --rm --no-deps runner-regional timeout 60s /work/testing/node_modules/.bin/playwright test --config /work/testing/regional/assertion-race.config.mjs
  compose run --rm --no-deps runner-regional timeout 240s /work/testing/node_modules/.bin/playwright test --config /work/testing/regional/browser.config.mjs
  compose run --rm --no-deps runner-regional timeout 240s /work/testing/node_modules/.bin/cucumber-js /work/testing/regional/browser.feature --import /work/testing/regional/steps.mjs --format progress
 done

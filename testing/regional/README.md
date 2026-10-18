@@ -35,3 +35,13 @@ range. The required midnight boundaries use supported whole-second endpoints;
 records immediately before an endpoint still have millisecond precision. The
 completion note records this additional gap; no general timestamp-equivalence,
 native Linux or new CI evidence is claimed.
+
+Regional order IDs use one retrying exact-text assertion, which checks the entire
+expected first-page sequence and count together while Vue replaces report tables.
+The assertion-race suite runs in both browsers before the live journeys. It uses
+an isolated synthetic table to expose the old count-then-snapshot gap and confirms
+that incorrect IDs still fail; these checks are separate from live API evidence.
+The browser evidence records only numeric report-request totals, peak concurrency,
+and overlapping identical requests. No request URLs, headers, or credentials are
+written. These diagnostics help investigate repeated refreshes; a passing run or
+zero overlaps does not establish the cause of a historical failure.
