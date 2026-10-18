@@ -1,3 +1,4 @@
+import { checkShortAccessLifetime } from './lesson-token-lifetime.mjs';
 import { withAuthRecording } from './auth-recording.mjs';
 import { expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
@@ -65,7 +66,7 @@ async function runcheckPasswordOtp(browser, name, playwright) {
     const tokens = await pending;
     expect(typeof tokens.access_token).toBe('string');
     expect(typeof tokens.refresh_token).toBe('string');
-    expect(tokens.expires_in).toBe(20);
+    checkShortAccessLifetime(tokens);
     expect(tokens.refresh_expires_in > 0 && tokens.refresh_expires_in <= 45).toBe(true);
     return { key, tokens };
   }
