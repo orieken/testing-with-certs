@@ -1,0 +1,9 @@
+# Authentication-type recording filter
+
+The gallery now filters selections by authentication method and shows an auth-type chip beside each selection. Options include Certificate / mTLS, certificate + password, Password + TOTP, passkeys, external OIDC, SAML, Kerberos, and unspecified, each with its saved-video count. The filter combines with search, browser, runner, and actual test-result filters. Counts describe files including copies and skipped recordings, not successful logins or unique tests.
+
+New matrix manifests persist an explicit `auth_type` field. Original certificate-shop combinations receive a backward-compatible Certificate / mTLS label; explicit recognized metadata takes precedence, and unsupported types remain unspecified. Classification never comes from keywords in a spec title. Auth type describes the selection's intended login method and does not establish that each recording authenticated successfully. The current saved report has 412 certificate-selection recordings and zero recordings for the other methods; existing authentication recording restrictions remain in force.
+
+All operator tests passed in the pinned Go container, including new checks for every planned/historical selection, explicit overrides for each supported type, unknown-type refusal, and exact per-method file counts. The native operator built successfully. Browser checks confirmed SAML gives zero videos and the empty state, certificate filtering gives all 28 expected selections with no mismatches, and combining certificate with skipped results gives 168 video files. The generated report passed the existing credential-artifact scan; shell syntax and whitespace checks passed. No new authentication execution or recording coverage is claimed.
+
+The existing local gallery was rebuilt and left open with Certificate / mTLS selected. A preview is retained at `/private/tmp/matrix-report-auth-filter.jpg`.

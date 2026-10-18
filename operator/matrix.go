@@ -19,6 +19,7 @@ type matrixRow struct {
 	Browser         string        `json:"browser"`
 	Runner          string        `json:"runner"`
 	User            string        `json:"user"`
+	AuthType        string        `json:"auth_type,omitempty"`
 	Suite           string        `json:"suite"`
 	Image           string        `json:"image"`
 	RunID           string        `json:"run_id"`
@@ -85,6 +86,7 @@ func planMatrix(s matrixSelection) []matrixRow {
 				if matrixMatches(s, row) {
 					row.Image, _ = matrixImage(osName)
 					row.Status = "pending"
+					row.AuthType = "certificate"
 					rows = append(rows, row)
 				}
 			}
@@ -124,6 +126,7 @@ func saveMatrix(path string, m matrixManifest) error {
 		if err != nil && !os.IsNotExist(err) {
 			return err
 		}
+		row.AuthType = matrixAuthType(*row)
 		row.Videos = videos
 		row.VideoCount = len(videos)
 		relative, err := filepath.Rel(filepath.Dir(path), report)

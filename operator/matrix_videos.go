@@ -24,6 +24,7 @@ type matrixGalleryRow struct {
 	Report                           string
 	Notice                           string
 	OS, Browser, Runner, User, Suite string
+	AuthType, AuthLabel              string
 	Videos                           []matrixGalleryVideo
 }
 type matrixGalleryVideo struct{ Label, URL, Spec, Name, Status string }
@@ -77,7 +78,7 @@ func saveMatrixHTML(path string, m matrixManifest) error {
 		if !filepath.IsAbs(report) {
 			report = filepath.Join(filepath.Dir(path), report)
 		}
-		gallery := matrixGalleryRow{Selection: strings.Join([]string{row.OS, row.Browser, row.Runner, row.User, row.Suite}, " / "), Status: row.Status, RunID: row.RunID, OS: row.OS, Browser: row.Browser, Runner: row.Runner, User: row.User, Suite: row.Suite}
+		gallery := matrixGalleryRow{Selection: strings.Join([]string{row.OS, row.Browser, row.Runner, row.User, row.Suite}, " / "), Status: row.Status, RunID: row.RunID, OS: row.OS, Browser: row.Browser, Runner: row.Runner, User: row.User, Suite: row.Suite, AuthType: matrixAuthType(row), AuthLabel: matrixAuthLabel(matrixAuthType(row))}
 		videos, err := discoverMatrixVideos(report)
 		switch {
 		case os.IsNotExist(err):
@@ -128,16 +129,17 @@ func saveMatrixHTML(path string, m matrixManifest) error {
 		return err
 	}
 	err = t.Execute(file, struct {
-		Manifest matrixManifest
-		Rows     []matrixGalleryRow
-		Total    int
+		Manifest  matrixManifest
+		Rows      []matrixGalleryRow
+		Total     int
+		AuthTypes []matrixAuthOption
 	}{m, rows, func() int {
 		total := 0
 		for _, r := range rows {
 			total += len(r.Videos)
 		}
 		return total
-	}()})
+	}(), matrixAuthOptions(rows)})
 	closeErr := file.Close()
 	if err != nil {
 		return err
