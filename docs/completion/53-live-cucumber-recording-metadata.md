@@ -1,0 +1,15 @@
+# Live Cucumber recording metadata and explicit disabled state
+
+2026-10-18 (America/Chicago).
+
+REPORT-VIDEO-01D is complete locally. A fresh disposable project, `magic-shop-video-mapping-20261018`, passed all eight certificate-shop Cucumber selections: Debian/UBI9 × real Chrome/Edge × customer/admin. All 28 scenarios passed and produced 28 nonempty videos. Their exact feature URI, scenario name, result, and video path were checked against each saved Cucumber JSON report. The association comes from the actual scenario/page video object, never file ordering. This is Linux amd64 browser execution under Apple Silicon emulation; it is not a new native CI acceptance claim.
+
+The capture matrix is `artifacts/matrix/20261018T180954-880604000Z-os-all-browser-all-runner-cucumber-user-all-suite-teaching/matrix.json`. Its eight selections all passed. Reports are under the matching `artifacts/teaching/20261018T180954-*` directories.
+
+Two additional live Debian selections, Chrome and Edge with `shop-admin`, passed all six scenarios with `LAB_CUCUMBER_RECORD_VIDEO=0`. Both saved explicit `recording-policy.json` evidence and zero video files. The reports are `artifacts/teaching/20261018-video-disabled-chrome` and `artifacts/teaching/20261018-video-disabled-msedge`. The gallery displays six named, passed cases with “Recording intentionally disabled”, without video players or download links. Missing/expired files retain their separate restoration notices. Disabled cases do not increase video counts.
+
+`testing/reporting/check-cucumber-recordings.mjs` now gates successful certificate-shop Cucumber invocations. It requires exact scenario/spec/result agreement, passed steps and hooks, unique confined regular nonempty files, no symlinks or unindexed videos, and no video files under an explicitly disabled policy. It preserves original Cucumber failures and runs alongside the artifact scan. Regression tests reject mismatched scenario names, failed hooks, and contradictory disabled recordings.
+
+The existing combined gallery now contains 122 selections and 1,156 saved videos, plus six explicitly disabled case entries. All 1,156 source links resolve to real files. In-browser checks verified 28 playable mapped certificate Cucumber videos, six disabled cards with no players, passed-result filtering, and actual playback (ready state 4, 3.28-second duration, no media error). The original 28 historical clips remain unlinked; newly mapped recordings do not retroactively label them. Repeated selections do not increase the unique authentication case inventory.
+
+Validation: the full pinned Go operator suite and both Node test files passed; shell/JavaScript syntax and diff checks passed. Scans covered 89 entries across the fresh report bundles and combined report. Both disabled selections also passed the integrated live recording gate and five-entry artifact scans. All test-project containers, volumes, and networks were removed and their absence independently verified. The local report preview server remains available intentionally.

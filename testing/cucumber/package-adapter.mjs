@@ -9,6 +9,8 @@ import { installCertificateCucumberHooks } from 'saturday-keycloak-prototype/cuc
 const selected = process.env.LAB_USER;
 const channel = process.env.LAB_BROWSER;
 const runId = process.env.LAB_RUN_ID;
+const recordVideo = process.env.LAB_CUCUMBER_RECORD_VIDEO ?? '1';
+if (!['0', '1'].includes(recordVideo)) throw new Error('LAB_CUCUMBER_RECORD_VIDEO must be 0 or 1');
 if (runId && !/^[A-Za-z0-9_-]+$/.test(runId)) throw new Error('Invalid LAB_RUN_ID');
 if (!selected || !['chrome', 'msedge'].includes(channel)) throw new Error('Selected user and real browser channel required');
 setDefaultTimeout(20_000);
@@ -21,6 +23,11 @@ AfterAll(async () => {
   await browser?.close();
   if (!runId) return;
   const root = `/work/artifacts/teaching/${runId}`;
+  if (recordVideo === '0') {
+    const cases = [...recordings.values()].map(({ name, spec, status }) => ({ name, spec, status }));
+    await writeFile(`${root}/recording-policy.json`, JSON.stringify({ evidence: 'explicit-recording-policy', recording: 'disabled', cases }, null, 2));
+    return;
+  }
   const cases = [];
   for (const recording of recordings.values()) {
     if (!recording.video) continue;
@@ -33,7 +40,7 @@ AfterAll(async () => {
 installCertificateCucumberHooks({
   browser: () => { if (!browser) throw new Error('Browser not started'); return browser; },
   provider,
-  ...(runId ? { recordVideo: { dir: `/work/artifacts/teaching/${runId}/videos` } } : {}),
+  ...(runId && recordVideo === '1' ? { recordVideo: { dir: `/work/artifacts/teaching/${runId}/videos` } } : {}),
   target: { origins: ['https://shop.magic.test:8443', 'https://auth.magic.test:9443'], issuer: 'https://auth.magic.test:9443/realms/magic-shop' },
   resolveIdentity: () => ({ namespace: 'lab', name: selected })
 });

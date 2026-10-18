@@ -49,7 +49,7 @@ func matrixAuthOptions(rows []matrixGalleryRow) []matrixAuthOption {
 		for _, row := range rows {
 			if row.AuthType == options[i].ID {
 				for _, video := range row.Videos {
-					if video.Availability != "Missing or expired recording" {
+					if video.Availability != "Missing or expired recording" && video.Availability != "Recording intentionally disabled" {
 						options[i].Count++
 					}
 				}

@@ -144,6 +144,13 @@ func saveMatrixHTML(path string, m matrixManifest) error {
 			}
 			gallery.Videos = append(gallery.Videos, matrixGalleryVideo{Availability: availability, Label: video.Path, URL: link, Spec: metadata.Spec, Name: metadata.Name, Status: metadata.Status})
 		}
+		disabled, err := matrixDisabledRecordingCases(report)
+		if err != nil {
+			return err
+		}
+		for _, c := range disabled {
+			gallery.Videos = append(gallery.Videos, matrixGalleryVideo{Label: "Recording disabled by producer", Spec: c.Spec, Name: c.Name, Status: c.Status, Availability: "Recording intentionally disabled"})
+		}
 		rows = append(rows, gallery)
 	}
 	t, err := template.New("matrix").Parse(matrixGalleryTemplate)

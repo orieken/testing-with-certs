@@ -210,11 +210,12 @@ case "${1:-}" in
       fi
       if [ "$LAB_USER" = shop-admin ]; then LAB_CUCUMBER_TAGS='not @customer'; else LAB_CUCUMBER_TAGS='not @admin'; fi
       LAB_SCENARIO_TELEMETRY="/work/artifacts/teaching/$LAB_RUN_ID/scenario-telemetry.jsonl"
-      export LAB_CUCUMBER_TAGS LAB_SCENARIO_TELEMETRY
+      LAB_CUCUMBER_RECORD_VIDEO=${LAB_CUCUMBER_RECORD_VIDEO:-1}
+      export LAB_CUCUMBER_TAGS LAB_SCENARIO_TELEMETRY LAB_CUCUMBER_RECORD_VIDEO
       exec docker compose -f "$compose_file" --profile test run --rm --no-deps --name "lab-browser-$LAB_RUN_ID" \
-        -e LAB_RUN_ID -e LAB_CUCUMBER_TAGS -e LAB_SCENARIO_TELEMETRY \
+        -e LAB_RUN_ID -e LAB_CUCUMBER_TAGS -e LAB_SCENARIO_TELEMETRY -e LAB_CUCUMBER_RECORD_VIDEO \
         -v "$root_dir/artifacts:/work/artifacts" runner-test \
-        sh -c 'node /work/testing/container/write-run-metadata.mjs "/work/artifacts/teaching/$LAB_RUN_ID" || exit $?; cd /work/testing; /work/testing/node_modules/.bin/cucumber-js --exit --import cucumber/package-adapter.mjs --import cucumber/teaching-steps.mjs --tags "$LAB_CUCUMBER_TAGS" --format progress --format "json:/work/artifacts/teaching/$LAB_RUN_ID/cucumber.json" --format "junit:/work/artifacts/teaching/$LAB_RUN_ID/junit.xml" cucumber/features/teaching.feature; result=$?; node /work/testing/container/check-artifacts.mjs "/work/artifacts/teaching/$LAB_RUN_ID"; scan=$?; if [ "$result" -ne 0 ]; then exit "$result"; fi; exit "$scan"'
+        sh -c 'node /work/testing/container/write-run-metadata.mjs "/work/artifacts/teaching/$LAB_RUN_ID" || exit $?; cd /work/testing; /work/testing/node_modules/.bin/cucumber-js --exit --import cucumber/package-adapter.mjs --import cucumber/teaching-steps.mjs --tags "$LAB_CUCUMBER_TAGS" --format progress --format "json:/work/artifacts/teaching/$LAB_RUN_ID/cucumber.json" --format "junit:/work/artifacts/teaching/$LAB_RUN_ID/junit.xml" cucumber/features/teaching.feature; result=$?; if [ "$result" -eq 0 ]; then policy=enabled; if [ "$LAB_CUCUMBER_RECORD_VIDEO" = 0 ]; then policy=disabled; fi; node /work/testing/reporting/check-cucumber-recordings.mjs "/work/artifacts/teaching/$LAB_RUN_ID" "$policy"; result=$?; fi; node /work/testing/container/check-artifacts.mjs "/work/artifacts/teaching/$LAB_RUN_ID"; scan=$?; if [ "$result" -ne 0 ]; then exit "$result"; fi; exit "$scan"'
     fi
     [ "$#" -ge 2 ] && [ "$#" -le 3 ] || usage
     valid_browser "$2"

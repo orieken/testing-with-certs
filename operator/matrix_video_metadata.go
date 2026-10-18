@@ -193,3 +193,26 @@ func cucumberSpec(root string) string {
 	}
 	return spec
 }
+
+// A missing file alone never establishes that recording was intentionally disabled.
+func matrixDisabledRecordingCases(root string) ([]videoCase, error) {
+	data, err := os.ReadFile(filepath.Join(root, "recording-policy.json"))
+	if os.IsNotExist(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	var policy struct {
+		Evidence, Recording string
+		Cases               []struct{ Spec, Name, Status string }
+	}
+	if len(data) > 20_000_000 || json.Unmarshal(data, &policy) != nil || policy.Evidence != "explicit-recording-policy" || policy.Recording != "disabled" {
+		return nil, fmt.Errorf("invalid recording policy")
+	}
+	cases := []videoCase{}
+	for _, c := range policy.Cases {
+		cases = append(cases, videoCase{c.Spec, c.Name, videoResult(c.Status)})
+	}
+	return cases, nil
+}

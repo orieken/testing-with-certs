@@ -127,3 +127,6 @@ expand CI or the separate password lesson.
 UBI9 remains experimental: it adds CentOS Stream/EPEL desktop packages and uses
 live RPM/browser versions. Debian uses the existing locked package set. See
 [manual desktops](manual-browser.md#ubi9-browser-containers) for VNC setup.
+
+
+Certificate-shop Cucumber captures now save exact scenario/video associations. Successful runs verify these against the final Cucumber results, including hook outcomes. To deliberately omit video while retaining explicit per-case evidence, use `LAB_CUCUMBER_RECORD_VIDEO=0 ./lab test --runner cucumber --browser chrome --user shop-admin --suite teaching`. The default is `1`; other values are rejected. The gallery shows intentionally disabled cases separately from missing or expired files, without a player or download link. A disabled case never increases the available video count. `./lab matrix` continues to require recordings for its normal recording acceptance gate; use the direct test command for deliberate disabled-policy validation. [Completion 53](completion/53-live-cucumber-recording-metadata.md) records 28 fresh mapped clips and six live disabled cases.

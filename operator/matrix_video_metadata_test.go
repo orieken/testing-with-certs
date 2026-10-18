@@ -118,3 +118,23 @@ func TestRebuildKeepsMissingManifestPaths(t *testing.T) {
 		t.Fatalf("lost missing path or incorrect available count: %s", data)
 	}
 }
+
+func TestDisabledRecordingRequiresExplicitProducerEvidence(t *testing.T) {
+	root := t.TempDir()
+	cases, err := matrixDisabledRecordingCases(root)
+	if err != nil || len(cases) != 0 {
+		t.Fatal("absence must not imply disabled")
+	}
+	os.WriteFile(filepath.Join(root, "recording-policy.json"), []byte(`{"evidence":"explicit-recording-policy","recording":"disabled","cases":[{"name":"No video requested","spec":"teaching.feature","status":"PASSED"}]}`), 0600)
+	if err := saveMatrixHTML(filepath.Join(root, "matrix.json"), matrixManifest{Rows: []matrixRow{{Report: root}}}); err != nil {
+		t.Fatal(err)
+	}
+	html, _ := os.ReadFile(filepath.Join(root, "matrix.html"))
+	if !bytes.Contains(html, []byte("Recording intentionally disabled")) || !bytes.Contains(html, []byte("No video requested")) || bytes.Contains(html, []byte("Restore this file")) || bytes.Contains(html, []byte("<source src=")) {
+		t.Fatal("incorrect disabled player state")
+	}
+	os.WriteFile(filepath.Join(root, "recording-policy.json"), []byte(`{"recording":"disabled"}`), 0600)
+	if _, err := matrixDisabledRecordingCases(root); err == nil {
+		t.Fatal("accepted unsupported disabled claim")
+	}
+}
