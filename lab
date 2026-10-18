@@ -100,7 +100,7 @@ case "${1:-}" in
   operator)
     shift
     binary="$root_dir/artifacts/operator/bin/magic-shop-operator"
-    if [ ! -x "$binary" ] || [ "$root_dir/operator/go.mod" -nt "$binary" ] || [ -n "$(find "$root_dir/operator" -maxdepth 1 -name '*.go' -newer "$binary" -print -quit)" ]; then
+    if [ ! -x "$binary" ] || [ "$root_dir/operator/go.mod" -nt "$binary" ] || [ -n "$(find "$root_dir/operator" -maxdepth 1 \( -name '*.go' -o -name '*.html' \) -newer "$binary" -print -quit)" ]; then
       "$root_dir/operator/build.sh"
     fi
     exec "$binary" --root "$root_dir" --project "$project" "$@"

@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -17,14 +18,15 @@ type matrixVideo struct {
 }
 
 type matrixGalleryRow struct {
-	Selection string
-	Status    string
-	RunID     string
-	Report    string
-	Notice    string
-	Videos    []matrixGalleryVideo
+	Selection                        string
+	Status                           string
+	RunID                            string
+	Report                           string
+	Notice                           string
+	OS, Browser, Runner, User, Suite string
+	Videos                           []matrixGalleryVideo
 }
-type matrixGalleryVideo struct{ Label, URL string }
+type matrixGalleryVideo struct{ Label, URL, Spec, Name, Status string }
 
 func localReportURL(base, target string) (string, error) {
 	relative, err := filepath.Rel(base, target)
@@ -75,7 +77,7 @@ func saveMatrixHTML(path string, m matrixManifest) error {
 		if !filepath.IsAbs(report) {
 			report = filepath.Join(filepath.Dir(path), report)
 		}
-		gallery := matrixGalleryRow{Selection: strings.Join([]string{row.OS, row.Browser, row.Runner, row.User, row.Suite}, " / "), Status: row.Status, RunID: row.RunID}
+		gallery := matrixGalleryRow{Selection: strings.Join([]string{row.OS, row.Browser, row.Runner, row.User, row.Suite}, " / "), Status: row.Status, RunID: row.RunID, OS: row.OS, Browser: row.Browser, Runner: row.Runner, User: row.User, Suite: row.Suite}
 		videos, err := discoverMatrixVideos(report)
 		switch {
 		case os.IsNotExist(err):
@@ -95,12 +97,24 @@ func saveMatrixHTML(path string, m matrixManifest) error {
 				return err
 			}
 		}
+		cases, err := matrixVideoCases(report, videos)
+		if err != nil {
+			return err
+		}
+		fallback := "Spec unavailable"
+		if row.Runner == "cucumber" {
+			fallback = cucumberSpec(report)
+		}
 		for _, video := range videos {
 			link, err := localReportURL(filepath.Dir(path), filepath.Join(report, filepath.FromSlash(video.Path)))
 			if err != nil {
 				return err
 			}
-			gallery.Videos = append(gallery.Videos, matrixGalleryVideo{Label: video.Path, URL: link})
+			metadata, ok := cases[video.Path]
+			if !ok {
+				metadata = videoCase{fallback, "Recording without scenario metadata", "unlinked"}
+			}
+			gallery.Videos = append(gallery.Videos, matrixGalleryVideo{Label: video.Path, URL: link, Spec: metadata.Spec, Name: metadata.Name, Status: metadata.Status})
 		}
 		rows = append(rows, gallery)
 	}
@@ -116,7 +130,14 @@ func saveMatrixHTML(path string, m matrixManifest) error {
 	err = t.Execute(file, struct {
 		Manifest matrixManifest
 		Rows     []matrixGalleryRow
-	}{m, rows})
+		Total    int
+	}{m, rows, func() int {
+		total := 0
+		for _, r := range rows {
+			total += len(r.Videos)
+		}
+		return total
+	}()})
 	closeErr := file.Close()
 	if err != nil {
 		return err
@@ -179,16 +200,5 @@ func (o operator) matrixReport(args []string) (string, error) {
 	return fmt.Sprintf("Video report: %s\n", filepath.Join(filepath.Dir(path), "matrix.html")), nil
 }
 
-const matrixGalleryTemplate = `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Browser matrix recordings</title><style>
-body{font:16px system-ui,sans-serif;margin:0;background:#f5f6fa;color:#17233b}main{max-width:1200px;margin:auto;padding:32px}h1{margin-bottom:8px}p{line-height:1.5}a{color:#1858b5}section{background:white;border:1px solid #d9dfeb;border-radius:12px;margin:20px 0;padding:20px}h2{font-size:18px;overflow-wrap:anywhere}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px}figure{margin:0;min-width:0}video{width:100%;background:#111;border-radius:6px}figcaption{overflow-wrap:anywhere;font-size:14px;line-height:1.6}.notice{padding:12px;background:#fff4d5;border-radius:6px}.run{font-size:13px;overflow-wrap:anywhere;color:#526079}.status{font-weight:600}
-</style></head><body><main><h1>Browser matrix recordings</h1>
-<p class="status">{{.Manifest.Status}} · {{.Manifest.Passed}} passed · {{.Manifest.Failed}} failed</p>
-<p>Every saved recording under each selection is listed, including HTML report copies and multiple pages. Counts represent files, not unique scenarios. File paths identify their source; recordings without case metadata are associated with their suite only.</p>
-<p><a href="matrix.md">Matrix table</a> · <a href="matrix.json">Manifest</a></p>
-<p>Separate authentication and certificate/password acceptance reports disable recording to protect credential material. They are not part of these certificate-shop matrix selections.</p>
-{{range .Rows}}<section><h2>{{.Selection}}</h2><p class="status">{{.Status}} · {{len .Videos}} available videos</p><p class="run">Run: {{.RunID}}</p>{{if .Report}}<p><a href="{{.Report}}">Open suite report</a></p>{{end}}
-{{if .Notice}}<p class="notice">{{.Notice}}</p>{{end}}
-<div class="grid">{{range .Videos}}<figure><video controls preload="none" playsinline><source src="{{.URL}}">Your browser cannot play this recording. Use its download link.</video><figcaption>{{.Label}}<br><a href="{{.URL}}" download>Download recording</a></figcaption></figure>{{end}}</div></section>{{end}}
-</main></body></html>`
+//go:embed matrix_gallery.html
+var matrixGalleryTemplate string

@@ -1,0 +1,15 @@
+# Styled recording report with spec names and results
+
+The matrix gallery now uses responsive video cards, a compact dark header, selection/recording summary cards, searchable text, and browser/runner/test-result filters. Each card separates spec filename, test/scenario title, result badge, player, download link, and a collapsible source path. Suite status stays in the selection header; it never substitutes for a test result. Filter counts describe video files, including report copies, not unique tests. Empty filter results are explained and filter controls have accessible labels.
+
+The viewer reads the pinned Playwright HTML report's embedded ZIP using Go's standard library, decoding only known spec/test/result/attachment fields. Direct attachment paths establish exact associations. SHA-256 matches identify byte-identical copies within that selection; ambiguous copies remain unlinked. Actual result status distinguishes passed, failed/timed-out/interrupted, and skipped recordings. A passed suite does not turn a skipped recording into a pass. Raw errors, steps, attachments other than video references, and token material are not rendered. Source metadata has size bounds, and existing safe discovery, escaped labels, encoded relative links, and credential scanning remain in force.
+
+Legacy Cucumber recordings do not contain reliable scenario-to-video associations. Their feature file is taken from Cucumber metadata, but the scenario/result remains explicitly unlinked. REPORT-VIDEO-01B retains future Cucumber metadata and safe authentication recording integration; this change does not guess from file ordering or enable recording in credential-bearing acceptance suites.
+
+## Observed validation
+
+All operator tests passed in the pinned Go 1.26.0 container. New cases check exact attachment metadata, copied-file associations, actual timeout failure status, skipped status, and ambiguous-copy refusal; existing gallery/link/relocation/escaping/cleanup tests passed too. The native operator built, shell syntax and whitespace checks passed, and the generated report passed the credential-artifact scan.
+
+The saved 28-selection report retained **412 videos**. Browser inspection confirmed **216 passed**, **168 skipped**, and **28 unlinked** video-file labels: all 384 Playwright recordings received verified spec/title/outcome associations; the 28 Cucumber recordings remain unlinked. Result filtering showed exactly 168 skipped cards with no other result mixed in. Combined Chrome/Playwright filtering showed ten matching selections and no mismatches. A no-match search displayed the empty state. Inline playback reached media ready state 4 with a 3.04-second recording. The report was inspected in the in-app browser; no new authentication execution or cross-platform playback acceptance is claimed.
+
+The report is regenerated at `artifacts/matrix/20261014T131439-794930000Z-os-all-browser-all-runner-all-user-all-suite-all/matrix.html`, and a local visual preview is retained at `/private/tmp/matrix-report-styled.jpg`.
