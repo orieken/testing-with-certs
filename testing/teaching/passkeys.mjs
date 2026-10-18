@@ -1,3 +1,4 @@
+import { emitPasskeyDiagnostic } from './passkey-diagnostics.mjs';
 import { checkShortAccessLifetime } from './lesson-token-lifetime.mjs';
 import { withAuthRecording } from './auth-recording.mjs';
 import { expect } from '@playwright/test';
@@ -27,26 +28,32 @@ async function runcheckPasskey(browser, name, playwright) {
     return virtualAuthenticator(context, page, credentials);
   }
   async function enroll(username, verifyToken = false) {
-    const authenticator = await fresh();
-    const moduleDelayed = verifyToken ? await delayPublicModule('webauthnRegister') : undefined;
-    const token = verifyToken ? captureToken(page) : undefined;
-    if (token) void token.catch(() => {});
-    await startLesson(page, 'passkeys/enroll', 'Enroll a passkey');
-    await page.locator('#username').fill(username);
-    const account = users.find(value => value.username === username);
-    if (!account) throw new Error('Missing passkey fixture account');
-    await page.locator('#password').fill(account.password);
-    await page.locator('#kc-login').click();
-    await clickWebAuthn('#registerWebAuthn');
-    await expect(page.getByTestId('lesson-user')).toHaveText(username);
-    if (verifyToken) {
-      expect(moduleDelayed()).toBe(true);
-      await checkLessonToken(playwright, await token, 'passkeys-enroll');
+    try {
+      const authenticator = await fresh();
+      const moduleDelayed = verifyToken ? await delayPublicModule('webauthnRegister') : undefined;
+      const token = verifyToken ? captureToken(page) : undefined;
+      if (token) void token.catch(() => {});
+      await startLesson(page, 'passkeys/enroll', 'Enroll a passkey');
+      await page.locator('#username').fill(username);
+      const account = users.find(value => value.username === username);
+      if (!account) throw new Error('Missing passkey fixture account');
+      await page.locator('#password').fill(account.password);
+      await page.locator('#kc-login').click();
+      await clickWebAuthn('#registerWebAuthn');
+      await expect(page.getByTestId('lesson-user')).toHaveText(username);
+      if (verifyToken) {
+        expect(moduleDelayed()).toBe(true);
+        await checkLessonToken(playwright, await token, 'passkeys-enroll');
+      }
+      const credentials = await authenticator.credentials();
+      expect(credentials.length).toBe(1);
+      expect(credentials[0].rpId).toBe('auth.magic.test');
+      emitPasskeyDiagnostic(name, 'enrollment-passed', { identity: true, ...(verifyToken ? { moduleDelayed: moduleDelayed() } : {}) });
+      return credentials;
+    } catch (error) {
+      await diagnosticState('enrollment-failed');
+      throw error;
     }
-    const credentials = await authenticator.credentials();
-    expect(credentials.length).toBe(1);
-    expect(credentials[0].rpId).toBe('auth.magic.test');
-    return credentials;
   }
   async function identify(username) {
     await startLesson(page, 'passkeys', 'Sign in with a passkey');
@@ -58,6 +65,7 @@ async function runcheckPasskey(browser, name, playwright) {
     await expect(button).toBeVisible();
     // Keycloak attaches its click handler from a deferred ES module.
     await page.waitForLoadState('load');
+    await diagnosticState('control-ready');
     await button.click();
   }
   async function delayPublicModule(name) {
@@ -69,6 +77,20 @@ async function runcheckPasskey(browser, name, playwright) {
       await route.continue();
     });
     return () => delayed;
+  }
+  async function diagnosticState(stage, extra = {}) {
+    let observationFailed = false;
+    const read = async fn => { try { return Boolean(await fn()); } catch { observationFailed = true; return false; } };
+    emitPasskeyDiagnostic(name, stage, {
+      documentComplete: await read(() => page.evaluate(() => document.readyState === 'complete')),
+      focused: await read(() => page.evaluate(() => document.hasFocus())),
+      errorMessage: await read(() => page.locator('#kc-error-message').isVisible()),
+      feedback: await read(() => page.locator('#kc-feedback-text').isVisible()),
+      credentialError: await read(() => page.locator('#kc-error-credential-form').isVisible()),
+      identity: await read(() => page.getByTestId('lesson-user').count()),
+      authenticationButton: await read(() => page.locator('#authenticateWebAuthnButton').isVisible()),
+      ...extra, observationFailed
+    });
   }
   async function rejected() {
     await expect(page.locator('#kc-error-message:visible, #kc-feedback-text:visible, #kc-error-credential-form:visible').first()).toBeVisible({ timeout: 30_000 });
@@ -212,15 +234,10 @@ async function runcheckPasskey(browser, name, playwright) {
           await rejected();
         }
         catch (error) {
-          console.log(`Passkey rejection state: ${JSON.stringify({ signatureChanged,
-            focused: await page.evaluate(() => document.hasFocus()),
-            errorMessage: await page.locator('#kc-error-message').isVisible(),
-            feedback: await page.locator('#kc-feedback-text').isVisible(),
-            credentialError: await page.locator('#kc-error-credential-form').isVisible(),
-            identity: await page.getByTestId('lesson-user').count() > 0,
-            authenticationButton: await page.locator('#authenticateWebAuthnButton').isVisible() })}`);
+          await diagnosticState('rejection-failed', { signatureChanged, moduleDelayed: moduleDelayed() });
           throw error;
         }
+        emitPasskeyDiagnostic(name, 'rejection-passed', { signatureChanged, moduleDelayed: moduleDelayed(), identity: false });
         expect(signatureChanged).toBe(true);
         break;
       }

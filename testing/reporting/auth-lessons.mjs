@@ -1,3 +1,4 @@
+import { PasskeyDiagnosticLines, diagnosticPrefix, safePasskeyDiagnostic } from '../teaching/passkey-diagnostics.mjs';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
 import { authPhases } from '../teaching/auth-matrix.mjs';
@@ -8,11 +9,14 @@ export function safeAuthResult(name, status) {
   return { name, status: ['passed', 'PASSED'].includes(status) ? 'passed' : 'failed' };
 }
 
-export function finishAuthReport(browser, phase, cases) {
+export function finishAuthReport(browser, phase, cases, diagnostics = []) {
   if (!['chrome', 'msedge'].includes(browser) || !Object.hasOwn(authPhases, phase)) throw new Error('Unknown authentication report selection');
   cases = cases.map(value => safeAuthResult(value.name, value.status));
   const directory = `/work/artifacts/auth-lessons/${browser}-${phase}`;
   mkdirSync(directory, { recursive: true });
+  diagnostics = diagnostics.map(safePasskeyDiagnostic);
+  if (diagnostics.some(value => !value)) throw new Error('Unsafe passkey diagnostics');
+  if (diagnostics.length) writeFileSync(`${directory}/diagnostics.json`, JSON.stringify({ evidence: 'allowlisted-passkey-diagnostics', events: diagnostics }, null, 2), { mode: 0o644 });
   const failed = cases.filter(value => value.status !== 'passed').length;
   writeFileSync(`${directory}/results.json`, JSON.stringify({ evidence: 'live-authentication-lessons', browser, phase, cases }, null, 2), { mode: 0o644 });
   writeFileSync(`${directory}/junit.xml`, `<testsuite name="${browser}-${phase}" tests="${cases.length}" failures="${failed}">${cases.map(value =>
@@ -23,11 +27,20 @@ export function finishAuthReport(browser, phase, cases) {
 
 export default class AuthenticationLessonReporter {
   cases = [];
+  diagnostics = [];
+  diagnosticLines = new PasskeyDiagnosticLines();
+  onStdOut(chunk, test) {
+    for (const value of this.diagnosticLines.read(chunk, test)) {
+      this.diagnostics.push(value);
+      console.log(diagnosticPrefix + JSON.stringify(value));
+    }
+  }
   printsToStdio() { return true; }
   onTestEnd(test, result) {
     if (!names.has(test.title)) throw new Error('Unknown authentication lesson report case');
     const entry = { name: test.title, status: result.status === 'passed' ? 'passed' : 'failed' };
     this.cases.push(entry);
+    this.diagnosticLines.finish(test);
     console.log(`${process.env.LAB_BROWSER} ${entry.name}: ${entry.status}`);
     if (entry.status === 'failed') {
       const location = result.error?.stack?.match(/(?:(?:auth-lessons|kerberos)\.spec|passkeys|oidc|saml|kerberos)\.mjs:(\d+):(\d+)/);
@@ -40,6 +53,6 @@ export default class AuthenticationLessonReporter {
     if (!['chrome', 'msedge'].includes(browser)) throw new Error('Unknown report browser');
     const phase = process.env.LAB_AUTH_SUITE === 'kerberos-lifecycle' ? 'kerberos-lifecycle' : process.env.LAB_AUTH_SUITE === 'kerberos' ?
       (process.env.LAB_KERBEROS_DISABLED === '1' ? 'kerberos-disabled' : 'kerberos') : process.env.LAB_AUTH_SUITE === 'passkeys-lifecycle' ? 'passkeys-lifecycle' : process.env.LAB_AUTH_SUITE === 'oidc-lifecycle' ? 'oidc-lifecycle' : process.env.LAB_AUTH_SUITE === 'saml-lifecycle' ? 'saml-lifecycle' : 'passkeys-federation';
-    finishAuthReport(browser, phase, this.cases);
+    finishAuthReport(browser, phase, this.cases, this.diagnostics);
   }
 }

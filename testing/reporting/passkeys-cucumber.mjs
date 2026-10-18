@@ -1,3 +1,4 @@
+import { takePasskeyDiagnostics } from '../teaching/passkey-diagnostics.mjs';
 import { Formatter } from '@cucumber/cucumber';
 import { safeAuthResult, finishAuthReport } from './auth-lessons.mjs';
 export default class PasskeyFormatter extends Formatter {
@@ -15,7 +16,7 @@ export default class PasskeyFormatter extends Formatter {
         console.log(`${process.env.LAB_BROWSER} cucumber ${result.name}: ${result.status}`);
         return result;
       });
-      finishAuthReport(process.env.LAB_BROWSER, process.env.LAB_AUTH_SUITE === 'passkeys-lifecycle' ? 'passkeys-lifecycle-cucumber' : 'passkeys-cucumber', cases);
+      finishAuthReport(process.env.LAB_BROWSER, process.env.LAB_AUTH_SUITE === 'passkeys-lifecycle' ? 'passkeys-lifecycle-cucumber' : 'passkeys-cucumber', cases, takePasskeyDiagnostics());
     });
   }
 }

@@ -78,3 +78,6 @@ Run identifiers and exact commands are recorded in [teaching completion 11](comp
 
 
 Certificate-shop Cucumber recording metadata was validated in all eight Debian/UBI9 × Chrome/Edge × customer/admin selections: 28/28 scenario videos have exact feature/name/result associations. Two further Debian Chrome/Edge selections passed 6/6 cases with explicitly disabled video and no clips. The combined gallery now contains 1,156 video files and six disabled-case entries; repeated captures do not add unique auth scenarios. The 28 older unlinked recordings remain unchanged. [Completion 53](completion/53-live-cucumber-recording-metadata.md) records local execution, gallery checks, scans, and cleanup; no new native CI claim is implied.
+
+
+[Completion 55](completion/55-passkey-safe-diagnostics.md) adds allowlisted passkey diagnostic forwarding and saved events in both runners. Two fresh local baseline rounds passed 56/56 browser/runner executions, including delayed-module enrollment and mandatory altered-signature rejection. These repetitions add 96 videos, bringing the gallery to 1,268; they add no unique auth cases and establish no new native CI acceptance. Current-source native diagnostic verification remains open.

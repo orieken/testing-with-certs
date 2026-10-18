@@ -225,3 +225,24 @@ SAML broker session and refresh acceptance subsequently passed **84/84** baselin
 Kerberos lesson session and refresh acceptance subsequently passed **40/40** baseline/lifecycle executions locally and natively. Five shared cases cover expiry/re-entry, refresh after removing a privately copied ticket cache, logout invalidation, client binding, and actual client-session expiry. Each invocation removes its owned cache/profile; group cleanup restores client policy and logs out imported-account sessions. The current native matrix passed **260/260**, with all 15 jobs green at `0d65396`. [Completion 47](completion/47-kerberos-session-refresh.md) records independently checked reports and cleanup. Re-entry permits Keycloak SSO reuse; token refresh does not establish immediate KDC revocation propagation or other-platform support.
 
 All implemented authentication methods now have accepted browser recordings in Playwright and Cucumber. Credential-provider documents use a privacy screen; lesson UI remains visible, and private API token bodies are not filmed. Recording gates verify each case and file before report import. [Completion 51](completion/51-authentication-recordings.md) records the 296 required auth/certificate-password executions, evidence sources, cleanup, and video-file counts.
+
+## Safe passkey diagnostics and repeat checks
+
+Passkey checks emit `PASSKEY_DIAGNOSTIC` records containing only an allowlisted
+case name, stage, and Boolean states. Playwright forwards only validated records;
+raw stdout is withheld. Both runners save the same records in `diagnostics.json`
+beside their result reports. These cover document completion, focus, visible
+error/identity controls, delayed public modules, and actual changed-signature
+submission. `observationFailed` distinguishes unsuccessful state sampling from a
+complete observation. No page text, URLs, request bodies, credentials, credential
+IDs, signatures, or tokens are exported.
+
+Run `LAB_PROJECT=magic-shop-auth-passkey-repeat-unique sh testing/run-passkey-reliability.sh`
+with a fresh project name to repeat the seven baseline cases twice in real Chrome
+and Edge through Playwright and Cucumber. The harness resets fixture accounts and
+browser profiles between selections, requires the existing delayed-script
+readiness controls and mandatory signature submission, checks all 56 outcomes
+and safe diagnostic evidence, scans artifacts, and removes its disposable stack.
+It is a focused baseline reliability run, not the full protocol/lifecycle matrix.
+Finite passing repetitions do not prove that every historical intermittent
+failure has the same cause or cannot recur.
