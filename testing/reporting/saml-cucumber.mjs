@@ -15,7 +15,7 @@ export default class SamlFormatter extends Formatter {
         console.log(`${process.env.LAB_BROWSER} cucumber ${result.name}: ${result.status}`);
         return result;
       });
-      finishAuthReport(process.env.LAB_BROWSER, 'saml-cucumber', cases);
+      finishAuthReport(process.env.LAB_BROWSER, process.env.LAB_AUTH_SUITE === 'saml-lifecycle' ? 'saml-lifecycle-cucumber' : 'saml-cucumber', cases);
     });
   }
 }

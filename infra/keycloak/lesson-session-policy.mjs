@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 export function lessonSessionPolicy(clientId) {
-  if (!['password-otp-spa', 'passkeys-spa', 'oidc-spa'].includes(clientId)) throw new Error('Unknown lifecycle client');
+  if (!['password-otp-spa', 'passkeys-spa', 'oidc-spa', 'saml-spa'].includes(clientId)) throw new Error('Unknown lifecycle client');
   const policy = { 'access.token.lifespan': '20', 'client.session.max.lifespan': '45' };
   async function client(admin) {
     const found = await admin('GET', `/clients?clientId=${clientId}&max=2`);

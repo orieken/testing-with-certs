@@ -56,7 +56,7 @@ for browser in chrome msedge; do
     compose run --rm --no-deps auth-lesson-fixture verify
     docker volume rm "${LAB_PROJECT}_auth-lesson-home" "${LAB_PROJECT}_auth-lesson-tmp" >/dev/null
   done
-  for method in passkeys oidc; do
+  for method in passkeys oidc saml; do
     for runner in playwright cucumber; do
       compose run --rm --no-deps auth-lesson-fixture "start-$method-lifecycle"
       if test "$runner" = playwright; then

@@ -4,7 +4,7 @@ import { lessonSessionPolicy } from './lesson-session-policy.mjs';
 import { lessonAdmin } from './lesson-admin.mjs';
 
 const action = process.argv[2];
-if (!['start', 'start-passkeys-lifecycle', 'start-oidc-lifecycle', 'finish', 'verify', 'kerberos-disable', 'kerberos-enable'].includes(action)) throw new Error('Unknown authentication lesson fixture action');
+if (!['start', 'start-passkeys-lifecycle', 'start-oidc-lifecycle', 'start-saml-lifecycle', 'finish', 'verify', 'kerberos-disable', 'kerberos-enable'].includes(action)) throw new Error('Unknown authentication lesson fixture action');
 if (!/^magic-shop-auth-[a-z0-9-]+$/.test(process.env.LAB_PROJECT ?? '')) throw new Error('Use a disposable magic-shop-auth-* project');
 const local = await lessonAdmin();
 const kerberos = await lessonAdmin({ realm: 'lesson-kerberos' });
@@ -16,8 +16,14 @@ const policy = lessonSessionPolicy('passkeys-spa');
 const policyPath = '/test-secrets/passkey-session-policy.json';
 const oidcPolicy = lessonSessionPolicy('oidc-spa');
 const oidcPolicyPath = '/test-secrets/oidc-session-policy.json';
+const samlPolicy = lessonSessionPolicy('saml-spa');
+const samlPolicyPath = '/test-secrets/saml-session-policy.json';
 const statePath = '/test-secrets/auth-users.json';
 const specs = [
+  ...['expiry', 'refresh', 'refresh-without-role', 'logout', 'binding', 'session-expiry'].map(kind => ({
+    username: `saml-test-life-${kind}`, target: 'provider',
+    attributes: kind === 'refresh-without-role' ? {} : { lesson_role: ['reviewer'] },
+  })),
   ...['mapped', 'absent', 'unrecognized', 'withdrawn'].map(kind => ({ username: `saml-test-role-${kind}`, target: 'provider',
     attributes: kind === 'absent' ? {} : { lesson_role: [kind === 'unrecognized' ? 'administrator' : 'reviewer'] } })),
   ...['enrollment', 'login', 'missing', 'signature', 'isolation', 'second', 'expiry', 'refresh', 'logout', 'binding', 'session-expiry'].map(name => ({ username: `passkeys-test-${name}`, target: 'local', requiredActions: ['webauthn-register-passwordless'] })),
@@ -36,17 +42,19 @@ if (action.startsWith('kerberos-')) {
   if (users.length !== 1) throw new Error('Authenticate Kerberos fixture once before toggling its imported account');
   await kerberos('PUT', `/users/${users[0].id}`, { enabled: action === 'kerberos-enable' }, 204);
   await kerberos('POST', `/users/${users[0].id}/logout`, undefined, 204);
-} else if (action === 'start' || action === 'start-passkeys-lifecycle' || action === 'start-oidc-lifecycle') {
+} else if (action === 'start' || action === 'start-passkeys-lifecycle' || action === 'start-oidc-lifecycle' || action === 'start-saml-lifecycle') {
   if (existsSync(statePath)) throw new Error('Prior authentication fixture remains');
   for (const spec of specs) if ((await find(admins[spec.target], spec.username)).length) throw new Error('Existing lesson account retained');
   if (action === 'start-passkeys-lifecycle') await policy.start(local, policyPath);
-  if (action === 'start-oidc-lifecycle') {
-    // Use a real second public client in this broker realm for the binding negative.
-    const control = await oidc('GET', '/clients?clientId=account-console&max=2');
-    if (control.length !== 1) throw new Error('OIDC refresh control client missing or ambiguous');
-    const client = await oidc('GET', `/clients/${control[0].id}`);
-    if (!client.enabled || !client.publicClient || !client.standardFlowEnabled || client.protocol !== 'openid-connect') throw new Error('OIDC refresh control client drift');
-    await oidcPolicy.start(oidc, oidcPolicyPath);
+  if (action === 'start-oidc-lifecycle' || action === 'start-saml-lifecycle') {
+    const broker = action === 'start-oidc-lifecycle' ? oidc : saml;
+    // Use a real second public client in the selected broker realm for the binding negative.
+    const control = await broker('GET', '/clients?clientId=account-console&max=2');
+    if (control.length !== 1) throw new Error('Broker refresh control client missing or ambiguous');
+    const client = await broker('GET', `/clients/${control[0].id}`);
+    if (!client.enabled || !client.publicClient || !client.standardFlowEnabled || client.protocol !== 'openid-connect') throw new Error('Broker refresh control client drift');
+    if (action === 'start-oidc-lifecycle') await oidcPolicy.start(oidc, oidcPolicyPath);
+    else await samlPolicy.start(saml, samlPolicyPath);
   }
   const entries = specs.map(value => ({ ...value, password: randomBytes(32).toString('base64url') }));
   writeFileSync(statePath, JSON.stringify(entries), { mode: 0o600, flag: 'wx' });
@@ -59,6 +67,7 @@ if (action.startsWith('kerberos-')) {
 } else if (action === 'finish') {
   await policy.finish(local, policyPath);
   await oidcPolicy.finish(oidc, oidcPolicyPath);
+  await samlPolicy.finish(saml, samlPolicyPath);
   if (existsSync(statePath)) {
     const entries = JSON.parse(readFileSync(statePath, 'utf8'));
     if (entries.length !== specs.length || entries.some((value, index) => value.username !== specs[index].username || value.target !== specs[index].target)) throw new Error('Fixture state drift');
@@ -76,6 +85,7 @@ if (action.startsWith('kerberos-')) {
 } else {
   await policy.verify(local, policyPath);
   await oidcPolicy.verify(oidc, oidcPolicyPath);
+  await samlPolicy.verify(saml, samlPolicyPath);
   if (existsSync(statePath)) throw new Error('Fixture secret file remains');
   for (const spec of specs) if ((await find(admins[spec.target], spec.username)).length) throw new Error('Fixture account remains');
   for (const spec of specs.filter(value => value.target === 'provider')) {
