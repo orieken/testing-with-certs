@@ -85,7 +85,18 @@ Rebuild a gallery from an existing manifest without rerunning tests:
 
 New manifest report paths are relative to the manifest, and video paths are relative to each suite report directory. To move or download artifacts, retain the `artifacts/matrix`, `artifacts/teaching`, and `artifacts/playwright` relative layout. Historical absolute paths are rebased onto the current checkout's artifacts tree when their original folders are absent. Missing folders and selections without recordings are labeled; rebuilding refreshes their availability. Symlinks and paths outside the artifact tree are rejected by the rebuild command. The report works as local HTML or through a local static server; copying only `matrix.html` does not include its videos.
 
-Separate authentication and certificate/password acceptance suites currently disable videos to avoid exporting credential material, and remain outside these 28 selections. This viewer does not turn on recording or change credential scans. Explicit Cucumber scenario metadata and safe recording for those separate suites remain tracked follow-ups. [Completion 49](completion/49-matrix-report-style-spec-results.md) records the styled report and verified Playwright associations. [Completion 48](completion/48-matrix-video-gallery.md) records validation against the saved matrix.
+Authentication and certificate/password capture now uses the shared browser-context recorder in both runners, including popup pages and Kerberos persistent profiles. Credential-provider documents appear as a neutral privacy screen; the shop and lesson UI remain visible. Private API refresh requests are represented by their case result and surrounding browser journey, not filmed token bodies. Recording does not enable traces or raw failure attachments. The 28 original certificate-shop selections stay separate from imported auth selections.
+
+The capture commands require every expected case, a nonempty recording, exact case/runner/phase metadata, and the existing credential-artifact scan. Successful runs export `recording-matrix.json` and per-selection `video-cases.json`. The certificate/password recording command uses `LAB_PASSWORD_REPORTS=1`. After downloading CI artifacts, rebuild and verify their indexes using the same source, then merge them into a saved gallery:
+
+```sh
+node testing/reporting/auth-recording-index.mjs auth-lessons artifacts/auth-lessons/RUN
+node testing/reporting/auth-recording-index.mjs password-otp artifacts/password-otp/RUN
+node testing/reporting/auth-recording-index.mjs certificate-password artifacts/certificate-password-ci/RUN
+./lab matrix-merge artifacts/matrix/SELECTION/matrix.json artifacts/auth-lessons/RUN/recording-matrix.json artifacts/password-otp/RUN/recording-matrix.json artifacts/certificate-password-ci/RUN/recording-matrix.json
+```
+
+Merging replaces an already-imported report directory instead of duplicating it. Keep all referenced auth artifact folders when moving the combined gallery. New auth recordings carry exact case metadata for Playwright and Cucumber; legacy certificate-shop Cucumber videos remain explicitly unlinked. [Completion 51](completion/51-authentication-recordings.md) tracks capture acceptance and earlier partial runs. [Completion 49](completion/49-matrix-report-style-spec-results.md) records the styled report and verified Playwright associations. [Completion 48](completion/48-matrix-video-gallery.md) records validation against the saved matrix.
 
 The manifest records each selection and its available video paths. It also records report path,
 status, duration, recognized test summary and nonempty video-file count. A suite

@@ -55,3 +55,5 @@ and opt-in local video recording. [Completion 15](docs/completion/15-certificate
 records local evidence and the remaining manual/native Linux dependencies.
 
 Password/TOTP and passkey baseline/session/refresh acceptance each passed 48/48 locally and natively across Chrome/Edge and Playwright/Cucumber. Controlled OIDC baseline/session/refresh acceptance passed 40/40. SAML baseline/session/refresh acceptance passed 84/84. Kerberos baseline/session/refresh acceptance passed 40/40. The full native authentication matrix passed 260/260, with all 15 workflow jobs green at the corrected source. See [completion 47](docs/completion/47-kerberos-session-refresh.md) and the [authentication matrix](docs/teaching-coverage.md#authentication-protocol-matrix) for evidence and remaining scope.
+
+Authentication recordings now cover every implemented method across both browsers and runners, with credential-provider pages hidden from video. The matrix gallery imports verified case/result metadata and filters by auth type. See [recording acceptance](docs/completion/51-authentication-recordings.md) and the [matrix report guide](docs/browser-matrix.md).

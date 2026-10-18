@@ -207,14 +207,12 @@ jobs:
             fi
           done
           test "$readable" -gt 0
-      - name: Upload scanned readable teaching text reports
+      - name: Upload scanned teaching reports and privacy-screened recordings
         if: always() && steps.password_scan.outcome == 'success'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: certificate-password-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            artifacts/certificate-password-ci/${{ env.LAB_PROJECT }}/*/junit.xml
-            artifacts/certificate-password-ci/${{ env.LAB_PROJECT }}/*/results.json
+          path: artifacts/certificate-password-ci/${{ env.LAB_PROJECT }}/
           if-no-files-found: error
           retention-days: 7
       - name: Remove and verify successful matrix resources

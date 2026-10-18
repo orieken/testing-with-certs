@@ -45,3 +45,5 @@ browser/runner/user/suite filters for a specific selection. The Bubble Tea menu
 includes matrix actions. See [browser matrix commands and saved recordings](browser-matrix.md).
 
 Saved matrix runs include `matrix.html` with inline video players and download links. Use `./lab matrix-report artifacts/matrix/<selection>/matrix.json` to rebuild a saved gallery without running tests. Keep its sibling teaching/recorded artifact folders when moving reports. See [matrix video coverage and limits](completion/48-matrix-video-gallery.md).
+
+Use `./lab matrix-merge MATRIX.json RECORDING-MATRIX.json [...]` to add verified authentication recording bundles to the gallery. The recording exporter checks every expected case before producing those bundles. Credential-provider pages use a privacy screen while real authentication continues. See [authentication recording acceptance](completion/51-authentication-recordings.md).
