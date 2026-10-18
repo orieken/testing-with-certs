@@ -24,7 +24,7 @@ async function fixture(run, clientId) {
   try { await run({ admin, path, state, original, fail: value => { fail = value; } }); }
   finally { rmSync(directory, { recursive: true, force: true }); }
 }
-for (const clientId of ['password-otp-spa', 'passkeys-spa']) {
+for (const clientId of ['password-otp-spa', 'passkeys-spa', 'oidc-spa']) {
 const { start: startOtpSessionPolicy, finish: finishOtpSessionPolicy, verify: verifyOtpSessionPolicy } = lessonSessionPolicy(clientId);
 test(`${clientId} short lifetimes are client scoped, privately recorded and completely restored`, () => fixture(async ({admin,path,state,original}) => {
   await startOtpSessionPolicy(admin,path);

@@ -56,18 +56,20 @@ for browser in chrome msedge; do
     compose run --rm --no-deps auth-lesson-fixture verify
     docker volume rm "${LAB_PROJECT}_auth-lesson-home" "${LAB_PROJECT}_auth-lesson-tmp" >/dev/null
   done
-  for runner in playwright cucumber; do
-    compose run --rm --no-deps auth-lesson-fixture start-passkeys-lifecycle
-    if test "$runner" = playwright; then
-      compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e LAB_AUTH_SUITE=passkeys-lifecycle auth-lesson-tests \
-        sh -c 'cd /work/testing && ./node_modules/.bin/playwright test --config playwright.auth-lessons.config.mjs'
-    else
-      compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e LAB_AUTH_SUITE=passkeys-lifecycle auth-lesson-tests \
-        sh -c 'cd /work/testing && ./node_modules/.bin/cucumber-js --import cucumber/passkeys.mjs cucumber/features/passkeys-session.feature --format ./reporting/passkeys-cucumber.mjs --order random'
-    fi
-    compose run --rm --no-deps auth-lesson-fixture finish
-    compose run --rm --no-deps auth-lesson-fixture verify
-    docker volume rm "${LAB_PROJECT}_auth-lesson-home" "${LAB_PROJECT}_auth-lesson-tmp" >/dev/null
+  for method in passkeys oidc; do
+    for runner in playwright cucumber; do
+      compose run --rm --no-deps auth-lesson-fixture "start-$method-lifecycle"
+      if test "$runner" = playwright; then
+        compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e "LAB_AUTH_SUITE=$method-lifecycle" -e "LAB_LIFECYCLE_METHOD=$method" auth-lesson-tests \
+          sh -c 'cd /work/testing && ./node_modules/.bin/playwright test --config playwright.auth-lessons.config.mjs'
+      else
+        compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e "LAB_AUTH_SUITE=$method-lifecycle" -e "LAB_LIFECYCLE_METHOD=$method" auth-lesson-tests \
+          sh -c 'cd /work/testing && ./node_modules/.bin/cucumber-js --import "cucumber/$LAB_LIFECYCLE_METHOD.mjs" "cucumber/features/$LAB_LIFECYCLE_METHOD-session.feature" --format "./reporting/$LAB_LIFECYCLE_METHOD-cucumber.mjs" --order random'
+      fi
+      compose run --rm --no-deps auth-lesson-fixture finish
+      compose run --rm --no-deps auth-lesson-fixture verify
+      docker volume rm "${LAB_PROJECT}_auth-lesson-home" "${LAB_PROJECT}_auth-lesson-tmp" >/dev/null
+    done
   done
 done
 docker run --rm --platform linux/amd64 --network none --entrypoint node \

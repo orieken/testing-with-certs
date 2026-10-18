@@ -15,7 +15,7 @@ export default class OidcFormatter extends Formatter {
         console.log(`${process.env.LAB_BROWSER} cucumber ${result.name}: ${result.status}`);
         return result;
       });
-      finishAuthReport(process.env.LAB_BROWSER, 'oidc-cucumber', cases);
+      finishAuthReport(process.env.LAB_BROWSER, process.env.LAB_AUTH_SUITE === 'oidc-lifecycle' ? 'oidc-lifecycle-cucumber' : 'oidc-cucumber', cases);
     });
   }
 }

@@ -39,7 +39,7 @@ export default class AuthenticationLessonReporter {
     const browser = process.env.LAB_BROWSER;
     if (!['chrome', 'msedge'].includes(browser)) throw new Error('Unknown report browser');
     const phase = process.env.LAB_AUTH_SUITE === 'kerberos' ?
-      (process.env.LAB_KERBEROS_DISABLED === '1' ? 'kerberos-disabled' : 'kerberos') : process.env.LAB_AUTH_SUITE === 'passkeys-lifecycle' ? 'passkeys-lifecycle' : 'passkeys-federation';
+      (process.env.LAB_KERBEROS_DISABLED === '1' ? 'kerberos-disabled' : 'kerberos') : process.env.LAB_AUTH_SUITE === 'passkeys-lifecycle' ? 'passkeys-lifecycle' : process.env.LAB_AUTH_SUITE === 'oidc-lifecycle' ? 'oidc-lifecycle' : 'passkeys-federation';
     finishAuthReport(browser, phase, this.cases);
   }
 }
