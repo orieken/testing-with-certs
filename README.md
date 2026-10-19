@@ -2,6 +2,8 @@
 
 Start with [Get started with certificate tests](docs/getting-started.md) for setup and copyable container test commands. Use the [project pitch and current gaps](docs/project-pitch.md) to explain the approach and its limits.
 
+For hosted identity-provider preparation, use the [external account setup guides](docs/providers/README.md). Entra ID, Auth0, Okta, Cognito, and optional ZITADEL Cloud are documented; account creation and live integration are deferred.
+
 To build all services and run the real-system verification in a fresh disposable lab, run `sh testing/run-all.sh all`.
 The root package aliases are `pnpm run build:all`, `pnpm run test:all`, and `pnpm run build:test`.
 Run `./lab matrix --plan` to preview, or `./lab matrix` to record the complete Debian/UBI9 Chrome/Edge browser matrix. See [matrix selections and reports](docs/browser-matrix.md).

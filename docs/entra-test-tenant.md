@@ -4,6 +4,9 @@ Checked against Microsoft documentation on 2026-10-19. This is a manual setup
 runbook; no account, subscription, or tenant has been created for this repository.
 Live IDP-02 implementation stays deferred until a dedicated tenant is available.
 
+See the [external provider setup index](providers/README.md) for all hosted options
+and shared handoff requirements.
+
 ## Choose an available path
 
 | Situation | Path |

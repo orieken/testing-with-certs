@@ -2,6 +2,8 @@
 
 The separate [authentik OIDC/SAML examples](authentik-lessons.md) now have 56/56 native Chrome/Edge × Playwright/Cucumber passes, scoped group mapping, rejection/logout checks, and 64 verified recordings. [Completion 57](completion/57-authentik-provider.md) records broker scope and cleanup.
 
+For upcoming hosted providers, see the [external account setup guides](providers/README.md). These are preparation documents; live cloud integration remains deferred.
+
 This document explains the implemented identity and access boundaries.
 The [certificate-free lessons guide](certificate-free-lessons.md) describes the separate port 8543 entrance and password/OTP implementation, with a [current protocol matrix](teaching-coverage.md#authentication-protocol-matrix) of 260 local passes across runs and 260 native passes at the current source. [Completion 42](completion/42-saml-role-mapping.md) records scoped SAML role mapping. [Completion 43](completion/43-password-otp-session-refresh.md) records 48/48 Password/TOTP baseline/lifecycle passes; subsequent [passkey lifecycle acceptance](completion/44-passkey-session-refresh.md) passed 48/48 total passkey executions. [Completion 45](completion/45-oidc-session-refresh.md) adds 40/40 controlled OIDC baseline/lifecycle executions and all 15 workflow jobs at the corrected source, with provider SSO and upstream-token limits explicit.
 Use the [project terminology dictionary](project-terminology.md) and [writing guide](writing-guide.md) with this document.
