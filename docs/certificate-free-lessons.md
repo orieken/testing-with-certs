@@ -1,5 +1,7 @@
 # Certificate-free authentication lessons
 
+The separate [authentik OIDC/SAML examples](authentik-lessons.md) now have 56/56 native Chrome/Edge × Playwright/Cucumber passes, scoped group mapping, rejection/logout checks, and 64 verified recordings. [Completion 57](completion/57-authentik-provider.md) records broker scope and cleanup.
+
 The teaching entrance is `https://shop.magic.test:8543/teaching`.
 It uses the existing shop server certificate and does not request a user certificate.
 The certificate-only shop remains at `https://shop.magic.test:8443`.

@@ -67,6 +67,16 @@ The ordinary native CI job runs the same harness, scans before upload, always
 verifies cleanup, and is required by the final independent gate. Only observed
 passes may be added to the coverage matrix.
 
+## Observed acceptance
+
+[Native run 39168182768](https://github.com/orieken/testing-with-certs/actions/runs/39168182768)
+passed 56/56 required executions and all 16 workflow jobs at `2bbf1b5`, attempt 1.
+Independent downloaded gates verified eight method/browser/runner selections and
+64 indexed videos; the credential scan checked 213 entries, including verified
+cleanup. All videos are imported into the combined matrix gallery.
+[Completion 57](completion/57-authentik-provider.md) records runtime versions,
+local Docker limitations, and remaining acceptance scope.
+
 ## Sources
 
 - [Official Docker Compose installation](https://docs.goauthentik.io/install-config/install/docker-compose/)
