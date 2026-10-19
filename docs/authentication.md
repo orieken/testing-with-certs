@@ -1,6 +1,6 @@
 # Certificate authentication and browser operation
 
-The separate [authentik OIDC/SAML examples](authentik-lessons.md) now have 56/56 native Chrome/Edge × Playwright/Cucumber passes, scoped group mapping, rejection/logout checks, and 64 verified recordings. [Completion 57](completion/57-authentik-provider.md) records broker scope and cleanup.
+The separate [authentik OIDC/SAML examples](authentik-lessons.md) now have 104/104 native Chrome/Edge × Playwright/Cucumber passes, including 48 lifecycle executions and 120 verified recordings. [Completion 58](completion/58-authentik-lifecycle.md) records refresh/expiry/logout, group withdrawal and restoration, broker scope, and cleanup.
 
 For upcoming hosted providers, see the [external account setup guides](providers/README.md). These are preparation documents; live cloud integration remains deferred.
 
