@@ -227,7 +227,11 @@ func (o operator) matrixReport(args []string) (string, error) {
 			return "", errors.New("matrix report must remain inside artifacts")
 		}
 		if resolved, err := filepath.EvalSymlinks(report); err == nil {
-			rel, err := filepath.Rel(artifactRoot, resolved)
+			resolvedRoot := artifactRoot
+			if rootResolved, err := filepath.EvalSymlinks(artifactRoot); err == nil {
+				resolvedRoot = rootResolved
+			}
+			rel, err := filepath.Rel(resolvedRoot, resolved)
 			if err != nil || rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
 				return "", errors.New("matrix report symlink escapes artifacts")
 			}

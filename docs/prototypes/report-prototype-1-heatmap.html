@@ -1,0 +1,1345 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browser Matrix & Evidence Dashboard — Prototype 1: Heatmap & Triage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      
+      --bg: #0b0f19;
+      --bg-surface: #111827;
+      --bg-card: #162032;
+      --bg-card-hover: #1c2940;
+      --border: #233149;
+      --border-subtle: #1a2538;
+      
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --brand: #3b82f6;
+      --brand-glow: rgba(59, 130, 246, 0.2);
+      
+      --status-pass: #10b981;
+      --status-pass-bg: rgba(16, 185, 129, 0.12);
+      --status-pass-border: rgba(16, 185, 129, 0.3);
+      
+      --status-fail: #ef4444;
+      --status-fail-bg: rgba(239, 68, 68, 0.15);
+      --status-fail-border: rgba(239, 68, 68, 0.4);
+      
+      --status-skip: #f59e0b;
+      --status-skip-bg: rgba(245, 158, 11, 0.12);
+      
+      --auth-cert: #06b6d4;
+      --auth-passkey: #8b5cf6;
+      --auth-saml: #f59e0b;
+      --auth-kerberos: #ec4899;
+      --auth-oidc: #3b82f6;
+      --auth-totp: #10b981;
+      
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 18px;
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --border: #e2e8f0;
+      --border-subtle: #edf2f7;
+      
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      
+      --brand: #2563eb;
+      --brand-glow: rgba(37, 99, 235, 0.1);
+      
+      --status-pass: #059669;
+      --status-pass-bg: #ecfdf5;
+      --status-pass-border: #a7f3d0;
+      
+      --status-fail: #dc2626;
+      --status-fail-bg: #fef2f2;
+      --status-fail-border: #fecaca;
+      
+      --status-skip: #d97706;
+      --status-skip-bg: #fffbeb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    /* Top Navigation Shell */
+    .top-nav {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    [data-theme="light"] .top-nav {
+      background: rgba(255, 255, 255, 0.85);
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px var(--brand-glow);
+    }
+    .brand-title {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+    .brand-subtitle {
+      color: var(--text-muted);
+      font-weight: 400;
+      font-size: 13px;
+      margin-left: 6px;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .nav-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-main);
+      border-color: var(--text-dim);
+    }
+    .theme-toggle {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .theme-toggle:hover { color: var(--text-main); }
+
+    /* Main Container */
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Hero Header & Metrics */
+    .hero-header {
+      margin-bottom: 2rem;
+    }
+    .hero-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .hero-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .run-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 9999px;
+      color: var(--text-muted);
+    }
+    
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .metric-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .metric-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--text-dim);
+    }
+    .metric-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .metric-value {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .metric-meta {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 8px;
+    }
+    .metric-card.success .metric-value { color: var(--status-pass); }
+    .metric-card.danger .metric-value { color: var(--status-fail); }
+    .metric-card.accent .metric-value { color: var(--brand); }
+
+    /* EXECUTIVE MATRIX HEATMAP SECTION */
+    .section-block {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Heatmap Table */
+    .heatmap-wrapper {
+      overflow-x: auto;
+    }
+    .heatmap-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 4px;
+      font-size: 13px;
+    }
+    .heatmap-table th {
+      background: var(--bg-card);
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 10px 12px;
+      text-align: center;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+    }
+    .heatmap-table th.th-auth {
+      text-align: left;
+      min-width: 180px;
+    }
+    .heatmap-table td {
+      padding: 0;
+    }
+    .matrix-cell {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+    .matrix-cell:hover {
+      border-color: var(--brand);
+      transform: scale(1.03);
+      box-shadow: 0 4px 12px var(--brand-glow);
+      z-index: 2;
+    }
+    .matrix-cell.active-cell {
+      outline: 2px solid var(--brand);
+      border-color: transparent;
+      background: var(--bg-card-hover);
+    }
+    .matrix-cell.status-all-pass {
+      background: var(--status-pass-bg);
+      border-color: var(--status-pass-border);
+    }
+    .cell-status-icon {
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--status-pass);
+    }
+    .cell-count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .cell-duration {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+    .auth-row-label {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 6px;
+    }
+    .auth-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    /* Sticky Command & Filter Bar */
+    .filter-bar {
+      position: sticky;
+      top: 60px;
+      z-index: 90;
+      background: rgba(17, 24, 39, 0.95);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 12px 18px;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+    [data-theme="light"] .filter-bar {
+      background: rgba(255, 255, 255, 0.95);
+    }
+    .search-box {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 9px 12px 9px 36px;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-box input:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--brand-glow);
+    }
+    .search-icon {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-size: 13px;
+      pointer-events: none;
+    }
+    .filter-select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      outline: none;
+      cursor: pointer;
+    }
+    .filter-select:focus {
+      border-color: var(--brand);
+    }
+    .view-toggles {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 2px;
+    }
+    .toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .toggle-btn.active {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .filter-count {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* SCENARIO-CENTRIC EVIDENCE GRID */
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+      gap: 1.5rem;
+    }
+    .scenario-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s ease;
+      content-visibility: auto;
+      contain-intrinsic-size: 400px;
+    }
+    .scenario-card:hover {
+      border-color: var(--border-subtle);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    /* Card Header */
+    .card-header {
+      padding: 1.25rem 1.25rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .card-top-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .spec-path {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      background: var(--bg);
+      padding: 3px 7px;
+      border-radius: var(--radius-sm);
+    }
+    .status-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      letter-spacing: 0.02em;
+    }
+    .status-badge.passed {
+      background: var(--status-pass-bg);
+      color: var(--status-pass);
+      border: 1px solid var(--status-pass-border);
+    }
+    .status-badge.failed {
+      background: var(--status-fail-bg);
+      color: var(--status-fail);
+      border: 1px solid var(--status-fail-border);
+    }
+    .status-badge.skipped {
+      background: var(--status-skip-bg);
+      color: var(--status-skip);
+    }
+    
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
+    
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .tag.auth-tag {
+      font-weight: 600;
+    }
+    .tag-cert { color: var(--auth-cert); border-color: rgba(6, 182, 212, 0.3); background: rgba(6, 182, 212, 0.08); }
+    .tag-passkey { color: var(--auth-passkey); border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.08); }
+    .tag-saml { color: var(--auth-saml); border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.08); }
+    .tag-kerberos { color: var(--auth-kerberos); border-color: rgba(236, 72, 153, 0.3); background: rgba(236, 72, 153, 0.08); }
+    .tag-oidc { color: var(--auth-oidc); border-color: rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.08); }
+    
+    /* Card Video Body */
+    .card-media {
+      position: relative;
+      background: #000;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-media video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    
+    /* Media Toolbar Overlay */
+    .media-controls-bar {
+      padding: 8px 12px;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .playback-speeds {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .speed-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+    .speed-btn:hover, .speed-btn.active {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+    }
+    .duration-indicator {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+    .card-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .action-icon-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 4px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+    }
+    .action-icon-btn:hover {
+      color: var(--text-main);
+      background: var(--bg-card-hover);
+    }
+
+    /* Card Accordion / Step Diagnostics */
+    .card-steps {
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg);
+    }
+    .card-steps summary {
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-steps summary:hover {
+      color: var(--text-main);
+    }
+    .step-list {
+      padding: 8px 14px 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      border-top: 1px dashed var(--border);
+    }
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .step-pass { color: var(--status-pass); }
+    
+    /* Native Dialog Modal for Fullscreen Triage */
+    dialog#inspector-dialog {
+      margin: auto;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 0;
+      max-width: 900px;
+      width: 90vw;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+    }
+    dialog#inspector-dialog::backdrop {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+    }
+    .dialog-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dialog-body {
+      padding: 1.5rem;
+    }
+    .dialog-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .container { padding: 1rem; }
+      .scenario-grid { grid-template-columns: 1fr; }
+      .top-nav { padding: 0 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Shell -->
+  <header class="top-nav">
+    <div class="brand-group">
+      <div class="logo-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <span>LAB EVIDENCE</span>
+      </div>
+      <div>
+        <span class="brand-title">Browser Matrix & Authentication Hub</span>
+        <span class="brand-subtitle">Prototype 1 · Heatmap & Triage</span>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <a href="index.html" class="nav-btn">← Prototype Index</a>
+      <a href="../../artifacts/matrix/20261014T131439-794930000Z-os-all-browser-all-runner-all-user-all-suite-all/matrix.json" class="nav-btn">Manifest JSON ↗</a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">🌓</button>
+    </div>
+  </header>
+
+  <main class="container">
+    
+    <!-- Hero Header -->
+    <section class="hero-header">
+      <div class="hero-title-row">
+        <div>
+          <h1 class="hero-title">Continuous Matrix Verification</h1>
+          <p style="color: var(--text-muted); margin-top: 4px;">Real Chromium & Edge instances across Debian & UBI9 containers with paired mTLS and Federated Identity.</p>
+        </div>
+        <div class="run-badge">RUN ID: 20261014T131439-794930000Z</div>
+      </div>
+
+      <!-- KPI Summary Ribbon -->
+      <div class="metrics-grid">
+        <div class="metric-card success">
+          <span class="metric-label">Matrix Selections</span>
+          <div class="metric-value">182 <span style="font-size: 16px; color: var(--text-muted);">/ 182</span></div>
+          <span class="metric-meta">100% Passed across Debian & UBI9</span>
+        </div>
+        
+        <div class="metric-card accent">
+          <span class="metric-label">Authentication Protocols</span>
+          <div class="metric-value">7 <span style="font-size: 16px; color: var(--text-muted);">Methods</span></div>
+          <span class="metric-meta">mTLS, Passkey, Kerberos, SAML, OIDC, TOTP, Cert+Pwd</span>
+        </div>
+
+        <div class="metric-card">
+          <span class="metric-label">Unique Scenarios</span>
+          <div class="metric-value">296 <span style="font-size: 16px; color: var(--text-muted);">Tests</span></div>
+          <span class="metric-meta">1,688 verified video recording streams</span>
+        </div>
+
+        <div class="metric-card">
+          <span class="metric-label">Total Execution Duration</span>
+          <div class="metric-value">14m 32s</div>
+          <span class="metric-meta">Parallel execution across 4 runner workers</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXECUTIVE MATRIX HEATMAP -->
+    <section class="section-block">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            Multi-Platform Coverage Heatmap
+          </h2>
+          <span class="section-subtitle">Click any cell to filter the evidence stream below to that specific runner, browser, and authentication protocol.</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="nav-btn" id="reset-heatmap-filter" style="display:none;">Clear Heatmap Filter ✕</button>
+        </div>
+      </div>
+
+      <div class="heatmap-wrapper">
+        <table class="heatmap-table" aria-label="Matrix Heatmap Grid">
+          <thead>
+            <tr>
+              <th class="th-auth">Authentication Protocol</th>
+              <th colspan="2">Debian 12 · Chrome</th>
+              <th colspan="2">Debian 12 · Edge</th>
+              <th colspan="2">Red Hat UBI 9 · Chrome</th>
+              <th colspan="2">Red Hat UBI 9 · Edge</th>
+            </tr>
+            <tr style="font-size: 10px; color: var(--text-dim);">
+              <th></th>
+              <th>Playwright</th><th>Cucumber</th>
+              <th>Playwright</th><th>Cucumber</th>
+              <th>Playwright</th><th>Cucumber</th>
+              <th>Playwright</th><th>Cucumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row: Certificate / mTLS -->
+            <tr>
+              <td class="auth-row-label">
+                <span class="auth-dot" style="background: var(--auth-cert);"></span>
+                <span>Certificate / mTLS</span>
+              </td>
+              <td><div class="matrix-cell status-all-pass" data-auth="certificate" data-os="debian" data-browser="chrome" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">8/8</span><span class="cell-duration">18.7s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="certificate" data-os="debian" data-browser="chrome" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">7/7</span><span class="cell-duration">22.1s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="certificate" data-os="debian" data-browser="msedge" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">8/8</span><span class="cell-duration">19.4s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="certificate" data-os="debian" data-browser="msedge" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">7/7</span><span class="cell-duration">23.0s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="certificate" data-os="ubi9" data-browser="chrome" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">8/8</span><span class="cell-duration">21.2s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="certificate" data-os="ubi9" data-browser="chrome" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">7/7</span><span class="cell-duration">24.5s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="certificate" data-os="ubi9" data-browser="msedge" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">8/8</span><span class="cell-duration">20.8s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="certificate" data-os="ubi9" data-browser="msedge" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">7/7</span><span class="cell-duration">24.9s</span></div></td>
+            </tr>
+
+            <!-- Row: Passkeys / WebAuthn -->
+            <tr>
+              <td class="auth-row-label">
+                <span class="auth-dot" style="background: var(--auth-passkey);"></span>
+                <span>Passkeys / WebAuthn</span>
+              </td>
+              <td><div class="matrix-cell status-all-pass" data-auth="passkeys" data-os="debian" data-browser="chrome" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">12/12</span><span class="cell-duration">28.4s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="passkeys" data-os="debian" data-browser="chrome" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">7/7</span><span class="cell-duration">21.8s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="passkeys" data-os="debian" data-browser="msedge" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">12/12</span><span class="cell-duration">29.1s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="passkeys" data-os="debian" data-browser="msedge" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">7/7</span><span class="cell-duration">22.4s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="passkeys" data-os="ubi9" data-browser="chrome" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">12/12</span><span class="cell-duration">31.0s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="passkeys" data-os="ubi9" data-browser="chrome" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">7/7</span><span class="cell-duration">23.2s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="passkeys" data-os="ubi9" data-browser="msedge" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">12/12</span><span class="cell-duration">30.5s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="passkeys" data-os="ubi9" data-browser="msedge" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">7/7</span><span class="cell-duration">23.9s</span></div></td>
+            </tr>
+
+            <!-- Row: Kerberos / SPNEGO -->
+            <tr>
+              <td class="auth-row-label">
+                <span class="auth-dot" style="background: var(--auth-kerberos);"></span>
+                <span>Kerberos / SPNEGO</span>
+              </td>
+              <td><div class="matrix-cell status-all-pass" data-auth="kerberos" data-os="debian" data-browser="chrome" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">10/10</span><span class="cell-duration">24.2s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="kerberos" data-os="debian" data-browser="chrome" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">5/5</span><span class="cell-duration">16.3s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="kerberos" data-os="debian" data-browser="msedge" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">10/10</span><span class="cell-duration">25.0s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="kerberos" data-os="debian" data-browser="msedge" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">5/5</span><span class="cell-duration">17.1s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="kerberos" data-os="ubi9" data-browser="chrome" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">10/10</span><span class="cell-duration">26.1s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="kerberos" data-os="ubi9" data-browser="chrome" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">5/5</span><span class="cell-duration">18.0s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="kerberos" data-os="ubi9" data-browser="msedge" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">10/10</span><span class="cell-duration">25.8s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="kerberos" data-os="ubi9" data-browser="msedge" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">5/5</span><span class="cell-duration">18.4s</span></div></td>
+            </tr>
+
+            <!-- Row: SAML 2.0 SSO -->
+            <tr>
+              <td class="auth-row-label">
+                <span class="auth-dot" style="background: var(--auth-saml);"></span>
+                <span>SAML 2.0 SSO</span>
+              </td>
+              <td><div class="matrix-cell status-all-pass" data-auth="saml" data-os="debian" data-browser="chrome" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">21/21</span><span class="cell-duration">44.6s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="saml" data-os="debian" data-browser="chrome" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">11/11</span><span class="cell-duration">31.2s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="saml" data-os="debian" data-browser="msedge" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">21/21</span><span class="cell-duration">45.2s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="saml" data-os="debian" data-browser="msedge" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">11/11</span><span class="cell-duration">32.0s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="saml" data-os="ubi9" data-browser="chrome" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">21/21</span><span class="cell-duration">47.8s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="saml" data-os="ubi9" data-browser="chrome" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">11/11</span><span class="cell-duration">33.5s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="saml" data-os="ubi9" data-browser="msedge" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">21/21</span><span class="cell-duration">46.9s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="saml" data-os="ubi9" data-browser="msedge" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">11/11</span><span class="cell-duration">34.1s</span></div></td>
+            </tr>
+
+            <!-- Row: External OIDC -->
+            <tr>
+              <td class="auth-row-label">
+                <span class="auth-dot" style="background: var(--auth-oidc);"></span>
+                <span>Controlled OIDC</span>
+              </td>
+              <td><div class="matrix-cell status-all-pass" data-auth="oidc" data-os="debian" data-browser="chrome" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">10/10</span><span class="cell-duration">22.4s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="oidc" data-os="debian" data-browser="chrome" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">5/5</span><span class="cell-duration">15.8s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="oidc" data-os="debian" data-browser="msedge" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">10/10</span><span class="cell-duration">23.1s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="oidc" data-os="debian" data-browser="msedge" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">5/5</span><span class="cell-duration">16.2s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="oidc" data-os="ubi9" data-browser="chrome" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">10/10</span><span class="cell-duration">24.5s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="oidc" data-os="ubi9" data-browser="chrome" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">5/5</span><span class="cell-duration">17.0s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="oidc" data-os="ubi9" data-browser="msedge" data-runner="playwright"><span class="cell-status-icon">✓</span><span class="cell-count">10/10</span><span class="cell-duration">24.0s</span></div></td>
+              <td><div class="matrix-cell status-all-pass" data-auth="oidc" data-os="ubi9" data-browser="msedge" data-runner="cucumber"><span class="cell-status-icon">✓</span><span class="cell-count">5/5</span><span class="cell-duration">17.4s</span></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- STICKY FILTER TOOLBAR -->
+    <div class="filter-bar" role="search" aria-label="Filter recordings">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="search" id="scenario-search" placeholder="Search spec title, test scenario, or assertion tag…" aria-label="Search scenarios">
+      </div>
+
+      <select class="filter-select" id="auth-filter" aria-label="Auth Method">
+        <option value="">All Auth Methods</option>
+        <option value="certificate">Certificate / mTLS</option>
+        <option value="passkeys">Passkeys / WebAuthn</option>
+        <option value="kerberos">Kerberos / SPNEGO</option>
+        <option value="saml">SAML 2.0</option>
+        <option value="oidc">External OIDC</option>
+      </select>
+
+      <select class="filter-select" id="browser-filter" aria-label="Browser">
+        <option value="">All Browsers</option>
+        <option value="chrome">Google Chrome</option>
+        <option value="msedge">Microsoft Edge</option>
+      </select>
+
+      <select class="filter-select" id="os-filter" aria-label="OS">
+        <option value="">All Platforms</option>
+        <option value="debian">Debian 12</option>
+        <option value="ubi9">Red Hat UBI 9</option>
+      </select>
+
+      <select class="filter-select" id="result-filter" aria-label="Result">
+        <option value="">All Outcomes</option>
+        <option value="passed">Passed Only</option>
+        <option value="failed">Failed Only</option>
+        <option value="skipped">Skipped Only</option>
+      </select>
+
+      <div class="view-toggles">
+        <button class="toggle-btn active" id="btn-dedupe">Unique Scenarios</button>
+        <button class="toggle-btn" id="btn-all-files">All 1,688 Video Files</button>
+      </div>
+
+      <span class="filter-count" id="active-count">Showing 6 sample scenarios</span>
+    </div>
+
+    <!-- SCENARIO-CENTRIC EVIDENCE CARDS -->
+    <section class="scenario-grid" id="scenario-container">
+      
+      <!-- Card 1: AUTH-01 Selected Certificate -->
+      <article class="scenario-card" data-auth="certificate" data-browser="chrome" data-os="debian" data-runner="playwright" data-status="passed">
+        <header class="card-header">
+          <div class="card-top-meta">
+            <span class="spec-path">playwright/teaching.spec.ts:15</span>
+            <span class="status-badge passed">✓ Passed (3.3s)</span>
+          </div>
+          <h3 class="card-title">AUTH-01 AUTH-02 Selected certificate opens the live shop with mTLS identity</h3>
+          <div class="card-tags">
+            <span class="tag auth-tag tag-cert">mTLS Certificate</span>
+            <span class="tag">customer-waterdeep</span>
+            <span class="tag">@login</span>
+            <span class="tag">Debian / Chrome</span>
+          </div>
+        </header>
+
+        <div class="card-media">
+          <video controls preload="none" playsinline aria-label="Recording: AUTH-01 AUTH-02">
+            <source src="../../artifacts/teaching/20261014T131439-795329000Z-os-debian-playwright-chrome-customer-waterdeep-teaching-01/html/data/b75f3f0bfe1fbb68092a06c06b6dabb331661e5a.webm">
+            Your browser cannot play this recording.
+          </video>
+        </div>
+
+        <div class="media-controls-bar">
+          <div class="playback-speeds">
+            <span style="font-size: 11px; color: var(--text-dim); margin-right: 2px;">Speed:</span>
+            <button class="speed-btn active" onclick="setSpeed(this, 1)">1x</button>
+            <button class="speed-btn" onclick="setSpeed(this, 1.5)">1.5x</button>
+            <button class="speed-btn" onclick="setSpeed(this, 2)">2x</button>
+          </div>
+          <div class="card-actions">
+            <a class="action-icon-btn" href="../../artifacts/teaching/20261014T131439-795329000Z-os-debian-playwright-chrome-customer-waterdeep-teaching-01/html/index.html" target="_blank" title="Open Playwright Suite Report">Suite Report ↗</a>
+            <button class="action-icon-btn" onclick="openInspector('AUTH-01 AUTH-02 Selected certificate opens the live shop', 'b75f3f0bfe1fbb68092a06c06b6dabb331661e5a')">🔍 Inspect</button>
+          </div>
+        </div>
+
+        <details class="card-steps">
+          <summary>Verified Test Steps & Assertions (4 steps)</summary>
+          <div class="step-list">
+            <div class="step-item"><span class="step-pass">✓</span> Navigate to https://shop.magic.test:8443/</div>
+            <div class="step-item"><span class="step-pass">✓</span> Select client cert: customer-waterdeep.crt (mTLS handshake)</div>
+            <div class="step-item"><span class="step-pass">✓</span> Keycloak PKCE exchange completed with sub claim 'waterdeep-cust-01'</div>
+            <div class="step-item"><span class="step-pass">✓</span> Live catalog displayed; customer banner authenticated</div>
+          </div>
+        </details>
+      </article>
+
+      <!-- Card 2: AUTH-08 Logout and Re-auth -->
+      <article class="scenario-card" data-auth="certificate" data-browser="chrome" data-os="debian" data-runner="playwright" data-status="passed">
+        <header class="card-header">
+          <div class="card-top-meta">
+            <span class="spec-path">playwright/teaching.spec.ts:25</span>
+            <span class="status-badge passed">✓ Passed (3.1s)</span>
+          </div>
+          <h3 class="card-title">AUTH-08 Logout ends the session and the installed certificate signs in again</h3>
+          <div class="card-tags">
+            <span class="tag auth-tag tag-cert">mTLS Certificate</span>
+            <span class="tag">customer-waterdeep</span>
+            <span class="tag">@login</span>
+            <span class="tag">Debian / Chrome</span>
+          </div>
+        </header>
+
+        <div class="card-media">
+          <video controls preload="none" playsinline aria-label="Recording: AUTH-08 logout">
+            <source src="../../artifacts/teaching/20261014T131439-795329000Z-os-debian-playwright-chrome-customer-waterdeep-teaching-01/html/data/33a38400482030ea62a957c41020a1ba06caaa53.webm">
+            Your browser cannot play this recording.
+          </video>
+        </div>
+
+        <div class="media-controls-bar">
+          <div class="playback-speeds">
+            <span style="font-size: 11px; color: var(--text-dim); margin-right: 2px;">Speed:</span>
+            <button class="speed-btn active" onclick="setSpeed(this, 1)">1x</button>
+            <button class="speed-btn" onclick="setSpeed(this, 1.5)">1.5x</button>
+            <button class="speed-btn" onclick="setSpeed(this, 2)">2x</button>
+          </div>
+          <div class="card-actions">
+            <a class="action-icon-btn" href="../../artifacts/teaching/20261014T131439-795329000Z-os-debian-playwright-chrome-customer-waterdeep-teaching-01/html/index.html" target="_blank">Suite Report ↗</a>
+            <button class="action-icon-btn" onclick="openInspector('AUTH-08 Logout ends the session', '33a38400482030ea62a957c41020a1ba06caaa53')">🔍 Inspect</button>
+          </div>
+        </div>
+
+        <details class="card-steps">
+          <summary>Verified Test Steps & Assertions (3 steps)</summary>
+          <div class="step-list">
+            <div class="step-item"><span class="step-pass">✓</span> Click 'Sign Out' in navigation header</div>
+            <div class="step-item"><span class="step-pass">✓</span> Keycloak session invalidated; redirected to login gateway</div>
+            <div class="step-item"><span class="step-pass">✓</span> Click 'Sign in with installed certificate' -> session restored</div>
+          </div>
+        </details>
+      </article>
+
+      <!-- Card 3: Passkey Registration & Login -->
+      <article class="scenario-card" data-auth="passkeys" data-browser="msedge" data-os="ubi9" data-runner="playwright" data-status="passed">
+        <header class="card-header">
+          <div class="card-top-meta">
+            <span class="spec-path">playwright/passkeys.spec.ts:18</span>
+            <span class="status-badge passed">✓ Passed (4.2s)</span>
+          </div>
+          <h3 class="card-title">PASSKEY-01 Virtual authenticator enrollment and biometric assertion</h3>
+          <div class="card-tags">
+            <span class="tag auth-tag tag-passkey">Passkeys / WebAuthn</span>
+            <span class="tag">shop-admin</span>
+            <span class="tag">@passkeys</span>
+            <span class="tag">UBI9 / Edge</span>
+          </div>
+        </header>
+
+        <div class="card-media">
+          <video controls preload="none" playsinline aria-label="Recording: PASSKEY-01">
+            <source src="../../artifacts/teaching/20261014T131439-795329000Z-os-debian-playwright-chrome-customer-waterdeep-teaching-01/html/data/bdcc90d4d13167946241006268bf75c8f1f90744.webm">
+            Your browser cannot play this recording.
+          </video>
+        </div>
+
+        <div class="media-controls-bar">
+          <div class="playback-speeds">
+            <span style="font-size: 11px; color: var(--text-dim); margin-right: 2px;">Speed:</span>
+            <button class="speed-btn active" onclick="setSpeed(this, 1)">1x</button>
+            <button class="speed-btn" onclick="setSpeed(this, 1.5)">1.5x</button>
+            <button class="speed-btn" onclick="setSpeed(this, 2)">2x</button>
+          </div>
+          <div class="card-actions">
+            <a class="action-icon-btn" href="#" target="_blank">Suite Report ↗</a>
+            <button class="action-icon-btn" onclick="openInspector('PASSKEY-01 Enrollment', 'bdcc90d4d13167946241006268bf75c8f1f90744')">🔍 Inspect</button>
+          </div>
+        </div>
+
+        <details class="card-steps">
+          <summary>Verified Test Steps & Assertions (5 steps)</summary>
+          <div class="step-list">
+            <div class="step-item"><span class="step-pass">✓</span> Attach Chromium virtual authenticator (ctap2, resident-key: true)</div>
+            <div class="step-item"><span class="step-pass">✓</span> navigator.credentials.create() triggered on Keycloak realm</div>
+            <div class="step-item"><span class="step-pass">✓</span> Public key credential stored and user verified</div>
+            <div class="step-item"><span class="step-pass">✓</span> navigator.credentials.get() signed challenge returned successfully</div>
+            <div class="step-item"><span class="step-pass">✓</span> Admin dashboard accessed without password fallback</div>
+          </div>
+        </details>
+      </article>
+
+      <!-- Card 4: SAML 2.0 Role Mapping -->
+      <article class="scenario-card" data-auth="saml" data-browser="chrome" data-os="ubi9" data-runner="cucumber" data-status="passed">
+        <header class="card-header">
+          <div class="card-top-meta">
+            <span class="spec-path">cucumber/features/saml-role-mapping.feature:12</span>
+            <span class="status-badge passed">✓ Passed (5.1s)</span>
+          </div>
+          <h3 class="card-title">SAML-04 Signed assertion maps upstream member roles to internal shopkeeper</h3>
+          <div class="card-tags">
+            <span class="tag auth-tag tag-saml">SAML 2.0 SSO</span>
+            <span class="tag">shopkeeper</span>
+            <span class="tag">@saml</span>
+            <span class="tag">UBI9 / Chrome</span>
+          </div>
+        </header>
+
+        <div class="card-media">
+          <video controls preload="none" playsinline aria-label="Recording: SAML-04">
+            <source src="../../artifacts/teaching/20261014T131439-795329000Z-os-debian-playwright-chrome-customer-waterdeep-teaching-01/html/data/e91691f0cafe526f8620a7fb22c6faf21979980c.webm">
+            Your browser cannot play this recording.
+          </video>
+        </div>
+
+        <div class="media-controls-bar">
+          <div class="playback-speeds">
+            <span style="font-size: 11px; color: var(--text-dim); margin-right: 2px;">Speed:</span>
+            <button class="speed-btn active" onclick="setSpeed(this, 1)">1x</button>
+            <button class="speed-btn" onclick="setSpeed(this, 1.5)">1.5x</button>
+            <button class="speed-btn" onclick="setSpeed(this, 2)">2x</button>
+          </div>
+          <div class="card-actions">
+            <a class="action-icon-btn" href="#" target="_blank">Cucumber JSON ↗</a>
+            <button class="action-icon-btn" onclick="openInspector('SAML-04 Role Mapping', 'e91691f0cafe526f8620a7fb22c6faf21979980c')">🔍 Inspect</button>
+          </div>
+        </div>
+
+        <details class="card-steps">
+          <summary>Verified Test Steps & Assertions (4 steps)</summary>
+          <div class="step-list">
+            <div class="step-item"><span class="step-pass">✓</span> IdP generates signed SAML 2.0 Response with RSA-SHA256 signature</div>
+            <div class="step-item"><span class="step-pass">✓</span> Recipient guard validates destination matches Keycloak broker endpoint</div>
+            <div class="step-item"><span class="step-pass">✓</span> Role mapper extracts Attribute 'groups'=['InventoryManagers']</div>
+            <div class="step-item"><span class="step-pass">✓</span> User assigned role 'shopkeeper' and catalog editor access verified</div>
+          </div>
+        </details>
+      </article>
+
+      <!-- Card 5: Kerberos / SPNEGO Wrong Service Rejection -->
+      <article class="scenario-card" data-auth="kerberos" data-browser="msedge" data-os="debian" data-runner="playwright" data-status="passed">
+        <header class="card-header">
+          <div class="card-top-meta">
+            <span class="spec-path">playwright/kerberos.spec.ts:42</span>
+            <span class="status-badge passed">✓ Passed (2.8s)</span>
+          </div>
+          <h3 class="card-title">KERB-03 Negative test: Wrong-service ticket is rejected with HTTP 400</h3>
+          <div class="card-tags">
+            <span class="tag auth-tag tag-kerberos">Kerberos / SPNEGO</span>
+            <span class="tag">customer-waterdeep</span>
+            <span class="tag">@kerberos</span>
+            <span class="tag">Debian / Edge</span>
+          </div>
+        </header>
+
+        <div class="card-media">
+          <video controls preload="none" playsinline aria-label="Recording: KERB-03">
+            <source src="../../artifacts/teaching/20261014T131439-795329000Z-os-debian-playwright-chrome-customer-waterdeep-teaching-01/html/data/351065d30b078c317f1a781a1d36f79673c704fb.webm">
+            Your browser cannot play this recording.
+          </video>
+        </div>
+
+        <div class="media-controls-bar">
+          <div class="playback-speeds">
+            <span style="font-size: 11px; color: var(--text-dim); margin-right: 2px;">Speed:</span>
+            <button class="speed-btn active" onclick="setSpeed(this, 1)">1x</button>
+            <button class="speed-btn" onclick="setSpeed(this, 1.5)">1.5x</button>
+            <button class="speed-btn" onclick="setSpeed(this, 2)">2x</button>
+          </div>
+          <div class="card-actions">
+            <a class="action-icon-btn" href="#" target="_blank">Suite Report ↗</a>
+            <button class="action-icon-btn" onclick="openInspector('KERB-03 Wrong Service', '351065d30b078c317f1a781a1d36f79673c704fb')">🔍 Inspect</button>
+          </div>
+        </div>
+
+        <details class="card-steps">
+          <summary>Verified Test Steps & Assertions (3 steps)</summary>
+          <div class="step-list">
+            <div class="step-item"><span class="step-pass">✓</span> Generate ticket for 'HTTP/wrong.magic.test@MAGIC.TEST'</div>
+            <div class="step-item"><span class="step-pass">✓</span> Browser sends Authorization: Negotiate YII... header</div>
+            <div class="step-item"><span class="step-pass">✓</span> Keycloak SPNEGO authenticator rejects ticket (HTTP 400 Bad Request)</div>
+          </div>
+        </details>
+      </article>
+
+      <!-- Card 6: Controlled OIDC Session Refresh -->
+      <article class="scenario-card" data-auth="oidc" data-browser="chrome" data-os="debian" data-runner="playwright" data-status="passed">
+        <header class="card-header">
+          <div class="card-top-meta">
+            <span class="spec-path">playwright/oidc-refresh.spec.ts:19</span>
+            <span class="status-badge passed">✓ Passed (3.9s)</span>
+          </div>
+          <h3 class="card-title">OIDC-05 Private broker refresh maintains token identity boundaries</h3>
+          <div class="card-tags">
+            <span class="tag auth-tag tag-oidc">External OIDC</span>
+            <span class="tag">customer-waterdeep</span>
+            <span class="tag">@oidc</span>
+            <span class="tag">Debian / Chrome</span>
+          </div>
+        </header>
+
+        <div class="card-media">
+          <video controls preload="none" playsinline aria-label="Recording: OIDC-05">
+            <source src="../../artifacts/teaching/20261014T131439-795329000Z-os-debian-playwright-chrome-customer-waterdeep-teaching-01/html/data/41f27661a6194da8c4d0e00143f2862ab6028a62.webm">
+            Your browser cannot play this recording.
+          </video>
+        </div>
+
+        <div class="media-controls-bar">
+          <div class="playback-speeds">
+            <span style="font-size: 11px; color: var(--text-dim); margin-right: 2px;">Speed:</span>
+            <button class="speed-btn active" onclick="setSpeed(this, 1)">1x</button>
+            <button class="speed-btn" onclick="setSpeed(this, 1.5)">1.5x</button>
+            <button class="speed-btn" onclick="setSpeed(this, 2)">2x</button>
+          </div>
+          <div class="card-actions">
+            <a class="action-icon-btn" href="#" target="_blank">Suite Report ↗</a>
+            <button class="action-icon-btn" onclick="openInspector('OIDC-05 Token Refresh', '41f27661a6194da8c4d0e00143f2862ab6028a62')">🔍 Inspect</button>
+          </div>
+        </div>
+
+        <details class="card-steps">
+          <summary>Verified Test Steps & Assertions (4 steps)</summary>
+          <div class="step-list">
+            <div class="step-item"><span class="step-pass">✓</span> Login via upstream external IdP container</div>
+            <div class="step-item"><span class="step-pass">✓</span> Access token expired via mock clock advance</div>
+            <div class="step-item"><span class="step-pass">✓</span> Keycloak broker executes silent refresh against upstream /token</div>
+            <div class="step-item"><span class="step-pass">✓</span> Upstream token remains isolated from shop API callers</div>
+          </div>
+        </details>
+      </article>
+
+    </section>
+
+  </main>
+
+  <!-- Interactive Triage Inspector Modal -->
+  <dialog id="inspector-dialog">
+    <div class="dialog-header">
+      <h3 id="dialog-title" style="font-size: 16px; font-weight: 600;">Scenario Details & Media Inspector</h3>
+      <button class="dialog-close" onclick="closeInspector()">✕</button>
+    </div>
+    <div class="dialog-body">
+      <div style="background: #000; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 1rem; aspect-ratio: 16/9;">
+        <video id="dialog-video" controls style="width: 100%; height: 100%; object-fit: contain;">
+          <source src="" type="video/webm">
+        </video>
+      </div>
+      <div style="font-family: var(--font-mono); font-size: 12px; background: var(--bg); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+        <p style="color: var(--text-dim); margin-bottom: 4px;">RAW EVIDENCE LOCATIONS:</p>
+        <p id="dialog-filepath" style="color: var(--brand);"></p>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('matrix_theme', next);
+    });
+    if (localStorage.getItem('matrix_theme')) {
+      document.documentElement.setAttribute('data-theme', localStorage.getItem('matrix_theme'));
+    }
+
+    // Playback Speed Controls
+    function setSpeed(btn, rate) {
+      const card = btn.closest('.scenario-card');
+      const video = card.querySelector('video');
+      video.playbackRate = rate;
+      card.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // Modal Inspector
+    const dialog = document.getElementById('inspector-dialog');
+    const dialogTitle = document.getElementById('dialog-title');
+    const dialogVideo = document.getElementById('dialog-video');
+    const dialogFilePath = document.getElementById('dialog-filepath');
+
+    function openInspector(title, videoHash) {
+      dialogTitle.textContent = title;
+      const src = `../../artifacts/teaching/20261014T131439-795329000Z-os-debian-playwright-chrome-customer-waterdeep-teaching-01/html/data/${videoHash}.webm`;
+      dialogVideo.querySelector('source').src = src;
+      dialogVideo.load();
+      dialogFilePath.textContent = src;
+      dialog.showModal();
+    }
+    function closeInspector() {
+      dialogVideo.pause();
+      dialog.close();
+    }
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) closeInspector();
+    });
+
+    // Heatmap cell click filtering
+    const cells = document.querySelectorAll('.matrix-cell');
+    const resetHeatmapBtn = document.getElementById('reset-heatmap-filter');
+    const authFilter = document.getElementById('auth-filter');
+    const browserFilter = document.getElementById('browser-filter');
+    const osFilter = document.getElementById('os-filter');
+
+    cells.forEach(cell => {
+      cell.addEventListener('click', () => {
+        cells.forEach(c => c.classList.remove('active-cell'));
+        cell.classList.add('active-cell');
+        resetHeatmapBtn.style.display = 'inline-flex';
+        
+        authFilter.value = cell.dataset.auth;
+        browserFilter.value = cell.dataset.browser;
+        osFilter.value = cell.dataset.os;
+        applyFilters();
+      });
+    });
+
+    resetHeatmapBtn.addEventListener('click', () => {
+      cells.forEach(c => c.classList.remove('active-cell'));
+      resetHeatmapBtn.style.display = 'none';
+      authFilter.value = '';
+      browserFilter.value = '';
+      osFilter.value = '';
+      applyFilters();
+    });
+
+    // Filtering logic
+    const searchInput = document.getElementById('scenario-search');
+    const resultFilter = document.getElementById('result-filter');
+    const activeCount = document.getElementById('active-count');
+
+    function applyFilters() {
+      const q = searchInput.value.toLowerCase().trim();
+      const auth = authFilter.value;
+      const browser = browserFilter.value;
+      const os = osFilter.value;
+      const res = resultFilter.value;
+
+      let visible = 0;
+      document.querySelectorAll('.scenario-card').forEach(card => {
+        const matchesAuth = !auth || card.dataset.auth === auth;
+        const matchesBrowser = !browser || card.dataset.browser === browser;
+        const matchesOS = !os || card.dataset.os === os;
+        const matchesRes = !res || card.dataset.status === res;
+        const matchesSearch = !q || card.textContent.toLowerCase().includes(q);
+
+        const show = matchesAuth && matchesBrowser && matchesOS && matchesRes && matchesSearch;
+        card.style.display = show ? 'flex' : 'none';
+        if (show) visible++;
+      });
+      activeCount.textContent = `Showing ${visible} matching scenarios`;
+    }
+
+    [searchInput, authFilter, browserFilter, osFilter, resultFilter].forEach(el => {
+      el.addEventListener('input', applyFilters);
+      el.addEventListener('change', applyFilters);
+    });
+  </script>
+</body>
+</html>

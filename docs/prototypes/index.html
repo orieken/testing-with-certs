@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browser Matrix & Evidence Report — Redesign Prototypes Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-display: 'Outfit', sans-serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      --bg: #090d16;
+      --surface: #101726;
+      --card: #151e32;
+      --card-hover: #1c2742;
+      --border: #23314d;
+      
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --dim: #64748b;
+      
+      --brand: #38bdf8;
+      --brand-glow: rgba(56, 189, 248, 0.2);
+      
+      --p1: #3b82f6;
+      --p2: #10b981;
+      --p3: #a855f7;
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --card: #ffffff;
+      --card-hover: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #475569;
+      --dim: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.6;
+      padding-bottom: 4rem;
+    }
+
+    .header-bar {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      background: var(--brand-glow);
+      color: var(--brand);
+      border: 1px solid var(--brand);
+      font-weight: 600;
+    }
+    .btn-toggle {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .hero-box {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 3.5rem;
+    }
+    .hero-heading {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 5vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .hero-lead {
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    /* Prototypes Showcase Grid */
+    .prototypes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+    .proto-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .proto-card:hover {
+      border-color: var(--brand);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
+    }
+
+    .proto-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .proto-number {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+    .p1-color { color: var(--p1); }
+    .p2-color { color: var(--p2); }
+    .p3-color { color: var(--p3); }
+
+    .proto-name {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .proto-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .proto-body {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
+    }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .bullet {
+      color: var(--brand);
+      font-weight: 700;
+    }
+
+    .proto-footer {
+      padding: 1.25rem 1.5rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .btn-launch {
+      background: var(--brand);
+      color: #000;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-launch:hover {
+      background: #7dd3fc;
+      box-shadow: 0 4px 12px var(--brand-glow);
+    }
+
+    /* Comparison Table */
+    .compare-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .compare-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .compare-table th, .compare-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    .compare-table th {
+      background: var(--card);
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 1.5rem 1rem; }
+      .prototypes-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header-bar">
+    <div class="brand-title">
+      <span>▶</span>
+      <span>Browser Matrix Redesign Exploration</span>
+      <span class="badge">3 Working Prototypes</span>
+    </div>
+    <div>
+      <button class="btn-toggle" id="theme-btn">🌓 Theme</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="hero-box">
+      <h1 class="hero-heading">Three Modern Layout Prototypes</h1>
+      <p class="hero-lead">To upgrade the browser matrix and test evidence report, we built three distinct prototypes focused on information density, executive triage, and visual evidence presentation.</p>
+    </div>
+
+    <!-- 3 Cards Grid -->
+    <div class="prototypes-grid">
+      
+      <!-- Prototype 1 -->
+      <div class="proto-card">
+        <div class="proto-header">
+          <div class="proto-number p1-color">PROTOTYPE 1</div>
+          <h2 class="proto-name">The Heatmap & Triage Dashboard</h2>
+          <p class="proto-desc">Executive coverage grid with 1-click drilldown and scenario-centric video cards.</p>
+        </div>
+        <div class="proto-body">
+          <ul class="feature-list">
+            <li><span class="bullet">✓</span> <strong>Interactive Heatmap Table:</strong> Instant high-level view of OS × Browser × Runner × Auth coverage with passing counts & durations.</li>
+            <li><span class="bullet">✓</span> <strong>1-Click Grid Filtering:</strong> Clicking any heatmap cell filters all evidence cards to that exact combination.</li>
+            <li><span class="bullet">✓</span> <strong>Scenario-Centric Grouping:</strong> Eliminates duplicate video cards; shows verified test steps and speed controls (0.5x–2x).</li>
+            <li><span class="bullet">✓</span> <strong>Native Dialog Inspector:</strong> Click 'Inspect' for full-screen playback with file path details.</li>
+          </ul>
+        </div>
+        <div class="proto-footer">
+          <span style="font-size: 12px; color: var(--muted);">Best for CI & Leadership</span>
+          <a href="report-prototype-1-heatmap.html" class="btn-launch">Open Prototype 1 ↗</a>
+        </div>
+      </div>
+
+      <!-- Prototype 2 -->
+      <div class="proto-card">
+        <div class="proto-header">
+          <div class="proto-number p2-color">PROTOTYPE 2</div>
+          <h2 class="proto-name">The Split-Pane Interactive Inspector</h2>
+          <p class="proto-desc">Developer-focused 3-pane console for deep test debugging without losing context.</p>
+        </div>
+        <div class="proto-body">
+          <ul class="feature-list">
+            <li><span class="bullet">✓</span> <strong>3-Column IDE Layout:</strong> Left hierarchy rail (tree), center test scenario table, and right-hand live inspector.</li>
+            <li><span class="bullet">✓</span> <strong>Dense & Fast Navigation:</strong> Click any test in the list to immediately preview its video, steps, and DN/issuer context in the right pane.</li>
+            <li><span class="bullet">✓</span> <strong>Tabbed Diagnostics:</strong> Switch between Test Steps, Certificate & mTLS Security context, and Artifact file paths.</li>
+            <li><span class="bullet">✓</span> <strong>Zero Scroll Fatigue:</strong> Fixed-viewport layout prevents scrolling through 1,600+ cards.</li>
+          </ul>
+        </div>
+        <div class="proto-footer">
+          <span style="font-size: 12px; color: var(--muted);">Best for Test Engineers & Debugging</span>
+          <a href="report-prototype-2-split-inspector.html" class="btn-launch" style="background: #34d399;">Open Prototype 2 ↗</a>
+        </div>
+      </div>
+
+      <!-- Prototype 3 -->
+      <div class="proto-card">
+        <div class="proto-header">
+          <div class="proto-number p3-color">PROTOTYPE 3</div>
+          <h2 class="proto-name">The Fluid Visual Evidence Gallery</h2>
+          <p class="proto-desc">Media-first showcase with protocol pill filters, video overlay badges, and theater mode.</p>
+        </div>
+        <div class="proto-body">
+          <ul class="feature-list">
+            <li><span class="bullet">✓</span> <strong>Fluid Protocol Pill Bar:</strong> Interactive counters for each authentication method (mTLS, Passkeys, Kerberos, SAML, OIDC).</li>
+            <li><span class="bullet">✓</span> <strong>Cinematic Video Cards:</strong> Distinct protocol color themes, custom overlay badges, duration tags, and metadata chips.</li>
+            <li><span class="bullet">✓</span> <strong>Theater Mode:</strong> Native modal video player with backdrop blur for presentation and review.</li>
+            <li><span class="bullet">✓</span> <strong>SaaS Polish:</strong> Ambient glowing gradients, glassmorphism headers, and smooth micro-interactions.</li>
+          </ul>
+        </div>
+        <div class="proto-footer">
+          <span style="font-size: 12px; color: var(--muted);">Best for Stakeholders & Demos</span>
+          <a href="report-prototype-3-evidence-cards.html" class="btn-launch" style="background: #c084fc;">Open Prototype 3 ↗</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Comparison Matrix Table -->
+    <div class="compare-section">
+      <h2 class="compare-title">Architectural & Usability Comparison</h2>
+      <div style="overflow-x: auto;">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Feature / Capability</th>
+              <th>Current Production Report</th>
+              <th>Prototype 1: Heatmap</th>
+              <th>Prototype 2: Split Inspector</th>
+              <th>Prototype 3: Visual Gallery</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Primary Layout</strong></td>
+              <td>Single long vertical scroll (182 sections)</td>
+              <td>Heatmap grid + scenario cards</td>
+              <td>3-pane IDE console (no vertical scroll)</td>
+              <td>Fluid card grid + sticky command bar</td>
+            </tr>
+            <tr>
+              <td><strong>Overall Matrix At-a-Glance</strong></td>
+              <td>❌ No (must scroll all sections)</td>
+              <td>✅ Yes (multi-dimensional table)</td>
+              <td>🟡 Partial (left navigation tree)</td>
+              <td>🟡 Partial (quick protocol pills)</td>
+            </tr>
+            <tr>
+              <td><strong>Video Card Duplication</strong></td>
+              <td>⚠️ High (2–3 identical cards per test)</td>
+              <td>✅ Grouped by Scenario</td>
+              <td>✅ Single row per scenario</td>
+              <td>✅ Grouped by Scenario</td>
+            </tr>
+            <tr>
+              <td><strong>Dark & Light Mode</strong></td>
+              <td>❌ Light mode only</td>
+              <td>✅ Dark + Light auto-switch</td>
+              <td>✅ Dark + Light auto-switch</td>
+              <td>✅ Dark + Light auto-switch</td>
+            </tr>
+            <tr>
+              <td><strong>Playback Speed Controls</strong></td>
+              <td>❌ None (default browser controls)</td>
+              <td>✅ 1x, 1.5x, 2x inline toggles</td>
+              <td>✅ 1x, 1.5x, 2x inspector buttons</td>
+              <td>✅ Theater mode modal</td>
+            </tr>
+            <tr>
+              <td><strong>Security / Auth Context</strong></td>
+              <td>Generic lavender chip</td>
+              <td>Color-coded protocol badges</td>
+              <td>Dedicated security tab (DN, Issuer, SAN)</td>
+              <td>Vibrant protocol tags & chips</td>
+            </tr>
+            <tr>
+              <td><strong>Step Diagnostics & Traces</strong></td>
+              <td>❌ None (must leave report)</td>
+              <td>✅ Expandable step drawer</td>
+              <td>✅ Live tabbed inspector</td>
+              <td>🟡 Linked to suite report</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const themeBtn = document.getElementById('theme-btn');
+    themeBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+    });
+  </script>
+</body>
+</html>

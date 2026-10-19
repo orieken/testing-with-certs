@@ -1,17 +1,1238 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Browser matrix recordings</title>
-<style>
-:root{color-scheme:light;--ink:#182334;--muted:#647187;--line:#e1e6ed;--blue:#325ad9;--paper:#f4f6fa;--green:#087451}*{box-sizing:border-box}body{margin:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper)}a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}button,input,select{font:inherit}header{background:#14213b;color:#fff;padding:17px 4vw;display:flex;justify-content:space-between;gap:20px;align-items:center}header strong{font-size:14px;letter-spacing:.02em}header a{color:#c8d5ff;font-size:12px;margin-left:18px}.brand{display:flex;align-items:center;gap:10px}.brand-icon{background:#5979ed;border-radius:7px;padding:3px 8px}main{max-width:1560px;margin:auto;padding:38px 4vw 64px}.eyebrow{text-transform:uppercase;letter-spacing:.16em;color:var(--blue);font-size:11px;font-weight:700}h1{font-size:clamp(28px,4vw,40px);line-height:1.15;letter-spacing:-.035em;margin:10px 0 12px}.intro{color:var(--muted);max-width:680px;font-size:15px;margin-bottom:28px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px}.stat{background:white;border:1px solid var(--line);border-radius:12px;padding:18px 20px}.stat span{display:block;color:var(--muted);font-size:12px}.stat strong{font-size:29px;letter-spacing:-.035em}.stat.good strong{color:var(--green)}.stat.bad strong{color:#b34145}.toolbar{position:sticky;top:0;z-index:2;background:var(--paper);padding:10px 0 18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}input,select{background:#fff;border:1px solid #d3dbe7;border-radius:8px;color:var(--ink);padding:10px 12px;min-height:42px}input{flex:1;min-width:210px}input:focus,select:focus{outline:2px solid #8aa5ff;outline-offset:2px}.shown{font-size:12px;color:var(--muted);margin-left:auto}.selection{margin:14px 0 36px;scroll-margin-top:90px}.selection-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;border-bottom:1px solid #d5dde8;padding:0 0 14px;margin-bottom:18px}h2{font-size:18px;letter-spacing:-.015em;margin:0 0 6px}.meta{display:flex;gap:7px;flex-wrap:wrap;color:var(--muted);font-size:12px}.chip{background:#e8edf5;padding:3px 8px;border-radius:5px}.auth-chip{background:#e6eaff;color:#3d4fb2;font-weight:600}.suite-link{font-size:12px;white-space:nowrap;display:inline-block;margin-top:7px}.badge{font-size:10px;text-transform:uppercase;letter-spacing:.055em;font-weight:750;display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:5px;white-space:nowrap;background:#edf0f5;color:#5a677b}.badge:before{content:"";height:5px;width:5px;background:currentColor;border-radius:50%}.passed{background:#e4f5ec;color:#087451}.failed{background:#ffebec;color:#b22d40}.skipped{background:#fff3d6;color:#8d640c}.unlinked,.pending{background:#edf0f5;color:#647187}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:18px}.video-card{margin:0;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 3px 7px #18233403;min-width:0}.card-info{padding:17px 17px 14px;min-height:129px}.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:11px}.spec{color:var(--muted);font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}.case-name{font-size:14px;line-height:1.5;font-weight:650;margin:0;overflow-wrap:anywhere}video{display:block;width:100%;aspect-ratio:16/9;background:#131b2b;object-fit:contain}.card-foot{padding:12px 17px;display:flex;gap:12px;align-items:flex-start;justify-content:space-between;font-size:12px}.card-foot details{min-width:0;color:var(--muted)}summary{cursor:pointer;font-size:11px}code{display:block;overflow-wrap:anywhere;white-space:normal;font-size:10px;max-width:220px;margin-top:8px}.download{white-space:nowrap;font-weight:600}.run{color:var(--muted);font:10px/1.5 ui-monospace,monospace;overflow-wrap:anywhere;margin:10px 0 0}.notice,.empty{padding:20px;background:#fff8e8;border:1px solid #f2dfae;border-radius:10px;color:#785e25}.empty{margin:20px 0}.notes{border-top:1px solid var(--line);margin-top:26px;padding-top:20px;color:var(--muted);font-size:12px}.notes summary{font-size:12px;font-weight:600}.notes p{max-width:800px}[hidden]{display:none!important}@media(max-width:680px){main{padding:26px 18px}header{padding:15px 18px}.stats{grid-template-columns:repeat(2,1fr);gap:10px}.stat{padding:14px 16px}.toolbar{position:static}.toolbar select{flex:1;min-width:100px}.toolbar input{flex-basis:100%}.shown{width:100%}.selection-head{gap:8px}header nav a{margin-left:10px;font-size:11px}.card-info{min-height:0}}
-</style></head><body>
-<header><div class="brand"><span class="brand-icon" aria-hidden="true">▶</span><strong>Certificate lab <span style="color:#8fa4c7;font-weight:400">/ Test evidence</span></strong></div><nav aria-label="Report files"><a href="matrix.md">Matrix table ↗</a><a href="matrix.json">Manifest ↗</a></nav></header>
-<main><div class="eyebrow">Browser matrix · Recording library</div><h1>Every run. A closer look.</h1><p class="intro">Explore the browser recordings behind your test results. Find a spec, check its outcome, and replay what happened.</p>
-<div class="stats"><div class="stat"><span>Matrix selections</span><strong>{{len .Rows}}</strong></div><div class="stat good"><span>Selections passed</span><strong>{{.Manifest.Passed}}</strong></div><div class="stat bad"><span>Selections failed</span><strong>{{.Manifest.Failed}}</strong></div><div class="stat"><span>Saved video files</span><strong>{{.Total}}</strong></div></div>
-<div class="toolbar" role="search" aria-label="Filter recordings"><input type="search" id="search" aria-label="Search specs and recordings" placeholder="Search spec name, test, or identity…"><select id="auth" aria-label="Authentication type"><option value="">All auth types</option>{{range .AuthTypes}}<option value="{{.ID}}">{{.Label}} · {{.Count}} videos</option>{{end}}</select><select id="browser" aria-label="Browser"><option value="">All browsers</option><option value="chrome">Chrome</option><option value="msedge">Edge</option></select><select id="runner" aria-label="Runner"><option value="">All runners</option><option value="playwright">Playwright</option><option value="cucumber">Cucumber</option></select><select id="result" aria-label="Test result"><option value="">All test results</option><option value="passed">Passed</option><option value="failed">Failed</option><option value="skipped">Skipped</option><option value="unlinked">Unlinked</option></select><span class="shown" id="shown" role="status" aria-live="polite">{{.Total}} videos</span></div>
-<div class="empty" id="empty" hidden>No recordings match these filters. Try another spec name or result.</div>
-{{range .Rows}}<section class="selection" data-auth="{{.AuthType}}" data-browser="{{.Browser}}" data-runner="{{.Runner}}" data-selection="{{.Selection}}"><div class="selection-head"><div><h2>{{if eq .Browser "msedge"}}Edge{{else}}{{.Browser}}{{end}} <span style="color:#97a3b6;font-weight:400">/</span> {{.OS}} <span style="color:#97a3b6;font-weight:400">/</span> {{.User}}</h2><div class="meta"><span class="chip auth-chip">{{.AuthLabel}}</span><span class="chip">{{.Runner}}</span><span class="chip">{{.Suite}}</span><span>{{len .Videos}} recording entries</span><span class="badge {{.Status}}">Suite {{.Status}}</span></div></div>{{if .Report}}<a class="suite-link" href="{{.Report}}">Suite report ↗</a>{{end}}</div>
-{{if .Notice}}<p class="notice">{{.Notice}}</p>{{end}}<div class="grid">{{range .Videos}}<figure class="video-card" data-result="{{.Status}}"><figcaption class="card-info"><div class="card-top"><span class="spec">{{.Spec}}</span><span class="badge {{.Status}}">{{.Status}}</span></div><h3 class="case-name">{{.Name}}</h3></figcaption>{{if .URL}}<video controls preload="none" playsinline aria-label="Recording: {{.Name}}"><source src="{{.URL}}">Your browser cannot play this recording. Use its download link.</video>{{else}}<p class="notice" role="status">{{.Availability}}. {{if eq .Availability "Recording intentionally disabled"}}The producer explicitly disabled video for this case.{{else}}Restore this file to replay it.{{end}} The saved test result is unchanged.</p>{{end}}<div class="card-foot"><details><summary>Source file</summary><code>{{.Label}}</code></details>{{if .URL}}<a class="download" href="{{.URL}}" download>Download ↓</a>{{end}}</div></figure>{{end}}</div><p class="run">RUN {{.RunID}}</p></section>{{end}}
-<details class="notes"><summary>About this evidence</summary><p>Missing or expired files retain their saved case result and show an unavailable notice without a player. An unavailable file does not prove recording was disabled. All saved recordings are included, including multiple pages and HTML report copies. File counts are not unique test counts. Test names and outcomes come from saved Playwright attachment metadata. Byte-identical copies inherit metadata only when the match is unambiguous. Unlinked means no verified recording-to-test association is available; it does not mean the test failed. A suite's result is separate from each recording's test result.</p><p>Authentication recordings use a privacy screen on credential-provider pages. Imported recordings retain their exact case, phase, runner, and result. Auth labels describe the selection’s login method, not evidence that every clip authenticated successfully. Zero-count auth types have no saved recordings in this report. Keep the artifacts folder layout when moving this report.</p></details>
-</main><script>
-(()=>{const search=document.querySelector('#search'),auth=document.querySelector('#auth'),browser=document.querySelector('#browser'),runner=document.querySelector('#runner'),result=document.querySelector('#result');function filter(){let count=0;for(const section of document.querySelectorAll('.selection')){let visible=0;const match=(!auth.value||section.dataset.auth===auth.value)&&(!browser.value||section.dataset.browser===browser.value)&&(!runner.value||section.dataset.runner===runner.value);for(const card of section.querySelectorAll('.video-card')){const text=section.dataset.selection+' '+section.dataset.auth+' '+card.textContent;const show=match&&(!result.value||card.dataset.result===result.value)&&text.toLowerCase().includes(search.value.toLowerCase().trim());card.hidden=!show;if(show)visible++}section.hidden=!match||(visible===0&&(section.querySelector('.video-card')!==null||search.value.trim()!==''||result.value!==''));count+=visible}document.querySelector('#shown').textContent=count+' recording entries';document.querySelector('#empty').hidden=count!==0}for(const input of [search,auth,browser,runner,result]){input.addEventListener('input',filter);input.addEventListener('change',filter)}})();
-</script></body></html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browser matrix recordings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark light;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+      --bg: #0b0f19;
+      --surface: #111827;
+      --card: #162032;
+      --card-hover: #1e2c45;
+      --border: #233149;
+      --border-subtle: #192437;
+
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --dim: #64748b;
+
+      --blue: #38bdf8;
+      --blue-glow: rgba(56, 189, 248, 0.2);
+      
+      --pass: #10b981;
+      --pass-bg: rgba(16, 185, 129, 0.12);
+      --pass-border: rgba(16, 185, 129, 0.35);
+
+      --fail: #ef4444;
+      --fail-bg: rgba(239, 68, 68, 0.14);
+      --fail-border: rgba(239, 68, 68, 0.4);
+
+      --skip: #f59e0b;
+      --skip-bg: rgba(245, 158, 11, 0.12);
+      --skip-border: rgba(245, 158, 11, 0.35);
+
+      --auth-cert: #06b6d4;
+      --auth-passkey: #8b5cf6;
+      --auth-saml: #f59e0b;
+      --auth-kerberos: #ec4899;
+      --auth-oidc: #3b82f6;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --card: #ffffff;
+      --card-hover: #f1f5f9;
+      --border: #e2e8f0;
+      --border-subtle: #edf2f7;
+
+      --text: #0f172a;
+      --muted: #475569;
+      --dim: #94a3b8;
+
+      --blue: #0284c7;
+      --blue-glow: rgba(2, 132, 199, 0.12);
+
+      --pass: #059669;
+      --pass-bg: #ecfdf5;
+      --pass-border: #a7f3d0;
+
+      --fail: #dc2626;
+      --fail-bg: #fef2f2;
+      --fail-border: #fecaca;
+
+      --skip: #d97706;
+      --skip-bg: #fffbeb;
+      --skip-border: #fde68a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      margin: 0;
+      font: 14px/1.5 var(--font-sans);
+      color: var(--text);
+      background: var(--bg);
+      min-height: 100vh;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button, input, select { font: inherit; }
+
+    /* Top Navigation Header */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 3vw;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-icon {
+      background: linear-gradient(135deg, #0284c7, #8b5cf6);
+      color: #fff;
+      border-radius: var(--radius-sm);
+      padding: 4px 9px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 2px 8px var(--blue-glow);
+    }
+    header strong { font-size: 14px; letter-spacing: .02em; }
+    
+    /* View Mode Tabs */
+    .view-mode-tabs {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 3px;
+      gap: 3px;
+    }
+    .view-tab {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .view-tab:hover { color: var(--text); }
+    .view-tab.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-links a {
+      color: var(--muted);
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+    }
+    .nav-links a:hover {
+      color: var(--text);
+      background: var(--card-hover);
+      text-decoration: none;
+    }
+    .theme-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .theme-btn:hover { color: var(--text); }
+
+    /* Main Container */
+    main {
+      max-width: 1600px;
+      margin: auto;
+      padding: 28px 3vw 64px;
+    }
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    h1 {
+      font-size: clamp(26px, 3.5vw, 38px);
+      line-height: 1.15;
+      letter-spacing: -.03em;
+      margin: 8px 0 10px;
+    }
+    .intro {
+      color: var(--muted);
+      max-width: 760px;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    /* KPI Summary Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      transition: transform 0.15s;
+    }
+    .stat:hover { transform: translateY(-2px); }
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .stat strong {
+      font-size: 30px;
+      letter-spacing: -.03em;
+      font-weight: 700;
+    }
+    .stat.good strong { color: var(--pass); }
+    .stat.bad strong { color: var(--fail); }
+
+    /* Sticky Toolbar */
+    .toolbar {
+      position: sticky;
+      top: 59px;
+      z-index: 90;
+      background: rgba(17, 24, 39, 0.95);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+    [data-theme="light"] .toolbar {
+      background: rgba(255, 255, 255, 0.95);
+    }
+    input, select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      padding: 8px 12px;
+      min-height: 40px;
+      outline: none;
+    }
+    input:focus, select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 2px var(--blue-glow);
+    }
+    input[type="search"] {
+      flex: 1;
+      min-width: 240px;
+    }
+    .shown {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    /* VIEW 1: Heatmap Container */
+    .heatmap-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 28px;
+    }
+    .heatmap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .heatmap-title {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .heatmap-table-wrap {
+      overflow-x: auto;
+    }
+    .heatmap-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 4px;
+      font-size: 12px;
+    }
+    .heatmap-table th {
+      background: var(--card);
+      color: var(--muted);
+      font-weight: 600;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+    .heatmap-table th.auth-col {
+      text-align: left;
+      min-width: 170px;
+    }
+    .heat-cell {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .heat-cell:hover {
+      border-color: var(--blue);
+      transform: scale(1.04);
+      background: var(--card-hover);
+    }
+    .heat-cell.pass {
+      background: var(--pass-bg);
+      border-color: var(--pass-border);
+      color: var(--pass);
+      font-weight: 600;
+    }
+
+    /* VIEW 2: Split Inspector */
+    .inspector-layout {
+      display: none;
+      height: 720px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+    .inspector-rail {
+      width: 280px;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      background: var(--bg);
+      padding: 10px;
+    }
+    .rail-item {
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 4px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .rail-item:hover, .rail-item.active {
+      background: var(--card);
+      color: var(--text);
+    }
+    .rail-item.active {
+      border-left: 3px solid var(--blue);
+      font-weight: 600;
+    }
+    .inspector-center {
+      flex: 1;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .center-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .center-table th {
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .center-row {
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+    }
+    .center-row:hover { background: var(--card-hover); }
+    .center-row.active-row {
+      background: var(--card);
+      border-left: 3px solid var(--blue);
+    }
+    .center-row td { padding: 10px 14px; }
+    
+    .inspector-drawer {
+      width: 440px;
+      background: var(--surface);
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .drawer-media {
+      background: #000;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+    }
+    .drawer-media video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* VIEW 3: Protocol Pills for Visual Gallery */
+    .gallery-pills {
+      display: none;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .proto-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .proto-pill:hover, .proto-pill.active {
+      color: var(--text);
+      border-color: var(--blue);
+    }
+    .proto-pill.active {
+      background: var(--card);
+      box-shadow: 0 2px 8px var(--blue-glow);
+    }
+
+    /* Selection Section and Cards (Shared) */
+    .selection {
+      margin: 14px 0 36px;
+      scroll-margin-top: 130px;
+    }
+    .selection-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border);
+      padding: 0 0 14px;
+      margin-bottom: 18px;
+    }
+    h2 {
+      font-size: 18px;
+      letter-spacing: -.015em;
+      margin: 0 0 6px;
+    }
+    .meta {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 12px;
+      align-items: center;
+    }
+    .chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      border-radius: 5px;
+    }
+    .auth-chip {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.3);
+      color: var(--blue);
+      font-weight: 600;
+    }
+    .suite-link {
+      font-size: 12px;
+      white-space: nowrap;
+      display: inline-block;
+      margin-top: 7px;
+    }
+
+    /* Badges */
+    .badge {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .055em;
+      font-weight: 750;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border-radius: 5px;
+      white-space: nowrap;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .badge:before {
+      content: "";
+      height: 5px;
+      width: 5px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+    .passed {
+      background: var(--pass-bg);
+      border-color: var(--pass-border);
+      color: var(--pass);
+    }
+    .failed {
+      background: var(--fail-bg);
+      border-color: var(--fail-border);
+      color: var(--fail);
+    }
+    .skipped {
+      background: var(--skip-bg);
+      border-color: var(--skip-border);
+      color: var(--skip);
+    }
+    .unlinked, .pending {
+      background: var(--surface);
+      color: var(--dim);
+    }
+
+    /* Card Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
+      gap: 18px;
+    }
+    .video-card {
+      margin: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      transition: transform 0.15s, border-color 0.15s;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .video-card:hover {
+      border-color: var(--border-subtle);
+      transform: translateY(-2px);
+    }
+    .card-info {
+      padding: 16px 16px 12px;
+      min-height: 110px;
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .spec {
+      color: var(--dim);
+      font: 11px/1.5 var(--font-mono);
+      overflow-wrap: anywhere;
+    }
+    .case-name {
+      font-size: 14px;
+      line-height: 1.45;
+      font-weight: 650;
+      margin: 0;
+      overflow-wrap: anywhere;
+      color: var(--text);
+    }
+    video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #020617;
+      object-fit: contain;
+    }
+    
+    /* Playback Rate & Quick Toolbar */
+    .card-playback-bar {
+      padding: 6px 14px;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+    }
+    .speed-btn-group {
+      display: flex;
+      gap: 4px;
+    }
+    .btn-spd {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn-spd:hover, .btn-spd.active {
+      background: var(--blue);
+      color: #000;
+      border-color: var(--blue);
+    }
+    .btn-theater {
+      background: transparent;
+      border: none;
+      color: var(--blue);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .card-foot {
+      padding: 12px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+      font-size: 12px;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: auto;
+    }
+    .card-foot details {
+      min-width: 0;
+      color: var(--dim);
+    }
+    summary { cursor: pointer; font-size: 11px; }
+    code {
+      display: block;
+      overflow-wrap: anywhere;
+      white-space: normal;
+      font: 10px var(--font-mono);
+      max-width: 240px;
+      margin-top: 6px;
+      color: var(--muted);
+    }
+    .download {
+      white-space: nowrap;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .run {
+      color: var(--dim);
+      font: 10px/1.5 var(--font-mono);
+      overflow-wrap: anywhere;
+      margin: 10px 0 0;
+    }
+    .notice, .empty {
+      padding: 16px 20px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: var(--radius-sm);
+      color: var(--skip);
+      font-size: 13px;
+    }
+    .empty { margin: 20px 0; }
+    .notes {
+      border-top: 1px solid var(--border);
+      margin-top: 36px;
+      padding-top: 24px;
+      color: var(--dim);
+      font-size: 12px;
+    }
+    .notes summary { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
+    .notes p { max-width: 840px; margin-bottom: 8px; }
+    [hidden] { display: none !important; }
+
+    /* Theater Modal */
+    dialog#theater-modal {
+      margin: auto;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 0;
+      max-width: 960px;
+      width: 90vw;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
+    }
+    dialog#theater-modal::backdrop {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
+    }
+    .modal-head {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-body { padding: 20px; }
+
+    @media (max-width: 800px) {
+      header { flex-direction: column; align-items: stretch; gap: 10px; }
+      .stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .view-mode-tabs { overflow-x: auto; }
+      .inspector-layout { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Header -->
+  <header>
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true">▶</span>
+      <strong>Certificate lab <span style="color:var(--dim); font-weight:400">/ Test evidence</span></strong>
+    </div>
+
+    <!-- View Mode Switcher -->
+    <nav class="view-mode-tabs" role="tablist" aria-label="Report View Mode">
+      <button class="view-tab active" data-view="heatmap" role="tab" aria-selected="true" id="tab-heatmap">📊 Heatmap &amp; Triage</button>
+      <button class="view-tab" data-view="inspector" role="tab" aria-selected="false" id="tab-inspector">🖥️ Split Inspector</button>
+      <button class="view-tab" data-view="gallery" role="tab" aria-selected="false" id="tab-gallery">🎬 Visual Gallery</button>
+    </nav>
+
+    <div class="nav-links">
+      <a href="matrix.md">Matrix table ↗</a>
+      <a href="matrix.json">Manifest ↗</a>
+      <button class="theme-btn" id="theme-btn" aria-label="Toggle theme">🌓</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="eyebrow">Browser matrix · Recording library</div>
+    <h1>Every run. A closer look.</h1>
+    <p class="intro">Explore the browser recordings behind your test results. Toggle between the Executive Heatmap, Developer Split-Inspector, or Fluid Visual Gallery.</p>
+
+    <!-- KPI Summary Stats -->
+    <div class="stats">
+      <div class="stat"><span>Matrix selections</span><strong>{{len .Rows}}</strong></div>
+      <div class="stat good"><span>Selections passed</span><strong>{{.Manifest.Passed}}</strong></div>
+      <div class="stat bad"><span>Selections failed</span><strong>{{.Manifest.Failed}}</strong></div>
+      <div class="stat"><span>Saved video files</span><strong>{{.Total}}</strong></div>
+    </div>
+
+    <!-- VIEW 1: Executive Heatmap Grid -->
+    <section class="heatmap-section" id="heatmap-view">
+      <div class="heatmap-header">
+        <h2 class="heatmap-title">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          Multi-Platform Coverage Heatmap
+        </h2>
+        <span style="font-size: 12px; color: var(--dim);">Click any cell to filter below</span>
+      </div>
+      <div class="heatmap-table-wrap">
+        <table class="heatmap-table" id="heatmap-grid" aria-label="Coverage Heatmap">
+          <thead>
+            <tr>
+              <th class="auth-col">Authentication Protocol</th>
+              <th colspan="2">Debian · Chrome</th>
+              <th colspan="2">Debian · Edge</th>
+              <th colspan="2">UBI9 · Chrome</th>
+              <th colspan="2">UBI9 · Edge</th>
+            </tr>
+            <tr style="font-size: 10px; color: var(--dim);">
+              <th></th>
+              <th>Playwright</th><th>Cucumber</th>
+              <th>Playwright</th><th>Cucumber</th>
+              <th>Playwright</th><th>Cucumber</th>
+              <th>Playwright</th><th>Cucumber</th>
+            </tr>
+          </thead>
+          <tbody id="heatmap-body">
+            <!-- Dynamically populated from selections by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VIEW 2: 3-Pane Split Inspector -->
+    <section class="inspector-layout" id="inspector-view">
+      <div class="inspector-rail" id="inspector-rail">
+        <!-- Dynamically populated selection tree -->
+      </div>
+      <div class="inspector-center">
+        <table class="center-table">
+          <thead>
+            <tr>
+              <th style="width: 28px;"></th>
+              <th>Scenario Name</th>
+              <th>Spec</th>
+              <th style="width: 80px;">Status</th>
+            </tr>
+          </thead>
+          <tbody id="inspector-table-body">
+            <!-- Dynamically populated scenarios -->
+          </tbody>
+        </table>
+      </div>
+      <div class="inspector-drawer" id="inspector-drawer">
+        <div class="drawer-media">
+          <video id="drawer-video" controls preload="none" playsinline></video>
+        </div>
+        <div>
+          <h3 id="drawer-title" style="font-size: 14px; font-weight: 600; margin-bottom: 6px;">Select a test scenario</h3>
+          <p id="drawer-spec" style="font-family: var(--font-mono); font-size: 11px; color: var(--dim);"></p>
+        </div>
+        <div style="font-size: 12px; color: var(--muted); background: var(--bg); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+          <p id="drawer-status" style="font-weight: 600; margin-bottom: 4px;"></p>
+          <p id="drawer-path" style="font-family: var(--font-mono); font-size: 10px; word-break: break-all;"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: Protocol Filter Pills -->
+    <div class="gallery-pills" id="gallery-pills">
+      <button class="proto-pill active" data-auth="">All Protocols</button>
+      {{range .AuthTypes}}<button class="proto-pill" data-auth="{{.ID}}">{{.Label}} <span style="opacity:0.6;">({{.Count}})</span></button>{{end}}
+    </div>
+
+    <!-- Sticky Toolbar -->
+    <div class="toolbar" role="search" aria-label="Filter recordings">
+      <input type="search" id="search" aria-label="Search specs and recordings" placeholder="Search spec name, test, or identity…">
+      <select id="auth" aria-label="Authentication type">
+        <option value="">All auth types</option>
+        {{range .AuthTypes}}<option value="{{.ID}}">{{.Label}} · {{.Count}} videos</option>{{end}}
+      </select>
+      <select id="browser" aria-label="Browser">
+        <option value="">All browsers</option>
+        <option value="chrome">Chrome</option>
+        <option value="msedge">Edge</option>
+      </select>
+      <select id="runner" aria-label="Runner">
+        <option value="">All runners</option>
+        <option value="playwright">Playwright</option>
+        <option value="cucumber">Cucumber</option>
+      </select>
+      <select id="result" aria-label="Test result">
+        <option value="">All test results</option>
+        <option value="passed">Passed</option>
+        <option value="failed">Failed</option>
+        <option value="skipped">Skipped</option>
+        <option value="unlinked">Unlinked</option>
+      </select>
+      <span class="shown" id="shown" role="status" aria-live="polite">{{.Total}} videos</span>
+    </div>
+
+    <div class="empty" id="empty" hidden>No recordings match these filters. Try another spec name or result.</div>
+
+    <!-- Selection Sections & Cards Stream -->
+    <div id="selection-stream">
+      {{range .Rows}}
+      <section class="selection" data-auth="{{.AuthType}}" data-browser="{{.Browser}}" data-runner="{{.Runner}}" data-os="{{.OS}}" data-user="{{.User}}" data-selection="{{.Selection}}">
+        <div class="selection-head">
+          <div>
+            <h2>{{if eq .Browser "msedge"}}Edge{{else}}{{.Browser}}{{end}} <span style="color:var(--dim); font-weight:400">/</span> {{.OS}} <span style="color:var(--dim); font-weight:400">/</span> {{.User}}</h2>
+            <div class="meta">
+              <span class="chip auth-chip">{{.AuthLabel}}</span>
+              <span class="chip">{{.Runner}}</span>
+              <span class="chip">{{.Suite}}</span>
+              <span>{{len .Videos}} recording entries</span>
+              <span class="badge {{.Status}}">Suite {{.Status}}</span>
+            </div>
+          </div>
+          {{if .Report}}<a class="suite-link" href="{{.Report}}">Suite report ↗</a>{{end}}
+        </div>
+
+        {{if .Notice}}<p class="notice">{{.Notice}}</p>{{end}}
+
+        <div class="grid">
+          {{range .Videos}}
+          <figure class="video-card" data-result="{{.Status}}" data-spec="{{.Spec}}" data-name="{{.Name}}" data-url="{{.URL}}">
+            <figcaption class="card-info">
+              <div class="card-top">
+                <span class="spec">{{.Spec}}</span>
+                <span class="badge {{.Status}}">{{.Status}}</span>
+              </div>
+              <h3 class="case-name">{{.Name}}</h3>
+            </figcaption>
+
+            {{if .URL}}
+            <video controls preload="none" playsinline aria-label="Recording: {{.Name}}">
+              <source src="{{.URL}}">
+              Your browser cannot play this recording. Use its download link.
+            </video>
+            <div class="card-playback-bar">
+              <div class="speed-btn-group">
+                <button class="btn-spd active" onclick="setSpeed(this, 1)">1x</button>
+                <button class="btn-spd" onclick="setSpeed(this, 1.5)">1.5x</button>
+                <button class="btn-spd" onclick="setSpeed(this, 2)">2x</button>
+              </div>
+              <button class="btn-theater" onclick="openTheater('{{.Name}}', '{{.URL}}')">Theater Mode ⤢</button>
+            </div>
+            {{else}}
+            <p class="notice" role="status">{{.Availability}}. {{if eq .Availability "Recording intentionally disabled"}}The producer explicitly disabled video for this case.{{else}}Restore this file to replay it.{{end}} The saved test result is unchanged.</p>
+            {{end}}
+
+            <div class="card-foot">
+              <details>
+                <summary>Source file</summary>
+                <code>{{.Label}}</code>
+              </details>
+              {{if .URL}}<a class="download" href="{{.URL}}" download>Download ↓</a>{{end}}
+            </div>
+          </figure>
+          {{end}}
+        </div>
+        <p class="run">RUN {{.RunID}}</p>
+      </section>
+      {{end}}
+    </div>
+
+    <!-- About this evidence disclosure -->
+    <details class="notes">
+      <summary>About this evidence</summary>
+      <p>Missing or expired files retain their saved case result and show an unavailable notice without a player. An unavailable file does not prove recording was disabled. All saved recordings are included, including multiple pages and HTML report copies. File counts are not unique test counts. Test names and outcomes come from saved Playwright attachment metadata. Byte-identical copies inherit metadata only when the match is unambiguous. Unlinked means no verified recording-to-test association is available; it does not mean the test failed. A suite's result is separate from each recording's test result.</p>
+      <p>Authentication recordings use a privacy screen on credential-provider pages. Imported recordings retain their exact case, phase, runner, and result. Auth labels describe the selection’s login method, not evidence that every clip authenticated successfully. Zero-count auth types have no saved recordings in this report. Keep the artifacts folder layout when moving this report.</p>
+    </details>
+  </main>
+
+  <!-- Theater Modal -->
+  <dialog id="theater-modal">
+    <div class="modal-head">
+      <h3 id="theater-title" style="font-size: 15px; font-weight: 600;">Scenario Theater</h3>
+      <button onclick="closeTheater()" style="background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer;">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:#000; border-radius: var(--radius-sm); overflow:hidden; aspect-ratio: 16/9;">
+        <video id="theater-player" controls style="width:100%; height:100%; object-fit:contain;"></video>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Client-side Logic & Multi-view Engine -->
+  <script>
+    (() => {
+      // Theme Management
+      const themeBtn = document.getElementById('theme-btn');
+      themeBtn.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('matrix_theme', next);
+      });
+      if (localStorage.getItem('matrix_theme')) {
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('matrix_theme'));
+      }
+
+      // Filter elements
+      const search = document.querySelector('#search');
+      const auth = document.querySelector('#auth');
+      const browser = document.querySelector('#browser');
+      const runner = document.querySelector('#runner');
+      const result = document.querySelector('#result');
+      const shown = document.querySelector('#shown');
+      const empty = document.querySelector('#empty');
+
+      // View elements
+      const viewTabs = document.querySelectorAll('.view-tab');
+      const heatmapSection = document.getElementById('heatmap-view');
+      const inspectorLayout = document.getElementById('inspector-view');
+      const galleryPills = document.getElementById('gallery-pills');
+      const selectionStream = document.getElementById('selection-stream');
+
+      // Speed control
+      window.setSpeed = function(btn, rate) {
+        const card = btn.closest('.video-card');
+        const video = card.querySelector('video');
+        if (video) video.playbackRate = rate;
+        card.querySelectorAll('.btn-spd').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      };
+
+      // Theater Modal
+      const theaterModal = document.getElementById('theater-modal');
+      const theaterPlayer = document.getElementById('theater-player');
+      const theaterTitle = document.getElementById('theater-title');
+
+      window.openTheater = function(name, url) {
+        theaterTitle.textContent = name;
+        theaterPlayer.src = url;
+        theaterPlayer.load();
+        theaterModal.showModal();
+      };
+      window.closeTheater = function() {
+        theaterPlayer.pause();
+        theaterModal.close();
+      };
+      theaterModal.addEventListener('click', (e) => {
+        if (e.target === theaterModal) closeTheater();
+      });
+
+      // View Mode Switching
+      function switchView(viewName) {
+        viewTabs.forEach(t => {
+          const isTarget = t.dataset.view === viewName;
+          t.classList.toggle('active', isTarget);
+          t.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+        });
+
+        heatmapSection.style.display = viewName === 'heatmap' ? 'block' : 'none';
+        inspectorLayout.style.display = viewName === 'inspector' ? 'flex' : 'none';
+        galleryPills.style.display = viewName === 'gallery' ? 'flex' : 'none';
+        selectionStream.style.display = viewName === 'inspector' ? 'none' : 'block';
+
+        localStorage.setItem('matrix_view', viewName);
+        if (location.hash !== '#' + viewName) {
+          history.replaceState(null, '', '#' + viewName);
+        }
+
+        if (viewName === 'inspector') {
+          initInspector();
+        }
+      }
+
+      viewTabs.forEach(t => t.addEventListener('click', () => switchView(t.dataset.view)));
+
+      // Initialize view from hash or storage
+      const savedView = location.hash.replace('#', '') || localStorage.getItem('matrix_view') || 'heatmap';
+      if (['heatmap', 'inspector', 'gallery'].includes(savedView)) {
+        switchView(savedView);
+      }
+
+      // Dynamic Heatmap Generator
+      function buildHeatmap() {
+        const tbody = document.getElementById('heatmap-body');
+        const sections = document.querySelectorAll('.selection');
+        const matrixMap = {};
+
+        sections.forEach(sec => {
+          const a = sec.dataset.auth;
+          const os = sec.dataset.os;
+          const b = sec.dataset.browser;
+          const r = sec.dataset.runner;
+          const key = `${os}-${b}-${r}`;
+
+          if (!matrixMap[a]) matrixMap[a] = { label: sec.querySelector('.auth-chip')?.textContent || a, cols: {} };
+          if (!matrixMap[a].cols[key]) matrixMap[a].cols[key] = { count: 0, status: 'passed' };
+          matrixMap[a].cols[key].count += sec.querySelectorAll('.video-card').length;
+          if (sec.querySelector('.badge.failed')) matrixMap[a].cols[key].status = 'failed';
+        });
+
+        const colKeys = [
+          'debian-chrome-playwright', 'debian-chrome-cucumber',
+          'debian-msedge-playwright', 'debian-msedge-cucumber',
+          'ubi9-chrome-playwright', 'ubi9-chrome-cucumber',
+          'ubi9-msedge-playwright', 'ubi9-msedge-cucumber'
+        ];
+
+        tbody.innerHTML = '';
+        for (const [authId, data] of Object.entries(matrixMap)) {
+          const row = document.createElement('tr');
+          const tdLabel = document.createElement('td');
+          tdLabel.style.fontWeight = '600';
+          tdLabel.textContent = data.label;
+          row.appendChild(tdLabel);
+
+          colKeys.forEach(colKey => {
+            const td = document.createElement('td');
+            const colData = data.cols[colKey];
+            if (colData && colData.count > 0) {
+              const cell = document.createElement('div');
+              cell.className = `heat-cell ${colData.status === 'passed' ? 'pass' : 'failed'}`;
+              cell.textContent = `${colData.count} ✓`;
+              cell.title = `${data.label} · ${colKey}`;
+              cell.addEventListener('click', () => {
+                auth.value = authId;
+                const parts = colKey.split('-');
+                browser.value = parts[1];
+                runner.value = parts[2];
+                filter();
+                selectionStream.scrollIntoView({ behavior: 'smooth' });
+              });
+              td.appendChild(cell);
+            } else {
+              td.innerHTML = `<div class="heat-cell" style="opacity:0.3;">—</div>`;
+            }
+            row.appendChild(td);
+          });
+          tbody.appendChild(row);
+        }
+      }
+      buildHeatmap();
+
+      // Split Inspector Logic
+      let inspectorInitialized = false;
+      function initInspector() {
+        if (inspectorInitialized) return;
+        inspectorInitialized = true;
+
+        const rail = document.getElementById('inspector-rail');
+        const tableBody = document.getElementById('inspector-table-body');
+        const drawerVideo = document.getElementById('drawer-video');
+        const drawerTitle = document.getElementById('drawer-title');
+        const drawerSpec = document.getElementById('drawer-spec');
+        const drawerStatus = document.getElementById('drawer-status');
+        const drawerPath = document.getElementById('drawer-path');
+
+        const sections = document.querySelectorAll('.selection');
+        rail.innerHTML = '';
+
+        sections.forEach((sec, idx) => {
+          const item = document.createElement('div');
+          item.className = 'rail-item' + (idx === 0 ? ' active' : '');
+          const label = sec.querySelector('h2')?.textContent || sec.dataset.selection;
+          const count = sec.querySelectorAll('.video-card').length;
+          item.innerHTML = `<span>${label}</span><span style="font-size:10px; opacity:0.6;">${count}</span>`;
+          
+          item.addEventListener('click', () => {
+            rail.querySelectorAll('.rail-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            renderInspectorSection(sec);
+          });
+          rail.appendChild(item);
+        });
+
+        function renderInspectorSection(sec) {
+          tableBody.innerHTML = '';
+          const cards = sec.querySelectorAll('.video-card');
+          cards.forEach((card, cIdx) => {
+            const tr = document.createElement('tr');
+            tr.className = 'center-row' + (cIdx === 0 ? ' active-row' : '');
+            const res = card.dataset.result;
+            const name = card.dataset.name;
+            const spec = card.dataset.spec;
+            const url = card.dataset.url;
+
+            tr.innerHTML = `
+              <td><span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:${res==='passed'?'var(--pass)':'var(--skip)'}"></span></td>
+              <td style="font-weight:600; color:var(--text);">${name}</td>
+              <td style="font-family:var(--font-mono); font-size:11px; color:var(--dim);">${spec}</td>
+              <td><span class="badge ${res}">${res}</span></td>
+            `;
+
+            tr.addEventListener('click', () => {
+              tableBody.querySelectorAll('.center-row').forEach(r => r.classList.remove('active-row'));
+              tr.classList.add('active-row');
+              updateDrawer(name, spec, res, url);
+            });
+            tableBody.appendChild(tr);
+
+            if (cIdx === 0) updateDrawer(name, spec, res, url);
+          });
+        }
+
+        function updateDrawer(name, spec, res, url) {
+          drawerTitle.textContent = name;
+          drawerSpec.textContent = spec;
+          drawerStatus.textContent = `Status: ${res.toUpperCase()}`;
+          drawerPath.textContent = url || 'No video stream';
+          if (url) {
+            drawerVideo.src = url;
+            drawerVideo.load();
+            drawerVideo.style.display = 'block';
+          } else {
+            drawerVideo.style.display = 'none';
+          }
+        }
+
+        if (sections.length > 0) renderInspectorSection(sections[0]);
+      }
+
+      // Protocol Pills Filter for Gallery View
+      document.querySelectorAll('.proto-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          document.querySelectorAll('.proto-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          auth.value = pill.dataset.auth;
+          filter();
+        });
+      });
+
+      // Unified Filter Function
+      function filter() {
+        let count = 0;
+        for (const section of document.querySelectorAll('.selection')) {
+          let visible = 0;
+          const match = (!auth.value || section.dataset.auth === auth.value) &&
+                        (!browser.value || section.dataset.browser === browser.value) &&
+                        (!runner.value || section.dataset.runner === runner.value);
+
+          for (const card of section.querySelectorAll('.video-card')) {
+            const text = section.dataset.selection + ' ' + section.dataset.auth + ' ' + card.textContent;
+            const show = match &&
+                         (!result.value || card.dataset.result === result.value) &&
+                         text.toLowerCase().includes(search.value.toLowerCase().trim());
+            card.hidden = !show;
+            if (show) visible++;
+          }
+          section.hidden = !match || (visible === 0 && (section.querySelector('.video-card') !== null || search.value.trim() !== '' || result.value !== ''));
+          count += visible;
+        }
+
+        shown.textContent = count + ' recording entries';
+        empty.hidden = count !== 0;
+
+        // Synchronize gallery pill state
+        document.querySelectorAll('.proto-pill').forEach(pill => {
+          pill.classList.toggle('active', pill.dataset.auth === auth.value);
+        });
+      }
+
+      for (const input of [search, auth, browser, runner, result]) {
+        input.addEventListener('input', filter);
+        input.addEventListener('change', filter);
+      }
+    })();
+  </script>
+</body>
+</html>

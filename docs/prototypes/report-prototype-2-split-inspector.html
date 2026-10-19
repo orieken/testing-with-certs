@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browser Matrix & Evidence Dashboard — Prototype 2: Split-Pane Inspector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      
+      --bg-app: #0d1117;
+      --bg-rail: #161b22;
+      --bg-surface: #0d1117;
+      --bg-panel: #161b22;
+      --bg-active: #1f242c;
+      --border: #30363d;
+      --border-subtle: #21262d;
+      
+      --text-main: #c9d1d9;
+      --text-bright: #f0f6fc;
+      --text-muted: #8b949e;
+      --text-dim: #6e7681;
+      
+      --brand: #58a6ff;
+      --brand-glow: rgba(88, 166, 255, 0.15);
+      
+      --status-pass: #3fb950;
+      --status-pass-bg: rgba(63, 185, 80, 0.15);
+      --status-pass-border: #238636;
+      
+      --status-fail: #f85149;
+      --status-fail-bg: rgba(248, 81, 73, 0.15);
+      --status-fail-border: #da3633;
+      
+      --status-skip: #d29922;
+      --status-skip-bg: rgba(210, 153, 34, 0.15);
+      
+      --auth-cert: #38bdf8;
+      --auth-passkey: #a78bfa;
+      --auth-saml: #fbbf24;
+      --auth-kerberos: #f472b6;
+      --auth-oidc: #60a5fa;
+      
+      --radius: 6px;
+    }
+
+    [data-theme="light"] {
+      --bg-app: #f6f8fa;
+      --bg-rail: #ffffff;
+      --bg-surface: #ffffff;
+      --bg-panel: #f6f8fa;
+      --bg-active: #e7ecf0;
+      --border: #d0d7de;
+      --border-subtle: #eaeef2;
+      
+      --text-main: #24292f;
+      --text-bright: #1f2328;
+      --text-muted: #57606a;
+      --text-dim: #8c959f;
+      
+      --brand: #0969da;
+      --brand-glow: rgba(9, 105, 218, 0.1);
+      
+      --status-pass: #1a7f37;
+      --status-pass-bg: #dafbe1;
+      --status-pass-border: #4ac26b;
+      
+      --status-fail: #cf222e;
+      --status-fail-bg: #ffebe9;
+      --status-fail-border: #ff8182;
+      
+      --status-skip: #9a6700;
+      --status-skip-bg: #fff8c5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* Split-Pane Shell */
+    .app-shell {
+      display: grid;
+      grid-template-rows: 50px 1fr;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Top Global Header */
+    .app-header {
+      background: var(--bg-rail);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 50;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .app-badge {
+      background: var(--brand);
+      color: #fff;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: var(--radius);
+      letter-spacing: 0.05em;
+    }
+    .header-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-bright);
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-btn {
+      background: var(--bg-app);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: var(--radius);
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .header-btn:hover {
+      background: var(--bg-active);
+      color: var(--text-bright);
+    }
+
+    /* Main 3-Column Split View */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr 450px;
+      height: calc(100vh - 50px);
+      overflow: hidden;
+    }
+
+    /* PANE 1: Left Navigation Rail (Tree & Groups) */
+    .left-rail {
+      background: var(--bg-rail);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .rail-header {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .rail-search {
+      width: 100%;
+      background: var(--bg-app);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 6px 10px;
+      color: var(--text-main);
+      font-size: 12px;
+      outline: none;
+    }
+    .rail-search:focus {
+      border-color: var(--brand);
+    }
+    .rail-tree {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .tree-category {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      padding: 8px 8px 4px;
+      margin-top: 6px;
+    }
+    .tree-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.1s;
+      margin-bottom: 2px;
+    }
+    .tree-item:hover {
+      background: var(--bg-active);
+      color: var(--text-bright);
+    }
+    .tree-item.active {
+      background: var(--bg-active);
+      color: var(--brand);
+      font-weight: 600;
+    }
+    .tree-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .tree-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      background: var(--bg-app);
+      padding: 2px 6px;
+      border-radius: 9999px;
+      color: var(--text-dim);
+      border: 1px solid var(--border-subtle);
+    }
+    .tree-badge.pass {
+      color: var(--status-pass);
+      border-color: var(--status-pass-border);
+    }
+
+    /* PANE 2: Center Main Execution Table */
+    .center-pane {
+      background: var(--bg-app);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+    }
+    .center-toolbar {
+      padding: 10px 16px;
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .selection-info {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .selection-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-bright);
+    }
+    .selection-meta {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    
+    .test-table-wrapper {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .test-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .test-table th {
+      position: sticky;
+      top: 0;
+      background: var(--bg-panel);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--border);
+      z-index: 10;
+    }
+    .test-row {
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .test-row:hover {
+      background: var(--bg-panel);
+    }
+    .test-row.selected-row {
+      background: var(--bg-active);
+      border-left: 3px solid var(--brand);
+    }
+    .test-row td {
+      padding: 12px 16px;
+      vertical-align: middle;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .status-dot.pass { background: var(--status-pass); }
+    .status-dot.fail { background: var(--status-fail); }
+    .status-dot.skip { background: var(--status-skip); }
+
+    .test-name {
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 3px;
+    }
+    .test-sub {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      display: flex;
+      gap: 8px;
+    }
+    .tag-pill {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    /* PANE 3: Right Slide-out Inspector Drawer */
+    .right-inspector {
+      background: var(--bg-panel);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .inspector-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .inspector-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-bright);
+    }
+    .inspector-body {
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Video Player Box */
+    .player-box {
+      background: #000;
+      border-radius: var(--radius);
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      position: relative;
+    }
+    .player-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .player-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+    .speed-group {
+      display: flex;
+      gap: 4px;
+    }
+    .speed-chip {
+      background: var(--bg-app);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .speed-chip.active {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+    }
+
+    /* Tabs in Inspector */
+    .tab-bar {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      gap: 4px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-size: 12px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .tab-btn.active {
+      color: var(--brand);
+      border-bottom-color: var(--brand);
+    }
+    
+    .tab-content {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.6;
+      background: var(--bg-app);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      overflow-x: auto;
+      color: var(--text-main);
+    }
+
+    .key-value-list {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 6px 12px;
+      font-size: 11px;
+    }
+    .kv-key { color: var(--text-dim); }
+    .kv-val { color: var(--text-bright); word-break: break-all; }
+
+    @media (max-width: 1100px) {
+      .split-layout { grid-template-columns: 240px 1fr 340px; }
+    }
+    @media (max-width: 800px) {
+      .split-layout { grid-template-columns: 1fr; }
+      .left-rail, .right-inspector { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-shell">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <span class="app-badge">DEV CONSOLE</span>
+        <span class="header-title">Matrix Test Evidence & Diagnostic Explorer</span>
+        <span style="color: var(--text-dim); font-size: 12px;">Prototype 2 · Split-Pane Inspector</span>
+      </div>
+      <div class="header-right">
+        <a href="index.html" class="header-btn">← Prototype Index</a>
+        <button class="header-btn" id="theme-btn">🌓 Theme</button>
+      </div>
+    </header>
+
+    <!-- 3-Column Split View -->
+    <div class="split-layout">
+      
+      <!-- PANE 1: Left Rail (Navigation Tree) -->
+      <aside class="left-rail">
+        <div class="rail-header">
+          <input type="search" class="rail-search" id="rail-search" placeholder="Filter suites & auth methods…">
+        </div>
+        <div class="rail-tree">
+          <div class="tree-category">Debian 12 Containers</div>
+          <div class="tree-item active" data-suite="deb-chrome-cert">
+            <span class="tree-label"><span>🌐</span> Chrome · Certificate mTLS</span>
+            <span class="tree-badge pass">8/8 ✓</span>
+          </div>
+          <div class="tree-item" data-suite="deb-chrome-passkey">
+            <span class="tree-label"><span>🔑</span> Chrome · Passkeys/WebAuthn</span>
+            <span class="tree-badge pass">12/12 ✓</span>
+          </div>
+          <div class="tree-item" data-suite="deb-chrome-kerberos">
+            <span class="tree-label"><span>🎟️</span> Chrome · Kerberos/SPNEGO</span>
+            <span class="tree-badge pass">10/10 ✓</span>
+          </div>
+          <div class="tree-item" data-suite="deb-chrome-saml">
+            <span class="tree-label"><span>🛡️</span> Chrome · SAML 2.0 SSO</span>
+            <span class="tree-badge pass">21/21 ✓</span>
+          </div>
+          <div class="tree-item" data-suite="deb-edge-cert">
+            <span class="tree-label"><span>🌐</span> Edge · Certificate mTLS</span>
+            <span class="tree-badge pass">8/8 ✓</span>
+          </div>
+          <div class="tree-item" data-suite="deb-edge-saml">
+            <span class="tree-label"><span>🛡️</span> Edge · SAML 2.0 SSO</span>
+            <span class="tree-badge pass">21/21 ✓</span>
+          </div>
+
+          <div class="tree-category">Red Hat UBI 9 Containers</div>
+          <div class="tree-item" data-suite="ubi-chrome-cert">
+            <span class="tree-label"><span>🌐</span> Chrome · Certificate mTLS</span>
+            <span class="tree-badge pass">8/8 ✓</span>
+          </div>
+          <div class="tree-item" data-suite="ubi-chrome-passkey">
+            <span class="tree-label"><span>🔑</span> Chrome · Passkeys/WebAuthn</span>
+            <span class="tree-badge pass">12/12 ✓</span>
+          </div>
+          <div class="tree-item" data-suite="ubi-edge-kerberos">
+            <span class="tree-label"><span>🎟️</span> Edge · Kerberos/SPNEGO</span>
+            <span class="tree-badge pass">10/10 ✓</span>
+          </div>
+          <div class="tree-item" data-suite="ubi-edge-oidc">
+            <span class="tree-label"><span>🔄</span> Edge · Controlled OIDC</span>
+            <span class="tree-badge pass">10/10 ✓</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- PANE 2: Center Execution List -->
+      <main class="center-pane">
+        <div class="center-toolbar">
+          <div class="selection-info">
+            <span class="selection-title" id="active-suite-title">Debian 12 · Chrome · Certificate / mTLS</span>
+            <span class="selection-meta">RUN 20261014T131439-795329000Z · 8 tests (18.7s)</span>
+          </div>
+          <div>
+            <a class="header-btn" href="../../artifacts/teaching/20261014T131439-795329000Z-os-debian-playwright-chrome-customer-waterdeep-teaching-01/html/index.html" target="_blank">Full Playwright Suite Report ↗</a>
+          </div>
+        </div>
+
+        <div class="test-table-wrapper">
+          <table class="test-table">
+            <thead>
+              <tr>
+                <th style="width: 32px;"></th>
+                <th>Test Scenario & Spec File</th>
+                <th style="width: 140px;">Tags</th>
+                <th style="width: 90px;">Duration</th>
+                <th style="width: 110px;">Evidence</th>
+              </tr>
+            </thead>
+            <tbody id="test-table-body">
+              
+              <!-- Row 1 -->
+              <tr class="test-row selected-row" 
+                  data-name="AUTH-01 AUTH-02 Selected certificate opens the live shop"
+                  data-spec="playwright/teaching.spec.ts:15"
+                  data-duration="3.3s"
+                  data-status="passed"
+                  data-video="b75f3f0bfe1fbb68092a06c06b6dabb331661e5a"
+                  data-cert="CN=customer-waterdeep, O=Magic Shop, OU=Customers"
+                  data-steps="1. Navigate to https://shop.magic.test:8443&#10;2. Auto-select client cert 'customer-waterdeep.crt'&#10;3. Keycloak PKCE authorization code exchange&#10;4. Verified sub claim 'waterdeep-cust-01'&#10;5. Response 200 OK: Live shop rendered">
+                <td><span class="status-dot pass"></span></td>
+                <td>
+                  <div class="test-name">AUTH-01 AUTH-02 Selected certificate opens the live shop</div>
+                  <div class="test-sub">playwright/teaching.spec.ts:15</div>
+                </td>
+                <td><span class="tag-pill">@login</span> <span class="tag-pill">@cert</span></td>
+                <td style="font-family: var(--font-mono); font-size: 12px;">3.3s</td>
+                <td><span style="color: var(--brand); font-size: 11px;">▶ 1 Recording</span></td>
+              </tr>
+
+              <!-- Row 2 -->
+              <tr class="test-row" 
+                  data-name="AUTH-08 Logout ends session and installed cert signs in again"
+                  data-spec="playwright/teaching.spec.ts:25"
+                  data-duration="3.1s"
+                  data-status="passed"
+                  data-video="33a38400482030ea62a957c41020a1ba06caaa53"
+                  data-cert="CN=customer-waterdeep, O=Magic Shop, OU=Customers"
+                  data-steps="1. Click Sign Out in navigation bar&#10;2. Session terminated in Keycloak backend&#10;3. Redirected to login gateway&#10;4. Certificate auto-negotiated on re-entry&#10;5. Shop session restored cleanly">
+                <td><span class="status-dot pass"></span></td>
+                <td>
+                  <div class="test-name">AUTH-08 Logout ends session and installed cert signs in again</div>
+                  <div class="test-sub">playwright/teaching.spec.ts:25</div>
+                </td>
+                <td><span class="tag-pill">@login</span> <span class="tag-pill">@session</span></td>
+                <td style="font-family: var(--font-mono); font-size: 12px;">3.1s</td>
+                <td><span style="color: var(--brand); font-size: 11px;">▶ 1 Recording</span></td>
+              </tr>
+
+              <!-- Row 3 -->
+              <tr class="test-row" 
+                  data-name="SHOP-01 Customer order and account placement"
+                  data-spec="playwright/teaching.spec.ts:36"
+                  data-duration="2.9s"
+                  data-status="passed"
+                  data-video="bdcc90d4d13167946241006268bf75c8f1f90744"
+                  data-cert="CN=customer-waterdeep, O=Magic Shop, OU=Customers"
+                  data-steps="1. Add 'Elixir of Health' to shopping cart&#10;2. Submit simulated order checkout&#10;3. Customer API validates JWT + mTLS pairing&#10;4. Order persisted with customer UUID">
+                <td><span class="status-dot pass"></span></td>
+                <td>
+                  <div class="test-name">SHOP-01 Customer order and account placement</div>
+                  <div class="test-sub">playwright/teaching.spec.ts:36</div>
+                </td>
+                <td><span class="tag-pill">@customer</span> <span class="tag-pill">@cart</span></td>
+                <td style="font-family: var(--font-mono); font-size: 12px;">2.9s</td>
+                <td><span style="color: var(--brand); font-size: 11px;">▶ 1 Recording</span></td>
+              </tr>
+
+              <!-- Row 4 -->
+              <tr class="test-row" 
+                  data-name="WIDGET-01 ROLE-01 Customer widget and admin boundary"
+                  data-spec="playwright/teaching.spec.ts:57"
+                  data-duration="3.4s"
+                  data-status="passed"
+                  data-video="e91691f0cafe526f8620a7fb22c6faf21979980c"
+                  data-cert="CN=customer-waterdeep, O=Magic Shop, OU=Customers"
+                  data-steps="1. Customer views portal widgets&#10;2. Attempt GET /admin/api/inventory&#10;3. Verified 403 Forbidden: Customer token denied admin routes">
+                <td><span class="status-dot pass"></span></td>
+                <td>
+                  <div class="test-name">WIDGET-01 ROLE-01 Customer widget and admin boundary</div>
+                  <div class="test-sub">playwright/teaching.spec.ts:57</div>
+                </td>
+                <td><span class="tag-pill">@security</span> <span class="tag-pill">@rbac</span></td>
+                <td style="font-family: var(--font-mono); font-size: 12px;">3.4s</td>
+                <td><span style="color: var(--brand); font-size: 11px;">▶ 1 Recording</span></td>
+              </tr>
+
+              <!-- Row 5 -->
+              <tr class="test-row" 
+                  data-name="MAP-01 Locations map works offline and pans to allowed geolocation"
+                  data-spec="playwright/teaching.spec.ts:102"
+                  data-duration="-"
+                  data-status="skipped"
+                  data-video="7e298408bb6533d23ffd82d838646e7a67646098"
+                  data-cert="N/A (Skipped on customer role)"
+                  data-steps="[SKIPPED] Test requires @admin role; current user is customer-waterdeep">
+                <td><span class="status-dot skip"></span></td>
+                <td>
+                  <div class="test-name">MAP-01 Locations map works offline and pans to allowed geolocation</div>
+                  <div class="test-sub">playwright/teaching.spec.ts:102</div>
+                </td>
+                <td><span class="tag-pill">@admin</span></td>
+                <td style="font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);">skipped</td>
+                <td><span style="color: var(--text-dim); font-size: 11px;">⊘ Skipped</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+
+      <!-- PANE 3: Right Inspector Drawer -->
+      <aside class="right-inspector">
+        <div class="inspector-header">
+          <span class="inspector-title">Active Test Diagnostic Inspector</span>
+          <span class="tag-pill" id="insp-status" style="color: var(--status-pass); border-color: var(--status-pass-border);">✓ PASSED</span>
+        </div>
+
+        <div class="inspector-body">
+          <!-- Video Player Box -->
+          <div>
+            <div class="player-box">
+              <video id="inspector-video" controls preload="none" playsinline>
+                <source id="video-source" src="../../artifacts/teaching/20261014T131439-795329000Z-os-debian-playwright-chrome-customer-waterdeep-teaching-01/html/data/b75f3f0bfe1fbb68092a06c06b6dabb331661e5a.webm" type="video/webm">
+              </video>
+            </div>
+            <div class="player-toolbar">
+              <span id="insp-duration">Duration: 3.3s</span>
+              <div class="speed-group">
+                <button class="speed-chip active" onclick="setInspectorSpeed(this, 1)">1x</button>
+                <button class="speed-chip" onclick="setInspectorSpeed(this, 1.5)">1.5x</button>
+                <button class="speed-chip" onclick="setInspectorSpeed(this, 2)">2x</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inspector Tabs -->
+          <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('steps')">Test Steps</button>
+            <button class="tab-btn" onclick="switchTab('cert')">Security Context</button>
+            <button class="tab-btn" onclick="switchTab('raw')">Artifact Path</button>
+          </div>
+
+          <div id="tab-steps" class="tab-content" style="white-space: pre-wrap;">
+1. Navigate to https://shop.magic.test:8443
+2. Auto-select client cert 'customer-waterdeep.crt'
+3. Keycloak PKCE authorization code exchange
+4. Verified sub claim 'waterdeep-cust-01'
+5. Response 200 OK: Live shop rendered
+          </div>
+
+          <div id="tab-cert" class="tab-content" style="display: none;">
+            <div class="key-value-list">
+              <span class="kv-key">Client DN:</span>
+              <span class="kv-val" id="insp-cert">CN=customer-waterdeep, O=Magic Shop</span>
+              <span class="kv-key">Issuer:</span>
+              <span class="kv-val">CN=Magic Shop Intermediate CA 01</span>
+              <span class="kv-key">Transport:</span>
+              <span class="kv-val">TLS 1.3 · mTLS verified by HAProxy</span>
+              <span class="kv-key">Token Aud:</span>
+              <span class="kv-val">magic-shop-frontend</span>
+              <span class="kv-key">User Role:</span>
+              <span class="kv-val">customer</span>
+            </div>
+          </div>
+
+          <div id="tab-raw" class="tab-content" style="display: none; word-break: break-all;">
+            <p style="color: var(--text-dim); margin-bottom: 6px;">Source Video WebM:</p>
+            <p id="insp-path" style="color: var(--brand);">html/data/b75f3f0bfe1fbb68092a06c06b6dabb331661e5a.webm</p>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle
+    const themeBtn = document.getElementById('theme-btn');
+    themeBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+    });
+
+    // Inspector video speed
+    function setInspectorSpeed(btn, rate) {
+      document.getElementById('inspector-video').playbackRate = rate;
+      document.querySelectorAll('.speed-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // Tabs switch
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('tab-steps').style.display = tab === 'steps' ? 'block' : 'none';
+      document.getElementById('tab-cert').style.display = tab === 'cert' ? 'block' : 'none';
+      document.getElementById('tab-raw').style.display = tab === 'raw' ? 'block' : 'none';
+    }
+
+    // Row selection update inspector
+    const rows = document.querySelectorAll('.test-row');
+    const inspVideo = document.getElementById('inspector-video');
+    const inspDuration = document.getElementById('insp-duration');
+    const inspSteps = document.getElementById('tab-steps');
+    const inspCert = document.getElementById('insp-cert');
+    const inspPath = document.getElementById('insp-path');
+    const inspStatus = document.getElementById('insp-status');
+
+    rows.forEach(row => {
+      row.addEventListener('click', () => {
+        rows.forEach(r => r.classList.remove('selected-row'));
+        row.classList.add('selected-row');
+
+        const videoHash = row.dataset.video;
+        const src = `../../artifacts/teaching/20261014T131439-795329000Z-os-debian-playwright-chrome-customer-waterdeep-teaching-01/html/data/${videoHash}.webm`;
+        inspVideo.querySelector('source').src = src;
+        inspVideo.load();
+
+        inspDuration.textContent = `Duration: ${row.dataset.duration}`;
+        inspSteps.textContent = row.dataset.steps;
+        inspCert.textContent = row.dataset.cert;
+        inspPath.textContent = src;
+        
+        if (row.dataset.status === 'passed') {
+          inspStatus.textContent = '✓ PASSED';
+          inspStatus.style.color = 'var(--status-pass)';
+          inspStatus.style.borderColor = 'var(--status-pass-border)';
+        } else {
+          inspStatus.textContent = '⊘ SKIPPED';
+          inspStatus.style.color = 'var(--status-skip)';
+          inspStatus.style.borderColor = 'var(--status-skip)';
+        }
+      });
+    });
+
+    // Left rail selection
+    const treeItems = document.querySelectorAll('.tree-item');
+    treeItems.forEach(item => {
+      item.addEventListener('click', () => {
+        treeItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        document.getElementById('active-suite-title').textContent = item.querySelector('.tree-label').textContent;
+      });
+    });
+  </script>
+</body>
+</html>
