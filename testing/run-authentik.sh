@@ -36,7 +36,9 @@ trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 sh testing/start-auth-lessons.sh
-compose up -d --wait --wait-timeout 300 authentik-server authentik-worker
+# Initialize the shared image volume once before creating the second container.
+compose up -d --wait --wait-timeout 300 authentik-server
+compose up -d --wait --wait-timeout 300 authentik-worker
 ready=0
 for attempt in $(seq 1 30);do
  if compose exec -T authentik-worker ak shell -c "exec(open('/fixtures/ready.py').read())" >/dev/null 2>&1;then ready=1;break;fi
