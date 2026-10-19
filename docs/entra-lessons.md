@@ -4,6 +4,10 @@ IDP-02 is in progress. No tenant is configured, no cloud resources have been
 created, and no Entra browser acceptance or recordings are credited. The local
 plan generator and boundary checks are preparation, not provider coverage.
 
+Tenant creation is documented in the [test-tenant runbook](entra-test-tenant.md).
+Per the current project decision, live setup is deferred; no tenant details are
+required until we resume that work.
+
 ## Tenant handoff
 
 Use a dedicated authorized workforce test tenant. Confirm its tenant GUID,
