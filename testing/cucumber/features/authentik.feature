@@ -17,3 +17,15 @@ Feature: Independent authentik OIDC and SAML brokers
       | authentik-saml:logout-isolation |
       | authentik-saml:invalid-signature |
       | authentik-oidc:broker-state |
+      | authentik-oidc:access-expiry-clears-identity |
+      | authentik-oidc:refresh-preserves-identity |
+      | authentik-oidc:logout-invalidates-refresh |
+      | authentik-oidc:refresh-client-binding |
+      | authentik-oidc:session-expiry-rejects-refresh |
+      | authentik-oidc:group-withdrawal |
+      | authentik-saml:access-expiry-clears-identity |
+      | authentik-saml:refresh-preserves-identity |
+      | authentik-saml:logout-invalidates-refresh |
+      | authentik-saml:refresh-client-binding |
+      | authentik-saml:session-expiry-rejects-refresh |
+      | authentik-saml:group-withdrawal |

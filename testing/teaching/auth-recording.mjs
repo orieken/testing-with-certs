@@ -1,4 +1,4 @@
-import { authentikCaseNames } from './provider-matrix.mjs';
+import { authentikCaseNames, authentikPhase } from './provider-matrix.mjs';
 import { mkdirSync, renameSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash, randomUUID } from 'node:crypto';
 import { join, relative } from 'node:path';
@@ -12,7 +12,7 @@ export function recordingSelection(name, method) {
   const browser = process.env.LAB_BROWSER;
   if (!['chrome', 'msedge'].includes(browser)) throw new Error('Real browser required for recording');
   const runner = process.argv.some(value => value.includes('cucumber')) ? 'cucumber' : 'playwright';
-  const phase = method === 'password-totp' ? (process.env.LAB_OTP_LIFECYCLE === '1' ? 'lifecycle' : 'baseline') :
+  const phase = method.startsWith('authentik-') ? authentikPhase(name) : method === 'password-totp' ? (process.env.LAB_OTP_LIFECYCLE === '1' ? 'lifecycle' : 'baseline') :
     process.env.LAB_AUTH_SUITE?.endsWith('-lifecycle') ? 'lifecycle' : process.env.LAB_KERBEROS_DISABLED === '1' ? 'disabled' : 'baseline';
   const root = `/work/artifacts/${method === 'password-totp' ? 'password-otp' : method === 'certificate-password' ? 'certificate-password-ci' : 'auth-lessons'}`;
   return { name, method, browser, runner, phase, root };
@@ -74,7 +74,7 @@ export async function withAuthRecording(browser, playwright, name, method, run) 
     if (!videos.length) throw new Error('Authentication recording missing');
     writeFileSync(join(directory, 'recording.json'), JSON.stringify({ evidence: 'live-authentication-recording',
       auth_type: method, name, browser: selection.browser, runner: selection.runner, phase: selection.phase, status,
-      spec: method.startsWith('authentik-') ? 'teaching/authentik.mjs' : `teaching/${method === 'password-totp' ? 'password-otp' : method}.mjs`, videos: videos.map(value => value.split('\\').join('/')),
+      spec: method.startsWith('authentik-') ? `teaching/authentik${authentikPhase(name)==='lifecycle'?'-lifecycle':''}.mjs` : `teaching/${method === 'password-totp' ? 'password-otp' : method}.mjs`, videos: videos.map(value => value.split('\\').join('/')),
       privacy: 'provider-document-hidden-before-paint',
     }, null, 2));
   }

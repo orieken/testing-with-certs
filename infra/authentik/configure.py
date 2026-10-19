@@ -23,7 +23,7 @@ if state.exists():
 member, _ = Group.objects.get_or_create(name='lesson-member')
 users = []
 for method in ['oidc', 'saml']:
-    for kind in ['member', 'no-group', 'disabled']:
+    for kind in ['member', 'no-group', 'disabled', 'access-expiry-clears-identity', 'refresh-preserves-identity', 'logout-invalidates-refresh', 'refresh-client-binding', 'session-expiry-rejects-refresh', 'group-withdrawal']:
         username = f'ak-{method}-{kind}'
         if User.objects.filter(username=username).exists():
             raise RuntimeError('Refusing to adopt a pre-existing account')
@@ -31,7 +31,7 @@ for method in ['oidc', 'saml']:
         user = User.objects.create(username=username, name='Lesson user', email=f'{username}@example.test', is_active=kind != 'disabled')
         user.set_password(password)
         user.save()
-        if kind == 'member':
+        if kind not in ['no-group', 'disabled']:
             user.ak_groups.add(member)
         users.append(dict(username=username, password=password, method=method, kind=kind))
 admin = User.objects.filter(username='akadmin').first()
@@ -53,5 +53,8 @@ saml.property_mappings.set([saml_group,username])
 Application.objects.get_or_create(slug='lesson-saml', defaults=dict(name='Lesson SAML',provider=saml,policy_engine_mode='all'))
 state.write_text(json.dumps(users))
 os.chmod(state,0o600)
+control = Path('/ak-fixture/control-secret')
+control.write_text(secrets.token_urlsafe(48))
+os.chmod(control,0o600)
 Path('/ak-fixture/public.json').write_text(json.dumps(dict(certificate=key.certificate_data)))
 print('Owned authentik users, strict OIDC redirects, signed SAML and group mappings ready; values withheld.')

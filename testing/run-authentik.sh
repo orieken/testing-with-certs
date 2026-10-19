@@ -44,6 +44,7 @@ for attempt in $(seq 1 30);do
 done
 test "$ready" -eq 1 || { echo 'Authentik blueprint readiness failed' >&2;exit 1; }
 if ! compose exec -T authentik-worker ak shell -c "exec(open('/fixtures/configure.py').read())" >/dev/null 2>&1;then echo "Authentik owned fixture provisioning failed" >&2;exit 1;fi
+compose up -d --wait --wait-timeout 120 authentik-control
 compose run --rm --no-deps authentik-setup
 docker compose -f infra/compose.yaml --profile test build runner-test
 compose run --rm --no-deps authentik-tests node /work/testing/teaching/authentik-versions.mjs
@@ -54,5 +55,7 @@ for browser in chrome msedge;do
  compose run --rm --no-deps -e "LAB_BROWSER=$browser" authentik-tests sh -c 'cd /work/testing && ./node_modules/.bin/cucumber-js --import cucumber/authentik.mjs cucumber/features/authentik.feature --format ./reporting/authentik-cucumber.mjs --order random'
  docker volume rm "${LAB_PROJECT}_auth-lesson-home" "${LAB_PROJECT}_auth-lesson-tmp" >/dev/null
 done
+compose exec -T authentik-control ak shell -c "exec(open('/fixtures/verify.py').read())" >/dev/null 2>&1
+echo 'Authentik lifecycle group membership restored and verified.' | tee "$LAB_AUTH_REPORT_DIR/lifecycle-cleanup.txt"
 compose run --rm --no-deps authentik-tests node /work/testing/reporting/check-authentik.mjs /work/artifacts/auth-lessons
 compose run --rm --no-deps authentik-tests node /work/testing/container/check-artifacts.mjs /work/artifacts/auth-lessons
