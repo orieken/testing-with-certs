@@ -64,7 +64,7 @@ services:
   authentik-control:
     <<: *authentik
     command: [shell, -c, "exec(open('/fixtures/control.py').read())"]
-    networks: [auth]
+    networks: [auth, authentik-private]
     healthcheck:
       test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9100/health', timeout=2)"]
       interval: 3s
