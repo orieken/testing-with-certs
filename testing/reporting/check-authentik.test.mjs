@@ -4,6 +4,7 @@ import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,rmSync,symlinkSync} fro
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {authentikCaseNames,authentikPhase} from '../teaching/provider-matrix.mjs';
+import {safeAuthentikOutput} from './authentik.mjs';
 import {checkAuthentikEvidence} from './check-authentik.mjs';
 function fixture(root){
  for(const browser of ['chrome','msedge'])for(const runner of ['playwright','cucumber']){
@@ -37,4 +38,10 @@ test('both runners enumerate every required authentik scenario exactly once',()=
  const feature=readFileSync(new URL('../cucumber/features/authentik.feature',import.meta.url),'utf8');
  const names=[...feature.matchAll(/\| (authentik-[^ |]+) \|/g)].map(m=>m[1]);
  assert.deepEqual(names.sort(),[...authentikCaseNames].sort());assert.equal(new Set(names).size,26);
+});
+
+test('provider progress forwarding accepts only fixed credential-free events',()=>{
+ const valid='Authentik group lifecycle: withdrawn';
+ assert.deepEqual(safeAuthentikOutput(valid+'\nAuthentik group lifecycle: restored'),[valid,'Authentik group lifecycle: restored']);
+ for(const line of [valid+' token=private', 'prefix '+valid, 'Authentik group lifecycle: unknown', 'Bearer private', '\u001b[31m'+valid])assert.deepEqual(safeAuthentikOutput(line),[]);
 });

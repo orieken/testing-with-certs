@@ -36,19 +36,21 @@ export async function checkAuthentikLifecycle({kind,method,page,context,user,log
    const isolated=await recorded.newContext();try{const other=await isolated.newPage();await other.goto(`https://shop.magic.test:8543/teaching/${method}`);await expect(other.getByTestId('lesson-user')).toHaveCount(0);}finally{await isolated.close();}break;
   }
   case 'group-withdrawal':{
+   const mark=value=>console.log(`Authentik group lifecycle: ${value}`);
+   mark('initial-session');
    const providerMethod=method.replace('authentik-','');
    async function membership(action){
     const response=await context.request.post(`http://authentik-control:9100/${providerMethod}/${action}`,{headers:{Authorization:`Bearer ${readFileSync('/ak-fixture/control-secret','utf8')}`}});
     expect(response.status()).toBe(200);expect(await response.json()).toEqual({ok:true,member:action==='restore'});
    }
-   expect((await context.request.post(`http://authentik-control:9100/${providerMethod}/withdraw`)).status()).toBe(403);
-   const denied=await context.request.post('http://authentik-control:9100/unknown/restore',{headers:{Authorization:`Bearer ${readFileSync('/ak-fixture/control-secret','utf8')}`}});expect(denied.status()).toBe(404);
+   expect((await context.request.post(`http://authentik-control:9100/${providerMethod}/withdraw`)).status()).toBe(403);mark('unauthorized-rejected');
+   const denied=await context.request.post('http://authentik-control:9100/unknown/restore',{headers:{Authorization:`Bearer ${readFileSync('/ak-fixture/control-secret','utf8')}`}});expect(denied.status()).toBe(404);mark('unknown-target-rejected');
    try{
-    await membership('withdraw');
+    await membership('withdraw');mark('withdrawn');
     // Broker refresh uses its cached role; withdrawal is enforced at the next provider login.
-    await refreshed(tokens,true);await logout();await rejected(tokens);
-    const previous=counters.provider;await login(false,false);expect(counters.provider>previous).toBe(true);
-   }finally{await membership('restore');}
+    await refreshed(tokens,true);mark('cached-role-verified');await logout();await rejected(tokens);mark('provider-logout-returned');
+    const previous=counters.provider;const next=await login(true,false);expect(counters.provider>previous).toBe(true);expect(claims(next.access_token).sub).toBe(claims(tokens.access_token).sub);mark('new-provider-session-verified');
+   }finally{await membership('restore');mark('restored');}
    break;
   }
   default:throw new Error('Unknown authentik lifecycle case');
