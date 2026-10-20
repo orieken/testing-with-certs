@@ -112,6 +112,8 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
+      - name: Verify the standalone package before starting live services
+        run: ./lab test --runner playwright --suite package
       - name: Start isolated healthy Compose stack and bootstrap realm
         run: ./lab up
       - name: Record real browser versions in the container
@@ -119,11 +121,10 @@ jobs:
           docker compose -f infra/compose.yaml --profile test build runner-test
           docker compose -f infra/compose.yaml --profile test run --rm --no-deps runner-test \
             sh -c 'google-chrome --version && microsoft-edge --version && node --version'
-      - name: Verify PKI, seed data, and the live package suite
+      - name: Verify PKI and seed data
         run: |
           ./lab pki verify
           ./lab db verify
-          ./lab test --runner playwright --suite package
       - name: Gate on live OpenAPI contracts and operation coverage
         run: ./lab test --runner playwright --suite contracts
       - name: Run live TLS, token, identity and ownership checks
@@ -544,12 +545,35 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
+      - name: Build the selected runner before starting live services
+        env:
+          LAB_RUNNER_OS: ${{ matrix.os }}
+        run: |
+          if [ "$LAB_RUNNER_OS" = ubi9 ]; then
+            export LAB_RUNNER_IMAGE=magic-shop-runner-ubi9:01
+            export LAB_RUNNER_CONTAINERFILE=testing/container/Runner.ubi9.Containerfile
+          fi
+          docker compose -f infra/compose.yaml --profile test build runner-test
       - name: Start disposable lab
         run: ./lab up
       - name: Record every supported user, runner, browser and suite
         env:
           MATRIX_OS: ${{ matrix.os }}
         run: ./lab matrix --os "$MATRIX_OS"
+      - name: Show safe failed-selection identifiers
+        if: failure()
+        run: |
+          docker run --rm --network none --entrypoint node -v "$PWD:/work:ro" \
+            node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9 \
+            --input-type=module -e '
+            import {readdirSync,readFileSync,existsSync} from "node:fs";
+            const root="/work/artifacts/matrix";
+            if(existsSync(root))for(const name of readdirSync(root)){
+              const matrix=JSON.parse(readFileSync(root+"/"+name+"/matrix.json"));
+              for(const row of matrix.rows.filter(r=>r.status!=="passed")){
+                console.log(JSON.stringify({os:row.os,browser:row.browser,runner:row.runner,user:row.user,suite:row.suite,status:row.status,summary:row.summary}));
+              }
+            }'
       - name: Verify full inventory and scan recordings
         env:
           MATRIX_OS: ${{ matrix.os }}

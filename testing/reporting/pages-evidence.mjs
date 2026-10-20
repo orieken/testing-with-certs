@@ -15,7 +15,7 @@ function walk(root){return readdirSync(root).flatMap(name=>{const path=join(root
 const escape=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
 export async function finalizePages(site,evidence,run){
  const provenance=verifyFullRun(run);site=resolve(site);evidence=resolve(evidence);
- const allowed=new Set(['junit.xml','results.json','environment.json','cleanup.txt','lifecycle-cleanup.txt','matrix-cleanup.txt','contract-coverage.json','coverage.json','browser-evidence.json','evidence.json']);
+ const allowed=new Set(['junit.xml','results.json','environment.json','cleanup.txt','lifecycle-cleanup.txt','matrix-cleanup.txt','contract-coverage.json','coverage.json','browser-evidence.json','evidence.json','provider.json','compatibility.json','manifest.json','versions.json','environment.txt','images.txt','compose-version.txt']);
  const entries=[];
  for(const file of walk(evidence)){
   if(!allowed.has(file.split('/').at(-1)))continue;
