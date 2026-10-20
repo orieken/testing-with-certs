@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 )
 
 // Export only video files and allowlisted case fields. Raw HTML reports may hold
@@ -33,6 +34,9 @@ func (o operator) matrixSite(args []string) (string, error) {
 	if json.Unmarshal(data, &original) != nil || original.Status != "passed" || len(original.Rows) == 0 {
 		return "", errors.New("site requires a passing matrix")
 	}
+	if !regexp.MustCompile(`^[a-zA-Z0-9_-]+$`).MatchString(original.ID) {
+		return "", errors.New("site requires a safe release identifier")
+	}
 	if err = os.MkdirAll(dest, 0755); err != nil {
 		return "", err
 	}
@@ -49,7 +53,7 @@ func (o operator) matrixSite(args []string) (string, error) {
 		if row.Status != "passed" {
 			return "", errors.New("site cannot publish unfinished or failed selections")
 		}
-		exported, n, size, err := exportSiteRow(filepath.Dir(source), dest, i, row)
+		exported, n, size, err := exportSiteRow(filepath.Dir(source), dest, original.ID, i, row)
 		if err != nil {
 			return "", err
 		}
@@ -84,7 +88,7 @@ func (o operator) matrixSite(args []string) (string, error) {
 	return fmt.Sprintf("Portable matrix site: %d selections, %d videos, %d video bytes\n", site.Passed, videos, bytes), nil
 }
 
-func exportSiteRow(base, dest string, index int, row matrixRow) (matrixRow, int, int64, error) {
+func exportSiteRow(base, dest, release string, index int, row matrixRow) (matrixRow, int, int64, error) {
 	report := row.Report
 	if !filepath.IsAbs(report) {
 		report = filepath.Join(base, report)
@@ -104,7 +108,7 @@ func exportSiteRow(base, dest string, index int, row matrixRow) (matrixRow, int,
 	if err != nil {
 		return matrixRow{}, 0, 0, err
 	}
-	target := filepath.Join(dest, "reports", fmt.Sprintf("selection-%03d", index+1))
+	target := filepath.Join(dest, "reports", release, fmt.Sprintf("selection-%03d", index+1))
 	if err = os.MkdirAll(target, 0755); err != nil {
 		return matrixRow{}, 0, 0, err
 	}

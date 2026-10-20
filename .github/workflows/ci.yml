@@ -626,3 +626,109 @@ jobs:
         run: |
           docker run --rm --platform linux/amd64 --network none --entrypoint node \
             -e CI_GATE_RESULTS -e CI_FULL_EVIDENCE magic-shop-ci-base:local /work/testing/ci/check-gates.mjs
+
+  publish-matrix:
+    name: Publish verified video matrix
+    needs: evidence-gates
+    if: >-
+      github.event_name == 'workflow_dispatch' && inputs.full_evidence &&
+      needs.evidence-gates.result == 'success' &&
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/codex/publish-video-matrix')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: verified-matrix-pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Capture native gates and current-run artifact metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p artifacts/publication
+          gh run view "$GITHUB_RUN_ID" --json databaseId,event,headSha,headBranch,attempt,status,conclusion,url,jobs > artifacts/publication/run.json
+          gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" > artifacts/publication/artifacts.json
+      - name: Select the latest evidence for each suite from this run and source
+        run: |
+          docker run --rm --network none --entrypoint node -v "$PWD:/work:ro" \
+            node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9 \
+            /work/testing/reporting/pages-artifacts.mjs /work/artifacts/publication/artifacts.json \
+            "$GITHUB_RUN_ID" "$GITHUB_SHA" "$GITHUB_RUN_ATTEMPT" > artifacts/publication/artifact-names.txt
+      - name: Download only the selected evidence bundles
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          while IFS= read -r artifact; do
+            gh run download "$GITHUB_RUN_ID" --name "$artifact" --dir "artifacts/full-evidence/$artifact" || exit 1
+          done < artifacts/publication/artifact-names.txt
+      - name: Build the portable report operator
+        run: sh operator/build.sh
+      - name: Recheck all evidence and assemble the sanitized site
+        env:
+          PAGES_ACTIVE_RUN: "1"
+        run: |
+          docker run --rm --network none --entrypoint node -w /work -v "$PWD:/work" \
+            -e PAGES_ACTIVE_RUN -e GITHUB_RUN_ID -e GITHUB_SHA -e GITHUB_REF_NAME -e GITHUB_RUN_ATTEMPT \
+            node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9 \
+            /work/testing/reporting/prepare-pages.mjs /work/artifacts/full-evidence /work/artifacts/publication/run.json \
+            /work/artifacts/operator/bin/magic-shop-operator /work/artifacts/pages/current > artifacts/publication/site-check.json
+      - name: Keep a newer published run in place
+        id: eligible
+        run: |
+          eligible=$(docker run --rm --entrypoint node -v "$PWD:/work:ro" -e GITHUB_RUN_ATTEMPT \
+            node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9 \
+            /work/testing/reporting/pages-release.mjs /work/artifacts/publication/run.json)
+          echo "publish=$eligible" >> "$GITHUB_OUTPUT"
+      - name: Build real browsers for public playback verification
+        if: steps.eligible.outputs.publish == 'true'
+        run: docker build --platform linux/amd64 -f testing/container/Runner.Containerfile -t magic-shop-runner:03 .
+      - name: Upload the verified Pages site
+        if: steps.eligible.outputs.publish == 'true'
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          name: verified-pages-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/pages/current
+          retention-days: 7
+      - name: Deploy the verified report
+        id: deployment
+        if: steps.eligible.outputs.publish == 'true'
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+        with:
+          artifact_name: verified-pages-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Verify public provenance, filtering and video playback in both browsers
+        if: steps.eligible.outputs.publish == 'true'
+        run: |
+          docker run --rm --platform linux/amd64 --entrypoint node \
+            -v "$PWD/artifacts/pages/current:/published:ro" -e GITHUB_RUN_ID -e GITHUB_SHA -e GITHUB_RUN_ATTEMPT \
+            magic-shop-runner:03 /work/testing/reporting/pages-playback.mjs /published/matrix.json > artifacts/publication/public-playback.jsonl
+      - name: Save publication verification
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: pages-verification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            artifacts/publication/site-check.json
+            artifacts/publication/public-playback.jsonl
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Summarize publication
+        if: success()
+        env:
+          PUBLISHED: ${{ steps.eligible.outputs.publish }}
+        run: |
+          if [ "$PUBLISHED" = true ]; then
+            echo 'Published and verified: https://orieken.github.io/testing-with-certs/' >> "$GITHUB_STEP_SUMMARY"
+            cat artifacts/publication/site-check.json >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'A newer full run is already published; this run did not replace it.' >> "$GITHUB_STEP_SUMMARY"
+          fi

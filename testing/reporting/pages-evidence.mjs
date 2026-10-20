@@ -4,17 +4,29 @@ import{resolve,join,relative,dirname,extname}from'node:path';
 import{pathToFileURL}from'node:url';
 import{scanArtifacts}from'../container/check-artifacts.mjs';
 export const fullJobNames=['workspace checks','spike checks','catalog-api build','insights-api build','Compose configuration','Native Go operator tests','Complete recorded browser matrix (debian)','Complete recorded browser matrix (ubi9)','Isolated contracts, security and real-browser suites','Native certificate and password teaching matrix','Contract-derived mock consumers (Prism)','Dependency faults (checkout)','Dependency faults (reporting)','Dependency faults (idempotency)','Real-provider regional boundaries','Password and OTP in Chrome/Edge and both runners','All authentication protocols in both runners','Authentik OIDC and SAML in both runners','Require independent live, consumer and fault gates'];
-export function verifyFullRun(run){
- assert.equal(run.status,'completed');assert.equal(run.conclusion,'success');assert.equal(run.event,'workflow_dispatch');assert.match(run.headSha,/^[a-f0-9]{40}$/);assert.ok(Number.isSafeInteger(run.databaseId));
+export const publicationJob='Publish verified video matrix';
+export function verifyFullRun(run,{publishing=false,context}={}){
+ const publishers=run.jobs.filter(j=>j.name===publicationJob);
+ if(publishing){
+  assert.equal(run.status,'in_progress');assert.ok(!run.conclusion);
+  assert.equal(publishers.length,1);assert.equal(publishers[0].status,'in_progress');assert.ok(!publishers[0].conclusion);
+  assert.equal(run.databaseId,Number(context?.runId));assert.equal(run.headSha,context?.sha);assert.equal(run.headBranch,context?.branch);
+  assert.ok(['main','codex/publish-video-matrix'].includes(run.headBranch));assert.ok(Number.isSafeInteger(Number(context?.attempt))&&Number(context.attempt)>0);
+ }else{
+  assert.equal(run.status,'completed');assert.equal(run.conclusion,'success');assert.ok(publishers.length<=1);
+  for(const job of publishers){assert.equal(job.status,'completed');assert.equal(job.conclusion,'success');}
+ }
+ assert.equal(run.event,'workflow_dispatch');assert.match(run.headSha,/^[a-f0-9]{40}$/);assert.ok(Number.isSafeInteger(run.databaseId));
  assert.equal(run.url,`https://github.com/orieken/testing-with-certs/actions/runs/${run.databaseId}`);
- assert.deepEqual(run.jobs.map(j=>j.name).sort(),[...fullJobNames].sort());
- for(const job of run.jobs){assert.equal(job.status,'completed');assert.equal(job.conclusion,'success');}
- return {evidence:'verified-full-native-test-run',sourceCommit:run.headSha,runId:run.databaseId,runUrl:run.url,jobs:run.jobs.map(j=>({name:j.name,status:j.conclusion,url:j.url})),deferred:['external-account providers','physical authenticators and manual-only desktop checks']};
+ const jobs=run.jobs.filter(j=>j.name!==publicationJob);
+ assert.deepEqual(jobs.map(j=>j.name).sort(),[...fullJobNames].sort());
+ for(const job of jobs){assert.equal(job.status,'completed');assert.equal(job.conclusion,'success');}
+ return {evidence:'verified-full-native-test-run',sourceCommit:run.headSha,runId:run.databaseId,runUrl:run.url,jobs:jobs.map(j=>({name:j.name,status:j.conclusion,url:j.url})),deferred:['external-account providers','physical authenticators and manual-only desktop checks']};
 }
 function walk(root){return readdirSync(root).flatMap(name=>{const path=join(root,name),stat=lstatSync(path);assert.ok(!stat.isSymbolicLink(),'Site/evidence symlink');return stat.isDirectory()?walk(path):[path];});}
 const escape=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
-export async function finalizePages(site,evidence,run){
- const provenance=verifyFullRun(run);site=resolve(site);evidence=resolve(evidence);
+export async function finalizePages(site,evidence,run,options={}){
+ const provenance=verifyFullRun(run,options);if(options.publishing)provenance.publicationAttempt=Number(options.context.attempt);site=resolve(site);evidence=resolve(evidence);
  const allowed=new Set(['junit.xml','results.json','environment.json','cleanup.txt','lifecycle-cleanup.txt','matrix-cleanup.txt','contract-coverage.json','coverage.json','browser-evidence.json','evidence.json','provider.json','compatibility.json','manifest.json','versions.json','environment.txt','images.txt','compose-version.txt']);
  const entries=[];
  for(const file of walk(evidence)){

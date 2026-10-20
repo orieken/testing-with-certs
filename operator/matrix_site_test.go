@@ -32,10 +32,10 @@ func TestPortableSiteWhitelistAndRelocation(t *testing.T) {
 	}
 	relocated := filepath.Join(root, "moved")
 	os.Rename(dest, relocated)
-	if _, err := os.Stat(filepath.Join(relocated, "reports/selection-001/video-0001.webm")); err != nil {
+	if _, err := os.Stat(filepath.Join(relocated, "reports/verified-run/selection-001/video-0001.webm")); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := os.Stat(filepath.Join(relocated, "reports/selection-001/credentials.key")); !os.IsNotExist(err) {
+	if _, err := os.Stat(filepath.Join(relocated, "reports/verified-run/selection-001/credentials.key")); !os.IsNotExist(err) {
 		t.Fatal("copied unapproved source file")
 	}
 	if _, err := op.matrixSite([]string{source, relocated}); err == nil {
@@ -49,5 +49,21 @@ func TestPortableSiteWhitelistAndRelocation(t *testing.T) {
 	}
 	if _, err := os.Stat(dest); !os.IsNotExist(err) {
 		t.Fatal("failed build left publishable output")
+	}
+	manifest.Rows[0].Status = "passed"
+	manifest.ID = "next-run"
+	data, _ = json.Marshal(manifest)
+	os.WriteFile(source, data, 0644)
+	if _, err := op.matrixSite([]string{source, dest}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(dest, "reports/next-run/selection-001/video-0001.webm")); err != nil {
+		t.Fatal("new release reused the previous media URL", err)
+	}
+	manifest.ID = "../escape"
+	data, _ = json.Marshal(manifest)
+	os.WriteFile(source, data, 0644)
+	if _, err := op.matrixSite([]string{source, filepath.Join(root, "unsafe")}); err == nil {
+		t.Fatal("accepted an escaping release identifier")
 	}
 }
