@@ -128,7 +128,7 @@ jobs:
           test -n "$database_before"
           ./lab db verify
           test "$database_before" = "$(docker compose -f infra/compose.yaml ps -q postgres)"
-          ./lab healthcheck
+          ./lab operator healthcheck
       - name: Gate on live OpenAPI contracts and operation coverage
         run: ./lab test --runner playwright --suite contracts
       - name: Run live TLS, token, identity and ownership checks
@@ -587,7 +587,7 @@ jobs:
             /work/testing/reporting/check-browser-matrix.mjs /work/artifacts "$MATRIX_OS"
           docker run --rm --network none --entrypoint node \
             -v "$PWD:/work:ro" node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9 \
-            /work/testing/container/check-artifacts.mjs /work/artifacts
+            /work/testing/container/check-artifacts.mjs /work/artifacts/.
       - name: Remove owned lab resources and verify cleanup
         run: sh testing/cleanup-certificate-password.sh
       - name: Save cleanup evidence
