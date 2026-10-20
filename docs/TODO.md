@@ -1,5 +1,7 @@
 # Implementation todo list
 
+- [x] **REPORT-PAGES — Fresh complete native evidence and public video matrix.** Run all configured automated CI jobs plus the complete Debian/UBI9 browser recording matrix; independently verify downloaded reports, cases, videos and cleanup; publish the sanitized portable report to repository GitHub Pages and verify public playback. External-account and manual-only checks stay explicitly deferred. [Publication procedure](pages-report.md). Completed in [run 39357933655](https://github.com/orieken/testing-with-certs/actions/runs/39357933655): 19/19 jobs, 92 selections, 952 videos and verified public Chrome/Edge playback; [completion 59](completion/59-public-video-matrix.md).
+
 ## Additional authentication methods — 2026-10-15
 
 Current coverage: X.509/mTLS user login with OIDC Authorization Code + PKCE, a separate certificate + password lesson, and OAuth client credentials with service mTLS are implemented. Certificate/password has a recorded 36-case native Chrome/Edge × Playwright/Cucumber matrix; see [authentication details](authentication.md), [coverage matrix](teaching-coverage.md), and [completion 18](completion/18-native-certificate-password-ci.md). Standalone mocked OIDC journeys do not establish real external-provider federation coverage.

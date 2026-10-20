@@ -1,5 +1,7 @@
 # Browser container matrix
 
+The [public report](https://orieken.github.io/testing-with-certs/) contains 92 fresh selections and 952 videos from the successful 19-job native run; [completion 59](completion/59-public-video-matrix.md) records acceptance and expected skips. For a new complete run and portable export, follow the [Pages publication guide](pages-report.md).
+
 Start the app with `./lab up`. Preview or execute the browser matrix:
 
 ```sh
@@ -120,9 +122,9 @@ lab. It uses disposable browser containers but shares the live lab's application
 data; checkout tests create orders and inventory/widget tests change and restore
 selected settings. API contracts, security probes, fault suites and the separate
 certificate-plus-password lesson are outside this browser command. Use
-`sh testing/run-all.sh all` for the existing broader all-service workflow. That
-workflow and CI keep their existing OS coverage; this change does not silently
-expand CI or the separate password lesson.
+`sh testing/run-all.sh all` for the existing broader all-service workflow. Ordinary CI retains its existing OS coverage. An explicit `full_evidence=true`
+dispatch adds both complete Debian/UBI9 certificate-shop recording matrices;
+the separate authentication lesson jobs retain their Debian runners.
 
 UBI9 remains experimental: it adds CentOS Stream/EPEL desktop packages and uses
 live RPM/browser versions. Debian uses the existing locked package set. See

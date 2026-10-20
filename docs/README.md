@@ -1,6 +1,8 @@
 # Magic Shop certificate-authentication teaching prototype
 
-The [certificate-free authentication lessons](certificate-free-lessons.md) cover password/OTP, passkeys, OIDC, SAML, and Kerberos through separate entry pages. The [current protocol matrix](teaching-coverage.md#authentication-protocol-matrix) records 156 local Chrome/Edge executions across runs and 156 independent native passes. [Completion 42](completion/42-saml-role-mapping.md) adds scoped SAML role mapping and later-assertion withdrawal, with broader shared acceptance retained.
+The [published video matrix](https://orieken.github.io/testing-with-certs/) contains 92 fresh selections and 952 videos from a complete 19-job native run. [Completion 59](completion/59-public-video-matrix.md) records independent checks, deployment, public playback and scope.
+
+The [certificate-free authentication lessons](certificate-free-lessons.md) cover password/OTP, passkeys, OIDC, SAML, and Kerberos through separate entry pages. The [current protocol matrix](teaching-coverage.md#authentication-protocol-matrix) covers 364 protocol/OTP/provider executions plus 36 separate certificate/password regressions across Chrome/Edge and both runners. [Completion 58](completion/58-authentik-lifecycle.md) records the latest authentik lifecycle increment, with earlier method-specific evidence retained.
 
 New to the lab? Use [Get started with certificate tests](getting-started.md) to start the containers and run your first real-login test. The [project pitch and current gaps](project-pitch.md) provides a short explanation and an evidence-based limitations table.
 
