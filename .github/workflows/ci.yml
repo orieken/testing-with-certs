@@ -124,7 +124,11 @@ jobs:
       - name: Verify PKI and seed data
         run: |
           ./lab pki verify
+          database_before=$(docker compose -f infra/compose.yaml ps -q postgres)
+          test -n "$database_before"
           ./lab db verify
+          test "$database_before" = "$(docker compose -f infra/compose.yaml ps -q postgres)"
+          ./lab healthcheck
       - name: Gate on live OpenAPI contracts and operation coverage
         run: ./lab test --runner playwright --suite contracts
       - name: Run live TLS, token, identity and ownership checks

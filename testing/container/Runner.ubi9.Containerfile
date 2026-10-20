@@ -19,9 +19,11 @@ COPY --from=dependencies /usr/local/bin/node /usr/local/bin/node
 COPY testing/container/google.asc testing/container/microsoft.asc /tmp/keys/
 # Stream supplies desktop libraries absent from the redistributable UBI repositories.
 # Keep signature verification enabled for both Stream and EPEL packages.
+# Keep UBI OpenSSL/FIPS packages together; Stream replacements conflict with the
+# pinned Red Hat FIPS provider. Desktop libraries still come from Stream.
 RUN rpm --import /tmp/keys/*.asc \
     && curl --fail --location --max-time 60 https://www.centos.org/keys/RPM-GPG-KEY-CentOS-Official -o /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-Official \
-    && printf '%s\n' '[stream-baseos]' 'name=Stream 9 BaseOS' 'baseurl=https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/' 'gpgcheck=1' 'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-Official' '[stream-appstream]' 'name=Stream 9 AppStream' 'baseurl=https://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/' 'gpgcheck=1' 'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-Official' '[stream-crb]' 'name=Stream 9 CRB' 'baseurl=https://mirror.stream.centos.org/9-stream/CRB/x86_64/os/' 'gpgcheck=1' 'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-Official' > /etc/yum.repos.d/stream.repo \
+    && printf '%s\n' '[stream-baseos]' 'name=Stream 9 BaseOS' 'baseurl=https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/' 'gpgcheck=1' 'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-Official' 'excludepkgs=openssl*' '[stream-appstream]' 'name=Stream 9 AppStream' 'baseurl=https://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/' 'gpgcheck=1' 'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-Official' 'excludepkgs=openssl*' '[stream-crb]' 'name=Stream 9 CRB' 'baseurl=https://mirror.stream.centos.org/9-stream/CRB/x86_64/os/' 'gpgcheck=1' 'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-Official' 'excludepkgs=openssl*' > /etc/yum.repos.d/stream.repo \
     && curl --fail --location --max-time 60 https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9 -o /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-9 \
     && rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-9 \
     && dnf --setopt=localpkg_gpgcheck=1 install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \

@@ -128,7 +128,7 @@ case "${1:-}" in
     [ "$#" -eq 2 ] || usage
     case "$2" in
       init) exec docker compose -f "$compose_file" run --rm db-bootstrap;;
-      verify) exec docker compose -f "$compose_file" run --rm --entrypoint bash db-bootstrap /bootstrap/verify.sh;;
+      verify) exec docker compose -f "$compose_file" run --rm --no-deps --entrypoint bash db-bootstrap /bootstrap/verify.sh;;
       *) usage;;
     esac
     ;;
