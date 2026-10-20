@@ -1,6 +1,6 @@
 # Teaching and security matrix evidence
 
-Latest full native evidence: [run 39357933655](https://github.com/orieken/testing-with-certs/actions/runs/39357933655) passed all **19 jobs**, including **400/400 dedicated authentication executions**. The [public report](https://orieken.github.io/testing-with-certs/) contains **92 fresh selections and 952 videos**, with exact spec/result labels and expected persona skips retained. [Completion 59](completion/59-public-video-matrix.md) records independent scans, cleanup and public Chrome/Edge playback. Historical local captures below remain separate.
+Latest full native evidence: [run 39371444928, attempt 2](https://github.com/orieken/testing-with-certs/actions/runs/39371444928) passed all **20 jobs**: 19 native gates, including **400/400 dedicated authentication executions**, followed by automatic publication. The [public report](https://orieken.github.io/testing-with-certs/) contains **92 fresh selections and 952 videos**, with exact spec/result labels and expected persona skips retained. [Completion 60](completion/60-automatic-pages.md) records independent checks, cleanup, retry handling and public Chrome/Edge playback. Historical local captures below remain separate.
 
 The subsequent [Kerberos wrong-service increment](completion/34-kerberos-wrong-service.md) passed 10/10 local browser cases, including two new wrong-service rejection cases. Native repetition subsequently passed in [completion 36](completion/36-native-expanded-authentication.md).
 

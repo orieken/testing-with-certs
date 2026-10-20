@@ -1,6 +1,6 @@
 # Magic Shop certificate prototype
 
-[Published video matrix](https://orieken.github.io/testing-with-certs/): **19 native CI jobs passed**, with 92 fresh selections, 952 videos, spec/result labels and authentication filters. [Publication evidence](docs/completion/59-public-video-matrix.md) records the accepted run, expected skips and remaining scope.
+[Published video matrix](https://orieken.github.io/testing-with-certs/): **20 CI jobs passed**, including automatic publication after all 19 native gates, with 92 fresh selections, 952 videos, spec/result labels and authentication filters. [Publication evidence](docs/completion/60-automatic-pages.md) records the accepted retry, public Chrome/Edge playback, expected skips and remaining scope.
 
 Start with [Get started with certificate tests](docs/getting-started.md) for setup and copyable container test commands. Use the [project pitch and current gaps](docs/project-pitch.md) to explain the approach and its limits.
 

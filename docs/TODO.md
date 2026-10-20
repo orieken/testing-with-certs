@@ -1,6 +1,6 @@
 # Implementation todo list
 
-- [ ] **REPORT-AUTO — Publish after successful full runs.** Implementation adds a gated Pages job, retry-safe artifact selection, fresh media URLs, stale-run protection and public Chrome/Edge playback checks. Native end-to-end acceptance pending; see [publication guide](pages-report.md).
+- [x] **REPORT-AUTO — Publish after successful full runs.** Gated Pages publication, retry-safe artifact selection, fresh media URLs, stale-run protection and public Chrome/Edge playback checks passed end to end in [run 39371444928, attempt 2](https://github.com/orieken/testing-with-certs/actions/runs/39371444928): all 20 jobs, 92 selections and 952 videos. Attempt 1 correctly blocked publication after a registry download failure. See [completion 60](completion/60-automatic-pages.md) and the [publication guide](pages-report.md).
 
 - [x] **REPORT-PAGES — Fresh complete native evidence and public video matrix.** Run all configured automated CI jobs plus the complete Debian/UBI9 browser recording matrix; independently verify downloaded reports, cases, videos and cleanup; publish the sanitized portable report to repository GitHub Pages and verify public playback. External-account and manual-only checks stay explicitly deferred. [Publication procedure](pages-report.md). Completed in [run 39357933655](https://github.com/orieken/testing-with-certs/actions/runs/39357933655): 19/19 jobs, 92 selections, 952 videos and verified public Chrome/Edge playback; [completion 59](completion/59-public-video-matrix.md).
 

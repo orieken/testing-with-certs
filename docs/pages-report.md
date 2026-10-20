@@ -1,6 +1,6 @@
 # Publish the verified video matrix
 
-[Public report](https://orieken.github.io/testing-with-certs/) · [Initial deployment evidence](completion/59-public-video-matrix.md)
+[Public report](https://orieken.github.io/testing-with-certs/) · [Automatic publication acceptance](completion/60-automatic-pages.md) · [Initial deployment evidence](completion/59-public-video-matrix.md)
 
 ## Automatic publication
 
