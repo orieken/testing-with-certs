@@ -1,0 +1,11 @@
+{
+  "evidence": "live-authentication-lessons",
+  "browser": "msedge",
+  "phase": "kerberos-cucumber-disabled",
+  "cases": [
+    {
+      "name": "kerberos:disabled-user",
+      "status": "passed"
+    }
+  ]
+}

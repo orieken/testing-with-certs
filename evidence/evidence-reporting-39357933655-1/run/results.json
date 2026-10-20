@@ -1,0 +1,327 @@
+{
+  "source": "real-insights-scripted-dependency-faults",
+  "mokapi": "0.52.0",
+  "specDigests": {
+    "catalog": {
+      "sha256": "1f8116a00957099220eebee2b2c2ee25b2642e8f4becdce0ce254ad5d76964e7",
+      "operations": 6
+    },
+    "customer": {
+      "sha256": "b563ed12c2ee848f4b6070af265618fa8f41416e5a4b8f0581ccff676f60d5cf",
+      "operations": 10
+    },
+    "insights": {
+      "sha256": "232016cff2aa8d5db1bf6c0e46d996301bb5ab9ddf7da0aa179f8fc40485f5d6",
+      "operations": 7
+    }
+  },
+  "results": [
+    {
+      "name": "TEST-09 sales conflict: no partial aggregate; explicit recovery",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "conflict",
+          "kind": "sales",
+          "status": 409,
+          "calls": 2,
+          "elapsedMs": 196,
+          "boundMs": 10000,
+          "recovery": 200,
+          "partial": false,
+          "upstreamAuthorization": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 sales revision: no partial aggregate; explicit recovery",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "revision",
+          "kind": "sales",
+          "status": 409,
+          "calls": 2,
+          "elapsedMs": 115,
+          "boundMs": 10000,
+          "recovery": 200,
+          "partial": false,
+          "upstreamAuthorization": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 sales outage: no partial aggregate; explicit recovery",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "outage",
+          "kind": "sales",
+          "status": 503,
+          "calls": 2,
+          "elapsedMs": 98,
+          "boundMs": 10000,
+          "recovery": 200,
+          "partial": false,
+          "upstreamAuthorization": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 sales repeat: no partial aggregate; explicit recovery",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "repeat",
+          "kind": "sales",
+          "status": 503,
+          "calls": 2,
+          "elapsedMs": 88,
+          "boundMs": 10000,
+          "recovery": 200,
+          "partial": false,
+          "upstreamAuthorization": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 customers conflict: no partial aggregate; explicit recovery",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "conflict",
+          "kind": "customers",
+          "status": 409,
+          "calls": 2,
+          "elapsedMs": 94,
+          "boundMs": 10000,
+          "recovery": 200,
+          "partial": false,
+          "upstreamAuthorization": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 customers revision: no partial aggregate; explicit recovery",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "revision",
+          "kind": "customers",
+          "status": 409,
+          "calls": 2,
+          "elapsedMs": 103,
+          "boundMs": 10000,
+          "recovery": 200,
+          "partial": false,
+          "upstreamAuthorization": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 customers outage: no partial aggregate; explicit recovery",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "outage",
+          "kind": "customers",
+          "status": 503,
+          "calls": 2,
+          "elapsedMs": 90,
+          "boundMs": 10000,
+          "recovery": 200,
+          "partial": false,
+          "upstreamAuthorization": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 customers repeat: no partial aggregate; explicit recovery",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "repeat",
+          "kind": "customers",
+          "status": 503,
+          "calls": 2,
+          "elapsedMs": 89,
+          "boundMs": 10000,
+          "recovery": 200,
+          "partial": false,
+          "upstreamAuthorization": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 orders conflict: no partial aggregate; explicit recovery",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "conflict",
+          "kind": "orders",
+          "status": 409,
+          "calls": 2,
+          "elapsedMs": 98,
+          "boundMs": 10000,
+          "recovery": 200,
+          "partial": false,
+          "upstreamAuthorization": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 orders revision: no partial aggregate; explicit recovery",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "revision",
+          "kind": "orders",
+          "status": 409,
+          "calls": 2,
+          "elapsedMs": 92,
+          "boundMs": 10000,
+          "recovery": 200,
+          "partial": false,
+          "upstreamAuthorization": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 orders outage: no partial aggregate; explicit recovery",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "outage",
+          "kind": "orders",
+          "status": 503,
+          "calls": 2,
+          "elapsedMs": 93,
+          "boundMs": 10000,
+          "recovery": 200,
+          "partial": false,
+          "upstreamAuthorization": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 orders repeat: no partial aggregate; explicit recovery",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "repeat",
+          "kind": "orders",
+          "status": 503,
+          "calls": 2,
+          "elapsedMs": 90,
+          "boundMs": 10000,
+          "recovery": 200,
+          "partial": false,
+          "upstreamAuthorization": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 sales empty intermediate page continues",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "empty",
+          "kind": "sales",
+          "status": 200,
+          "calls": 3,
+          "partial": false
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 customers empty intermediate page continues",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "empty",
+          "kind": "customers",
+          "status": 200,
+          "calls": 3,
+          "partial": false
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 orders empty intermediate page continues",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "empty",
+          "kind": "orders",
+          "status": 200,
+          "calls": 3,
+          "partial": false
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 sales exact record/page bound",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "exact",
+          "kind": "sales",
+          "status": 200,
+          "calls": 100,
+          "elapsedMs": 2875,
+          "boundMs": 30000,
+          "recovery": 200,
+          "partial": false
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 sales over record/page bound",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "over",
+          "kind": "sales",
+          "status": 503,
+          "calls": 101,
+          "elapsedMs": 2783,
+          "boundMs": 30000,
+          "recovery": 200,
+          "partial": false
+        }
+      ]
+    },
+    {
+      "name": "TEST-09 sales loop record/page bound",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "loop",
+          "kind": "sales",
+          "status": 503,
+          "calls": 101,
+          "elapsedMs": 1641,
+          "boundMs": 30000,
+          "recovery": 200,
+          "partial": false
+        }
+      ]
+    },
+    {
+      "name": "TEST-06 verified TLS, real authorization and explicit invalid schema fault",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "tls-schema",
+          "kind": "boundary",
+          "status": 200,
+          "verifiedTls": true,
+          "negativeTls": 4,
+          "authorizationNegatives": 2,
+          "invalidFixtureRejectedByAjv": true,
+          "mokapiDoesNotEnforceScriptResponse": true
+        }
+      ]
+    }
+  ]
+}

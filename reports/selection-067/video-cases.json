@@ -1,0 +1,59 @@
+{
+  "cases": [
+    {
+      "name": "successful login, logout and cookie cannot skip factors",
+      "path": "video-0001.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "wrong password",
+      "path": "video-0002.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "fresh profile and second account isolation",
+      "path": "video-0003.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "fresh profile and second account isolation",
+      "path": "video-0004.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "incorrect and expired codes",
+      "path": "video-0005.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "incorrect and expired codes",
+      "path": "video-0006.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "certificate-free entrance and route boundaries",
+      "path": "video-0007.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "enrollment and lesson audience denied at business APIs",
+      "path": "video-0008.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "disabled user",
+      "path": "video-0009.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

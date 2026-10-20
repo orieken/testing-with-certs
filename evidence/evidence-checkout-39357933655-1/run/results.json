@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "source": "real-checkout-dependency-faults",
+  "specDigests": {
+    "catalog": {
+      "sha256": "1f8116a00957099220eebee2b2c2ee25b2642e8f4becdce0ce254ad5d76964e7",
+      "operations": 6
+    },
+    "customer": {
+      "sha256": "b563ed12c2ee848f4b6070af265618fa8f41416e5a4b8f0581ccff676f60d5cf",
+      "operations": 10
+    },
+    "insights": {
+      "sha256": "232016cff2aa8d5db1bf6c0e46d996301bb5ab9ddf7da0aa179f8fc40485f5d6",
+      "operations": 7
+    }
+  },
+  "results": [
+    {
+      "name": "catalog list and authenticated spec match the expected OpenAPI artifact",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "catalog item lifecycle and authoritative private quote match OpenAPI",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "catalog rejects invalid input, missing token, customer writes and token/certificate mismatch",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "catalog rejects tampered signatures and private caller/token substitution",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "catalog documents every operation’s common input and authorization failures",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "customer profile, owned orders, widgets and admin lists match OpenAPI",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "checkout prices come from Go and replay is idempotent",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "private reporting is revision-pinned and spec is authenticated",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "each customer operation rejects malformed input and missing or mismatched credentials",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "regional sales, map, customers and orders match the seeded oracle",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "follow-up records persist locally and reject unauthorized callers",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "validates a catalog response and rejects missing, wrong-type and unknown fields",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "rejects unexpected status, media type, missing location and bodyless-content drift",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "validates request shape before sending and rejects client-computed checkout prices",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "enforces 2020-12 tuple and UTC date-time constraints in a regional response",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "accepts documented structured errors and rejects malformed error bodies",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "rejects a deployed OpenAPI artifact changed by one byte",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "TEST-03 unavailable: no order on failure; same-key real recovery",
+      "group": "checkout-faults",
+      "status": "passed",
+      "evidence": [
+        {
+          "fault": "unavailable",
+          "operationId": "createOrder",
+          "status": 503,
+          "recoveryStatus": 201,
+          "elapsedMs": 25,
+          "boundMs": 8000,
+          "databaseTls": true,
+          "noPersistence": true,
+          "sameKeyRecovery": true,
+          "stableReplay": true,
+          "upstreamAuthorizedBeforeFault": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-03 delay: no order on failure; same-key real recovery",
+      "group": "checkout-faults",
+      "status": "passed",
+      "evidence": [
+        {
+          "fault": "delay",
+          "operationId": "createOrder",
+          "status": 503,
+          "recoveryStatus": 201,
+          "elapsedMs": 5011,
+          "boundMs": 8000,
+          "databaseTls": true,
+          "noPersistence": true,
+          "sameKeyRecovery": true,
+          "stableReplay": true,
+          "upstreamAuthorizedBeforeFault": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-03 malformed-json: no order on failure; same-key real recovery",
+      "group": "checkout-faults",
+      "status": "passed",
+      "evidence": [
+        {
+          "fault": "malformed-json",
+          "operationId": "createOrder",
+          "status": 503,
+          "recoveryStatus": 201,
+          "elapsedMs": 22,
+          "boundMs": 8000,
+          "databaseTls": true,
+          "noPersistence": true,
+          "sameKeyRecovery": true,
+          "stableReplay": true,
+          "upstreamAuthorizedBeforeFault": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-03 invalid-quote: no order on failure; same-key real recovery",
+      "group": "checkout-faults",
+      "status": "passed",
+      "evidence": [
+        {
+          "fault": "invalid-quote",
+          "operationId": "createOrder",
+          "status": 503,
+          "recoveryStatus": 201,
+          "elapsedMs": 16,
+          "boundMs": 8000,
+          "databaseTls": true,
+          "noPersistence": true,
+          "sameKeyRecovery": true,
+          "stableReplay": true,
+          "upstreamAuthorizedBeforeFault": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-03 verified TLS and live Go authorization remain mandatory",
+      "group": "checkout-faults",
+      "status": "passed",
+      "evidence": [
+        {
+          "fault": "tls-boundary",
+          "verifiedDownstream": true,
+          "verifiedUpstream": true,
+          "missingTokenRejected": true,
+          "alteredTokenRejected": true,
+          "missingClientRejected": true,
+          "wrongClientCaRejected": true,
+          "wrongCallerRejected": true
+        }
+      ]
+    }
+  ]
+}

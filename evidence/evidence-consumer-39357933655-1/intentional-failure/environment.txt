@@ -1,0 +1,2 @@
+Base runner: sha256:f5de7056f24eba3fb87c41538b2442f66e96225f4677c4778851f99f859cd466
+Host: Linux x86_64; runner platform linux/amd64 (native or emulated according to host)

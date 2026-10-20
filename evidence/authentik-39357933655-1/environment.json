@@ -1,0 +1,10 @@
+{
+  "evidence": "real-authentik-browser-runtime",
+  "node": "v24.19.0",
+  "platform": "linux",
+  "architecture": "x64",
+  "browsers": {
+    "chrome": "155.0.8059.84",
+    "msedge": "154.0.4258.62"
+  }
+}

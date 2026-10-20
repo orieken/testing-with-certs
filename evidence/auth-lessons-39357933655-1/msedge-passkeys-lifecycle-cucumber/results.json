@@ -1,0 +1,27 @@
+{
+  "evidence": "live-authentication-lessons",
+  "browser": "msedge",
+  "phase": "passkeys-lifecycle-cucumber",
+  "cases": [
+    {
+      "name": "passkeys:session-expiry-rejects-refresh",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:refresh-preserves-identity",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:refresh-client-binding",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:logout-invalidates-refresh",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:access-expiry-requires-passkey",
+      "status": "passed"
+    }
+  ]
+}

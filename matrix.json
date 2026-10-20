@@ -1,0 +1,4428 @@
+{
+  "id": "native-full-39357933655",
+  "status": "passed",
+  "passed": 92,
+  "failed": 0,
+  "rows": [
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "customer-waterdeep",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022015-993629145Z-os-debian-playwright-chrome-customer-waterdeep-teaching-01",
+      "report": "reports/selection-001",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 9.699836878,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        },
+        {
+          "path": "video-0018.webm"
+        },
+        {
+          "path": "video-0019.webm"
+        },
+        {
+          "path": "video-0020.webm"
+        },
+        {
+          "path": "video-0021.webm"
+        },
+        {
+          "path": "video-0022.webm"
+        },
+        {
+          "path": "video-0023.webm"
+        },
+        {
+          "path": "video-0024.webm"
+        }
+      ],
+      "video_count": 24
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "shop-admin",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022015-993633096Z-os-debian-playwright-chrome-shop-admin-teaching-02",
+      "report": "reports/selection-002",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 10.037580152,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        },
+        {
+          "path": "video-0018.webm"
+        },
+        {
+          "path": "video-0019.webm"
+        },
+        {
+          "path": "video-0020.webm"
+        },
+        {
+          "path": "video-0021.webm"
+        },
+        {
+          "path": "video-0022.webm"
+        },
+        {
+          "path": "video-0023.webm"
+        },
+        {
+          "path": "video-0024.webm"
+        }
+      ],
+      "video_count": 24
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "shopkeeper",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022015-993634308Z-os-debian-playwright-chrome-shopkeeper-teaching-03",
+      "report": "reports/selection-003",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 7.521178871,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        },
+        {
+          "path": "video-0018.webm"
+        },
+        {
+          "path": "video-0019.webm"
+        },
+        {
+          "path": "video-0020.webm"
+        },
+        {
+          "path": "video-0021.webm"
+        },
+        {
+          "path": "video-0022.webm"
+        },
+        {
+          "path": "video-0023.webm"
+        },
+        {
+          "path": "video-0024.webm"
+        }
+      ],
+      "video_count": 24
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "customer-waterdeep",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022015-993635382Z-os-debian-cucumber-chrome-customer-waterdeep-teaching-04",
+      "report": "reports/selection-004",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 7.624411482,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        }
+      ],
+      "video_count": 4
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "shop-admin",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022015-993636516Z-os-debian-cucumber-chrome-shop-admin-teaching-05",
+      "report": "reports/selection-005",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 5.731179114,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        }
+      ],
+      "video_count": 3
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "customer-waterdeep",
+      "auth_type": "certificate",
+      "suite": "recorded",
+      "image": "",
+      "run_id": "20261020T022015-993637653Z-os-debian-playwright-chrome-customer-waterdeep-recorded-06",
+      "report": "reports/selection-006",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 8.981935292,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        }
+      ],
+      "video_count": 12
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "shop-admin",
+      "auth_type": "certificate",
+      "suite": "recorded",
+      "image": "",
+      "run_id": "20261020T022015-993638675Z-os-debian-playwright-chrome-shop-admin-recorded-07",
+      "report": "reports/selection-007",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 8.732352465,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        }
+      ],
+      "video_count": 12
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "customer-waterdeep",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022015-993639729Z-os-debian-playwright-msedge-customer-waterdeep-teaching-08",
+      "report": "reports/selection-008",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 8.801967236,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        },
+        {
+          "path": "video-0018.webm"
+        },
+        {
+          "path": "video-0019.webm"
+        },
+        {
+          "path": "video-0020.webm"
+        },
+        {
+          "path": "video-0021.webm"
+        },
+        {
+          "path": "video-0022.webm"
+        },
+        {
+          "path": "video-0023.webm"
+        },
+        {
+          "path": "video-0024.webm"
+        }
+      ],
+      "video_count": 24
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "shop-admin",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022015-993640623Z-os-debian-playwright-msedge-shop-admin-teaching-09",
+      "report": "reports/selection-009",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 9.811253147,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        },
+        {
+          "path": "video-0018.webm"
+        },
+        {
+          "path": "video-0019.webm"
+        },
+        {
+          "path": "video-0020.webm"
+        },
+        {
+          "path": "video-0021.webm"
+        },
+        {
+          "path": "video-0022.webm"
+        },
+        {
+          "path": "video-0023.webm"
+        },
+        {
+          "path": "video-0024.webm"
+        }
+      ],
+      "video_count": 24
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "shopkeeper",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022015-993641526Z-os-debian-playwright-msedge-shopkeeper-teaching-10",
+      "report": "reports/selection-010",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 7.047777289,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        },
+        {
+          "path": "video-0018.webm"
+        },
+        {
+          "path": "video-0019.webm"
+        },
+        {
+          "path": "video-0020.webm"
+        },
+        {
+          "path": "video-0021.webm"
+        },
+        {
+          "path": "video-0022.webm"
+        },
+        {
+          "path": "video-0023.webm"
+        },
+        {
+          "path": "video-0024.webm"
+        }
+      ],
+      "video_count": 24
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "customer-waterdeep",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022015-993642534Z-os-debian-cucumber-msedge-customer-waterdeep-teaching-11",
+      "report": "reports/selection-011",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 7.612355592,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        }
+      ],
+      "video_count": 4
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "shop-admin",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022015-993643453Z-os-debian-cucumber-msedge-shop-admin-teaching-12",
+      "report": "reports/selection-012",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 6.098720592,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        }
+      ],
+      "video_count": 3
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "customer-waterdeep",
+      "auth_type": "certificate",
+      "suite": "recorded",
+      "image": "",
+      "run_id": "20261020T022015-993644316Z-os-debian-playwright-msedge-customer-waterdeep-recorded-13",
+      "report": "reports/selection-013",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 8.92848534,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        }
+      ],
+      "video_count": 12
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "shop-admin",
+      "auth_type": "certificate",
+      "suite": "recorded",
+      "image": "",
+      "run_id": "20261020T022015-993645195Z-os-debian-playwright-msedge-shop-admin-recorded-14",
+      "report": "reports/selection-014",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 8.702696988,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        }
+      ],
+      "video_count": 12
+    },
+    {
+      "os": "ubi9",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "customer-waterdeep",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022048-907297979Z-os-ubi9-playwright-chrome-customer-waterdeep-teaching-01",
+      "report": "reports/selection-015",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 10.191326231,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        },
+        {
+          "path": "video-0018.webm"
+        },
+        {
+          "path": "video-0019.webm"
+        },
+        {
+          "path": "video-0020.webm"
+        },
+        {
+          "path": "video-0021.webm"
+        },
+        {
+          "path": "video-0022.webm"
+        },
+        {
+          "path": "video-0023.webm"
+        },
+        {
+          "path": "video-0024.webm"
+        }
+      ],
+      "video_count": 24
+    },
+    {
+      "os": "ubi9",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "shop-admin",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022048-907305101Z-os-ubi9-playwright-chrome-shop-admin-teaching-02",
+      "report": "reports/selection-016",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 10.296456314,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        },
+        {
+          "path": "video-0018.webm"
+        },
+        {
+          "path": "video-0019.webm"
+        },
+        {
+          "path": "video-0020.webm"
+        },
+        {
+          "path": "video-0021.webm"
+        },
+        {
+          "path": "video-0022.webm"
+        },
+        {
+          "path": "video-0023.webm"
+        },
+        {
+          "path": "video-0024.webm"
+        }
+      ],
+      "video_count": 24
+    },
+    {
+      "os": "ubi9",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "shopkeeper",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022048-907306422Z-os-ubi9-playwright-chrome-shopkeeper-teaching-03",
+      "report": "reports/selection-017",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 7.78965215,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        },
+        {
+          "path": "video-0018.webm"
+        },
+        {
+          "path": "video-0019.webm"
+        },
+        {
+          "path": "video-0020.webm"
+        },
+        {
+          "path": "video-0021.webm"
+        },
+        {
+          "path": "video-0022.webm"
+        },
+        {
+          "path": "video-0023.webm"
+        },
+        {
+          "path": "video-0024.webm"
+        }
+      ],
+      "video_count": 24
+    },
+    {
+      "os": "ubi9",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "customer-waterdeep",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022048-907307355Z-os-ubi9-cucumber-chrome-customer-waterdeep-teaching-04",
+      "report": "reports/selection-018",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 7.88722539,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        }
+      ],
+      "video_count": 4
+    },
+    {
+      "os": "ubi9",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "shop-admin",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022048-907308526Z-os-ubi9-cucumber-chrome-shop-admin-teaching-05",
+      "report": "reports/selection-019",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 6.187362484,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        }
+      ],
+      "video_count": 3
+    },
+    {
+      "os": "ubi9",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "customer-waterdeep",
+      "auth_type": "certificate",
+      "suite": "recorded",
+      "image": "",
+      "run_id": "20261020T022048-907309619Z-os-ubi9-playwright-chrome-customer-waterdeep-recorded-06",
+      "report": "reports/selection-020",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 9.261206408,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        }
+      ],
+      "video_count": 12
+    },
+    {
+      "os": "ubi9",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "shop-admin",
+      "auth_type": "certificate",
+      "suite": "recorded",
+      "image": "",
+      "run_id": "20261020T022048-907310620Z-os-ubi9-playwright-chrome-shop-admin-recorded-07",
+      "report": "reports/selection-021",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 8.799883969,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        }
+      ],
+      "video_count": 12
+    },
+    {
+      "os": "ubi9",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "customer-waterdeep",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022048-907311499Z-os-ubi9-playwright-msedge-customer-waterdeep-teaching-08",
+      "report": "reports/selection-022",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 9.18369686,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        },
+        {
+          "path": "video-0018.webm"
+        },
+        {
+          "path": "video-0019.webm"
+        },
+        {
+          "path": "video-0020.webm"
+        },
+        {
+          "path": "video-0021.webm"
+        },
+        {
+          "path": "video-0022.webm"
+        },
+        {
+          "path": "video-0023.webm"
+        },
+        {
+          "path": "video-0024.webm"
+        }
+      ],
+      "video_count": 24
+    },
+    {
+      "os": "ubi9",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "shop-admin",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022048-907312356Z-os-ubi9-playwright-msedge-shop-admin-teaching-09",
+      "report": "reports/selection-023",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 10.163389704,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        },
+        {
+          "path": "video-0018.webm"
+        },
+        {
+          "path": "video-0019.webm"
+        },
+        {
+          "path": "video-0020.webm"
+        },
+        {
+          "path": "video-0021.webm"
+        },
+        {
+          "path": "video-0022.webm"
+        },
+        {
+          "path": "video-0023.webm"
+        },
+        {
+          "path": "video-0024.webm"
+        }
+      ],
+      "video_count": 24
+    },
+    {
+      "os": "ubi9",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "shopkeeper",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022048-907313232Z-os-ubi9-playwright-msedge-shopkeeper-teaching-10",
+      "report": "reports/selection-024",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 7.227428963,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        },
+        {
+          "path": "video-0018.webm"
+        },
+        {
+          "path": "video-0019.webm"
+        },
+        {
+          "path": "video-0020.webm"
+        },
+        {
+          "path": "video-0021.webm"
+        },
+        {
+          "path": "video-0022.webm"
+        },
+        {
+          "path": "video-0023.webm"
+        },
+        {
+          "path": "video-0024.webm"
+        }
+      ],
+      "video_count": 24
+    },
+    {
+      "os": "ubi9",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "customer-waterdeep",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022048-907314159Z-os-ubi9-cucumber-msedge-customer-waterdeep-teaching-11",
+      "report": "reports/selection-025",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 8.043701852,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        }
+      ],
+      "video_count": 4
+    },
+    {
+      "os": "ubi9",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "shop-admin",
+      "auth_type": "certificate",
+      "suite": "teaching",
+      "image": "",
+      "run_id": "20261020T022048-907315018Z-os-ubi9-cucumber-msedge-shop-admin-teaching-12",
+      "report": "reports/selection-026",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 6.138907633,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        }
+      ],
+      "video_count": 3
+    },
+    {
+      "os": "ubi9",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "customer-waterdeep",
+      "auth_type": "certificate",
+      "suite": "recorded",
+      "image": "",
+      "run_id": "20261020T022048-907315851Z-os-ubi9-playwright-msedge-customer-waterdeep-recorded-13",
+      "report": "reports/selection-027",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 9.199668637,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        }
+      ],
+      "video_count": 12
+    },
+    {
+      "os": "ubi9",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "shop-admin",
+      "auth_type": "certificate",
+      "suite": "recorded",
+      "image": "",
+      "run_id": "20261020T022048-907316709Z-os-ubi9-playwright-msedge-shop-admin-recorded-14",
+      "report": "reports/selection-028",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 8.754523701,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        }
+      ],
+      "video_count": 12
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "kerberos",
+      "suite": "kerberos-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-cucumber-kerberos-baseline",
+      "report": "reports/selection-029",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        }
+      ],
+      "video_count": 8
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "oidc",
+      "suite": "oidc-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-cucumber-oidc-baseline",
+      "report": "reports/selection-030",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        }
+      ],
+      "video_count": 5
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "passkeys",
+      "suite": "passkeys-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-cucumber-passkeys-baseline",
+      "report": "reports/selection-031",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        }
+      ],
+      "video_count": 12
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "saml",
+      "suite": "saml-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-cucumber-saml-baseline",
+      "report": "reports/selection-032",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        }
+      ],
+      "video_count": 16
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "kerberos",
+      "suite": "kerberos-disabled",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-cucumber-kerberos-disabled",
+      "report": "reports/selection-033",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        }
+      ],
+      "video_count": 2
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "kerberos",
+      "suite": "kerberos-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-cucumber-kerberos-lifecycle",
+      "report": "reports/selection-034",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        }
+      ],
+      "video_count": 10
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "oidc",
+      "suite": "oidc-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-cucumber-oidc-lifecycle",
+      "report": "reports/selection-035",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        }
+      ],
+      "video_count": 5
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "passkeys",
+      "suite": "passkeys-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-cucumber-passkeys-lifecycle",
+      "report": "reports/selection-036",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        }
+      ],
+      "video_count": 10
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "saml",
+      "suite": "saml-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-cucumber-saml-lifecycle",
+      "report": "reports/selection-037",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        }
+      ],
+      "video_count": 6
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "kerberos",
+      "suite": "kerberos-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-playwright-kerberos-baseline",
+      "report": "reports/selection-038",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        }
+      ],
+      "video_count": 8
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "oidc",
+      "suite": "oidc-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-playwright-oidc-baseline",
+      "report": "reports/selection-039",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        }
+      ],
+      "video_count": 5
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "passkeys",
+      "suite": "passkeys-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-playwright-passkeys-baseline",
+      "report": "reports/selection-040",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        }
+      ],
+      "video_count": 12
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "saml",
+      "suite": "saml-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-playwright-saml-baseline",
+      "report": "reports/selection-041",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        }
+      ],
+      "video_count": 16
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "kerberos",
+      "suite": "kerberos-disabled",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-playwright-kerberos-disabled",
+      "report": "reports/selection-042",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        }
+      ],
+      "video_count": 2
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "kerberos",
+      "suite": "kerberos-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-playwright-kerberos-lifecycle",
+      "report": "reports/selection-043",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        }
+      ],
+      "video_count": 10
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "oidc",
+      "suite": "oidc-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-playwright-oidc-lifecycle",
+      "report": "reports/selection-044",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        }
+      ],
+      "video_count": 5
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "passkeys",
+      "suite": "passkeys-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-playwright-passkeys-lifecycle",
+      "report": "reports/selection-045",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        }
+      ],
+      "video_count": 10
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "saml",
+      "suite": "saml-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-chrome-playwright-saml-lifecycle",
+      "report": "reports/selection-046",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        }
+      ],
+      "video_count": 6
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "kerberos",
+      "suite": "kerberos-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-cucumber-kerberos-baseline",
+      "report": "reports/selection-047",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        }
+      ],
+      "video_count": 8
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "oidc",
+      "suite": "oidc-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-cucumber-oidc-baseline",
+      "report": "reports/selection-048",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        }
+      ],
+      "video_count": 5
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "passkeys",
+      "suite": "passkeys-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-cucumber-passkeys-baseline",
+      "report": "reports/selection-049",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        }
+      ],
+      "video_count": 12
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "saml",
+      "suite": "saml-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-cucumber-saml-baseline",
+      "report": "reports/selection-050",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        }
+      ],
+      "video_count": 16
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "kerberos",
+      "suite": "kerberos-disabled",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-cucumber-kerberos-disabled",
+      "report": "reports/selection-051",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        }
+      ],
+      "video_count": 2
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "kerberos",
+      "suite": "kerberos-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-cucumber-kerberos-lifecycle",
+      "report": "reports/selection-052",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        }
+      ],
+      "video_count": 10
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "oidc",
+      "suite": "oidc-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-cucumber-oidc-lifecycle",
+      "report": "reports/selection-053",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        }
+      ],
+      "video_count": 5
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "passkeys",
+      "suite": "passkeys-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-cucumber-passkeys-lifecycle",
+      "report": "reports/selection-054",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        }
+      ],
+      "video_count": 10
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "saml",
+      "suite": "saml-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-cucumber-saml-lifecycle",
+      "report": "reports/selection-055",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        }
+      ],
+      "video_count": 6
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "kerberos",
+      "suite": "kerberos-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-playwright-kerberos-baseline",
+      "report": "reports/selection-056",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        }
+      ],
+      "video_count": 8
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "oidc",
+      "suite": "oidc-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-playwright-oidc-baseline",
+      "report": "reports/selection-057",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        }
+      ],
+      "video_count": 5
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "passkeys",
+      "suite": "passkeys-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-playwright-passkeys-baseline",
+      "report": "reports/selection-058",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        }
+      ],
+      "video_count": 12
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "saml",
+      "suite": "saml-baseline",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-playwright-saml-baseline",
+      "report": "reports/selection-059",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        }
+      ],
+      "video_count": 16
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "kerberos",
+      "suite": "kerberos-disabled",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-playwright-kerberos-disabled",
+      "report": "reports/selection-060",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        }
+      ],
+      "video_count": 2
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "kerberos",
+      "suite": "kerberos-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-playwright-kerberos-lifecycle",
+      "report": "reports/selection-061",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        }
+      ],
+      "video_count": 10
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "oidc",
+      "suite": "oidc-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-playwright-oidc-lifecycle",
+      "report": "reports/selection-062",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        }
+      ],
+      "video_count": 5
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "passkeys",
+      "suite": "passkeys-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-playwright-passkeys-lifecycle",
+      "report": "reports/selection-063",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        }
+      ],
+      "video_count": 10
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "saml",
+      "suite": "saml-lifecycle",
+      "image": "",
+      "run_id": "auth-lessons-39357933655-1-msedge-playwright-saml-lifecycle",
+      "report": "reports/selection-064",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        }
+      ],
+      "video_count": 6
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "password-totp",
+      "suite": "password-totp-baseline",
+      "image": "",
+      "run_id": "password-otp-39357933655-1-chrome-cucumber-password-totp-baseline",
+      "report": "reports/selection-065",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        }
+      ],
+      "video_count": 9
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "password-totp",
+      "suite": "password-totp-lifecycle",
+      "image": "",
+      "run_id": "password-otp-39357933655-1-chrome-cucumber-password-totp-lifecycle",
+      "report": "reports/selection-066",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        }
+      ],
+      "video_count": 5
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "password-totp",
+      "suite": "password-totp-baseline",
+      "image": "",
+      "run_id": "password-otp-39357933655-1-chrome-playwright-password-totp-baseline",
+      "report": "reports/selection-067",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        }
+      ],
+      "video_count": 9
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "password-totp",
+      "suite": "password-totp-lifecycle",
+      "image": "",
+      "run_id": "password-otp-39357933655-1-chrome-playwright-password-totp-lifecycle",
+      "report": "reports/selection-068",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        }
+      ],
+      "video_count": 5
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "password-totp",
+      "suite": "password-totp-baseline",
+      "image": "",
+      "run_id": "password-otp-39357933655-1-msedge-cucumber-password-totp-baseline",
+      "report": "reports/selection-069",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        }
+      ],
+      "video_count": 9
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "password-totp",
+      "suite": "password-totp-lifecycle",
+      "image": "",
+      "run_id": "password-otp-39357933655-1-msedge-cucumber-password-totp-lifecycle",
+      "report": "reports/selection-070",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        }
+      ],
+      "video_count": 5
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "password-totp",
+      "suite": "password-totp-baseline",
+      "image": "",
+      "run_id": "password-otp-39357933655-1-msedge-playwright-password-totp-baseline",
+      "report": "reports/selection-071",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        }
+      ],
+      "video_count": 9
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "password-totp",
+      "suite": "password-totp-lifecycle",
+      "image": "",
+      "run_id": "password-otp-39357933655-1-msedge-playwright-password-totp-lifecycle",
+      "report": "reports/selection-072",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        }
+      ],
+      "video_count": 5
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "certificate-password",
+      "suite": "certificate-password-baseline",
+      "image": "",
+      "run_id": "certificate-password-39357933655-1-chrome-cucumber-certificate-password-baseline",
+      "report": "reports/selection-073",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        }
+      ],
+      "video_count": 17
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "certificate-password",
+      "suite": "certificate-password-baseline",
+      "image": "",
+      "run_id": "certificate-password-39357933655-1-chrome-playwright-certificate-password-baseline",
+      "report": "reports/selection-074",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        }
+      ],
+      "video_count": 17
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated test fixtures",
+      "auth_type": "certificate-password",
+      "suite": "certificate-password-baseline",
+      "image": "",
+      "run_id": "certificate-password-39357933655-1-msedge-cucumber-certificate-password-baseline",
+      "report": "reports/selection-075",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        }
+      ],
+      "video_count": 17
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated test fixtures",
+      "auth_type": "certificate-password",
+      "suite": "certificate-password-baseline",
+      "image": "",
+      "run_id": "certificate-password-39357933655-1-msedge-playwright-certificate-password-baseline",
+      "report": "reports/selection-076",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        },
+        {
+          "path": "video-0009.webm"
+        },
+        {
+          "path": "video-0010.webm"
+        },
+        {
+          "path": "video-0011.webm"
+        },
+        {
+          "path": "video-0012.webm"
+        },
+        {
+          "path": "video-0013.webm"
+        },
+        {
+          "path": "video-0014.webm"
+        },
+        {
+          "path": "video-0015.webm"
+        },
+        {
+          "path": "video-0016.webm"
+        },
+        {
+          "path": "video-0017.webm"
+        }
+      ],
+      "video_count": 17
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated authentik fixtures",
+      "auth_type": "oidc",
+      "suite": "authentik-oidc-baseline",
+      "image": "",
+      "run_id": "authentik-39357933655-1-chrome-playwright-oidc-baseline",
+      "report": "reports/selection-077",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        }
+      ],
+      "video_count": 8
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated authentik fixtures",
+      "auth_type": "saml",
+      "suite": "authentik-saml-baseline",
+      "image": "",
+      "run_id": "authentik-39357933655-1-chrome-playwright-saml-baseline",
+      "report": "reports/selection-078",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        }
+      ],
+      "video_count": 8
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated authentik fixtures",
+      "auth_type": "oidc",
+      "suite": "authentik-oidc-lifecycle",
+      "image": "",
+      "run_id": "authentik-39357933655-1-chrome-playwright-oidc-lifecycle",
+      "report": "reports/selection-079",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        }
+      ],
+      "video_count": 7
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "playwright",
+      "user": "isolated authentik fixtures",
+      "auth_type": "saml",
+      "suite": "authentik-saml-lifecycle",
+      "image": "",
+      "run_id": "authentik-39357933655-1-chrome-playwright-saml-lifecycle",
+      "report": "reports/selection-080",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        }
+      ],
+      "video_count": 7
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated authentik fixtures",
+      "auth_type": "oidc",
+      "suite": "authentik-oidc-baseline",
+      "image": "",
+      "run_id": "authentik-39357933655-1-chrome-cucumber-oidc-baseline",
+      "report": "reports/selection-081",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        }
+      ],
+      "video_count": 8
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated authentik fixtures",
+      "auth_type": "saml",
+      "suite": "authentik-saml-baseline",
+      "image": "",
+      "run_id": "authentik-39357933655-1-chrome-cucumber-saml-baseline",
+      "report": "reports/selection-082",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        }
+      ],
+      "video_count": 8
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated authentik fixtures",
+      "auth_type": "oidc",
+      "suite": "authentik-oidc-lifecycle",
+      "image": "",
+      "run_id": "authentik-39357933655-1-chrome-cucumber-oidc-lifecycle",
+      "report": "reports/selection-083",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        }
+      ],
+      "video_count": 7
+    },
+    {
+      "os": "debian",
+      "browser": "chrome",
+      "runner": "cucumber",
+      "user": "isolated authentik fixtures",
+      "auth_type": "saml",
+      "suite": "authentik-saml-lifecycle",
+      "image": "",
+      "run_id": "authentik-39357933655-1-chrome-cucumber-saml-lifecycle",
+      "report": "reports/selection-084",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        }
+      ],
+      "video_count": 7
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated authentik fixtures",
+      "auth_type": "oidc",
+      "suite": "authentik-oidc-baseline",
+      "image": "",
+      "run_id": "authentik-39357933655-1-msedge-playwright-oidc-baseline",
+      "report": "reports/selection-085",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        }
+      ],
+      "video_count": 8
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated authentik fixtures",
+      "auth_type": "saml",
+      "suite": "authentik-saml-baseline",
+      "image": "",
+      "run_id": "authentik-39357933655-1-msedge-playwright-saml-baseline",
+      "report": "reports/selection-086",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        }
+      ],
+      "video_count": 8
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated authentik fixtures",
+      "auth_type": "oidc",
+      "suite": "authentik-oidc-lifecycle",
+      "image": "",
+      "run_id": "authentik-39357933655-1-msedge-playwright-oidc-lifecycle",
+      "report": "reports/selection-087",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        }
+      ],
+      "video_count": 7
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "playwright",
+      "user": "isolated authentik fixtures",
+      "auth_type": "saml",
+      "suite": "authentik-saml-lifecycle",
+      "image": "",
+      "run_id": "authentik-39357933655-1-msedge-playwright-saml-lifecycle",
+      "report": "reports/selection-088",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        }
+      ],
+      "video_count": 7
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated authentik fixtures",
+      "auth_type": "oidc",
+      "suite": "authentik-oidc-baseline",
+      "image": "",
+      "run_id": "authentik-39357933655-1-msedge-cucumber-oidc-baseline",
+      "report": "reports/selection-089",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        }
+      ],
+      "video_count": 8
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated authentik fixtures",
+      "auth_type": "saml",
+      "suite": "authentik-saml-baseline",
+      "image": "",
+      "run_id": "authentik-39357933655-1-msedge-cucumber-saml-baseline",
+      "report": "reports/selection-090",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        },
+        {
+          "path": "video-0008.webm"
+        }
+      ],
+      "video_count": 8
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated authentik fixtures",
+      "auth_type": "oidc",
+      "suite": "authentik-oidc-lifecycle",
+      "image": "",
+      "run_id": "authentik-39357933655-1-msedge-cucumber-oidc-lifecycle",
+      "report": "reports/selection-091",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        }
+      ],
+      "video_count": 7
+    },
+    {
+      "os": "debian",
+      "browser": "msedge",
+      "runner": "cucumber",
+      "user": "isolated authentik fixtures",
+      "auth_type": "saml",
+      "suite": "authentik-saml-lifecycle",
+      "image": "",
+      "run_id": "authentik-39357933655-1-msedge-cucumber-saml-lifecycle",
+      "report": "reports/selection-092",
+      "status": "passed",
+      "summary": "Verified passing selection; portable recordings",
+      "duration_seconds": 0,
+      "videos": [
+        {
+          "path": "video-0001.webm"
+        },
+        {
+          "path": "video-0002.webm"
+        },
+        {
+          "path": "video-0003.webm"
+        },
+        {
+          "path": "video-0004.webm"
+        },
+        {
+          "path": "video-0005.webm"
+        },
+        {
+          "path": "video-0006.webm"
+        },
+        {
+          "path": "video-0007.webm"
+        }
+      ],
+      "video_count": 7
+    }
+  ]
+}

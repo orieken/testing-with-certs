@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "suite": "regional",
+  "source": "live-regional-provider",
+  "execution": "native-github-ci",
+  "runOutcome": "success",
+  "failureCleanupOutcome": "success",
+  "liveProviderGateCredit": false,
+  "videosExported": false
+}

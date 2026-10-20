@@ -1,0 +1,11 @@
+{
+  "runId": "20261020T022015-993644316Z-os-debian-playwright-msedge-customer-waterdeep-recorded-13",
+  "os": "debian",
+  "distribution": "debian",
+  "distributionVersion": "12",
+  "browser": "msedge",
+  "browserVersion": "Microsoft Edge 154.0.4258.62",
+  "nodeVersion": "v24.19.0",
+  "architecture": "x64",
+  "selectedUser": "customer-waterdeep"
+}

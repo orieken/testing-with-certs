@@ -1,0 +1,67 @@
+{
+  "evidence": "live-authentication-lessons",
+  "browser": "msedge",
+  "phase": "saml-cucumber",
+  "cases": [
+    {
+      "name": "saml:signed-wrong-audience",
+      "status": "passed"
+    },
+    {
+      "name": "saml:response-replay",
+      "status": "passed"
+    },
+    {
+      "name": "saml:role-withdrawn-on-login",
+      "status": "passed"
+    },
+    {
+      "name": "saml:login-audience-and-logout",
+      "status": "passed"
+    },
+    {
+      "name": "saml:disabled-provider-user",
+      "status": "passed"
+    },
+    {
+      "name": "saml:role-absent",
+      "status": "passed"
+    },
+    {
+      "name": "saml:callback-state-rejection",
+      "status": "passed"
+    },
+    {
+      "name": "saml:signed-expired",
+      "status": "passed"
+    },
+    {
+      "name": "saml:role-unrecognized",
+      "status": "passed"
+    },
+    {
+      "name": "saml:modified-signed-response",
+      "status": "passed"
+    },
+    {
+      "name": "saml:signed-control",
+      "status": "passed"
+    },
+    {
+      "name": "saml:signed-wrong-recipient",
+      "status": "passed"
+    },
+    {
+      "name": "saml:role-mapped",
+      "status": "passed"
+    },
+    {
+      "name": "saml:cross-protocol-provider-rejection",
+      "status": "passed"
+    },
+    {
+      "name": "saml:broker-state-rejection",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "evidence": "live-authentication-lessons",
+  "browser": "msedge",
+  "phase": "passkeys-cucumber",
+  "cases": [
+    {
+      "name": "passkeys:unconfigured-user",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:disabled-user",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:enrollment",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:account-isolation",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:missing-credential",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:invalid-signature",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:login-and-logout",
+      "status": "passed"
+    }
+  ]
+}

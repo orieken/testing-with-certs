@@ -1,0 +1,1 @@
+<testsuite name="msedge-kerberos-cucumber" tests="4" failures="0"><testcase name="kerberos:valid-ticket"></testcase><testcase name="kerberos:missing-ticket"></testcase><testcase name="kerberos:wrong-service-ticket"></testcase><testcase name="kerberos:expired-ticket"></testcase></testsuite>

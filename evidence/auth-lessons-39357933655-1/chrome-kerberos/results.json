@@ -1,0 +1,23 @@
+{
+  "evidence": "live-authentication-lessons",
+  "browser": "chrome",
+  "phase": "kerberos",
+  "cases": [
+    {
+      "name": "kerberos:valid-ticket",
+      "status": "passed"
+    },
+    {
+      "name": "kerberos:missing-ticket",
+      "status": "passed"
+    },
+    {
+      "name": "kerberos:expired-ticket",
+      "status": "passed"
+    },
+    {
+      "name": "kerberos:wrong-service-ticket",
+      "status": "passed"
+    }
+  ]
+}

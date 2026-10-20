@@ -1,0 +1,88 @@
+{
+  "source": "live-regional-provider",
+  "specDigests": {
+    "catalog": {
+      "sha256": "1f8116a00957099220eebee2b2c2ee25b2642e8f4becdce0ce254ad5d76964e7",
+      "operations": 6
+    },
+    "customer": {
+      "sha256": "b563ed12c2ee848f4b6070af265618fa8f41416e5a4b8f0581ccff676f60d5cf",
+      "operations": 10
+    },
+    "insights": {
+      "sha256": "232016cff2aa8d5db1bf6c0e46d996301bb5ab9ddf7da0aa179f8fc40485f5d6",
+      "operations": 7
+    }
+  },
+  "results": [
+    {
+      "name": "TEST-10 exact UTC inclusion/exclusion and completed-only aggregate",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "utc-boundaries",
+          "orderCount": 110,
+          "salesCopper": 11100
+        }
+      ]
+    },
+    {
+      "name": "TEST-10 historical order region survives real profile move",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "moved-profile",
+          "historicalRegion": "waterdeep",
+          "currentRegion": "baldurs-gate",
+          "pages": 2
+        }
+      ]
+    },
+    {
+      "name": "TEST-10 complete totals and identities across real provider pages",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "pagination",
+          "pages": 7,
+          "orderCount": 110,
+          "salesCopper": 11100
+        }
+      ]
+    },
+    {
+      "name": "TEST-10 preserve September oracle and empty region",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "seed-empty",
+          "septemberCopper": 124000,
+          "emptyCopper": 0
+        }
+      ]
+    },
+    {
+      "name": "TEST-10 real reporting feed uses two revision-pinned pages",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "reporting-feed",
+          "pages": 2,
+          "orderCount": 110,
+          "revisionPinned": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-10 observed mixed-precision timestamp limitation (no app change)",
+      "status": "passed",
+      "evidence": [
+        {
+          "mode": "mixed-precision-limitation",
+          "status": 503,
+          "supported": false
+        }
+      ]
+    }
+  ]
+}

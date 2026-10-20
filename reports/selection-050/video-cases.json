@@ -1,0 +1,101 @@
+{
+  "cases": [
+    {
+      "name": "saml:response-replay",
+      "path": "video-0001.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:cross-protocol-provider-rejection",
+      "path": "video-0002.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:signed-wrong-audience",
+      "path": "video-0003.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:signed-control",
+      "path": "video-0004.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:signed-expired",
+      "path": "video-0005.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:disabled-provider-user",
+      "path": "video-0006.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:login-audience-and-logout",
+      "path": "video-0007.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:role-absent",
+      "path": "video-0008.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:role-unrecognized",
+      "path": "video-0009.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:broker-state-rejection",
+      "path": "video-0010.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:signed-wrong-recipient",
+      "path": "video-0011.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:callback-state-rejection",
+      "path": "video-0012.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:role-withdrawn-on-login",
+      "path": "video-0013.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:role-withdrawn-on-login",
+      "path": "video-0014.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:modified-signed-response",
+      "path": "video-0015.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:role-mapped",
+      "path": "video-0016.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

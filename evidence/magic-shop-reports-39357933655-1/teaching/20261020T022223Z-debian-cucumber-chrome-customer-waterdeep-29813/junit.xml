@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<testsuite name="Cucumber" time="7.289" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-20T02:22:24.891Z">
+  <testcase classname="Certificate-backed Magic Shop teaching journeys" name="Selected certificate opens the live shop and account" time="1.395">
+    <system-out><![CDATA[Given I sign in to the live shop with my selected certificate...............passed
+Then my selected identity and live catalog are visible......................passed
+When I open my account......................................................passed
+Then my seeded display name is visible......................................passed]]></system-out>
+  </testcase>
+  <testcase classname="Certificate-backed Magic Shop teaching journeys" name="Customer places a simulated order and finds it in their account" time="1.502">
+    <system-out><![CDATA[Given I sign in to the live shop with my selected certificate...............passed
+When I add the Wand of Embers and place an order in waterdeep...............passed
+Then the created order appears in my account................................passed]]></system-out>
+  </testcase>
+  <testcase classname="Certificate-backed Magic Shop teaching journeys" name="Logout ends the session and the installed certificate signs in again" time="2.063">
+    <system-out><![CDATA[Given I sign in to the live shop with my selected certificate...............passed
+When I sign out and revisit the shop........................................passed
+Then my selected certificate signs in again without a password..............passed]]></system-out>
+  </testcase>
+  <testcase classname="Certificate-backed Magic Shop teaching journeys" name="Customer widget setting persists and admin report is forbidden" time="2.05">
+    <system-out><![CDATA[Given I sign in to the live shop with my selected certificate...............passed
+When I change and save my recent-orders widget..............................passed
+Then the widget setting persists after a fresh certificate sign-in..........passed
+And the admin report rejects my customer token..............................passed]]></system-out>
+  </testcase>
+</testsuite>

@@ -1,0 +1,35 @@
+{
+  "cases": [
+    {
+      "name": "oidc:disabled-provider-user",
+      "path": "video-0001.webm",
+      "spec": "teaching/oidc.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:login-audience-and-logout",
+      "path": "video-0002.webm",
+      "spec": "teaching/oidc.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:callback-state-rejection",
+      "path": "video-0003.webm",
+      "spec": "teaching/oidc.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:cross-protocol-provider-rejection",
+      "path": "video-0004.webm",
+      "spec": "teaching/oidc.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:broker-state-rejection",
+      "path": "video-0005.webm",
+      "spec": "teaching/oidc.mjs",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

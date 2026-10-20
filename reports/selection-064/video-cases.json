@@ -1,0 +1,41 @@
+{
+  "cases": [
+    {
+      "name": "saml:logout-invalidates-refresh",
+      "path": "video-0001.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:refresh-preserves-role",
+      "path": "video-0002.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:access-expiry-reenters-federation",
+      "path": "video-0003.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:refresh-client-binding",
+      "path": "video-0004.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:refresh-without-role",
+      "path": "video-0005.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "saml:session-expiry-rejects-refresh",
+      "path": "video-0006.webm",
+      "spec": "teaching/saml.mjs",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

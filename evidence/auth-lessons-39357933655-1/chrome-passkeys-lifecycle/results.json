@@ -1,0 +1,27 @@
+{
+  "evidence": "live-authentication-lessons",
+  "browser": "chrome",
+  "phase": "passkeys-lifecycle",
+  "cases": [
+    {
+      "name": "passkeys:access-expiry-requires-passkey",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:refresh-preserves-identity",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:logout-invalidates-refresh",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:refresh-client-binding",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:session-expiry-rejects-refresh",
+      "status": "passed"
+    }
+  ]
+}

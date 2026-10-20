@@ -1,0 +1,27 @@
+{
+  "evidence": "live-authentication-lessons",
+  "browser": "chrome",
+  "phase": "kerberos-lifecycle-cucumber",
+  "cases": [
+    {
+      "name": "kerberos:refresh-client-binding",
+      "status": "passed"
+    },
+    {
+      "name": "kerberos:refresh-without-ticket-cache",
+      "status": "passed"
+    },
+    {
+      "name": "kerberos:access-expiry-reenters-login",
+      "status": "passed"
+    },
+    {
+      "name": "kerberos:session-expiry-rejects-refresh",
+      "status": "passed"
+    },
+    {
+      "name": "kerberos:logout-invalidates-refresh",
+      "status": "passed"
+    }
+  ]
+}

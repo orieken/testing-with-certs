@@ -1,0 +1,1 @@
+<testsuite name="chrome-oidc-lifecycle" tests="5" failures="0"><testcase name="oidc:access-expiry-reenters-federation"></testcase><testcase name="oidc:refresh-preserves-identity"></testcase><testcase name="oidc:logout-invalidates-refresh"></testcase><testcase name="oidc:refresh-client-binding"></testcase><testcase name="oidc:session-expiry-rejects-refresh"></testcase></testsuite>

@@ -1,0 +1,17 @@
+{
+  "cases": [
+    {
+      "name": "kerberos:disabled-user",
+      "path": "video-0001.webm",
+      "spec": "teaching/kerberos.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "kerberos:disabled-user",
+      "path": "video-0002.webm",
+      "spec": "teaching/kerberos.mjs",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

@@ -1,0 +1,11 @@
+{
+  "runId": "20261020T022048-907307355Z-os-ubi9-cucumber-chrome-customer-waterdeep-teaching-04",
+  "os": "ubi9",
+  "distribution": "rhel",
+  "distributionVersion": "9.6",
+  "browser": "chrome",
+  "browserVersion": "Google Chrome 155.0.8059.84",
+  "nodeVersion": "v24.19.0",
+  "architecture": "x64",
+  "selectedUser": "customer-waterdeep"
+}

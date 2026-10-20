@@ -1,0 +1,9 @@
+{
+  "node": "v24.19.0",
+  "playwright": "1.61.0",
+  "cucumber": "12.9.0",
+  "chrome": "Google Chrome 155.0.8059.84",
+  "edge": "Microsoft Edge 154.0.4258.62",
+  "platform": "linux",
+  "arch": "x64"
+}

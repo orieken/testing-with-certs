@@ -1,0 +1,27 @@
+{
+  "evidence": "live-authentication-lessons",
+  "browser": "chrome",
+  "phase": "oidc-lifecycle",
+  "cases": [
+    {
+      "name": "oidc:access-expiry-reenters-federation",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:refresh-preserves-identity",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:logout-invalidates-refresh",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:refresh-client-binding",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:session-expiry-rejects-refresh",
+      "status": "passed"
+    }
+  ]
+}

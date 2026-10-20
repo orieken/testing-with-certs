@@ -1,0 +1,47 @@
+<testsuites id="" name="" tests="6" failures="0" skipped="1" errors="0" time="7.78321">
+<testsuite name="recorded-ui.spec.ts" timestamp="2026-10-20T02:21:55.310Z" hostname="debian-msedge-customer-waterdeep" tests="6" failures="0" skipped="1" time="7.006" errors="0">
+<testcase name="real certificate login with live catalog and customer data" classname="recorded-ui.spec.ts" time="1.15">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/recorded-ui-real-certifica-f736a-e-catalog-and-customer-data-debian-msedge-customer-waterdeep/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="live item detail and local branch map work without external tiles" classname="recorded-ui.spec.ts" time="1.232">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/recorded-ui-live-item-deta-38703-work-without-external-tiles-debian-msedge-customer-waterdeep/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="customer completes a live, server-priced simulated order" classname="recorded-ui.spec.ts" time="1.272">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/recorded-ui-customer-compl-230f7-rver-priced-simulated-order-debian-msedge-customer-waterdeep/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="customer widget choice persists and direct admin API access is denied" classname="recorded-ui.spec.ts" time="1.897">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/recorded-ui-customer-widge-25a76--admin-API-access-is-denied-debian-msedge-customer-waterdeep/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="admin report filters and local follow-up survive reload" classname="recorded-ui.spec.ts">
+<properties>
+<property name="skip" value="The reporting and follow-up check uses the selected administrator identity.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="fixture-backed shop interaction with selected certificate" classname="recorded-ui.spec.ts" time="1.249">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/recorded-ui-fixture-backed-7198e-n-with-selected-certificate-debian-msedge-customer-waterdeep/video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

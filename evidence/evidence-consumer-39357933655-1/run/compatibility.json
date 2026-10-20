@@ -1,0 +1,322 @@
+{
+  "schemaVersion": 1,
+  "source": "prism-compatibility-experiment",
+  "prism": "5.14.2",
+  "digest": "sha256:87972b6cf73da2c0339fca18f362b6f93118152d652c970fab93ed13cfd55bae",
+  "decision": "mock-only; no authenticated proxy routing",
+  "specDigests": {
+    "catalog": {
+      "sha256": "1f8116a00957099220eebee2b2c2ee25b2642e8f4becdce0ce254ad5d76964e7",
+      "operations": 6
+    },
+    "customer": {
+      "sha256": "b563ed12c2ee848f4b6070af265618fa8f41416e5a4b8f0581ccff676f60d5cf",
+      "operations": 10
+    },
+    "insights": {
+      "sha256": "232016cff2aa8d5db1bf6c0e46d996301bb5ab9ddf7da0aa179f8fc40485f5d6",
+      "operations": 7
+    }
+  },
+  "results": [
+    {
+      "name": "populated",
+      "status": 200,
+      "ajv": true,
+      "requiredHeaderPresent": null
+    },
+    {
+      "name": "empty",
+      "status": 200,
+      "ajv": true,
+      "requiredHeaderPresent": null
+    },
+    {
+      "name": "geo2020-valid",
+      "status": 200,
+      "ajv": true,
+      "requiredHeaderPresent": null
+    },
+    {
+      "name": "salesUTC-valid",
+      "status": 200,
+      "ajv": true,
+      "requiredHeaderPresent": null
+    },
+    {
+      "name": "structured-403",
+      "status": 403,
+      "ajv": true,
+      "requiredHeaderPresent": null
+    },
+    {
+      "name": "created-location",
+      "status": 201,
+      "ajv": true,
+      "requiredHeaderPresent": true
+    },
+    {
+      "name": "bodyless-204",
+      "status": 204,
+      "ajv": true,
+      "requiredHeaderPresent": null
+    },
+    {
+      "name": "checkout-409",
+      "status": 409,
+      "ajv": true,
+      "requiredHeaderPresent": null
+    },
+    {
+      "name": "checkout-422",
+      "status": 422,
+      "ajv": true,
+      "requiredHeaderPresent": null
+    },
+    {
+      "name": "checkout-503",
+      "status": 503,
+      "ajv": true,
+      "requiredHeaderPresent": null
+    },
+    {
+      "name": "invalid-query",
+      "status": 400,
+      "ajv": true
+    },
+    {
+      "name": "wrong-type-warning",
+      "status": 200,
+      "ajvAcceptsOriginal": false,
+      "violationHeader": true,
+      "validation": [
+        {
+          "location": [
+            "response",
+            "body",
+            "items",
+            "0",
+            "priceCopper"
+          ],
+          "code": "type",
+          "message": "Response body property items.0.priceCopper must be integer"
+        }
+      ],
+      "rejectsInvalid": false,
+      "supported": true
+    },
+    {
+      "name": "wrong-type-enforced",
+      "status": 500,
+      "ajvAcceptsOriginal": false,
+      "violationHeader": true,
+      "validation": [
+        {
+          "location": [
+            "response",
+            "body",
+            "items",
+            "0",
+            "priceCopper"
+          ],
+          "code": "type",
+          "message": "Response body property items.0.priceCopper must be integer"
+        }
+      ],
+      "rejectsInvalid": true,
+      "supported": true
+    },
+    {
+      "name": "tuple-enforced",
+      "status": 500,
+      "ajvAcceptsOriginal": false,
+      "violationHeader": true,
+      "validation": [
+        {
+          "location": [
+            "response",
+            "body",
+            "features",
+            "0",
+            "properties",
+            "center"
+          ],
+          "code": "maxItems",
+          "message": "Response body property features.0.properties.center must NOT have more than 2 items"
+        },
+        {
+          "location": [
+            "response",
+            "body",
+            "features",
+            "0",
+            "properties",
+            "center"
+          ],
+          "code": "items",
+          "message": "Response body property features.0.properties.center must NOT have more than 2 items"
+        }
+      ],
+      "rejectsInvalid": true,
+      "supported": true
+    },
+    {
+      "name": "tuple-position-enforced",
+      "status": 500,
+      "ajvAcceptsOriginal": false,
+      "violationHeader": true,
+      "validation": [
+        {
+          "location": [
+            "response",
+            "body",
+            "features",
+            "0",
+            "properties",
+            "center",
+            "1"
+          ],
+          "code": "maximum",
+          "message": "Response body property features.0.properties.center.1 must be <= 90"
+        }
+      ],
+      "rejectsInvalid": true,
+      "supported": true
+    },
+    {
+      "name": "tuple-type-enforced",
+      "status": 500,
+      "ajvAcceptsOriginal": false,
+      "violationHeader": true,
+      "validation": [
+        {
+          "location": [
+            "response",
+            "body",
+            "features",
+            "0",
+            "properties",
+            "center",
+            "0"
+          ],
+          "code": "type",
+          "message": "Response body property features.0.properties.center.0 must be number"
+        }
+      ],
+      "rejectsInvalid": true,
+      "supported": true
+    },
+    {
+      "name": "date-enforced",
+      "status": 500,
+      "ajvAcceptsOriginal": false,
+      "violationHeader": true,
+      "validation": [
+        {
+          "location": [
+            "response",
+            "body",
+            "from"
+          ],
+          "code": "pattern",
+          "message": "Response body property from must match pattern \"Z$\""
+        }
+      ],
+      "rejectsInvalid": true,
+      "supported": true
+    },
+    {
+      "name": "date-calendar-enforced",
+      "status": 500,
+      "ajvAcceptsOriginal": false,
+      "violationHeader": true,
+      "validation": [
+        {
+          "location": [
+            "response",
+            "body",
+            "from"
+          ],
+          "code": "format",
+          "message": "Response body property from must match format \"date-time\""
+        }
+      ],
+      "rejectsInvalid": true,
+      "supported": true
+    },
+    {
+      "name": "location-enforced",
+      "status": 500,
+      "ajvAcceptsOriginal": false,
+      "violationHeader": true,
+      "validation": [
+        {
+          "location": [
+            "response",
+            "header"
+          ],
+          "code": "required",
+          "message": "Response header must have required property 'location'"
+        }
+      ],
+      "rejectsInvalid": true,
+      "supported": true
+    },
+    {
+      "name": "invalid-request-enforced",
+      "status": 422,
+      "rejectsInvalid": true,
+      "upstreamCalls": 0,
+      "supported": true
+    },
+    {
+      "name": "upstream-501",
+      "upstreamStatus": 501,
+      "status": 200,
+      "canonicalMockFallback": true
+    },
+    {
+      "name": "proxy-tls",
+      "status": 200,
+      "upstreamCalls": 1,
+      "canonicalSuccess": true,
+      "supported": true
+    },
+    {
+      "name": "proxy-bad-ca",
+      "status": 500,
+      "upstreamCalls": 0,
+      "canonicalSuccess": false,
+      "supported": true
+    },
+    {
+      "name": "proxy-bad-name",
+      "status": 500,
+      "upstreamCalls": 0,
+      "canonicalSuccess": false,
+      "supported": true
+    },
+    {
+      "name": "proxy-mtls",
+      "status": 500,
+      "upstreamCalls": 0,
+      "canonicalSuccess": false,
+      "supported": true
+    },
+    {
+      "name": "tls-controls",
+      "verifiedFrontTls": true,
+      "missingFrontClientRejected": true,
+      "wrongFrontCaRejected": true,
+      "wrongFrontHostnameRejected": true,
+      "directUpstreamMutualTls": true,
+      "missingUpstreamClientRejected": true,
+      "prismClientCertificateForwarding": false
+    },
+    {
+      "name": "credential-strip",
+      "syntheticBearerStripped": true,
+      "cookieStripped": true
+    }
+  ]
+}

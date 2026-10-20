@@ -1,0 +1,11 @@
+{
+  "runId": "20261020T022048-907308526Z-os-ubi9-cucumber-chrome-shop-admin-teaching-05",
+  "os": "ubi9",
+  "distribution": "rhel",
+  "distributionVersion": "9.6",
+  "browser": "chrome",
+  "browserVersion": "Google Chrome 155.0.8059.84",
+  "nodeVersion": "v24.19.0",
+  "architecture": "x64",
+  "selectedUser": "shop-admin"
+}

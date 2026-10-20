@@ -1,0 +1,11 @@
+{
+  "runId": "20261020T022048-907314159Z-os-ubi9-cucumber-msedge-customer-waterdeep-teaching-11",
+  "os": "ubi9",
+  "distribution": "rhel",
+  "distributionVersion": "9.6",
+  "browser": "msedge",
+  "browserVersion": "Microsoft Edge 155.0.4283.62",
+  "nodeVersion": "v24.19.0",
+  "architecture": "x64",
+  "selectedUser": "customer-waterdeep"
+}

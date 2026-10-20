@@ -1,0 +1,108 @@
+{
+  "evidence": "verified-full-native-test-run",
+  "sourceCommit": "1d8efddba2bd5cd179e6fea1c71c2739c40335f2",
+  "runId": 39357933655,
+  "runUrl": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655",
+  "jobs": [
+    {
+      "name": "All authentication protocols in both runners",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417260384"
+    },
+    {
+      "name": "Native Go operator tests",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417260590"
+    },
+    {
+      "name": "Complete recorded browser matrix (ubi9)",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417260623"
+    },
+    {
+      "name": "Password and OTP in Chrome/Edge and both runners",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417260636"
+    },
+    {
+      "name": "Authentik OIDC and SAML in both runners",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417260653"
+    },
+    {
+      "name": "workspace checks",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417260672"
+    },
+    {
+      "name": "catalog-api build",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417260702"
+    },
+    {
+      "name": "Compose configuration",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417260771"
+    },
+    {
+      "name": "Complete recorded browser matrix (debian)",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417260779"
+    },
+    {
+      "name": "insights-api build",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417260785"
+    },
+    {
+      "name": "spike checks",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417260832"
+    },
+    {
+      "name": "Real-provider regional boundaries",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417563523"
+    },
+    {
+      "name": "Contract-derived mock consumers (Prism)",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417563556"
+    },
+    {
+      "name": "Isolated contracts, security and real-browser suites",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417563557"
+    },
+    {
+      "name": "Dependency faults (idempotency)",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417563568"
+    },
+    {
+      "name": "Dependency faults (checkout)",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417563575"
+    },
+    {
+      "name": "Native certificate and password teaching matrix",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417563579"
+    },
+    {
+      "name": "Dependency faults (reporting)",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118417563606"
+    },
+    {
+      "name": "Require independent live, consumer and fault gates",
+      "status": "success",
+      "url": "https://github.com/orieken/testing-with-certs/actions/runs/39357933655/job/118426553070"
+    }
+  ],
+  "deferred": [
+    "external-account providers",
+    "physical authenticators and manual-only desktop checks"
+  ],
+  "evidenceFiles": 224
+}

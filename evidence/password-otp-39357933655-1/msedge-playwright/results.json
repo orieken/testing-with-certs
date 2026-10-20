@@ -1,0 +1,36 @@
+{
+  "evidence": "live-password-otp",
+  "browser": "msedge",
+  "runner": "playwright",
+  "phase": "baseline",
+  "cases": [
+    {
+      "name": "certificate-free entrance and route boundaries",
+      "status": "passed"
+    },
+    {
+      "name": "enrollment and lesson audience denied at business APIs",
+      "status": "passed"
+    },
+    {
+      "name": "wrong password",
+      "status": "passed"
+    },
+    {
+      "name": "incorrect and expired codes",
+      "status": "passed"
+    },
+    {
+      "name": "disabled user",
+      "status": "passed"
+    },
+    {
+      "name": "successful login, logout and cookie cannot skip factors",
+      "status": "passed"
+    },
+    {
+      "name": "fresh profile and second account isolation",
+      "status": "passed"
+    }
+  ]
+}

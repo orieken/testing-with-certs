@@ -1,0 +1,23 @@
+{
+  "evidence": "live-authentication-lessons",
+  "browser": "msedge",
+  "phase": "kerberos-cucumber",
+  "cases": [
+    {
+      "name": "kerberos:valid-ticket",
+      "status": "passed"
+    },
+    {
+      "name": "kerberos:missing-ticket",
+      "status": "passed"
+    },
+    {
+      "name": "kerberos:wrong-service-ticket",
+      "status": "passed"
+    },
+    {
+      "name": "kerberos:expired-ticket",
+      "status": "passed"
+    }
+  ]
+}

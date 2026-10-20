@@ -1,0 +1,31 @@
+{
+  "evidence": "live-authentication-lessons",
+  "browser": "chrome",
+  "phase": "saml-lifecycle-cucumber",
+  "cases": [
+    {
+      "name": "saml:refresh-without-role",
+      "status": "passed"
+    },
+    {
+      "name": "saml:refresh-preserves-role",
+      "status": "passed"
+    },
+    {
+      "name": "saml:refresh-client-binding",
+      "status": "passed"
+    },
+    {
+      "name": "saml:logout-invalidates-refresh",
+      "status": "passed"
+    },
+    {
+      "name": "saml:access-expiry-reenters-federation",
+      "status": "passed"
+    },
+    {
+      "name": "saml:session-expiry-rejects-refresh",
+      "status": "passed"
+    }
+  ]
+}

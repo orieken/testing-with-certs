@@ -1,0 +1,53 @@
+{
+  "cases": [
+    {
+      "name": "authentik-oidc:no-group",
+      "path": "video-0001.webm",
+      "spec": "teaching/authentik.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "authentik-oidc:logout-isolation",
+      "path": "video-0002.webm",
+      "spec": "teaching/authentik.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "authentik-oidc:logout-isolation",
+      "path": "video-0003.webm",
+      "spec": "teaching/authentik.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "authentik-oidc:callback-state",
+      "path": "video-0004.webm",
+      "spec": "teaching/authentik.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "authentik-oidc:login-group",
+      "path": "video-0005.webm",
+      "spec": "teaching/authentik.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "authentik-oidc:disabled-user",
+      "path": "video-0006.webm",
+      "spec": "teaching/authentik.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "authentik-oidc:wrong-password",
+      "path": "video-0007.webm",
+      "spec": "teaching/authentik.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "authentik-oidc:broker-state",
+      "path": "video-0008.webm",
+      "spec": "teaching/authentik.mjs",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

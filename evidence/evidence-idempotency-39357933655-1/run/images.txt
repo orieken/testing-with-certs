@@ -1,0 +1,7 @@
+[magic-shop-runner:03] sha256:817771bcad851ade5c5fe040523c7ff1d0d0cc3bf1cea8b76ad5b81b669032f0
+[magic-shop-customer-api:03] sha256:6bcdc57c4d2ccacdfc840dbc654406c91311c7dc6c0f8051011bccd9a68cc7bf
+[magic-shop-catalog-api:03] sha256:0a75f2edb9db44898374301e8ba758e3d3bf67b2178fb98f8161bc1e9916cbf2
+[magic-shop-insights-api:03] sha256:fbf1d6cee4e46aafa341746b00265071b1b30429fb794111a39216bed2bb1e5c
+[magic-shop-keycloak:03] sha256:f02e2d02305610aab02d83242a8d2f4cf76be93ac76f60215bb187c0793d61ce
+[magic-shop-gateway:03] sha256:20fb6a720d798747567f2397edb46a72b0aaa749405d9e3fc018642e5e9415fc
+[magic-shop-postgres:03] sha256:251cad24d4deee933dfd6c29db1eccdb4eccc3c66cc15009ce20608c9d00a95b

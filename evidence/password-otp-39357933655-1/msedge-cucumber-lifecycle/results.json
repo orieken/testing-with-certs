@@ -1,0 +1,28 @@
+{
+  "evidence": "live-password-otp",
+  "browser": "msedge",
+  "runner": "cucumber",
+  "phase": "lifecycle",
+  "cases": [
+    {
+      "name": "logout invalidates refresh token",
+      "status": "passed"
+    },
+    {
+      "name": "refresh preserves identity and lesson audience",
+      "status": "passed"
+    },
+    {
+      "name": "expired session rejects refresh",
+      "status": "passed"
+    },
+    {
+      "name": "access-token expiry clears lesson and requires both factors",
+      "status": "passed"
+    },
+    {
+      "name": "refresh token cannot be used by another client",
+      "status": "passed"
+    }
+  ]
+}

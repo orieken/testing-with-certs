@@ -1,0 +1,35 @@
+{
+  "cases": [
+    {
+      "name": "expired session rejects refresh",
+      "path": "video-0001.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "access-token expiry clears lesson and requires both factors",
+      "path": "video-0002.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "refresh preserves identity and lesson audience",
+      "path": "video-0003.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "refresh token cannot be used by another client",
+      "path": "video-0004.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "logout invalidates refresh token",
+      "path": "video-0005.webm",
+      "spec": "teaching/password-otp.mjs",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

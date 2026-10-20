@@ -1,0 +1,43 @@
+{
+  "evidence": "live-certificate-password",
+  "browser": "msedge",
+  "runner": "cucumber",
+  "cases": [
+    {
+      "kind": "success",
+      "status": "passed"
+    },
+    {
+      "kind": "wrong-password",
+      "status": "passed"
+    },
+    {
+      "kind": "missing",
+      "status": "passed"
+    },
+    {
+      "kind": "wrong",
+      "status": "passed"
+    },
+    {
+      "kind": "disabled",
+      "status": "passed"
+    },
+    {
+      "kind": "unknown",
+      "status": "passed"
+    },
+    {
+      "kind": "unconfigured",
+      "status": "passed"
+    },
+    {
+      "kind": "cookies",
+      "status": "passed"
+    },
+    {
+      "kind": "shop",
+      "status": "passed"
+    }
+  ]
+}

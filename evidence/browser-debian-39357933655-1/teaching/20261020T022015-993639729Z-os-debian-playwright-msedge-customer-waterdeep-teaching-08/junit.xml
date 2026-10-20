@@ -1,0 +1,64 @@
+<testsuites id="" name="" tests="8" failures="0" skipped="4" errors="0" time="7.635902999999999">
+<testsuite name="teaching.spec.ts" timestamp="2026-10-20T02:21:15.708Z" hostname="debian-msedge-customer-waterdeep" tests="8" failures="0" skipped="4" time="6.681" errors="0">
+<testcase name="AUTH-01 AUTH-02 selected certificate opens the live shop @login" classname="teaching.spec.ts" time="1.173">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/teaching-AUTH-01-AUTH-02-s-97940-e-opens-the-live-shop-login-debian-msedge-customer-waterdeep/attachments/video-809d4b2da7698d4f19df22990dde22b902d8f13d.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="AUTH-08 logout ends the session and the installed certificate signs in again @login" classname="teaching.spec.ts" time="1.654">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/teaching-AUTH-08-logout-en-fe2db-ficate-signs-in-again-login-debian-msedge-customer-waterdeep/attachments/video-4a96b06b7e36d8fff4eb0771facdab4e689504b7.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="SHOP-01 customer order and account @customer" classname="teaching.spec.ts" time="1.247">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/teaching-SHOP-01-customer-order-and-account-customer-debian-msedge-customer-waterdeep/attachments/video-47b5f83daaf9d3ccd7559c3011875b2a6f6e2d3e.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="WIDGET-01 ROLE-01 customer widget and admin boundary @customer" classname="teaching.spec.ts" time="1.803">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/teaching-WIDGET-01-ROLE-01-9e900-and-admin-boundary-customer-debian-msedge-customer-waterdeep/attachments/video-59dab05c21d0f6e66877b9d144a482ed5a2825b1.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="REGION-01 MAP-01 admin Waterdeep report and local map @admin" classname="teaching.spec.ts">
+<properties>
+<property name="skip" value="Administrator example requires shop-admin">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="MAP-01 locations map works offline and pans to allowed geolocation @admin" classname="teaching.spec.ts">
+<properties>
+<property name="skip" value="Administrator example requires shop-admin">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="MAP-01 denied geolocation leaves the locations map usable @admin" classname="teaching.spec.ts">
+<properties>
+<property name="skip" value="Administrator example requires shop-admin">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="ROLE-03 shopkeeper manages inventory through the certificate-backed UI @shopkeeper" classname="teaching.spec.ts">
+<properties>
+<property name="skip" value="Shopkeeper example requires shopkeeper">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

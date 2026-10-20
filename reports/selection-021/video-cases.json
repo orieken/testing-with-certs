@@ -1,0 +1,77 @@
+{
+  "cases": [
+    {
+      "name": "admin report filters and local follow-up survive reload",
+      "path": "video-0001.webm",
+      "spec": "recorded-ui.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "customer widget choice persists and direct admin API access is denied",
+      "path": "video-0002.webm",
+      "spec": "recorded-ui.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "customer completes a live, server-priced simulated order",
+      "path": "video-0003.webm",
+      "spec": "recorded-ui.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "real certificate login with live catalog and customer data",
+      "path": "video-0004.webm",
+      "spec": "recorded-ui.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "live item detail and local branch map work without external tiles",
+      "path": "video-0005.webm",
+      "spec": "recorded-ui.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "fixture-backed shop interaction with selected certificate",
+      "path": "video-0006.webm",
+      "spec": "recorded-ui.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "admin report filters and local follow-up survive reload",
+      "path": "video-0007.webm",
+      "spec": "recorded-ui.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "customer completes a live, server-priced simulated order",
+      "path": "video-0008.webm",
+      "spec": "recorded-ui.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "customer widget choice persists and direct admin API access is denied",
+      "path": "video-0009.webm",
+      "spec": "recorded-ui.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "fixture-backed shop interaction with selected certificate",
+      "path": "video-0010.webm",
+      "spec": "recorded-ui.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "live item detail and local branch map work without external tiles",
+      "path": "video-0011.webm",
+      "spec": "recorded-ui.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "real certificate login with live catalog and customer data",
+      "path": "video-0012.webm",
+      "spec": "recorded-ui.spec.ts",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

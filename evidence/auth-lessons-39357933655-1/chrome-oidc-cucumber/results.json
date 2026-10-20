@@ -1,0 +1,27 @@
+{
+  "evidence": "live-authentication-lessons",
+  "browser": "chrome",
+  "phase": "oidc-cucumber",
+  "cases": [
+    {
+      "name": "oidc:broker-state-rejection",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:callback-state-rejection",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:disabled-provider-user",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:cross-protocol-provider-rejection",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:login-audience-and-logout",
+      "status": "passed"
+    }
+  ]
+}

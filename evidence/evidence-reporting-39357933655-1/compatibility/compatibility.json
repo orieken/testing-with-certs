@@ -1,0 +1,92 @@
+{
+  "source": "mokapi-script-compatibility",
+  "version": "0.52.0",
+  "digest": "sha256:ba936c3c88db3f95674cbb7b7c790193de1a7e5b6f638efa6adcb89fc6f19be8",
+  "results": [
+    {
+      "mode": "healthy",
+      "index": 1,
+      "status": 200,
+      "ajvValid": true
+    },
+    {
+      "mode": "healthy",
+      "index": 2,
+      "status": 200,
+      "ajvValid": true
+    },
+    {
+      "mode": "conflict",
+      "index": 1,
+      "status": 200,
+      "ajvValid": true
+    },
+    {
+      "mode": "conflict",
+      "index": 2,
+      "status": 409,
+      "ajvValid": true
+    },
+    {
+      "mode": "revision",
+      "index": 1,
+      "status": 200,
+      "ajvValid": true
+    },
+    {
+      "mode": "revision",
+      "index": 2,
+      "status": 200,
+      "ajvValid": true
+    },
+    {
+      "mode": "outage",
+      "index": 1,
+      "status": 200,
+      "ajvValid": true
+    },
+    {
+      "mode": "outage",
+      "index": 2,
+      "status": 503,
+      "ajvValid": true
+    },
+    {
+      "mode": "repeat",
+      "index": 1,
+      "status": 200,
+      "ajvValid": true
+    },
+    {
+      "mode": "repeat",
+      "index": 2,
+      "status": 200,
+      "ajvValid": true
+    },
+    {
+      "mode": "empty",
+      "index": 1,
+      "status": 200,
+      "ajvValid": true
+    },
+    {
+      "mode": "empty",
+      "index": 2,
+      "status": 200,
+      "ajvValid": true
+    },
+    {
+      "mode": "wrong-type",
+      "index": 1,
+      "status": 200,
+      "ajvValid": false
+    },
+    {
+      "mode": "wrong-type",
+      "index": 2,
+      "status": 200,
+      "ajvValid": false
+    }
+  ],
+  "decision": "isolated sequences behind verified TLS/real-authorization wrapper; not a real provider"
+}

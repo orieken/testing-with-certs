@@ -1,0 +1,29 @@
+{
+  "cases": [
+    {
+      "name": "Selected certificate opens the live shop and account",
+      "path": "video-0001.webm",
+      "spec": "cucumber/features/teaching.feature",
+      "status": "passed"
+    },
+    {
+      "name": "Customer places a simulated order and finds it in their account",
+      "path": "video-0002.webm",
+      "spec": "cucumber/features/teaching.feature",
+      "status": "passed"
+    },
+    {
+      "name": "Customer widget setting persists and admin report is forbidden",
+      "path": "video-0003.webm",
+      "spec": "cucumber/features/teaching.feature",
+      "status": "passed"
+    },
+    {
+      "name": "Logout ends the session and the installed certificate signs in again",
+      "path": "video-0004.webm",
+      "spec": "cucumber/features/teaching.feature",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

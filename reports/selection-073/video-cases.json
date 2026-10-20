@@ -1,0 +1,107 @@
+{
+  "cases": [
+    {
+      "name": "disabled",
+      "path": "video-0001.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "disabled",
+      "path": "video-0002.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "cookies",
+      "path": "video-0003.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "cookies",
+      "path": "video-0004.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "cookies",
+      "path": "video-0005.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "cookies",
+      "path": "video-0006.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "wrong-password",
+      "path": "video-0007.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "unconfigured",
+      "path": "video-0008.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "unconfigured",
+      "path": "video-0009.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "wrong",
+      "path": "video-0010.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "wrong",
+      "path": "video-0011.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "shop",
+      "path": "video-0012.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "success",
+      "path": "video-0013.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "unknown",
+      "path": "video-0014.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "unknown",
+      "path": "video-0015.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "missing",
+      "path": "video-0016.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "missing",
+      "path": "video-0017.webm",
+      "spec": "teaching/certificate-password.mjs",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

@@ -1,0 +1,11 @@
+{
+  "runId": "20261020T022015-993638675Z-os-debian-playwright-chrome-shop-admin-recorded-07",
+  "os": "debian",
+  "distribution": "debian",
+  "distributionVersion": "12",
+  "browser": "chrome",
+  "browserVersion": "Google Chrome 155.0.8059.84",
+  "nodeVersion": "v24.19.0",
+  "architecture": "x64",
+  "selectedUser": "shop-admin"
+}

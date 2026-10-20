@@ -1,0 +1,120 @@
+{
+  "runId": "39357933655",
+  "sourceCommit": "1d8efddba2bd5cd179e6fea1c71c2739c40335f2",
+  "checks": [
+    {
+      "artifact": "browser-debian-39357933655-1",
+      "scanned": 480
+    },
+    {
+      "artifact": "browser-ubi9-39357933655-1",
+      "scanned": 480
+    },
+    {
+      "artifact": "auth-lessons-39357933655-1",
+      "scanned": 943
+    },
+    {
+      "artifact": "password-otp-39357933655-1",
+      "scanned": 210
+    },
+    {
+      "artifact": "certificate-password-39357933655-1",
+      "scanned": 166
+    },
+    {
+      "artifact": "authentik-39357933655-1",
+      "scanned": 386
+    },
+    {
+      "artifact": "magic-shop-reports-39357933655-1",
+      "scanned": 29
+    },
+    {
+      "artifact": "evidence-consumer-39357933655-1",
+      "scanned": 24
+    },
+    {
+      "artifact": "evidence-checkout-39357933655-1",
+      "scanned": 12
+    },
+    {
+      "artifact": "evidence-reporting-39357933655-1",
+      "scanned": 15
+    },
+    {
+      "artifact": "evidence-idempotency-39357933655-1",
+      "scanned": 12
+    },
+    {
+      "artifact": "evidence-regional-39357933655-1",
+      "scanned": 13
+    },
+    {
+      "suite": "browser-debian",
+      "selections": 14,
+      "cleanup": "Owned browser-matrix resources removed and independently verified."
+    },
+    {
+      "suite": "browser-ubi9",
+      "selections": 14,
+      "cleanup": "Owned browser-matrix resources removed and independently verified."
+    },
+    {
+      "suite": "auth-lessons",
+      "cases": 212,
+      "videos": 296,
+      "selections": 36
+    },
+    {
+      "suite": "password-otp",
+      "cases": 48,
+      "videos": 56,
+      "selections": 8
+    },
+    {
+      "suite": "certificate-password",
+      "cases": 36,
+      "videos": 68,
+      "selections": 4
+    },
+    {
+      "suite": "authentik",
+      "cases": 104,
+      "videos": 120,
+      "selections": 16,
+      "cleanup": "Disposable authentik users, keys, database and project resources removed and verified.",
+      "lifecycleCleanup": "Authentik lifecycle group membership restored and verified."
+    },
+    {
+      "suite": "evidence-consumer",
+      "source": "prism-mock-browser-consumer",
+      "run": "success",
+      "failureCleanup": "success"
+    },
+    {
+      "suite": "evidence-checkout",
+      "source": "real-checkout-dependency-faults",
+      "run": "success",
+      "failureCleanup": "success"
+    },
+    {
+      "suite": "evidence-reporting",
+      "source": "real-insights-scripted-dependency-faults",
+      "run": "success",
+      "failureCleanup": "success"
+    },
+    {
+      "suite": "evidence-idempotency",
+      "source": "real-provider-checkout-idempotency",
+      "run": "success",
+      "failureCleanup": "success"
+    },
+    {
+      "suite": "evidence-regional",
+      "source": "live-regional-provider",
+      "run": "success",
+      "failureCleanup": "success"
+    }
+  ]
+}

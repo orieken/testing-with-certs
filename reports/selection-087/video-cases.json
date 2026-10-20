@@ -1,0 +1,47 @@
+{
+  "cases": [
+    {
+      "name": "authentik-oidc:access-expiry-clears-identity",
+      "path": "video-0001.webm",
+      "spec": "teaching/authentik-lifecycle.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "authentik-oidc:group-withdrawal",
+      "path": "video-0002.webm",
+      "spec": "teaching/authentik-lifecycle.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "authentik-oidc:logout-invalidates-refresh",
+      "path": "video-0003.webm",
+      "spec": "teaching/authentik-lifecycle.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "authentik-oidc:logout-invalidates-refresh",
+      "path": "video-0004.webm",
+      "spec": "teaching/authentik-lifecycle.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "authentik-oidc:session-expiry-rejects-refresh",
+      "path": "video-0005.webm",
+      "spec": "teaching/authentik-lifecycle.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "authentik-oidc:refresh-client-binding",
+      "path": "video-0006.webm",
+      "spec": "teaching/authentik-lifecycle.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "authentik-oidc:refresh-preserves-identity",
+      "path": "video-0007.webm",
+      "spec": "teaching/authentik-lifecycle.mjs",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

@@ -1,0 +1,77 @@
+{
+  "cases": [
+    {
+      "name": "passkeys:enrollment",
+      "path": "video-0001.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:disabled-user",
+      "path": "video-0002.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:missing-credential",
+      "path": "video-0003.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:missing-credential",
+      "path": "video-0004.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:unconfigured-user",
+      "path": "video-0005.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:login-and-logout",
+      "path": "video-0006.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:login-and-logout",
+      "path": "video-0007.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:account-isolation",
+      "path": "video-0008.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:account-isolation",
+      "path": "video-0009.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:account-isolation",
+      "path": "video-0010.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:invalid-signature",
+      "path": "video-0011.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:invalid-signature",
+      "path": "video-0012.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

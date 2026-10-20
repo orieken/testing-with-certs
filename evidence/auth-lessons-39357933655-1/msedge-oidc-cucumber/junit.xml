@@ -1,0 +1,1 @@
+<testsuite name="msedge-oidc-cucumber" tests="5" failures="0"><testcase name="oidc:broker-state-rejection"></testcase><testcase name="oidc:cross-protocol-provider-rejection"></testcase><testcase name="oidc:login-audience-and-logout"></testcase><testcase name="oidc:callback-state-rejection"></testcase><testcase name="oidc:disabled-provider-user"></testcase></testsuite>

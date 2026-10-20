@@ -1,0 +1,63 @@
+<testsuites id="" name="" tests="8" failures="0" skipped="3" errors="0" time="8.936645">
+<testsuite name="teaching.spec.ts" timestamp="2026-10-20T02:21:59.979Z" hostname="ubi9-msedge-shop-admin" tests="8" failures="0" skipped="3" time="7.968" errors="0">
+<testcase name="AUTH-01 AUTH-02 selected certificate opens the live shop @login" classname="teaching.spec.ts" time="1.127">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/teaching-AUTH-01-AUTH-02-s-97940-e-opens-the-live-shop-login-ubi9-msedge-shop-admin/attachments/video-fbbfffa1cb16cae1f06177498f253d78b2435bad.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="AUTH-08 logout ends the session and the installed certificate signs in again @login" classname="teaching.spec.ts" time="1.758">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/teaching-AUTH-08-logout-en-fe2db-ficate-signs-in-again-login-ubi9-msedge-shop-admin/attachments/video-b63960640b5aafce003e997a5097154906270ed7.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="SHOP-01 customer order and account @customer" classname="teaching.spec.ts">
+<properties>
+<property name="skip" value="Customer example requires customer-waterdeep">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="WIDGET-01 ROLE-01 customer widget and admin boundary @customer" classname="teaching.spec.ts">
+<properties>
+<property name="skip" value="Customer example requires customer-waterdeep">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="REGION-01 MAP-01 admin Waterdeep report and local map @admin" classname="teaching.spec.ts" time="1.18">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/teaching-REGION-01-MAP-01--a75ab--report-and-local-map-admin-ubi9-msedge-shop-admin/attachments/video-c47993ab522f5954496e5216257f6a5547d77925.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="MAP-01 locations map works offline and pans to allowed geolocation @admin" classname="teaching.spec.ts" time="2.041">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/teaching-MAP-01-locations--58df6-o-allowed-geolocation-admin-ubi9-msedge-shop-admin/attachments/video-90c1ab5661bb03a282d395102b62c8a041859edd.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="MAP-01 denied geolocation leaves the locations map usable @admin" classname="teaching.spec.ts" time="1.13">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/teaching-MAP-01-denied-geo-efe89--locations-map-usable-admin-ubi9-msedge-shop-admin/attachments/video-abe9acb88bb8466eba7202b73d7b85bd32881980.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="ROLE-03 shopkeeper manages inventory through the certificate-backed UI @shopkeeper" classname="teaching.spec.ts">
+<properties>
+<property name="skip" value="Shopkeeper example requires shopkeeper">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

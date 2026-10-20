@@ -1,0 +1,115 @@
+{
+  "evidence": "live-authentication-lessons",
+  "browser": "msedge",
+  "phase": "passkeys-federation",
+  "cases": [
+    {
+      "name": "passkeys:enrollment",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:login-and-logout",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:missing-credential",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:invalid-signature",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:disabled-user",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:unconfigured-user",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:account-isolation",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:login-audience-and-logout",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:disabled-provider-user",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:callback-state-rejection",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:cross-protocol-provider-rejection",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:broker-state-rejection",
+      "status": "passed"
+    },
+    {
+      "name": "saml:role-mapped",
+      "status": "passed"
+    },
+    {
+      "name": "saml:role-absent",
+      "status": "passed"
+    },
+    {
+      "name": "saml:role-unrecognized",
+      "status": "passed"
+    },
+    {
+      "name": "saml:role-withdrawn-on-login",
+      "status": "passed"
+    },
+    {
+      "name": "saml:login-audience-and-logout",
+      "status": "passed"
+    },
+    {
+      "name": "saml:disabled-provider-user",
+      "status": "passed"
+    },
+    {
+      "name": "saml:callback-state-rejection",
+      "status": "passed"
+    },
+    {
+      "name": "saml:cross-protocol-provider-rejection",
+      "status": "passed"
+    },
+    {
+      "name": "saml:broker-state-rejection",
+      "status": "passed"
+    },
+    {
+      "name": "saml:modified-signed-response",
+      "status": "passed"
+    },
+    {
+      "name": "saml:response-replay",
+      "status": "passed"
+    },
+    {
+      "name": "saml:signed-control",
+      "status": "passed"
+    },
+    {
+      "name": "saml:signed-wrong-audience",
+      "status": "passed"
+    },
+    {
+      "name": "saml:signed-wrong-recipient",
+      "status": "passed"
+    },
+    {
+      "name": "saml:signed-expired",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "cases": [
+    {
+      "name": "AUTH-08 logout ends the session and the installed certificate signs in again @login",
+      "path": "video-0001.webm",
+      "spec": "teaching.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "WIDGET-01 ROLE-01 customer widget and admin boundary @customer",
+      "path": "video-0002.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "REGION-01 MAP-01 admin Waterdeep report and local map @admin",
+      "path": "video-0003.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "AUTH-01 AUTH-02 selected certificate opens the live shop @login",
+      "path": "video-0004.webm",
+      "spec": "teaching.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "SHOP-01 customer order and account @customer",
+      "path": "video-0005.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "ROLE-03 shopkeeper manages inventory through the certificate-backed UI @shopkeeper",
+      "path": "video-0006.webm",
+      "spec": "teaching.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "MAP-01 denied geolocation leaves the locations map usable @admin",
+      "path": "video-0007.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "MAP-01 locations map works offline and pans to allowed geolocation @admin",
+      "path": "video-0008.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "AUTH-01 AUTH-02 selected certificate opens the live shop @login",
+      "path": "video-0009.webm",
+      "spec": "teaching.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "AUTH-01 AUTH-02 selected certificate opens the live shop @login",
+      "path": "video-0010.webm",
+      "spec": "teaching.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "AUTH-08 logout ends the session and the installed certificate signs in again @login",
+      "path": "video-0011.webm",
+      "spec": "teaching.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "AUTH-08 logout ends the session and the installed certificate signs in again @login",
+      "path": "video-0012.webm",
+      "spec": "teaching.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "MAP-01 denied geolocation leaves the locations map usable @admin",
+      "path": "video-0013.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "MAP-01 denied geolocation leaves the locations map usable @admin",
+      "path": "video-0014.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "MAP-01 locations map works offline and pans to allowed geolocation @admin",
+      "path": "video-0015.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "MAP-01 locations map works offline and pans to allowed geolocation @admin",
+      "path": "video-0016.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "REGION-01 MAP-01 admin Waterdeep report and local map @admin",
+      "path": "video-0017.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "REGION-01 MAP-01 admin Waterdeep report and local map @admin",
+      "path": "video-0018.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "ROLE-03 shopkeeper manages inventory through the certificate-backed UI @shopkeeper",
+      "path": "video-0019.webm",
+      "spec": "teaching.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "ROLE-03 shopkeeper manages inventory through the certificate-backed UI @shopkeeper",
+      "path": "video-0020.webm",
+      "spec": "teaching.spec.ts",
+      "status": "passed"
+    },
+    {
+      "name": "SHOP-01 customer order and account @customer",
+      "path": "video-0021.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "SHOP-01 customer order and account @customer",
+      "path": "video-0022.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "WIDGET-01 ROLE-01 customer widget and admin boundary @customer",
+      "path": "video-0023.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    },
+    {
+      "name": "WIDGET-01 ROLE-01 customer widget and admin boundary @customer",
+      "path": "video-0024.webm",
+      "spec": "teaching.spec.ts",
+      "status": "skipped"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

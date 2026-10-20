@@ -1,0 +1,65 @@
+{
+  "cases": [
+    {
+      "name": "passkeys:logout-invalidates-refresh",
+      "path": "video-0001.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:logout-invalidates-refresh",
+      "path": "video-0002.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:session-expiry-rejects-refresh",
+      "path": "video-0003.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:session-expiry-rejects-refresh",
+      "path": "video-0004.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:refresh-preserves-identity",
+      "path": "video-0005.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:refresh-preserves-identity",
+      "path": "video-0006.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:access-expiry-requires-passkey",
+      "path": "video-0007.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:access-expiry-requires-passkey",
+      "path": "video-0008.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:refresh-client-binding",
+      "path": "video-0009.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "passkeys:refresh-client-binding",
+      "path": "video-0010.webm",
+      "spec": "teaching/passkeys.mjs",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

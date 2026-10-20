@@ -1,0 +1,11 @@
+{
+  "runId": "20261020T022048-907315851Z-os-ubi9-playwright-msedge-customer-waterdeep-recorded-13",
+  "os": "ubi9",
+  "distribution": "rhel",
+  "distributionVersion": "9.6",
+  "browser": "msedge",
+  "browserVersion": "Microsoft Edge 155.0.4283.62",
+  "nodeVersion": "v24.19.0",
+  "architecture": "x64",
+  "selectedUser": "customer-waterdeep"
+}

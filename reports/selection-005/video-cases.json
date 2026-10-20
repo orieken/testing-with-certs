@@ -1,0 +1,23 @@
+{
+  "cases": [
+    {
+      "name": "Selected certificate opens the live shop and account",
+      "path": "video-0001.webm",
+      "spec": "cucumber/features/teaching.feature",
+      "status": "passed"
+    },
+    {
+      "name": "Logout ends the session and the installed certificate signs in again",
+      "path": "video-0002.webm",
+      "spec": "cucumber/features/teaching.feature",
+      "status": "passed"
+    },
+    {
+      "name": "Administrator sees the September Waterdeep report and local map",
+      "path": "video-0003.webm",
+      "spec": "cucumber/features/teaching.feature",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

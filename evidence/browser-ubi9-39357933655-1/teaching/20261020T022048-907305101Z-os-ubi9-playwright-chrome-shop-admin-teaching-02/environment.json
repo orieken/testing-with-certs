@@ -1,0 +1,11 @@
+{
+  "runId": "20261020T022048-907305101Z-os-ubi9-playwright-chrome-shop-admin-teaching-02",
+  "os": "ubi9",
+  "distribution": "rhel",
+  "distributionVersion": "9.6",
+  "browser": "chrome",
+  "browserVersion": "Google Chrome 155.0.8059.84",
+  "nodeVersion": "v24.19.0",
+  "architecture": "x64",
+  "selectedUser": "shop-admin"
+}

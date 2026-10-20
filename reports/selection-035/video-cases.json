@@ -1,0 +1,35 @@
+{
+  "cases": [
+    {
+      "name": "oidc:refresh-preserves-identity",
+      "path": "video-0001.webm",
+      "spec": "teaching/oidc.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:refresh-client-binding",
+      "path": "video-0002.webm",
+      "spec": "teaching/oidc.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:session-expiry-rejects-refresh",
+      "path": "video-0003.webm",
+      "spec": "teaching/oidc.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:access-expiry-reenters-federation",
+      "path": "video-0004.webm",
+      "spec": "teaching/oidc.mjs",
+      "status": "passed"
+    },
+    {
+      "name": "oidc:logout-invalidates-refresh",
+      "path": "video-0005.webm",
+      "spec": "teaching/oidc.mjs",
+      "status": "passed"
+    }
+  ],
+  "evidence": "verified-authentication-video-cases"
+}

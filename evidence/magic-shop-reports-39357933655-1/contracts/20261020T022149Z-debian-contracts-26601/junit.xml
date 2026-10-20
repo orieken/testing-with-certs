@@ -1,0 +1,346 @@
+<testsuites id="" name="" tests="17" failures="0" skipped="0" errors="0" time="5.552957">
+<testsuite name="validator.spec.ts" timestamp="2026-10-20T02:21:51.368Z" hostname="contracts-validator" tests="6" failures="0" skipped="0" time="0.109" errors="0">
+<testcase name="validates a catalog response and rejects missing, wrong-type and unknown fields" classname="validator.spec.ts" time="0.061">
+</testcase>
+<testcase name="rejects unexpected status, media type, missing location and bodyless-content drift" classname="validator.spec.ts" time="0.013">
+</testcase>
+<testcase name="validates request shape before sending and rejects client-computed checkout prices" classname="validator.spec.ts" time="0.009">
+</testcase>
+<testcase name="enforces 2020-12 tuple and UTC date-time constraints in a regional response" classname="validator.spec.ts" time="0.019">
+</testcase>
+<testcase name="accepts documented structured errors and rejects malformed error bodies" classname="validator.spec.ts" time="0.005">
+</testcase>
+<testcase name="rejects a deployed OpenAPI artifact changed by one byte" classname="validator.spec.ts" time="0.002">
+</testcase>
+</testsuite>
+<testsuite name="catalog.contract.spec.ts" timestamp="2026-10-20T02:21:51.368Z" hostname="contracts" tests="5" failures="0" skipped="0" time="1.044" errors="0">
+<testcase name="catalog list and authenticated spec match the expected OpenAPI artifact" classname="catalog.contract.spec.ts" time="0.487">
+<properties>
+<property name="contract-status" value="catalog:listItems:200">
+</property>
+<property name="contract-status" value="catalog:listItems:200">
+</property>
+<property name="contract-status" value="catalog:listItems:200">
+</property>
+<property name="contract-status" value="catalog:listItems:200">
+</property>
+</properties>
+</testcase>
+<testcase name="catalog item lifecycle and authoritative private quote match OpenAPI" classname="catalog.contract.spec.ts" time="0.18">
+<properties>
+<property name="contract-status" value="catalog:getItem:200">
+</property>
+<property name="contract-status" value="catalog:createItem:201">
+</property>
+<property name="contract-status" value="catalog:updateItem:200">
+</property>
+<property name="contract-status" value="catalog:quoteItems:200">
+</property>
+<property name="contract-status" value="catalog:quoteItems:422">
+</property>
+<property name="contract-status" value="catalog:archiveItem:204">
+</property>
+<property name="contract-status" value="catalog:getItem:404">
+</property>
+<property name="contract-status" value="catalog:quoteItems:422">
+</property>
+</properties>
+</testcase>
+<testcase name="catalog rejects invalid input, missing token, customer writes and token/certificate mismatch" classname="catalog.contract.spec.ts" time="0.118">
+<properties>
+<property name="contract-status" value="catalog:listItems:400">
+</property>
+<property name="contract-status" value="catalog:listItems:401">
+</property>
+<property name="contract-status" value="catalog:listItems:403">
+</property>
+<property name="contract-status" value="catalog:createItem:403">
+</property>
+<property name="contract-status" value="catalog:quoteItems:400">
+</property>
+<property name="contract-status" value="catalog:getItem:400">
+</property>
+<property name="contract-status" value="catalog:updateItem:403">
+</property>
+<property name="contract-status" value="catalog:archiveItem:403">
+</property>
+</properties>
+</testcase>
+<testcase name="catalog rejects tampered signatures and private caller/token substitution" classname="catalog.contract.spec.ts" time="0.122">
+<properties>
+<property name="contract-status" value="catalog:listItems:401">
+</property>
+<property name="contract-status" value="catalog:quoteItems:403">
+</property>
+<property name="contract-status" value="catalog:quoteItems:403">
+</property>
+<property name="contract-status" value="catalog:quoteItems:401">
+</property>
+</properties>
+</testcase>
+<testcase name="catalog documents every operation’s common input and authorization failures" classname="catalog.contract.spec.ts" time="0.137">
+<properties>
+<property name="contract-status" value="catalog:listItems:400">
+</property>
+<property name="contract-status" value="catalog:createItem:400">
+</property>
+<property name="contract-status" value="catalog:getItem:400">
+</property>
+<property name="contract-status" value="catalog:updateItem:400">
+</property>
+<property name="contract-status" value="catalog:archiveItem:400">
+</property>
+<property name="contract-status" value="catalog:quoteItems:400">
+</property>
+<property name="contract-status" value="catalog:listItems:401">
+</property>
+<property name="contract-status" value="catalog:createItem:401">
+</property>
+<property name="contract-status" value="catalog:getItem:401">
+</property>
+<property name="contract-status" value="catalog:updateItem:401">
+</property>
+<property name="contract-status" value="catalog:archiveItem:401">
+</property>
+<property name="contract-status" value="catalog:quoteItems:401">
+</property>
+<property name="contract-status" value="catalog:listItems:403">
+</property>
+<property name="contract-status" value="catalog:createItem:403">
+</property>
+<property name="contract-status" value="catalog:getItem:403">
+</property>
+<property name="contract-status" value="catalog:updateItem:403">
+</property>
+<property name="contract-status" value="catalog:archiveItem:403">
+</property>
+<property name="contract-status" value="catalog:quoteItems:403">
+</property>
+</properties>
+</testcase>
+</testsuite>
+<testsuite name="customer.contract.spec.ts" timestamp="2026-10-20T02:21:51.368Z" hostname="contracts" tests="4" failures="0" skipped="0" time="0.689" errors="0">
+<testcase name="customer profile, owned orders, widgets and admin lists match OpenAPI" classname="customer.contract.spec.ts" time="0.26">
+<properties>
+<property name="contract-status" value="customer:getMyProfile:200">
+</property>
+<property name="contract-status" value="customer:updateMyProfile:200">
+</property>
+<property name="contract-status" value="customer:updateMyProfile:200">
+</property>
+<property name="contract-status" value="customer:listMyOrders:200">
+</property>
+<property name="contract-status" value="customer:getMyOrder:200">
+</property>
+<property name="contract-status" value="customer:getMyOrder:404">
+</property>
+<property name="contract-status" value="customer:getMyWidgets:200">
+</property>
+<property name="contract-status" value="customer:putMyWidgets:200">
+</property>
+<property name="contract-status" value="customer:putMyWidgets:422">
+</property>
+<property name="contract-status" value="customer:putMyWidgets:200">
+</property>
+<property name="contract-status" value="customer:listAdminUsers:200">
+</property>
+<property name="contract-status" value="customer:listAdminUsers:200">
+</property>
+<property name="contract-status" value="customer:listAdminOrders:200">
+</property>
+<property name="contract-status" value="customer:listAdminUsers:403">
+</property>
+<property name="contract-status" value="customer:listAdminOrders:403">
+</property>
+</properties>
+</testcase>
+<testcase name="checkout prices come from Go and replay is idempotent" classname="customer.contract.spec.ts" time="0.118">
+<properties>
+<property name="contract-status" value="customer:createOrder:201">
+</property>
+<property name="contract-status" value="customer:createOrder:201">
+</property>
+<property name="contract-status" value="customer:createOrder:409">
+</property>
+<property name="contract-status" value="customer:createOrder:400">
+</property>
+<property name="contract-status" value="customer:createOrder:422">
+</property>
+<property name="contract-status" value="customer:getMyOrder:404">
+</property>
+</properties>
+</testcase>
+<testcase name="private reporting is revision-pinned and spec is authenticated" classname="customer.contract.spec.ts" time="0.108">
+<properties>
+<property name="contract-status" value="customer:listReportingOrders:200">
+</property>
+<property name="contract-status" value="customer:listReportingOrders:200">
+</property>
+<property name="contract-status" value="customer:listReportingOrders:409">
+</property>
+</properties>
+</testcase>
+<testcase name="each customer operation rejects malformed input and missing or mismatched credentials" classname="customer.contract.spec.ts" time="0.203">
+<properties>
+<property name="contract-status" value="customer:getMyProfile:400">
+</property>
+<property name="contract-status" value="customer:getMyProfile:401">
+</property>
+<property name="contract-status" value="customer:getMyProfile:403">
+</property>
+<property name="contract-status" value="customer:updateMyProfile:400">
+</property>
+<property name="contract-status" value="customer:updateMyProfile:401">
+</property>
+<property name="contract-status" value="customer:updateMyProfile:403">
+</property>
+<property name="contract-status" value="customer:listMyOrders:400">
+</property>
+<property name="contract-status" value="customer:listMyOrders:401">
+</property>
+<property name="contract-status" value="customer:listMyOrders:403">
+</property>
+<property name="contract-status" value="customer:createOrder:400">
+</property>
+<property name="contract-status" value="customer:createOrder:401">
+</property>
+<property name="contract-status" value="customer:createOrder:403">
+</property>
+<property name="contract-status" value="customer:getMyOrder:400">
+</property>
+<property name="contract-status" value="customer:getMyOrder:401">
+</property>
+<property name="contract-status" value="customer:getMyOrder:403">
+</property>
+<property name="contract-status" value="customer:getMyWidgets:400">
+</property>
+<property name="contract-status" value="customer:getMyWidgets:401">
+</property>
+<property name="contract-status" value="customer:getMyWidgets:403">
+</property>
+<property name="contract-status" value="customer:putMyWidgets:400">
+</property>
+<property name="contract-status" value="customer:putMyWidgets:401">
+</property>
+<property name="contract-status" value="customer:putMyWidgets:403">
+</property>
+<property name="contract-status" value="customer:listAdminUsers:400">
+</property>
+<property name="contract-status" value="customer:listAdminUsers:401">
+</property>
+<property name="contract-status" value="customer:listAdminUsers:403">
+</property>
+<property name="contract-status" value="customer:listAdminOrders:400">
+</property>
+<property name="contract-status" value="customer:listAdminOrders:401">
+</property>
+<property name="contract-status" value="customer:listAdminOrders:403">
+</property>
+<property name="contract-status" value="customer:listReportingOrders:400">
+</property>
+<property name="contract-status" value="customer:listReportingOrders:401">
+</property>
+<property name="contract-status" value="customer:listReportingOrders:403">
+</property>
+<property name="contract-status" value="customer:getMyProfile:401">
+</property>
+<property name="contract-status" value="customer:listReportingOrders:403">
+</property>
+<property name="contract-status" value="customer:listReportingOrders:401">
+</property>
+</properties>
+</testcase>
+</testsuite>
+<testsuite name="insights.contract.spec.ts" timestamp="2026-10-20T02:21:51.368Z" hostname="contracts" tests="2" failures="0" skipped="0" time="2.156" errors="0">
+<testcase name="regional sales, map, customers and orders match the seeded oracle" classname="insights.contract.spec.ts" time="0.546">
+<properties>
+<property name="contract-status" value="insights:listRegions:200">
+</property>
+<property name="contract-status" value="insights:listRegions:200">
+</property>
+<property name="contract-status" value="insights:getSalesSummary:200">
+</property>
+<property name="contract-status" value="insights:getSalesSummary:200">
+</property>
+<property name="contract-status" value="insights:listRegionalCustomers:200">
+</property>
+<property name="contract-status" value="insights:listRegionalCustomers:200">
+</property>
+<property name="contract-status" value="insights:listRegionalOrders:200">
+</property>
+<property name="contract-status" value="insights:listRegionalOrders:200">
+</property>
+</properties>
+</testcase>
+<testcase name="follow-up records persist locally and reject unauthorized callers" classname="insights.contract.spec.ts" time="1.61">
+<properties>
+<property name="contract-status" value="insights:listFollowUps:200">
+</property>
+<property name="contract-status" value="insights:createFollowUp:201">
+</property>
+<property name="contract-status" value="insights:updateFollowUp:200">
+</property>
+<property name="contract-status" value="insights:listFollowUps:200">
+</property>
+<property name="contract-status" value="insights:createFollowUp:404">
+</property>
+<property name="contract-status" value="insights:listRegions:400">
+</property>
+<property name="contract-status" value="insights:listRegions:401">
+</property>
+<property name="contract-status" value="insights:listRegions:403">
+</property>
+<property name="contract-status" value="insights:listRegions:403">
+</property>
+<property name="contract-status" value="insights:getSalesSummary:400">
+</property>
+<property name="contract-status" value="insights:getSalesSummary:401">
+</property>
+<property name="contract-status" value="insights:getSalesSummary:403">
+</property>
+<property name="contract-status" value="insights:getSalesSummary:403">
+</property>
+<property name="contract-status" value="insights:listRegionalCustomers:400">
+</property>
+<property name="contract-status" value="insights:listRegionalCustomers:401">
+</property>
+<property name="contract-status" value="insights:listRegionalCustomers:403">
+</property>
+<property name="contract-status" value="insights:listRegionalCustomers:403">
+</property>
+<property name="contract-status" value="insights:listRegionalOrders:400">
+</property>
+<property name="contract-status" value="insights:listRegionalOrders:401">
+</property>
+<property name="contract-status" value="insights:listRegionalOrders:403">
+</property>
+<property name="contract-status" value="insights:listRegionalOrders:403">
+</property>
+<property name="contract-status" value="insights:listFollowUps:400">
+</property>
+<property name="contract-status" value="insights:listFollowUps:401">
+</property>
+<property name="contract-status" value="insights:listFollowUps:403">
+</property>
+<property name="contract-status" value="insights:listFollowUps:403">
+</property>
+<property name="contract-status" value="insights:createFollowUp:400">
+</property>
+<property name="contract-status" value="insights:createFollowUp:401">
+</property>
+<property name="contract-status" value="insights:createFollowUp:403">
+</property>
+<property name="contract-status" value="insights:createFollowUp:403">
+</property>
+<property name="contract-status" value="insights:updateFollowUp:400">
+</property>
+<property name="contract-status" value="insights:updateFollowUp:401">
+</property>
+<property name="contract-status" value="insights:updateFollowUp:403">
+</property>
+<property name="contract-status" value="insights:updateFollowUp:403">
+</property>
+</properties>
+</testcase>
+</testsuite>
+</testsuites>

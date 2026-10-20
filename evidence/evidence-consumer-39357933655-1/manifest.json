@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "suite": "consumer",
+  "source": "prism-mock-browser-consumer",
+  "execution": "native-github-ci",
+  "runOutcome": "success",
+  "failureCleanupOutcome": "success",
+  "liveProviderGateCredit": false,
+  "videosExported": false
+}

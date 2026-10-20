@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 1,
+  "source": "real-provider-checkout-idempotency",
+  "specDigests": {
+    "catalog": {
+      "sha256": "1f8116a00957099220eebee2b2c2ee25b2642e8f4becdce0ce254ad5d76964e7",
+      "operations": 6
+    },
+    "customer": {
+      "sha256": "b563ed12c2ee848f4b6070af265618fa8f41416e5a4b8f0581ccff676f60d5cf",
+      "operations": 10
+    },
+    "insights": {
+      "sha256": "232016cff2aa8d5db1bf6c0e46d996301bb5ab9ddf7da0aa179f8fc40485f5d6",
+      "operations": 7
+    }
+  },
+  "results": [
+    {
+      "name": "catalog list and authenticated spec match the expected OpenAPI artifact",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "catalog item lifecycle and authoritative private quote match OpenAPI",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "catalog rejects invalid input, missing token, customer writes and token/certificate mismatch",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "catalog rejects tampered signatures and private caller/token substitution",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "catalog documents every operation’s common input and authorization failures",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "customer profile, owned orders, widgets and admin lists match OpenAPI",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "checkout prices come from Go and replay is idempotent",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "private reporting is revision-pinned and spec is authenticated",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "each customer operation rejects malformed input and missing or mismatched credentials",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "regional sales, map, customers and orders match the seeded oracle",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "follow-up records persist locally and reject unauthorized callers",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "validates a catalog response and rejects missing, wrong-type and unknown fields",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "rejects unexpected status, media type, missing location and bodyless-content drift",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "validates request shape before sending and rejects client-computed checkout prices",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "enforces 2020-12 tuple and UTC date-time constraints in a regional response",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "accepts documented structured errors and rejects malformed error bodies",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "rejects a deployed OpenAPI artifact changed by one byte",
+      "group": "live-contracts",
+      "status": "passed",
+      "evidence": []
+    },
+    {
+      "name": "TEST-08 four identical blocked inserts produce one order and stable replay",
+      "group": "checkout-idempotency",
+      "status": "passed",
+      "evidence": [
+        {
+          "scenario": "identical-race",
+          "database": {
+            "beforeTotal": 10,
+            "afterTotal": 11,
+            "beforeMatching": 0,
+            "afterMatching": 1,
+            "revisionBefore": "6",
+            "revisionAfter": "7"
+          },
+          "observedBlockedInserts": 4,
+          "statuses": [
+            201,
+            201,
+            201,
+            201
+          ],
+          "oneOrder": true,
+          "revisionDelta": 1,
+          "requestHashMatched": true,
+          "stableReplay": true,
+          "databaseTls": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-08 conflicting blocked inserts select one winner and documented 409",
+      "group": "checkout-idempotency",
+      "status": "passed",
+      "evidence": [
+        {
+          "scenario": "conflicting-race",
+          "database": {
+            "beforeTotal": 11,
+            "afterTotal": 12,
+            "beforeMatching": 0,
+            "afterMatching": 1,
+            "revisionBefore": "7",
+            "revisionAfter": "8"
+          },
+          "observedBlockedInserts": 2,
+          "statuses": [
+            201,
+            409
+          ],
+          "oneOrder": true,
+          "revisionDelta": 1,
+          "requestHashMatched": true,
+          "stableReplay": true,
+          "conflictingReplay": 409,
+          "databaseTls": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-08 response discarded after real commit retries without duplicate",
+      "group": "checkout-idempotency",
+      "status": "passed",
+      "evidence": [
+        {
+          "scenario": "lost-response",
+          "database": {
+            "beforeTotal": 12,
+            "afterTotal": 13,
+            "beforeMatching": 0,
+            "afterMatching": 1,
+            "revisionBefore": "8",
+            "revisionAfter": "9"
+          },
+          "responseStarted": false,
+          "transportCode": "ECONNRESET",
+          "committedStatus": 201,
+          "retryStatus": 201,
+          "oneOrder": true,
+          "revisionDelta": 1,
+          "requestHashMatched": true,
+          "stableReplay": true,
+          "conflictingReplay": 409,
+          "databaseTls": true
+        }
+      ]
+    },
+    {
+      "name": "TEST-08 response-loss harness keeps TLS and selected certificate boundary",
+      "group": "checkout-idempotency",
+      "status": "passed",
+      "evidence": [
+        {
+          "scenario": "tls-boundary",
+          "verifiedTls": true,
+          "wrongCaRejected": true,
+          "wrongHostnameRejected": true,
+          "missingClientRejected": true,
+          "wrongClientCaRejected": true,
+          "wrongCustomerRejected": true,
+          "missingTokenRejected": true,
+          "invalidTokenRejected": true,
+          "noPersistence": true
+        }
+      ]
+    }
+  ]
+}
