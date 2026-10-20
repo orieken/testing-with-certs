@@ -5,6 +5,11 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
+      full_evidence:
+        description: Run the complete Debian/UBI9 recorded browser matrix for publication
+        type: boolean
+        default: false
+        required: false
       evidence_failure_suite:
         description: Deliberately fail one isolated evidence job to verify cleanup and red gating
         type: choice
@@ -114,6 +119,11 @@ jobs:
           docker compose -f infra/compose.yaml --profile test build runner-test
           docker compose -f infra/compose.yaml --profile test run --rm --no-deps runner-test \
             sh -c 'google-chrome --version && microsoft-edge --version && node --version'
+      - name: Verify PKI, seed data, and the live package suite
+        run: |
+          ./lab pki verify
+          ./lab db verify
+          ./lab test --runner playwright --suite package
       - name: Gate on live OpenAPI contracts and operation coverage
         run: ./lab test --runner playwright --suite contracts
       - name: Run live TLS, token, identity and ownership checks
@@ -504,9 +514,74 @@ jobs:
           test -z "$(docker volume ls -q --filter label=com.docker.compose.project=$LAB_PROJECT)"
           test -z "$(docker network ls -q --filter label=com.docker.compose.project=$LAB_PROJECT)"
 
+  operator-tests:
+    name: Native Go operator tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Test all operator packages in the pinned Go container
+        run: |
+          docker run --rm -v "$PWD/operator:/src:ro" -w /src \
+            golang:1.26.0-bookworm@sha256:2a0ba12e116687098780d3ce700f9ce3cb340783779646aafbabed748fa6677c \
+            go test -mod=readonly ./...
+
+  browser-recordings:
+    name: Complete recorded browser matrix (${{ matrix.os }})
+    if: github.event_name == 'workflow_dispatch' && inputs.full_evidence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [debian, ubi9]
+    env:
+      LAB_PROJECT: magic-shop-matrix-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+      LAB_CI_REPORTS: "1"
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Start disposable lab
+        run: ./lab up
+      - name: Record every supported user, runner, browser and suite
+        env:
+          MATRIX_OS: ${{ matrix.os }}
+        run: ./lab matrix --os "$MATRIX_OS"
+      - name: Verify full inventory and scan recordings
+        env:
+          MATRIX_OS: ${{ matrix.os }}
+        run: |
+          docker run --rm --network none --entrypoint node \
+            -v "$PWD:/work:ro" node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9 \
+            /work/testing/reporting/check-browser-matrix.mjs /work/artifacts "$MATRIX_OS"
+          docker run --rm --network none --entrypoint node \
+            -v "$PWD:/work:ro" node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9 \
+            /work/testing/container/check-artifacts.mjs /work/artifacts
+      - name: Remove owned lab resources and verify cleanup
+        run: sh testing/cleanup-certificate-password.sh
+      - name: Save cleanup evidence
+        run: echo 'Owned browser-matrix resources removed and independently verified.' > artifacts/matrix-cleanup.txt
+      - name: Upload complete scanned browser evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: browser-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            artifacts/matrix/
+            artifacts/teaching/
+            artifacts/playwright/
+            artifacts/matrix-cleanup.txt
+          if-no-files-found: error
+          retention-days: 30
+      - name: Always remove owned resources after failure or cancellation
+        if: always()
+        run: sh testing/cleanup-certificate-password.sh
+
   evidence-gates:
     name: Require independent live, consumer and fault gates
-    needs: [integration, certificate-password, password-otp, auth-lessons, authentik, consumer, dependency-faults, regional]
+    needs: [integration, certificate-password, password-otp, auth-lessons, authentik, consumer, dependency-faults, regional, operator-tests, browser-recordings]
     if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -519,6 +594,7 @@ jobs:
       - name: Reject missing, skipped, failed or cancelled required gates
         env:
           CI_GATE_RESULTS: ${{ toJSON(needs) }}
+          CI_FULL_EVIDENCE: ${{ inputs.full_evidence && '1' || '0' }}
         run: |
           docker run --rm --platform linux/amd64 --network none --entrypoint node \
-            -e CI_GATE_RESULTS magic-shop-ci-base:local /work/testing/ci/check-gates.mjs
+            -e CI_GATE_RESULTS -e CI_FULL_EVIDENCE magic-shop-ci-base:local /work/testing/ci/check-gates.mjs

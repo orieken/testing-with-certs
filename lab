@@ -90,6 +90,10 @@ valid_project "$project"
 export LAB_PROJECT="$project"
 
 case "${1:-}" in
+  matrix-site)
+    shift
+    exec "$root_dir/lab" operator matrix-site "$@"
+    ;;
   matrix-merge)
     shift
     exec "$root_dir/lab" operator matrix-merge "$@"
