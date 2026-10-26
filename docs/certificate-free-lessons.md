@@ -1,6 +1,20 @@
 # Certificate-free authentication lessons
 
+For a detailed explanation of the controlled OIDC suite, see [How OIDC testing works](oidc-testing.md). It covers the provider, broker, browser flow, fixtures, token checks, reports, and cleanup.
+
 The separate [authentik OIDC/SAML examples](authentik-lessons.md) now have 104/104 native Chrome/Edge × Playwright/Cucumber passes, including 48 lifecycle executions and 120 verified recordings. [Completion 58](completion/58-authentik-lifecycle.md) records refresh/expiry/logout, group withdrawal and restoration, broker scope, and cleanup.
+
+The extended authentik OIDC callback-state and code-exchange suite subsequently passed 136/136 local container executions, including 84 OIDC and 52 SAML regressions. [Completion 62](completion/62-authentik-callback-pkce.md) records both browsers/runners, 152 videos, fixture checks, and independently verified cleanup; native acceptance remains separate.
+
+[Cancellation and recovery acceptance](completion/63-oidc-cancellation-recovery.md) records 96/96 controlled OIDC and 160/160 authentik OIDC/SAML local container executions across both browsers and runners, including all 48 new recovery executions. Recording and artifact gates, fixture checks, and independent resource cleanup passed. Native CI remains separate.
+
+[Upstream ID-token acceptance](completion/64-upstream-id-token-validation.md) records **136/136 controlled OIDC** and **200/200 authentik OIDC/SAML** local container executions, including all 80 new signed-control/rejection executions across both runners and browsers. Recording, artifact, fixture/relay-idle and independent cleanup checks passed. Native CI remains separate.
+
+[Native signing-key rotation and JWKS acceptance](completion/65-native-key-rotation-jwks.md) records **156/156 controlled OIDC** and **220/220 authentik OIDC/SAML** local container executions across Chrome/Edge and Playwright/Cucumber. All forty new rotation/outage executions passed, with original signing-key restoration, recording/artifact gates, relay-idle checks and independently verified removal of project resources. Native CI remains separate.
+
+[Refresh rotation and reuse acceptance](completion/66-refresh-rotation-reuse.md) records **172/172 controlled OIDC** and **236/236 authentik OIDC/SAML** local container executions across Chrome/Edge and Playwright/Cucumber. All thirty-two new broker/upstream rotation and replay executions passed, including the different replacement-token consequences, fresh-authorization recovery, original-policy restoration, recording/artifact gates and independent cleanup. Native CI remains separate.
+
+[Upstream logout and session-revocation acceptance](completion/67-upstream-logout-revocation.md) records **188/188 controlled OIDC** and **252/252 authentik OIDC/SAML** local container executions across Chrome/Edge and Playwright/Cucumber. All thirty-two new native logout/session/token-revocation and broker-boundary executions passed, including retained-cookie SSO checks, issuer-specific grant survival, fresh-authorization recovery, recording/artifact gates and independent cleanup. Native CI remains separate.
 
 The teaching entrance is `https://shop.magic.test:8543/teaching`.
 It uses the existing shop server certificate and does not request a user certificate.

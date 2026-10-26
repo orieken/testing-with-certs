@@ -4,6 +4,17 @@ import { expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { startLesson, captureToken, checkLessonToken, lessonOrigin } from './auth-lessons.mjs';
 import { oidcCaseNames, oidcSessionCaseNames } from './auth-matrix.mjs';
+import { checkUpstreamSessions } from './oidc-sessions.mjs';
+import { upstreamSessionCases } from './oidc-session-cases.mjs';
+import { checkRefreshRotation } from './oidc-refresh.mjs';
+import { refreshCaseNames } from './oidc-refresh-cases.mjs';
+import { authorizeCode } from './oidc-boundaries.mjs';
+import { checkJwksLifecycle } from './oidc-jwks.mjs';
+import { jwksCaseNames } from '../../infra/oidc-token-fixture/cases.mjs';
+import { checkUpstreamIdToken } from './oidc-upstream.mjs';
+import { checkOidcRecovery } from './oidc-recovery.mjs';
+import { oidcRecoveryKinds } from './oidc-recovery-cases.mjs';
+import { checkCallbackState, checkCodeBoundary, interceptProviderCallback } from './oidc-boundaries.mjs';
 
 // A scenario owns its context; credentials and tokens never enter reports.
 async function runcheckOidc(browser, name, playwright) {
@@ -75,6 +86,73 @@ async function runcheckOidc(browser, name, playwright) {
     expect((await response.json()).error).toBe('invalid_grant');
   }
   try {
+    const kind = name.split(':')[1];
+    if (upstreamSessionCases.includes(kind)) {
+      const username = `oidc-test-${kind}`;
+      const validateBroker = async tokens => {
+        expect(claims(tokens.access_token).preferred_username).toBe(username);
+        await checkLessonToken(playwright, tokens.access_token, 'oidc');
+      };
+      await checkUpstreamSessions({kind, provider: 'keycloak', page, context, username,
+        authorize: () => authorizeCode(page, true, false, kind), validateBroker,
+        login: async () => {
+          const response = page.waitForResponse(value => value.url() === tokenEndpoint && value.status() === 200 && value.request().method() === 'POST');
+          void response.catch(() => {}); await providerLogin(kind);
+          await expect(page.getByTestId('lesson-user')).toHaveText(username);
+          const tokens = await (await response).json(); await validateBroker(tokens); return tokens;
+        }});
+      return;
+    }
+    if (refreshCaseNames.includes(kind)) {
+      await checkRefreshRotation({kind, provider: 'keycloak', page, context,
+        authorize: upstream => authorizeCode(page, upstream),
+        validate: async (tokens, upstream) => {
+          if (!upstream) return checkLessonToken(playwright, tokens.access_token, 'oidc');
+          const value = claims(tokens.access_token);
+          expect(value.iss).toBe('https://shop.magic.test:9643/realms/lesson-provider');
+          expect(value.azp).toBe('lesson-oidc-broker'); expect(value.preferred_username).toBe('oidc-test-user');
+          const response = await context.request.get('https://shop.magic.test:9643/realms/lesson-provider/protocol/openid-connect/userinfo', {headers: {authorization: `Bearer ${tokens.access_token}`}});
+          expect(response.status()).toBe(200); expect((await response.json()).sub === value.sub).toBe(true);
+        }});
+      return;
+    }
+    if (jwksCaseNames.includes(kind)) {
+      await checkJwksLifecycle({kind, page, context, provider: 'keycloak', tokenEndpoint, attempt: () => providerLogin('user', true),
+        login: async () => {
+          const token = captureToken(page, 'lesson-oidc'); await providerLogin('user', true);
+          await expect(page.getByTestId('lesson-user')).toHaveText('oidc-test-user');
+          await checkLessonToken(playwright, await token, 'oidc');
+        }});
+      return;
+    }
+    if (kind.startsWith('upstream-id-token-')) {
+      const login = async () => {
+        const token = captureToken(page, 'lesson-oidc');
+        await providerLogin('user', true);
+        await expect(page.getByTestId('lesson-user')).toHaveText('oidc-test-user');
+        await checkLessonToken(playwright, await token, 'oidc');
+      };
+      await checkUpstreamIdToken({ kind, page, context, provider: 'keycloak', tokenEndpoint, login, attempt: () => providerLogin('user', true) });
+      return;
+    }
+    if (oidcRecoveryKinds.includes(kind)) {
+      await checkOidcRecovery({ kind, page, tokenEndpoint, method: 'oidc',
+        attempt: () => providerLogin('user', true), recover: async () => {
+          const token = captureToken(page, 'lesson-oidc');
+          await providerLogin('user', true);
+          await expect(page.getByTestId('lesson-user')).toHaveText('oidc-test-user');
+          await checkLessonToken(playwright, await token, 'oidc');
+        },
+        capture: handle => interceptProviderCallback(page, `${lessonOrigin}/teaching/oidc/callback`,
+          (route, url, response) => handle(url, destination => route.fulfill({ response, status: 302, headers: { ...response.headers(), location: destination }, body: '' }))),
+      });
+      return;
+    }
+    const boundary = name.match(/^oidc:(app|upstream)-(wrong-verifier|missing-verifier|replay|redirect)$/);
+    if (boundary) {
+      await checkCodeBoundary({ context, page, playwright, upstream: boundary[1] === 'upstream', kind: boundary[2] });
+      return;
+    }
     switch (name) {
       case 'oidc:access-expiry-reenters-federation': {
         const tokens = await session('expiry');
@@ -137,9 +215,7 @@ async function runcheckOidc(browser, name, playwright) {
         break;
       }
       case 'oidc:callback-state-rejection': {
-        await page.goto(`${lessonOrigin}/teaching/oidc/callback?code=invalid-fixture-code&state=unmatched-fixture-state`);
-        await expect(page.getByRole('alert')).toBeVisible();
-        await expect(page.getByTestId('lesson-user')).toHaveCount(0);
+        await checkCallbackState({ page, providerLogin, playwright, broker: false });
         break;
       }
       case 'oidc:cross-protocol-provider-rejection': {
@@ -153,9 +229,7 @@ async function runcheckOidc(browser, name, playwright) {
         break;
       }
       case 'oidc:broker-state-rejection': {
-        await page.goto('https://shop.magic.test:9643/realms/lesson-oidc/broker/lesson-oidc/endpoint?state=unmatched-fixture-state&code=invalid-fixture-code');
-        await expect(page.locator('#kc-error-message')).toBeVisible();
-        await expect(page.getByTestId('lesson-user')).toHaveCount(0);
+        await checkCallbackState({ page, providerLogin, playwright, broker: true });
         break;
       }
     }

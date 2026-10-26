@@ -1,0 +1,4 @@
+interface:
+  display_name: "OIDC Testing"
+  short_description: "Assess, build, and run OIDC tests in containers"
+  default_prompt: "Use $oidc-testing to assess this project's OIDC testing readiness and explain how to run its tests in containers."

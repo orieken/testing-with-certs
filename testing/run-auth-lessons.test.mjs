@@ -31,7 +31,11 @@ case "$*" in
   *"playwright.auth-lessons.config.mjs"*) exit "\${PROBE_FAIL:-0}";;
 esac
 `, { mode: 0o755 });
-    const result = spawnSync('/bin/sh', [join(root, 'testing/run-auth-lessons.sh')], {
+    if (options.PROBE_STALE_REPORTS === '1') {
+      const reports = join(root, 'artifacts/auth-lessons/magic-shop-auth-probe');
+      mkdirSync(reports, { recursive: true }); writeFileSync(join(reports, 'old.json'), '{}');
+    }
+    const result = spawnSync('/bin/sh', [join(root, 'testing/run-auth-lessons.sh'), ...(options.PROBE_OIDC_ONLY === '1' ? ['oidc'] : [])], {
       encoding: 'utf8', timeout: 10_000,
       env: { ...process.env, PATH: `${root}/bin:/usr/bin:/bin`, PROBE_ROOT: root,
         LAB_PROJECT: 'magic-shop-auth-probe', ...options },
@@ -163,5 +167,33 @@ for (const runner of ['PW', 'CUCUMBER']) test(`Kerberos lifecycle ${runner} fail
   assert.match(result.calls, /auth-lesson-fixture finish/);
   assert.match(result.calls, /auth-lesson-fixture verify/);
   assert.match(result.calls, /--profile \* down --volumes --remove-orphans/);
+  assert.doesNotMatch(result.calls, /LAB_BROWSER=msedge/);
+});
+
+test('focused OIDC runs every baseline/lifecycle browser/runner and applies only the scoped gates', () => {
+  const result = run({ PROBE_OIDC_ONLY: '1' });
+  assert.equal(result.status, 0);
+  for (const browser of ['chrome', 'msedge']) assert.match(result.calls, new RegExp(`LAB_BROWSER=${browser}`));
+  assert.equal((result.calls.match(/playwright.auth-lessons.config.mjs/g) ?? []).length, 4);
+  assert.equal((result.calls.match(/cucumber-js/g) ?? []).length, 4);
+  assert.equal((result.calls.match(/auth-lesson-fixture start-oidc-lifecycle/g) ?? []).length, 4);
+  assert.equal((result.calls.match(/auth-lesson-fixture finish/g) ?? []).length, 9);
+  assert.match(result.calls, /check-auth-matrix.mjs oidc/);
+  assert.match(result.calls, /auth-recording-index.mjs oidc/);
+  assert.doesNotMatch(result.calls, /kerberos-disable|lesson-kdc|LAB_LIFECYCLE_METHOD=passkeys/);
+});
+
+test('focused OIDC refuses stale artifacts before startup', () => {
+  const result = run({ PROBE_OIDC_ONLY: '1', PROBE_STALE_REPORTS: '1' });
+  assert.equal(result.status, 2);
+  assert.doesNotMatch(result.calls, /startup|down|fixture/);
+});
+
+test('focused OIDC failure preserves status and cleans the project without entering another browser', () => {
+  const result = run({ PROBE_OIDC_ONLY: '1', PROBE_FAIL: '17' });
+  assert.equal(result.status, 17);
+  assert.match(result.calls, /auth-lesson-fixture finish/);
+  assert.match(result.calls, /auth-lesson-fixture verify/);
+  assert.match(result.calls, /down --volumes --remove-orphans/);
   assert.doesNotMatch(result.calls, /LAB_BROWSER=msedge/);
 });

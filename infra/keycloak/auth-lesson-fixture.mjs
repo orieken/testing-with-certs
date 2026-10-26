@@ -32,6 +32,7 @@ const specs = [
   { username: 'passkeys-test-other', target: 'local', requiredActions: ['webauthn-register-passwordless'] },
   { username: 'passkeys-test-disabled', target: 'local', enabled: false },
   ...['expiry', 'refresh', 'logout', 'binding', 'session-expiry'].map(kind => ({ username: `oidc-test-${kind}`, target: 'provider' })),
+  ...['upstream-rp-logout', 'upstream-session-revoked', 'upstream-token-revoked', 'upstream-revocation-broker-boundary'].map(kind => ({ username: `oidc-test-${kind}`, target: 'provider' })),
   ...['oidc', 'saml'].flatMap(method => [
     { username: `${method}-test-user`, target: 'provider' },
     { username: `${method}-test-disabled`, target: 'provider', enabled: false },

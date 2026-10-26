@@ -74,9 +74,9 @@ for (const method of ['oidc', 'saml']) {
   const protocol = `${providerOrigin}/realms/${providerRealm}/protocol`;
   const config = method === 'oidc' ? {
     clientId: 'lesson-oidc-broker', clientSecret, authorizationUrl: `${protocol}/openid-connect/auth`,
-    tokenUrl: `${protocol}/openid-connect/token`, userInfoUrl: `${protocol}/openid-connect/userinfo`,
+    tokenUrl: 'https://shop.magic.test:9843/keycloak/token', userInfoUrl: `${protocol}/openid-connect/userinfo`,
     logoutUrl: `${protocol}/openid-connect/logout`, issuer: `${providerOrigin}/realms/${providerRealm}`,
-    jwksUrl: `${protocol}/openid-connect/certs`, validateSignature: 'true', useJwksUrl: 'true',
+    jwksUrl: 'https://shop.magic.test:9843/keycloak/jwks', disableNonce: 'false', allowedClockSkew: '0', validateSignature: 'true', useJwksUrl: 'true',
     pkceEnabled: 'true', pkceMethod: 'S256', defaultScope: 'openid profile email',
   } : {
     singleSignOnServiceUrl: `${protocol}/saml`, singleLogoutServiceUrl: `${protocol}/saml`,

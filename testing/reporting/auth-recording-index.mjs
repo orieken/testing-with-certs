@@ -2,11 +2,11 @@ import assert from 'node:assert/strict';
 import { readdirSync, readFileSync, writeFileSync, statSync, lstatSync, existsSync } from 'node:fs';
 import { join, relative, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { authPhases, otpPhases } from '../teaching/auth-matrix.mjs';
+import { authPhases, oidcPhases, otpPhases } from '../teaching/auth-matrix.mjs';
 import { checks } from './password-results.mjs';
 
 export function indexAuthRecordings(suite, root) {
-  assert.ok(['auth-lessons', 'password-otp', 'certificate-password'].includes(suite));
+  assert.ok(['auth-lessons', 'oidc', 'password-otp', 'certificate-password'].includes(suite));
   root = resolve(root);
   const expected = new Map();
   const add = (browser, runner, phase, method, name, status) => {
@@ -14,7 +14,7 @@ export function indexAuthRecordings(suite, root) {
     assert.ok(!expected.has(key)); expected.set(key, false);
   };
   for (const browser of ['chrome', 'msedge']) {
-    if (suite === 'auth-lessons') for (const [phase, names] of Object.entries(authPhases)) {
+    if (suite === 'auth-lessons' || suite === 'oidc') for (const [phase, names] of Object.entries(suite === 'oidc' ? oidcPhases : authPhases)) {
       const report = JSON.parse(readFileSync(join(root, `${browser}-${phase}`, 'results.json')));
       assert.equal(report.evidence, 'live-authentication-lessons'); assert.equal(report.browser, browser); assert.equal(report.phase, phase);
       assert.deepEqual(report.cases.map(v => v.name).sort(), [...names].sort());

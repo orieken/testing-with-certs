@@ -26,6 +26,7 @@ RUN /work/testing/node_modules/.bin/playwright install ffmpeg && chmod -R a+rX /
 COPY packages/saturday-keycloak/ /work/packages/saturday-keycloak/
 RUN cd /work/packages/saturday-keycloak && /work/packages/saturday-keycloak/node_modules/.bin/tsc -p tsconfig.json
 COPY testing/ testing/
+COPY infra/oidc-token-fixture/cases.mjs /work/infra/oidc-token-fixture/cases.mjs
 RUN cd /work/testing && /work/testing/node_modules/.bin/tsc -p tsconfig.runtime.json
 COPY contracts/ contracts/
 COPY seed/identities.json seed/identities.json

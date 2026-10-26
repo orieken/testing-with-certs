@@ -2,18 +2,18 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { authPhases, otpPhases } from '../teaching/auth-matrix.mjs';
+import { authPhases, oidcPhases, otpPhases } from '../teaching/auth-matrix.mjs';
 
 export function checkAuthMatrix(suite, root) {
-  assert.ok(['auth-lessons', 'password-otp'].includes(suite), 'Unknown authentication suite');
-  const phases = suite === 'auth-lessons' ? authPhases : otpPhases;
+  assert.ok(['auth-lessons', 'oidc', 'password-otp'].includes(suite), 'Unknown authentication suite');
+  const phases = suite === 'oidc' ? oidcPhases : suite === 'auth-lessons' ? authPhases : otpPhases;
   let count = 0;
   for (const browser of ['chrome', 'msedge']) for (const [phase, expected] of Object.entries(phases)) {
     const selection = `${browser}-${phase}`;
     const report = JSON.parse(readFileSync(join(root, selection, 'results.json'), 'utf8'));
-    assert.equal(report.evidence, suite === 'auth-lessons' ? 'live-authentication-lessons' : 'live-password-otp', 'Wrong evidence provenance');
+    assert.equal(report.evidence, suite !== 'password-otp' ? 'live-authentication-lessons' : 'live-password-otp', 'Wrong evidence provenance');
     assert.equal(report.browser, browser, 'Wrong browser');
-    if (suite === 'auth-lessons') assert.equal(report.phase, phase, 'Wrong phase');
+    if (suite !== 'password-otp') assert.equal(report.phase, phase, 'Wrong phase');
     else {
       assert.equal(report.runner, phase.split('-')[0], 'Wrong runner');
       assert.equal(report.phase, phase.endsWith('-lifecycle') ? 'lifecycle' : 'baseline', 'Wrong OTP phase');
@@ -31,5 +31,5 @@ export function checkAuthMatrix(suite, root) {
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const count = checkAuthMatrix(process.argv[2], process.argv[3]);
-  console.log(`Authentication matrix complete: ${count}/${count} required cases passed`);
+  console.log(`${process.argv[2]} matrix complete: ${count}/${count} required cases passed`);
 }

@@ -23,7 +23,8 @@ if state.exists():
 member, _ = Group.objects.get_or_create(name='lesson-member')
 users = []
 for method in ['oidc', 'saml']:
-    for kind in ['member', 'no-group', 'disabled', 'access-expiry-clears-identity', 'refresh-preserves-identity', 'logout-invalidates-refresh', 'refresh-client-binding', 'session-expiry-rejects-refresh', 'group-withdrawal']:
+    session_kinds = ['upstream-rp-logout', 'upstream-session-revoked', 'upstream-token-revoked', 'upstream-revocation-broker-boundary'] if method == 'oidc' else []
+    for kind in session_kinds + ['member', 'no-group', 'disabled', 'access-expiry-clears-identity', 'refresh-preserves-identity', 'logout-invalidates-refresh', 'refresh-client-binding', 'session-expiry-rejects-refresh', 'group-withdrawal']:
         username = f'ak-{method}-{kind}'
         if User.objects.filter(username=username).exists():
             raise RuntimeError('Refusing to adopt a pre-existing account')
@@ -41,10 +42,12 @@ if admin:
     admin.save()
 common = dict(authentication_flow=authentication, authorization_flow=authorization, invalidation_flow=invalidation)
 scope, _ = ScopeMapping.objects.get_or_create(name='Lesson groups', defaults=dict(scope_name='lesson', expression='return {"lesson_groups": [group.name for group in request.user.ak_groups.all()]}'))
-oidc, _ = OAuth2Provider.objects.get_or_create(name='Lesson OIDC', defaults=dict(**common, client_id='authentik-oidc-broker', client_secret=Path('/ak-secrets/broker-secret').read_text().strip(), client_type='confidential', grant_types=['authorization_code','refresh_token'], signing_key=key, issuer_mode='per_provider', include_claims_in_id_token=True))
+broker_secret = Path('/ak-secrets/broker-secret').read_text().strip()
+oidc, _ = OAuth2Provider.objects.get_or_create(name='Lesson OIDC', defaults=dict(**common, client_id='authentik-oidc-broker', client_secret=broker_secret, client_type='confidential', grant_types=['authorization_code','refresh_token'], signing_key=key, issuer_mode='per_provider', include_claims_in_id_token=True))
 oidc._redirect_uris = [dict(matching_mode='strict', url=f'{broker}/realms/lesson-authentik-oidc/broker/authentik-oidc/endpoint'), dict(matching_mode='strict',url=f'{broker}/realms/lesson-authentik-oidc/broker/authentik-oidc/endpoint/logout_response',redirect_uri_type='logout')]
 oidc.save()
-oidc.property_mappings.set(list(ScopeMapping.objects.filter(managed__in=['goauthentik.io/providers/oauth2/scope-openid','goauthentik.io/providers/oauth2/scope-profile','goauthentik.io/providers/oauth2/scope-email']))+[scope])
+Path('/ak-fixture/oidc-key-baseline.json').write_text(json.dumps(dict(key=str(oidc.signing_key_id))))
+oidc.property_mappings.set(list(ScopeMapping.objects.filter(managed__in=['goauthentik.io/providers/oauth2/scope-openid','goauthentik.io/providers/oauth2/scope-profile','goauthentik.io/providers/oauth2/scope-email','goauthentik.io/providers/oauth2/scope-offline_access']))+[scope])
 Application.objects.get_or_create(slug='lesson-oidc', defaults=dict(name='Lesson OIDC',provider=oidc,policy_engine_mode='all'))
 saml_group, _ = SAMLPropertyMapping.objects.get_or_create(name='Lesson SAML groups', defaults=dict(saml_name='lesson_groups', expression='return [group.name for group in request.user.ak_groups.all()]'))
 username = SAMLPropertyMapping.objects.get(managed='goauthentik.io/providers/saml/username')
@@ -53,6 +56,9 @@ saml.property_mappings.set([saml_group,username])
 Application.objects.get_or_create(slug='lesson-saml', defaults=dict(name='Lesson SAML',provider=saml,policy_engine_mode='all'))
 state.write_text(json.dumps(users))
 os.chmod(state,0o600)
+client_secret = Path('/ak-fixture/oidc-client-secret')
+client_secret.write_text(broker_secret)
+os.chmod(client_secret,0o600)
 control = Path('/ak-fixture/control-secret')
 control.write_text(secrets.token_urlsafe(48))
 os.chmod(control,0o600)

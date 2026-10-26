@@ -20,6 +20,9 @@ mkdir -p "$LAB_AUTH_REPORT_DIR"
 chmod 0777 "$LAB_AUTH_REPORT_DIR"
 cleanup(){
  result=$?;trap - EXIT
+ compose exec -T authentik-control ak shell -c "exec(open('/fixtures/restore_keys.py').read())" >/dev/null 2>&1 || result=1
+ compose exec -T oidc-key-control node /infra/oidc-token-fixture/restore-keys.mjs || result=1
+ compose exec -T oidc-token-fixture node /fixture/verify.mjs || result=1
  compose --profile '*' down --volumes --remove-orphans --timeout 10 || result=1
  for kind in containers volumes networks;do
   case "$kind" in
@@ -57,6 +60,7 @@ for browser in chrome msedge;do
  compose run --rm --no-deps -e "LAB_BROWSER=$browser" authentik-tests sh -c 'cd /work/testing && ./node_modules/.bin/cucumber-js --import cucumber/authentik.mjs cucumber/features/authentik.feature --format ./reporting/authentik-cucumber.mjs --order random'
  docker volume rm "${LAB_PROJECT}_auth-lesson-home" "${LAB_PROJECT}_auth-lesson-tmp" >/dev/null
 done
+compose exec -T oidc-key-control node /infra/oidc-token-fixture/verify-keys.mjs
 compose exec -T authentik-control ak shell -c "exec(open('/fixtures/verify.py').read())" >/dev/null 2>&1
 echo 'Authentik lifecycle group membership restored and verified.' | tee "$LAB_AUTH_REPORT_DIR/lifecycle-cleanup.txt"
 compose run --rm --no-deps authentik-tests node /work/testing/reporting/check-authentik.mjs /work/artifacts/auth-lessons

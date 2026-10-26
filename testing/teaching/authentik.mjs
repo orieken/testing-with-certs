@@ -2,6 +2,17 @@ import {readFileSync} from 'node:fs';
 import {expect} from '@playwright/test';
 import {withAuthRecording} from './auth-recording.mjs';
 import {checkAuthentikLifecycle} from './authentik-lifecycle.mjs';
+import {checkUpstreamSessions} from './oidc-sessions.mjs';
+import {upstreamSessionCases} from './oidc-session-cases.mjs';
+import {checkRefreshRotation} from './oidc-refresh.mjs';
+import {refreshCaseNames} from './oidc-refresh-cases.mjs';
+import {authorizeAuthentik} from './authentik-boundaries.mjs';
+import {checkJwksLifecycle} from './oidc-jwks.mjs';
+import {jwksCaseNames} from '../../infra/oidc-token-fixture/cases.mjs';
+import {checkUpstreamIdToken} from './oidc-upstream.mjs';
+import {checkOidcRecovery} from './oidc-recovery.mjs';
+import {oidcRecoveryKinds} from './oidc-recovery-cases.mjs';
+import {checkAuthentikBoundary,captureCallback} from './authentik-boundaries.mjs';
 import {authentikCaseNames,authentikLifecycleCaseNames} from './provider-matrix.mjs';
 const shop='https://shop.magic.test:8543', broker='https://shop.magic.test:9643';
 
@@ -12,7 +23,7 @@ export async function checkAuthentik(browser,name,playwright){
  return withAuthRecording(browser,playwright,name,method,async recorded=>{
   const context=await recorded.newContext({ignoreHTTPSErrors:false});
   const page=await context.newPage();
-  const accountKind=lifecycle?kind:kind==='no-group'?'no-group':kind==='disabled-user'?'disabled':'member';
+  const accountKind=lifecycle||upstreamSessionCases.includes(kind)?kind:kind==='no-group'?'no-group':kind==='disabled-user'?'disabled':'member';
   const user=JSON.parse(readFileSync('/ak-fixture/users.json')).find(u=>u.method===method.replace('authentik-','')&&u.kind===accountKind);
   if(!user)throw new Error('Missing owned authentik account');
   const endpoint=`${broker}/realms/lesson-${method}/protocol/openid-connect/token`;
@@ -54,6 +65,45 @@ export async function checkAuthentik(browser,name,playwright){
   try{
    if(lifecycle){
     await checkAuthentikLifecycle({kind,method,page,context,user,login,validate,logout,counters,recorded});
+    expect([...external]).toEqual([]);return;
+   }
+   if(method==='authentik-oidc'&&upstreamSessionCases.includes(kind)){
+    await checkUpstreamSessions({kind,provider:'authentik',page,context,username:user.username,
+     authorize:()=>authorizeAuthentik({page,identify,upstream:true,mark:()=>{},refresh:true}),
+     login:()=>login(),validateBroker:tokens=>validate(tokens),mark:value=>{stage=`session-${value}`;}});
+    expect([...external]).toEqual([]);return;
+   }
+   if(method==='authentik-oidc'&&refreshCaseNames.includes(kind)){
+    await checkRefreshRotation({kind,provider:'authentik',page,context,
+     authorize:upstream=>authorizeAuthentik({page,identify,upstream,mark:()=>{},refresh:true}),
+     validate:async(tokens,upstream)=>{
+      if(!upstream)return validate(tokens);
+      const value=JSON.parse(Buffer.from(tokens.id_token.split('.')[1],'base64url').toString());
+      expect(value.iss).toBe('https://shop.magic.test:9743/application/o/lesson-oidc/');
+      expect([value.aud].flat()).toContain('authentik-oidc-broker');expect(value.preferred_username).toBe(user.username);
+      const response=await context.request.get('https://shop.magic.test:9743/application/o/userinfo/',{headers:{authorization:`Bearer ${tokens.access_token}`}});
+      expect(response.status()).toBe(200);expect((await response.json()).sub===value.sub).toBe(true);
+     },mark:value=>{stage=`refresh-${value}`;}});
+    expect([...external]).toEqual([]);return;
+   }
+   if(method==='authentik-oidc'&&jwksCaseNames.includes(kind)){
+    await checkJwksLifecycle({kind,page,context,provider:'authentik',tokenEndpoint:endpoint,login:()=>login(),
+     attempt:async()=>{await begin();await identify();},mark:value=>{stage=`keys-${value}`;}});
+    expect([...external]).toEqual([]);return;
+   }
+   if(method==='authentik-oidc'&&kind.startsWith('upstream-id-token-')){
+    await checkUpstreamIdToken({kind,page,context,provider:'authentik',tokenEndpoint:endpoint,login:()=>login(),
+     attempt:async()=>{await begin();await identify();},mark:value=>{stage=`upstream-${value}`;}});
+    expect([...external]).toEqual([]);return;
+   }
+   if(method==='authentik-oidc'&&oidcRecoveryKinds.includes(kind)){
+    await checkOidcRecovery({kind,page,method,tokenEndpoint:endpoint,attempt:async()=>{await begin();await identify();},
+     recover:()=>login(true),capture:handle=>captureCallback(page,`${shop}/teaching/${method}/callback`,handle),
+     mark:value=>{stage=`recovery-${value}`;}});
+    expect([...external]).toEqual([]);return;
+   }
+   if(method==='authentik-oidc'&&(['callback-state','broker-state'].includes(kind)||/^(app|upstream)-/.test(kind))){
+    await checkAuthentikBoundary({kind,page,context,user,begin,identify,login,logout,accepted,validate,mark:value=>{stage=`boundary-${value}`;}});
     expect([...external]).toEqual([]);return;
    }
    if(kind==='invalid-signature')await page.route('**/realms/lesson-authentik-saml/broker/authentik-saml/endpoint',async route=>{

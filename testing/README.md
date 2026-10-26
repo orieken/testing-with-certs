@@ -1,5 +1,7 @@
 # Testing workspace
 
+See [How OIDC testing works](../docs/oidc-testing.md) for the controlled provider/broker flow, dependencies, shared checks, run commands, reports, and cleanup. Run the focused 188-execution matrix with `LAB_PROJECT=magic-shop-auth-oidc-example-01 sh testing/run-auth-lessons.sh oidc` from the repository root, using a fresh project name.
+
 The live teaching examples use one Saturday `MagicShop` site with page, element and certificate-login flow models in `site/`. Playwright Test and Cucumber call the same setup/interactions, while each runner keeps its own readable business assertions. The local `saturday-keycloak-prototype` fixture/hooks select one mounted identity and both exact HTTPS origins. Only real Chrome and Edge are configured; server validation remains on.
 
 Run from the repository root after `./lab up`:

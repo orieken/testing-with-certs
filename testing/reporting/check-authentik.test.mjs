@@ -20,13 +20,14 @@ function fixture(root){
 test('authentik gate requires complete passing real-provider selections and safe recordings',()=>{
  const root=mkdtempSync(join(tmpdir(),'authentik-gate-'));
  try{
-  fixture(root);assert.deepEqual(checkAuthentikEvidence(root),{cases:104,videos:104,selections:16});
+  fixture(root);assert.deepEqual(checkAuthentikEvidence(root),{cases:252,videos:252,selections:16});
   const file=join(root,'chrome-playwright/results.json'),original=readFileSync(file);
   for(const mutate of [r=>r.cases.pop(),r=>r.cases[0].status='failed',r=>r.evidence='mock-provider',r=>r.browser='msedge',r=>r.cases[1]=r.cases[0]]){
    const report=JSON.parse(original);mutate(report);writeFileSync(file,JSON.stringify(report));assert.throws(()=>checkAuthentikEvidence(root));
   }
   writeFileSync(file,original);
-  const recording=join(root,'recordings/chrome-playwright-lifecycle/authentik-oidc/14/recording.json');
+  const lifecycleIndex=authentikCaseNames.indexOf('authentik-oidc:access-expiry-clears-identity');
+  const recording=join(root,`recordings/chrome-playwright-lifecycle/authentik-oidc/${lifecycleIndex}/recording.json`);
   const saved=readFileSync(recording);
   for(const mutate of [r=>r.phase='baseline',r=>r.spec='teaching/authentik.mjs',r=>r.privacy='visible-provider',r=>r.status='failed']){
    const record=JSON.parse(saved);mutate(record);writeFileSync(recording,JSON.stringify(record));assert.throws(()=>checkAuthentikEvidence(root));
@@ -37,7 +38,7 @@ test('authentik gate requires complete passing real-provider selections and safe
 test('both runners enumerate every required authentik scenario exactly once',()=>{
  const feature=readFileSync(new URL('../cucumber/features/authentik.feature',import.meta.url),'utf8');
  const names=[...feature.matchAll(/\| (authentik-[^ |]+) \|/g)].map(m=>m[1]);
- assert.deepEqual(names.sort(),[...authentikCaseNames].sort());assert.equal(new Set(names).size,26);
+ assert.deepEqual(names.sort(),[...authentikCaseNames].sort());assert.equal(new Set(names).size,63);
 });
 
 test('provider progress forwarding accepts only fixed credential-free events',()=>{

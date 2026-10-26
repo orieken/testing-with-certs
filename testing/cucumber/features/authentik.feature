@@ -3,6 +3,14 @@ Feature: Independent authentik OIDC and SAML brokers
     Given the authentik check "<name>" passes
     Examples:
       | name |
+      | authentik-oidc:upstream-rp-logout |
+      | authentik-oidc:upstream-session-revoked |
+      | authentik-oidc:upstream-token-revoked |
+      | authentik-oidc:upstream-revocation-broker-boundary |
+      | authentik-oidc:app-refresh-rotation |
+      | authentik-oidc:app-refresh-reuse |
+      | authentik-oidc:upstream-refresh-rotation |
+      | authentik-oidc:upstream-refresh-reuse |
       | authentik-oidc:login-group |
       | authentik-oidc:no-group |
       | authentik-oidc:wrong-password |
@@ -17,6 +25,14 @@ Feature: Independent authentik OIDC and SAML brokers
       | authentik-saml:logout-isolation |
       | authentik-saml:invalid-signature |
       | authentik-oidc:broker-state |
+      | authentik-oidc:app-wrong-verifier |
+      | authentik-oidc:app-missing-verifier |
+      | authentik-oidc:app-replay |
+      | authentik-oidc:app-redirect |
+      | authentik-oidc:upstream-wrong-verifier |
+      | authentik-oidc:upstream-missing-verifier |
+      | authentik-oidc:upstream-replay |
+      | authentik-oidc:upstream-redirect |
       | authentik-oidc:access-expiry-clears-identity |
       | authentik-oidc:refresh-preserves-identity |
       | authentik-oidc:logout-invalidates-refresh |
@@ -29,3 +45,24 @@ Feature: Independent authentik OIDC and SAML brokers
       | authentik-saml:refresh-client-binding |
       | authentik-saml:session-expiry-rejects-refresh |
       | authentik-saml:group-withdrawal |
+      | authentik-oidc:authorization-cancelled |
+      | authentik-oidc:callback-interrupted |
+      | authentik-oidc:provider-unavailable |
+      | authentik-oidc:token-unavailable |
+      | authentik-oidc:token-interrupted |
+      | authentik-oidc:logout-unavailable |
+      | authentik-oidc:upstream-id-token-signed-control |
+      | authentik-oidc:upstream-id-token-signature |
+      | authentik-oidc:upstream-id-token-unknown-key |
+      | authentik-oidc:upstream-id-token-issuer |
+      | authentik-oidc:upstream-id-token-audience |
+      | authentik-oidc:upstream-id-token-authorized-party |
+      | authentik-oidc:upstream-id-token-expired |
+      | authentik-oidc:upstream-id-token-not-yet-valid |
+      | authentik-oidc:upstream-id-token-nonce |
+      | authentik-oidc:upstream-id-token-missing-nonce |
+      | authentik-oidc:signing-key-native-rotation |
+      | authentik-oidc:jwks-cached-key-outage |
+      | authentik-oidc:jwks-uncached-key-outage |
+      | authentik-oidc:jwks-malformed-response |
+      | authentik-oidc:jwks-empty-response |

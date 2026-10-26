@@ -11,6 +11,53 @@ services:
       - kerberos-server-keytab:/kerberos:ro
     depends_on:
       lesson-kdc: {condition: service_healthy}
+  oidc-token-fixture-init:
+    image: magic-shop-realm-bootstrap:04
+    user: "0:0"
+    entrypoint: [node, /fixture/init.mjs]
+    network_mode: none
+    volumes:
+      - ./oidc-token-fixture:/fixture:ro
+      - oidc-token-fixture-state:/state
+  oidc-token-fixture:
+    image: magic-shop-realm-bootstrap:04
+    user: "1000:1000"
+    entrypoint: [node, /fixture/server.mjs]
+    environment:
+      NODE_EXTRA_CA_CERTS: /trust/server-ca.pem
+    volumes:
+      - ./oidc-token-fixture:/fixture:ro
+      - oidc-token-fixture-state:/state:ro
+      - public-trust:/trust:ro
+    networks: [auth]
+    depends_on:
+      oidc-token-fixture-init: {condition: service_completed_successfully}
+      pki: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:9102/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+  oidc-key-control:
+    image: magic-shop-realm-bootstrap:04
+    user: "1000:1000"
+    entrypoint: [node, /infra/oidc-token-fixture/key-control.mjs]
+    environment:
+      NODE_EXTRA_CA_CERTS: /trust/server-ca.pem
+    volumes:
+      - ./:/infra:ro
+      - oidc-token-fixture-state:/state
+      - auth-secret-admin:/secrets/admin:ro
+      - public-trust:/trust:ro
+    networks: [auth]
+    depends_on:
+      oidc-token-fixture-init: {condition: service_completed_successfully}
+      lesson-provider: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:9103/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
   lesson-provider:
     build:
       context: ..
@@ -92,6 +139,7 @@ services:
       - public-trust:/public:ro
       - cert-customer-waterdeep:/identity-customer:ro
       - auth-lesson-secrets:/test-secrets:ro
+      - oidc-token-fixture-state:/oidc-fixture:ro
       - saml-fixture-key:/saml-fixture:ro
       - auth-lesson-home:/home/runner
       - auth-lesson-tmp:/tmp
@@ -120,6 +168,7 @@ services:
     depends_on:
       auth-lesson-setup: {condition: service_completed_successfully}
 volumes:
+  oidc-token-fixture-state: {}
   saml-fixture-key: {}
   lesson-provider-data: {}
   kerberos-state: {}
