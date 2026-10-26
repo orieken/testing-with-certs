@@ -1,5 +1,9 @@
 # Agent handoff: add certificate-authentication tests to another project
 
+For one prompt covering assessment, implementation, and container verification,
+use the [Keycloak, OIDC, and mTLS starter prompt](container-auth-testing-starter-prompt.md).
+Use the numbered sequence below when you want to review each adoption stage separately.
+
 This is a copyable sequence for agents working in a **target repository**. The Magic Shop is a reference implementation, not a template to paste wholesale. Its architecture, exact commands, and observed results are documented in [architecture](architecture.md), [workflows](workflows.md), [authentication](authentication.md), [test plan](test-plan.md), [OpenAPI contracts](api-contracts.md), [manual browser](manual-browser.md), [operator guide](operator-guide.md), and [completion notes](completion/). Read those sources before adapting a step. Historical completion notes describe this lab's Apple Silicon amd64-emulation observations. Native GitHub Linux contracts, security and all eight real-browser selections passed together on the second run, but report upload failed; later runs passed upload but intermittently crashed in Cucumber. The [CI continuation](completion/12-native-linux-ci.md) records the current status. Native manual viewer/operator paths remain unverified.
 
 ## How this reference works
