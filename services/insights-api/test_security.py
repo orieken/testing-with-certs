@@ -66,6 +66,21 @@ class SignedSecurityTests(unittest.TestCase):
         self.keys['second'] = public_jwk(second, 'second')
         self.assertEqual(server.authorize(signed(second, 'second'), SUB), SUB)
 
+    def test_rfc8705_certificate_thumbprint_binding(self):
+        thumb = base64.urlsafe_b64encode(bytes([7]) * 32).rstrip(b'=').decode()
+        forwarded = base64.b64encode(bytes([7]) * 32).decode()
+        token = signed(self.first, 'first', azp='shop-spa-rfc8705', cnf={'x5t#S256': thumb})
+        self.assertEqual(server.authorize(token, SUB, forwarded), SUB)
+        for wrong in ['', base64.b64encode(bytes([9]) * 32).decode(), forwarded + ',' + forwarded]:
+            self.assert_status(401, lambda: server.authorize(token, SUB, wrong))
+        for cnf in [None, {}, [], {'x5t#S256': 123}, {'x5t#S256': 'short'}]:
+            bad = signed(self.first, 'first', azp='shop-spa-rfc8705', cnf=cnf)
+            self.assert_status(401, lambda: server.authorize(bad, SUB, forwarded))
+        missing = signed(self.first, 'first', azp='shop-spa-rfc8705')
+        self.assert_status(401, lambda: server.authorize(missing, SUB, forwarded))
+        optional = signed(self.first, 'first', cnf={'x5t#S256': thumb})
+        self.assert_status(401, lambda: server.authorize(optional, SUB))
+
     def test_signed_service_scope_and_caller(self):
         base = {'aud': 'customer-api', 'azp': 'insights-reporting', 'cert_identity': None, 'scope': 'openid reporting.read'}
         server.authorize_spec_service(signed(self.first, 'first', **base))

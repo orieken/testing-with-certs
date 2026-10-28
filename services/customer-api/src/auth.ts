@@ -42,11 +42,16 @@ export class AccessTokenVerifier {
       throw new AuthFailure(401);
     }
   }
-  async authenticate(raw: string, caller: string, certificateIdentity: string): Promise<Identity> {
+  async authenticate(raw: string, caller: string, certificateIdentity: string, certificateThumbprint = ''): Promise<Identity> {
   const value = await this.claims(raw);
   if (value.typ !== 'Bearer') throw new AuthFailure(403);
   if (caller === 'gateway') {
-    if (value.azp !== 'shop-spa' || typeof value.cert_identity !== 'string' || value.cert_identity !== certificateIdentity || !validSub(value.sub)) throw new AuthFailure(403);
+    const confirmation = value.cnf;
+    if (value.azp === 'shop-spa-rfc8705' || confirmation !== undefined) {
+      const thumb = confirmation && typeof confirmation === 'object' && 'x5t#S256' in confirmation ? confirmation['x5t#S256'] : null;
+      if (typeof thumb !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(thumb) || Buffer.from(thumb, 'base64url').toString('base64url') !== thumb || certificateThumbprint !== Buffer.from(thumb, 'base64url').toString('base64')) throw new AuthFailure(401);
+    }
+    if (!['shop-spa', 'shop-spa-rfc8705'].includes(String(value.azp)) || typeof value.cert_identity !== 'string' || value.cert_identity !== certificateIdentity || !validSub(value.sub)) throw new AuthFailure(403);
     const access = value.realm_access;
     const roles = access && typeof access === 'object' && 'roles' in access ? access.roles : null;
     if (!Array.isArray(roles)) throw new AuthFailure(403);
@@ -66,8 +71,8 @@ const verifier = new AccessTokenVerifier(async () => {
   if (response.status !== 200 || !response.body || typeof response.body !== 'object' || !('keys' in response.body) || !Array.isArray(response.body.keys)) throw new Error('JWKS unavailable');
   return response.body as JSONWebKeySet;
 });
-export async function authenticate(raw: string, caller: string, certificateIdentity: string): Promise<Identity> {
-  return verifier.authenticate(raw, caller, certificateIdentity);
+export async function authenticate(raw: string, caller: string, certificateIdentity: string, certificateThumbprint = ''): Promise<Identity> {
+  return verifier.authenticate(raw, caller, certificateIdentity, certificateThumbprint);
 }
 export async function catalogQuote(lines: Array<{ itemId: string; quantity: number }>): Promise<{ status: number; body: unknown }> {
   const secret = readFileSync('/service-secret/client-secret', 'utf8').trim();

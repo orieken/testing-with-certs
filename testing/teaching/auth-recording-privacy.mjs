@@ -1,10 +1,10 @@
 import { chromium, expect } from '@playwright/test';
 import { installRecordingPrivacy } from './auth-recording.mjs';
-import { mkdtempSync, rmSync, readdirSync, readFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, readdirSync, readFileSync } from 'node:fs';
 import { inflateSync } from 'node:zlib';
 import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
-const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const browser = await chromium.launch({ channel: process.env.LAB_BROWSER ?? 'chrome', headless: process.env.LAB_RECORDING_HEADED !== '1' });
 const directory = mkdtempSync('/tmp/privacy-recording-');
 try {
   const context = await browser.newContext({ viewport: { width: 640, height: 360 }, recordVideo: { dir: directory, size: { width: 640, height: 360 } } });
@@ -17,7 +17,9 @@ try {
   await expect(page.getByLabel('Probe credential')).toHaveValue('synthetic-private-value');
   await expect(page.locator('body')).toHaveCSS('opacity', '0');
   await page.waitForTimeout(500);
-  await page.screenshot({ path: '/work/artifacts/auth-lessons/privacy-screen.png' });
+  const output = process.env.LAB_RECORDING_PRIVACY_DIR ?? '/work/artifacts/auth-lessons';
+  mkdirSync(output, { recursive: true });
+  await page.screenshot({ path: `${output}/privacy-screen.png` });
   await context.close();
   const cache = process.env.PLAYWRIGHT_BROWSERS_PATH;
   const decoders = readdirSync(cache).filter(value => value.startsWith('ffmpeg-'));

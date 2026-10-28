@@ -98,6 +98,72 @@
     "config": {"kc.user.profile.config": ["{\"attributes\":[{\"name\":\"username\",\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\"]}},{\"name\":\"email\",\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\"]}},{\"name\":\"cert_identity\",\"multivalued\":false,\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\"]}}]}"]}
   }]},
   "clients": [{
+  "clientId": "shop-spa-rfc8705",
+  "publicClient": true,
+  "standardFlowEnabled": true,
+  "directAccessGrantsEnabled": false,
+  "implicitFlowEnabled": false,
+  "serviceAccountsEnabled": false,
+  "redirectUris": [
+    "https://shop.magic.test:8443/callback"
+  ],
+  "webOrigins": [
+    "https://shop.magic.test:8443"
+  ],
+  "attributes": {
+    "pkce.code.challenge.method": "S256",
+    "post.logout.redirect.uris": "https://shop.magic.test:8443/",
+    "tls.client.certificate.bound.access.tokens": "true"
+  },
+  "authenticationFlowBindingOverrides": {
+    "browser": "certificate-browser"
+  },
+  "protocolMappers": [
+    {
+      "name": "certificate-identity",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-usermodel-attribute-mapper",
+      "config": {
+        "user.attribute": "cert_identity",
+        "claim.name": "cert_identity",
+        "jsonType.label": "String",
+        "multivalued": "false",
+        "access.token.claim": "true",
+        "id.token.claim": "false"
+      }
+    },
+    {
+      "name": "catalog-audience",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-audience-mapper",
+      "config": {
+        "included.custom.audience": "catalog-api",
+        "access.token.claim": "true",
+        "id.token.claim": "false"
+      }
+    },
+    {
+      "name": "customer-audience",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-audience-mapper",
+      "config": {
+        "included.custom.audience": "customer-api",
+        "access.token.claim": "true",
+        "id.token.claim": "false"
+      }
+    },
+    {
+      "name": "insights-audience",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-audience-mapper",
+      "config": {
+        "included.custom.audience": "insights-api",
+        "access.token.claim": "true",
+        "id.token.claim": "false"
+      }
+    }
+  ]
+}, {
     "clientId": "shop-spa",
     "publicClient": true,
     "standardFlowEnabled": true,

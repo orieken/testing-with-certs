@@ -233,6 +233,11 @@ EOF
     chmod 0600 /out/negative/key.pem
     echo "Issued isolated $kind $mode validity fixture."
     ;;
+  binding-pair)
+    [[ ${LAB_RFC8705_FIXTURE:-} == yes && -d /out/binding-admin ]] || { echo 'Isolated RFC 8705 fixture flag and output volume required' >&2; exit 2; }
+    issue user binding-admin "${identity[shop-admin]}" clientAuth
+    echo 'Issued second valid admin leaf for RFC 8705 binding checks.'
+    ;;
   verify)
     openssl verify -purpose sslserver -verify_hostname shop.magic.test -CAfile /public/server-ca.pem /out/shop/cert.pem
     openssl verify -purpose sslserver -verify_hostname auth.magic.test -CAfile /public/server-ca.pem /out/auth/cert.pem

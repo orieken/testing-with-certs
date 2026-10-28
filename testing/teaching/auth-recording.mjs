@@ -1,3 +1,4 @@
+import { browserCases as rfc8705Cases } from '../rfc8705/cases.mjs';
 import { authentikCaseNames, authentikPhase } from './provider-matrix.mjs';
 import { mkdirSync, renameSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash, randomUUID } from 'node:crypto';
@@ -6,7 +7,7 @@ import { authPhases, otpCaseNames, otpSessionCaseNames } from './auth-matrix.mjs
 
 const certificateCases = ['success', 'wrong-password', 'missing', 'wrong', 'disabled', 'unknown', 'unconfigured', 'cookies', 'shop'];
 export function recordingSelection(name, method) {
-  const allowed = method.startsWith('authentik-') ? authentikCaseNames.filter(name => name.startsWith(`${method}:`)) : method === 'password-totp' ? [...otpCaseNames, ...otpSessionCaseNames] :
+  const allowed = method === 'rfc8705' ? rfc8705Cases : method.startsWith('authentik-') ? authentikCaseNames.filter(name => name.startsWith(`${method}:`)) : method === 'password-totp' ? [...otpCaseNames, ...otpSessionCaseNames] :
     method === 'certificate-password' ? certificateCases : Object.values(authPhases).flat().filter(value => value.startsWith(`${method}:`));
   if (!allowed.includes(name)) throw new Error('Unknown recording case');
   const browser = process.env.LAB_BROWSER;
@@ -14,7 +15,7 @@ export function recordingSelection(name, method) {
   const runner = process.argv.some(value => value.includes('cucumber')) ? 'cucumber' : 'playwright';
   const phase = method.startsWith('authentik-') ? authentikPhase(name) : method === 'password-totp' ? (process.env.LAB_OTP_LIFECYCLE === '1' ? 'lifecycle' : 'baseline') :
     process.env.LAB_AUTH_SUITE?.endsWith('-lifecycle') ? 'lifecycle' : process.env.LAB_KERBEROS_DISABLED === '1' ? 'disabled' : 'baseline';
-  const root = `/work/artifacts/${method === 'password-totp' ? 'password-otp' : method === 'certificate-password' ? 'certificate-password-ci' : 'auth-lessons'}`;
+  const root = `/work/artifacts/${method === 'rfc8705' ? 'rfc8705' : method === 'password-totp' ? 'password-otp' : method === 'certificate-password' ? 'certificate-password-ci' : 'auth-lessons'}`;
   return { name, method, browser, runner, phase, root };
 }
 
@@ -74,7 +75,7 @@ export async function withAuthRecording(browser, playwright, name, method, run) 
     if (!videos.length) throw new Error('Authentication recording missing');
     writeFileSync(join(directory, 'recording.json'), JSON.stringify({ evidence: 'live-authentication-recording',
       auth_type: method, name, browser: selection.browser, runner: selection.runner, phase: selection.phase, status,
-      spec: method.startsWith('authentik-') ? `teaching/authentik${authentikPhase(name)==='lifecycle'?'-lifecycle':''}.mjs` : `teaching/${method === 'password-totp' ? 'password-otp' : method}.mjs`, videos: videos.map(value => value.split('\\').join('/')),
+      spec: method === 'rfc8705' ? 'rfc8705/browser.spec.mjs' : method.startsWith('authentik-') ? `teaching/authentik${authentikPhase(name)==='lifecycle'?'-lifecycle':''}.mjs` : `teaching/${method === 'password-totp' ? 'password-otp' : method}.mjs`, videos: videos.map(value => value.split('\\').join('/')),
       privacy: 'provider-document-hidden-before-paint',
     }, null, 2));
   }

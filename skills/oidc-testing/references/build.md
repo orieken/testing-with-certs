@@ -44,3 +44,5 @@ Add one supported orchestration entrypoint covering build, startup, fixtures, te
 Filter reports to safe case identifiers and outcomes. Treat token endpoint responses and browser/network traces as credential-bearing. If recording real journeys, hide provider documents before capture or omit credential screens. Verify the privacy mechanism as well as the tests.
 
 Run meaningful source checks and live selections as available. For a claimed full matrix, require every expected case, browser, runner, and phase with matching provenance. Document exact commands, prerequisites, expected output, artifact location, and limits. If external credentials or unavailable infrastructure block live execution, finish the implementation and report that limitation explicitly.
+
+When reference-style VNC containers, all scenario recordings and the matrix report are requested, apply [recorded container requirements](recorded-container-tests.md). Console-only focused runs are development evidence until the required desktop, recordings, report and completeness/privacy gates are implemented and verified.

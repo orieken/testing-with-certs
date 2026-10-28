@@ -1,6 +1,6 @@
 ---
 name: oidc-testing
-description: Assess OIDC test readiness, build missing live authentication tests, or run and troubleshoot container-based OIDC suites. Use for application login, federation, token/session boundaries, and isolated test fixtures; not for generic authentication advice or mock-only API testing.
+description: Assess OIDC test readiness, build missing live authentication tests, or run and troubleshoot container-based OIDC suites. Use for application login, federation, token/session boundaries, mTLS certificate boundaries, and isolated test fixtures; also supports requested multi-project authentication inventories and recorded-container test plans. Not for generic authentication advice or mock-only API testing.
 ---
 
 # OIDC testing
@@ -16,6 +16,10 @@ Infer the mode from the request. If the request spans modes, assess first and co
 - **Run:** Execute or explain container tests and diagnose failures. Read [run guidance](references/run.md). An explanation request does not require starting containers.
 
 Read [the working reference](references/working-reference.md) when comparing topology, fixtures, test coverage, or container commands with `orieken/testing-with-certs`. It describes a specific implementation, not a mandatory architecture. Read [starter prompts](references/starter-prompts.md) when the user needs an invocation to reuse.
+
+Read [mTLS guidance and helpers](references/mtls.md) when certificates participate in login, OAuth client authentication, token binding, or service transport. Identify which mechanism is implemented before choosing assertions.
+
+For explicitly requested folder-wide authentication discovery and planning, read [project-folder assessment](references/project-folder-assessment.md). Inventory other mechanisms without applying OIDC assumptions to them. When the user requests reference-style VNC containers, all scenario videos or matrix reports, read [recorded container requirements](references/recorded-container-tests.md); include those deliverables in the plan and implementation acceptance criteria.
 
 ## Shared decisions and boundaries
 

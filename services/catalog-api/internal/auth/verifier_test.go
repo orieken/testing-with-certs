@@ -154,3 +154,36 @@ func TestSignedClaimAndServiceScopeBoundaries(t *testing.T) {
 		t.Fatal("service token without catalog.quote accepted")
 	}
 }
+
+func TestCertificateThumbprintBinding(t *testing.T) {
+	bytes := make([]byte, 32)
+	for i := range bytes {
+		bytes[i] = 7
+	}
+	thumb := base64.RawURLEncoding.EncodeToString(bytes)
+	forwarded := base64.StdEncoding.EncodeToString(bytes)
+	claims := jwt.MapClaims{"azp": "shop-spa-rfc8705", "typ": "Bearer", "cert_identity": "selected", "realm_access": map[string]any{"roles": []any{"customer"}}, "cnf": map[string]any{"x5t#S256": thumb}}
+	if err := Authorize(claims, "gateway", "selected", forwarded); err != nil {
+		t.Fatal(err)
+	}
+	for _, wrong := range []string{"", base64.StdEncoding.EncodeToString(make([]byte, 32)), forwarded + "," + forwarded} {
+		if err := Authorize(claims, "gateway", "selected", wrong); err == nil {
+			t.Fatal("accepted mismatched certificate thumbprint")
+		}
+	}
+	for _, confirmation := range []any{nil, "wrong", map[string]any{}, map[string]any{"x5t#S256": 123}, map[string]any{"x5t#S256": "short"}} {
+		claims["cnf"] = confirmation
+		if err := Authorize(claims, "gateway", "selected", forwarded); err == nil {
+			t.Fatal("accepted invalid confirmation")
+		}
+	}
+	delete(claims, "cnf")
+	if err := Authorize(claims, "gateway", "selected", forwarded); err == nil {
+		t.Fatal("bound client accepted missing confirmation")
+	}
+	claims["azp"] = "shop-spa"
+	claims["cnf"] = map[string]any{"x5t#S256": thumb}
+	if err := Authorize(claims, "gateway", "selected"); err == nil {
+		t.Fatal("optional binding ignored")
+	}
+}

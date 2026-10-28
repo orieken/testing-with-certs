@@ -31,3 +31,5 @@ Deliver:
 5. Existing runnable commands, or the precise missing dependencies that prevent execution.
 
 For an empty project, mark framework/provider choices unresolved and propose a minimal disposable setup. Ask only for choices that materially affect implementation; continue inspection and independent preparation while waiting.
+
+For a folder of projects, follow [project-folder assessment](project-folder-assessment.md). For requested VNC/video/report parity, use [recorded container requirements](recorded-container-tests.md) and include the existing suite's missing evidence in the gap list.

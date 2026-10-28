@@ -71,3 +71,22 @@ test('service capability requires the matching caller and exact scope', async ()
   }
   await assert.rejects(() => verifier.authenticate(good, 'gateway', sub), rejectsStatus(403));
 });
+
+test('RFC 8705 requires signed cnf and the exact gateway certificate thumbprint', async () => {
+  const active = await key('binding');
+  const verifier = new AccessTokenVerifier(async (): Promise<JSONWebKeySet> => ({ keys: [active.publicJwk] }));
+  const thumb = Buffer.alloc(32, 7).toString('base64url');
+  const forwarded = Buffer.alloc(32, 7).toString('base64');
+  const sign = (cnf: unknown, azp = 'shop-spa-rfc8705') => new SignJWT({ typ: 'Bearer', azp, cert_identity: sub, realm_access: { roles: ['customer'] }, ...(cnf === undefined ? {} : { cnf }) })
+    .setProtectedHeader({ alg: 'RS256', kid: 'binding' }).setSubject(sub).setIssuer(issuer).setAudience('customer-api').setIssuedAt(now).setExpirationTime(now + 120).sign(active.privateKey);
+  const valid = await sign({ 'x5t#S256': thumb });
+  assert.equal((await verifier.authenticate(valid, 'gateway', sub, forwarded)).sub, sub);
+  for (const wrong of ['', Buffer.alloc(32, 9).toString('base64'), `${forwarded},${forwarded}`]) {
+    await assert.rejects(verifier.authenticate(valid, 'gateway', sub, wrong), rejectsStatus(401));
+  }
+  for (const cnf of [undefined, null, {}, [], { 'x5t#S256': 123 }, { 'x5t#S256': 'short' }]) {
+    await assert.rejects(verifier.authenticate(await sign(cnf), 'gateway', sub, forwarded), rejectsStatus(401));
+  }
+  // Even an optional binding on the existing client cannot be ignored.
+  await assert.rejects(verifier.authenticate(await sign({ 'x5t#S256': thumb }, 'shop-spa'), 'gateway', sub, ''), rejectsStatus(401));
+});

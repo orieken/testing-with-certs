@@ -99,3 +99,5 @@ TEST-06/09: [Mokapi reporting sequence commands](../testing/faults/reporting/REA
 TEST-10: [real regional boundary commands](../testing/regional/README.md). Run `LAB_PROJECT=magic-shop-regional-example ./testing/regional/run.sh` from the repository root for isolated real-auth provider checks and 16 recorded Chrome/Edge Playwright/Cucumber journeys. Exact evidence and retained limits are in [completion 24](completion/24-regional-reporting-boundaries.md).
 
 [TEST-04 completion](completion/25-pr-base-contract-evidence.md) reconciles current versus historical evidence and records actual committed-base PR acceptance/rejection. [TEST-11 completion](completion/26-independent-ci-evidence.md) records native independent consumer/fault/regional jobs and reports, including deliberate-failure cleanup and aggregate rejection.
+
+[Recorded RFC 8705 acceptance](completion/70-rfc8705-recorded-vnc.md) adds headed Chrome/Edge in VNC containers, six recorded browser scenarios plus six API-only checks, ten page videos and the existing portable matrix gallery with verified playback and cleanup.

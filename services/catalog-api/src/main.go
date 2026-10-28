@@ -111,7 +111,11 @@ func (a *api) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if public {
 		identity = r.Header.Get("X-Cert-Identity")
 	}
-	claims, err := a.verify.Verify(r.Context(), raw, caller, identity)
+	thumbprint := ""
+	if public && len(r.Header.Values("X-Cert-Thumbprint")) == 1 {
+		thumbprint = r.Header.Get("X-Cert-Thumbprint")
+	}
+	claims, err := a.verify.Verify(r.Context(), raw, caller, identity, thumbprint)
 	if err != nil {
 		if errors.Is(err, auth.ErrForbidden) {
 			fail(w, 403, "forbidden")

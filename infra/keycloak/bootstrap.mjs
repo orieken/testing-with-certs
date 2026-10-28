@@ -256,6 +256,21 @@ async function ensureScopesAndClients(token) {
       attributes: { ...spaDetail.attributes, 'post.logout.redirect.uris': 'https://shop.magic.test:8443/' },
     }, [204]);
   }
+  const boundSpec = template.clients.find(value => value.clientId === 'shop-spa-rfc8705');
+  const boundListing = (await call('GET', `${root}/clients?clientId=shop-spa-rfc8705&max=2`, token)).data;
+  assert(boundListing.length <= 1, 'Ambiguous RFC 8705 client');
+  if (boundListing.length === 0) {
+    await call('POST', `${root}/clients`, token, { ...boundSpec, authenticationFlowBindingOverrides: { browser: shopFlow.id } }, [201]);
+  }
+  const bound = (await call('GET', `${root}/clients?clientId=shop-spa-rfc8705&max=2`, token)).data;
+  const detail = (await call('GET', `${root}/clients/${bound[0].id}`, token)).data;
+  assert(detail.publicClient === true && detail.standardFlowEnabled === true &&
+    detail.directAccessGrantsEnabled === false && detail.implicitFlowEnabled === false && detail.serviceAccountsEnabled === false &&
+    detail.authenticationFlowBindingOverrides?.browser === shopFlow.id &&
+    detail.attributes?.['tls.client.certificate.bound.access.tokens'] === 'true' &&
+    detail.attributes?.['pkce.code.challenge.method'] === 'S256' &&
+    JSON.stringify(detail.redirectUris) === JSON.stringify(boundSpec.redirectUris) &&
+    JSON.stringify(detail.webOrigins) === JSON.stringify(boundSpec.webOrigins), 'RFC 8705 client drift');
   console.log('SPA and scoped service clients verified.');
 }
 

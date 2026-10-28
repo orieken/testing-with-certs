@@ -121,7 +121,7 @@ func (v *Verifier) key(ctx context.Context, kid string) (*rsa.PublicKey, error) 
 	v.missKid = ""
 	return key, nil
 }
-func (v *Verifier) Verify(ctx context.Context, raw, caller, certIdentity string) (jwt.MapClaims, error) {
+func (v *Verifier) Verify(ctx context.Context, raw, caller, certIdentity string, thumbprints ...string) (jwt.MapClaims, error) {
 	if len(raw) < 20 || len(raw) > 16_384 {
 		return nil, errors.New("token length invalid")
 	}
@@ -136,14 +136,23 @@ func (v *Verifier) Verify(ctx context.Context, raw, caller, certIdentity string)
 	if err != nil || !token.Valid {
 		return nil, errors.New("invalid access token")
 	}
-	if err = Authorize(claims, caller, certIdentity); err != nil {
+	if err = Authorize(claims, caller, certIdentity, thumbprints...); err != nil {
 		return nil, err
 	}
 	return claims, nil
 }
-func Authorize(claims jwt.MapClaims, caller, certIdentity string) error {
+func Authorize(claims jwt.MapClaims, caller, certIdentity string, thumbprints ...string) error {
 	if caller == "gateway" {
-		if certIdentity == "" || claims["cert_identity"] != certIdentity || claims["azp"] != "shop-spa" || claims["typ"] != "Bearer" {
+		confirmation, present := claims["cnf"]
+		if claims["azp"] == "shop-spa-rfc8705" || present {
+			cnf, ok := confirmation.(map[string]any)
+			thumb, valid := cnf["x5t#S256"].(string)
+			decoded, err := base64.RawURLEncoding.Strict().DecodeString(thumb)
+			if !ok || !valid || err != nil || len(decoded) != 32 || len(thumbprints) != 1 || base64.StdEncoding.EncodeToString(decoded) != thumbprints[0] {
+				return errors.New("invalid certificate-bound access token")
+			}
+		}
+		if certIdentity == "" || claims["cert_identity"] != certIdentity || (claims["azp"] != "shop-spa" && claims["azp"] != "shop-spa-rfc8705") || claims["typ"] != "Bearer" {
 			return ErrForbidden
 		}
 		access, ok := claims["realm_access"].(map[string]any)

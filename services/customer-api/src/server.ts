@@ -71,7 +71,8 @@ async function handle(req: IncomingMessage, res: ServerResponse, store: Store, s
   if (!socket.authorized || (publicRoute && caller !== 'gateway') || (privateRoute && caller !== 'insights-api')) throw new ApiError(403);
   const raw = bearer(req); if (!raw) throw new ApiError(401);
   const identityHeader = req.headersDistinct['x-cert-identity'];
-  const identity = await authenticate(raw, caller ?? '', publicRoute && identityHeader?.length === 1 ? identityHeader[0]! : '');
+  const thumbs = req.headersDistinct['x-cert-thumbprint'];
+  const identity = await authenticate(raw, caller ?? '', publicRoute && identityHeader?.length === 1 ? identityHeader[0]! : '', publicRoute && thumbs?.length === 1 ? thumbs[0]! : '');
   if (privateRoute) {
     if (!identity.service) throw new ApiError(403);
     if (path === '/internal/openapi.json') {

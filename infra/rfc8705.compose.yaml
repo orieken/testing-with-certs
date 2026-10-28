@@ -1,0 +1,28 @@
+# Only the dedicated disposable acceptance workflow mounts the second valid leaf.
+services:
+  pki:
+    environment:
+      LAB_RFC8705_FIXTURE: yes
+    volumes:
+      - cert-binding-admin:/out/binding-admin
+  runner-security:
+    volumes:
+      - cert-shop-admin:/identity-admin:ro
+      - cert-binding-admin:/identity-renewed:ro
+  rfc8705-tests:
+    extends:
+      file: compose.yaml
+      service: runner-security
+    profiles: [test]
+    command: [sh, /work/testing/container/rfc8705-desktop.sh, sh, /work/testing/rfc8705/run-desktop.sh]
+    environment:
+      LAB_BROWSER: ${LAB_BROWSER:-chrome}
+      LAB_RFC8705_FORCE_FAILURE: ${LAB_RFC8705_FORCE_FAILURE:-0}
+    ports:
+      - "127.0.0.1:${LAB_RFC8705_VIEWER_PORT:-6086}:6080"
+    volumes:
+      - cert-shop-admin:/identity-admin:ro
+      - cert-binding-admin:/identity-renewed:ro
+      - ${LAB_RFC8705_REPORT_DIR:?Set RFC 8705 report directory}:/work/artifacts/rfc8705
+volumes:
+  cert-binding-admin: {}

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import base64
+
 import hashlib
 import http.client
 import json
@@ -68,7 +70,7 @@ def signing_keys() -> dict[str, Any]:
     return _jwks
 
 
-def authorize(token: str, identity: str) -> str:
+def authorize(token: str, identity: str, thumbprint: str = '') -> str:
     if not 20 <= len(token) <= 16384:
         raise ApiError(401, 'invalid_token')
     try:
@@ -88,9 +90,14 @@ def authorize(token: str, identity: str) -> str:
         raise
     except (jwt.PyJWTError, ValueError, TypeError, KeyError) as exc:
         raise ApiError(401, 'invalid_token') from exc
+    if claims.get('azp') == 'shop-spa-rfc8705' or 'cnf' in claims:
+        confirmation = claims.get('cnf')
+        thumb = confirmation.get('x5t#S256') if isinstance(confirmation, dict) else None
+        if not isinstance(thumb, str) or not re.fullmatch(r'[A-Za-z0-9_-]{43}', thumb) or base64.urlsafe_b64encode(base64.urlsafe_b64decode(thumb + '=')).rstrip(b'=').decode() != thumb or thumbprint != base64.b64encode(base64.urlsafe_b64decode(thumb + '=')).decode():
+            raise ApiError(401, 'invalid_token')
     access = claims.get('realm_access')
     roles = access.get('roles', []) if isinstance(access, dict) else []
-    if claims.get('typ') != 'Bearer' or claims.get('azp') != 'shop-spa' or claims.get('cert_identity') != identity or not SUB.fullmatch(str(claims.get('sub'))) or not isinstance(roles, list) or 'shop-admin' not in roles:
+    if claims.get('typ') != 'Bearer' or claims.get('azp') not in ('shop-spa', 'shop-spa-rfc8705') or claims.get('cert_identity') != identity or not SUB.fullmatch(str(claims.get('sub'))) or not isinstance(roles, list) or 'shop-admin' not in roles:
         raise ApiError(403, 'forbidden')
     return claims['sub']
 
@@ -248,7 +255,8 @@ class Handler(BaseHTTPRequestHandler):
                 authorize_spec_service(values[0][7:])
                 author = ''
             else:
-                author = authorize(values[0][7:], identities[0] if len(identities) == 1 else '')
+                thumbs = self.headers.get_all('x-cert-thumbprint', [])
+                author = authorize(values[0][7:], identities[0] if len(identities) == 1 else '', thumbs[0] if len(thumbs) == 1 else '')
             query = parse_qs(parsed.query, keep_blank_values=True)
             if any(len(values) != 1 for values in query.values()):
                 raise ApiError(400, 'invalid_request')

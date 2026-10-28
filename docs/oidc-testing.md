@@ -598,3 +598,40 @@ The separate [authentik boundary acceptance](completion/62-authentik-callback-pk
 [Baseline runner parity](completion/39-oidc-cucumber.md) and [session/refresh acceptance](completion/45-oidc-session-refresh.md) record previous local and native Linux runs, exact sources, browser versions, cleanup results, and failed attempts. Their combined-suite totals describe those historical sources; use the current executable matrix for today's combined inventory.
 
 The suite establishes controlled Keycloak-to-Keycloak federation and broker-token/session behavior. It does not establish organizational or cloud-provider compatibility, upstream refresh-token revocation, every provider SSO policy, or a forced upstream password prompt after access-token expiry. Those need their own provider-specific evidence.
+
+## Certificate login and mTLS workflow
+
+The certificate-free lesson above and the certificate-authenticated shop have different transport contracts. For a focused real shop workflow, run from the repository root:
+
+```sh
+LAB_PROJECT=magic-shop-mtls-example-01 sh testing/run-oidc-mtls.sh
+```
+
+Use a fresh project name. This builds/starts a disposable stack, checks verified mTLS with successful controls around missing-client/wrong-CA/wrong-hostname rejection, runs real Chrome X.509 authorization with PKCE and signed token checks, then runs the API security suite. Teardown removes only the chosen project and verifies no project-labeled containers, volumes or networks remain. Terminal output contains case results; the workflow deliberately saves no token responses or recordings. Docker image/package access is needed when builds are not cached.
+
+This validates application `cert_identity` matching and gateway/service transport, not RFC 8705 certificate-thumbprint binding or OAuth mTLS client authentication. It is not the full OIDC federation/browser/runner matrix. Reusable guidance and helper APIs are in the versioned [OIDC skill’s mTLS reference](../skills/oidc-testing/references/mtls.md).
+
+[Focused mTLS workflow acceptance](completion/68-oidc-mtls-skill.md) records real Chrome login, 12/12 API security tests, helper checks and verified cleanup, with the exact scope and limits.
+
+### RFC 8705 certificate-bound access tokens
+
+Run the extended acceptance selection:
+
+```sh
+LAB_PROJECT=magic-shop-mtls-rfc8705-example-01 sh testing/run-oidc-mtls.sh rfc8705
+```
+
+The dedicated public client `shop-spa-rfc8705` uses Keycloak's `tls.client.certificate.bound.access.tokens=true` setting, exact callbacks and PKCE. The original shop client remains available. The dedicated client requires a signed `cnf.x5t#S256` claim matching the SHA-256 hash of the DER leaf used at token issuance. This is token binding for a public client, not OAuth confidential-client mTLS authentication.
+
+HAProxy replaces `X-Cert-Thumbprint` with the SHA-256 hash of the verified browser certificate, encoded as standard base64. APIs accept this assertion only over the existing gateway-authenticated mTLS connection and compare it against the verified token's base64url thumbprint. A missing/malformed binding for the dedicated client, a mismatch, or an invalid forwarded thumbprint returns 401. Identity, roles, issuer, audience, signature and time validation still apply. A `cnf` claim on an original-client user token is also enforced when present.
+
+The overlay creates a second valid, separately keyed admin certificate with the same identity. Each certificate obtains its own real-provider token and succeeds at catalog, customer and insights APIs. Cross-presenting either token with the other certificate returns 401 at all three APIs, including when the caller spoofs the original thumbprint header. Successful controls after rejection show that both certificates and tokens remain usable with their matching counterpart. The selection also tests a valid bound token without a client certificate and reruns the 12-case security regression suite.
+
+The RFC 8705 selection now runs three API-only checks and three recorded browser scenarios per channel in Chrome and Edge. The headed browsers run on the VNC container’s Xvfb display, with loopback-only noVNC access on port 6086 by default. Provider documents are hidden before paint, and a decoded-frame privacy check runs in each channel. Browser authorization uses a test-owned callback capture with the shop adapter suppressed; private code exchange and signed-token checks remain test-owned. This is not an end-to-end test of a new product UI. Browser scenarios navigate real API resources, including certificate-substitution and missing-certificate failures. Every executed browser scenario retains its clips on pass or failure; API-only cases receive structured assertion evidence. Traces and credential responses are excluded. [Acceptance evidence](completion/69-rfc8705-certificate-bound-tokens.md) records local results and limits. For interruption recovery, use the exact project name with both `-f infra/compose.yaml -f infra/rfc8705.compose.yaml` when running Compose `down --volumes --remove-orphans`, so the extra certificate volume is included.
+
+
+The recorded selection saves its local report under `artifacts/rfc8705/PROJECT/`. Open `index.html` for scenario/API evidence and `matrix.html` for the existing filterable video gallery. A complete passing selection also produces a portable `site/index.html`, using the same Go matrix exporter as the other reports. JSON/JUnit results, run/source identity, privacy checks, cleanup receipts and Chrome/Edge video playback results accompany the clips. Incomplete runs retain a failure report and available recordings; they cannot produce a passing portable site.
+
+To watch while tests run, open `http://localhost:6086/vnc.html`. In a second terminal, obtain the private viewer password with `docker exec PROJECT-viewer cat /tmp/viewer-password`, replacing `PROJECT` with the exact disposable project name. The same viewer container name is reused sequentially for Chrome and Edge and exists only during that selection. Override `LAB_RFC8705_VIEWER_PORT` if the local port is occupied. Viewer credentials stay out of artifacts.
+
+For report/recording implementation and observed acceptance, see [recorded RFC 8705 acceptance](completion/70-rfc8705-recorded-vnc.md). This is a local report; the workflow does not deploy or publish it.
