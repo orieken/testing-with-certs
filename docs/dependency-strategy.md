@@ -154,3 +154,13 @@ run during the container build. The resolved insights OpenAPI bundle and local
 GeoJSON fixture are packaged in the image. The authenticated private served
 bundle digest and live responses are compared with repository-expected artifacts
 by Playwright. No host Python installation or package publication is required.
+
+On 2026-10-28, CI for `091098c` exposed another live-index rollover: the
+full-stack runner's Chrome, CA certificate, Expat and OpenSSL pins were no longer
+available. The lock now selects Chrome `156.0.8078.73-1`,
+`ca-certificates=20250419~deb12u2`, `libexpat1=2.5.0-1+deb12u5`, and
+`libssl3`/`openssl` at `3.0.22-1~deb12u2`, verified against the signed vendor
+and Debian indexes. Edge remains pinned to the still-available
+`154.0.4258.62-1`. Every other package remains exactly pinned; signature checks,
+TLS verification and refusal of unavailable versions remain enabled. Historical
+video reports retain the browser versions actually used for their own runs.

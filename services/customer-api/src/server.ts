@@ -63,6 +63,11 @@ async function main(): Promise<void> {
   const health = createHttpServer((req, res) => { void store.ready().then(() => { res.writeHead(req.url === '/health/ready' ? 200 : 404); res.end(req.url === '/health/ready' ? 'UP' : 'Not found'); }).catch(() => { res.writeHead(503); res.end('Unavailable'); }); });
   health.requestTimeout = 5_000; health.listen(9000, '127.0.0.1');
 }
+function publicGatewayHeader(req: IncomingMessage, name: string, publicRoute: boolean): string {
+  if (!publicRoute) return '';
+  const values = req.headersDistinct[name];
+  return values?.length === 1 ? values[0]! : '';
+}
 async function handle(req: IncomingMessage, res: ServerResponse, store: Store, spec: Buffer, digest: string): Promise<void> {
   const url = new URL(req.url ?? '/', 'https://customer-api:8443'); const path = url.pathname; const method = req.method ?? '';
   const publicRoute = path.startsWith('/api/customer/'); const privateRoute = path === '/internal/reporting/orders' || path === '/internal/openapi.json';
@@ -70,9 +75,7 @@ async function handle(req: IncomingMessage, res: ServerResponse, store: Store, s
   const socket = req.socket as TLSSocket; const caller = socket.getPeerCertificate().subject?.CN;
   if (!socket.authorized || (publicRoute && caller !== 'gateway') || (privateRoute && caller !== 'insights-api')) throw new ApiError(403);
   const raw = bearer(req); if (!raw) throw new ApiError(401);
-  const identityHeader = req.headersDistinct['x-cert-identity'];
-  const thumbs = req.headersDistinct['x-cert-thumbprint'];
-  const identity = await authenticate(raw, caller ?? '', publicRoute && identityHeader?.length === 1 ? identityHeader[0]! : '', publicRoute && thumbs?.length === 1 ? thumbs[0]! : '');
+  const identity = await authenticate(raw, caller ?? '', publicGatewayHeader(req, 'x-cert-identity', publicRoute), publicGatewayHeader(req, 'x-cert-thumbprint', publicRoute));
   if (privateRoute) {
     if (!identity.service) throw new ApiError(403);
     if (path === '/internal/openapi.json') {

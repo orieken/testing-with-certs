@@ -237,6 +237,10 @@ class Handler(BaseHTTPRequestHandler):
             raise ApiError(400, 'invalid_request')
         return value
 
+    def gateway_header(self, name: str) -> str:
+        values = self.headers.get_all(name, [])
+        return values[0] if len(values) == 1 else ''
+
     def handle_api(self) -> None:
         try:
             parsed = urlsplit(self.path)
@@ -250,13 +254,11 @@ class Handler(BaseHTTPRequestHandler):
             values = self.headers.get_all('authorization', [])
             if len(values) != 1 or not values[0].startswith('Bearer '):
                 raise ApiError(401, 'invalid_token')
-            identities = self.headers.get_all('x-cert-identity', [])
             if path == '/internal/openapi.json':
                 authorize_spec_service(values[0][7:])
                 author = ''
             else:
-                thumbs = self.headers.get_all('x-cert-thumbprint', [])
-                author = authorize(values[0][7:], identities[0] if len(identities) == 1 else '', thumbs[0] if len(thumbs) == 1 else '')
+                author = authorize(values[0][7:], self.gateway_header('x-cert-identity'), self.gateway_header('x-cert-thumbprint'))
             query = parse_qs(parsed.query, keep_blank_values=True)
             if any(len(values) != 1 for values in query.values()):
                 raise ApiError(400, 'invalid_request')
