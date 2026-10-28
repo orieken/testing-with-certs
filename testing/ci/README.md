@@ -63,3 +63,11 @@ write while the GitHub host retains readable files.
 `failureCleanupOutcome` describes the secondary intentional-failure probe step.
 If the primary job is deliberately failed, that secondary step is skipped; the
 independent always-cleanup step and disposal receipt still record resource cleanup.
+
+The Authentik matrix has a 75-minute job budget, matching the protocol lesson
+matrix. On 2026-10-28, the former 35-minute cap canceled passing execution after
+both Chrome runner selections and part of Edge's selection; no scenario had
+reported failure. The complete inventory requires all four browser/runner
+selections, real expiry waits, JWKS refresh cooldowns, recording/privacy gates
+and verified cleanup. Individual test timeouts, retries and full-evidence
+requirements are unchanged. A partial run cannot satisfy acceptance.

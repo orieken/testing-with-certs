@@ -491,7 +491,8 @@ jobs:
   authentik:
     name: Authentik OIDC and SAML in both runners
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    # Four recorded selections include real expiry waits and JWKS refresh cooldowns.
+    timeout-minutes: 75
     env:
       LAB_PROJECT: magic-shop-authentik-ci-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
