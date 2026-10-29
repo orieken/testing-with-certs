@@ -3,7 +3,7 @@ import{readdirSync,lstatSync,readFileSync,writeFileSync,mkdirSync,copyFileSync}f
 import{resolve,join,relative,dirname,extname}from'node:path';
 import{pathToFileURL}from'node:url';
 import{scanArtifacts}from'../container/check-artifacts.mjs';
-export const fullJobNames=['workspace checks','spike checks','catalog-api build','insights-api build','Compose configuration','Native Go operator tests','Complete recorded browser matrix (debian)','Complete recorded browser matrix (ubi9)','Isolated contracts, security and real-browser suites','Native certificate and password teaching matrix','Contract-derived mock consumers (Prism)','Dependency faults (checkout)','Dependency faults (reporting)','Dependency faults (idempotency)','Real-provider regional boundaries','Password and OTP in Chrome/Edge and both runners','All authentication protocols in both runners','Authentik OIDC and SAML in both runners','Require independent live, consumer and fault gates'];
+export const fullJobNames=['workspace checks','spike checks','catalog-api build','insights-api build','Compose configuration','Native Go operator tests','Complete recorded browser matrix (debian)','Complete recorded browser matrix (ubi9)','Isolated contracts, security and real-browser suites','Native certificate and password teaching matrix','Contract-derived mock consumers (Prism)','Dependency faults (checkout)','Dependency faults (reporting)','Dependency faults (idempotency)','Real-provider regional boundaries','Password and OTP in Chrome/Edge and both runners','All authentication protocols in both runners','Authentik OIDC and SAML in both runners','Recorded RFC 8705 in Chrome and Edge','Require independent live, consumer and fault gates'];
 export const publicationJob='Publish verified video matrix';
 export function verifyFullRun(run,{publishing=false,context}={}){
  const publishers=run.jobs.filter(j=>j.name===publicationJob);
@@ -37,13 +37,13 @@ export async function finalizePages(site,evidence,run,options={}){
  writeFileSync(join(site,'test-run.json'),JSON.stringify(provenance,null,2)+'\n');
  const links=entries.map(path=>`<li><a href="../${path.split('/').map(encodeURIComponent).join('/')}">${escape(path)}</a></li>`).join('\n');
  mkdirSync(join(site,'evidence'),{recursive:true});
- writeFileSync(join(site,'evidence/index.html'),`<!doctype html><html lang="en"><meta charset="utf-8"><title>Test evidence</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:20px;line-height:1.6}a{color:#245fbc}</style><h1>Verified native test evidence</h1><p><a href="../index.html">Video matrix</a> · <a href="../test-run.json">Run provenance and job results</a></p><p>All 19 required jobs passed. This publication contains fresh automated evidence; external-account and manual-only scenarios remain deferred.</p><ul>${links}</ul></html>`);
+ writeFileSync(join(site,'evidence/index.html'),`<!doctype html><html lang="en"><meta charset="utf-8"><title>Test evidence</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:20px;line-height:1.6}a{color:#245fbc}</style><h1>Verified native test evidence</h1><p><a href="../index.html">Video matrix</a> · <a href="../test-run.json">Run provenance and job results</a></p><p>All ${fullJobNames.length} required jobs passed. This publication contains fresh automated evidence; external-account and manual-only scenarios remain deferred.</p><ul>${links}</ul></html>`);
  for(const name of ['index.html','matrix.html']){
   const path=join(site,name);let html=readFileSync(path,'utf8');html=html.replace('<body>','<body><nav style="padding:12px 24px;background:#14213b;color:white"><a style="color:white" href="evidence/index.html">Test evidence and CI provenance ↗</a></nav>');writeFileSync(path,html);
  }
  return checkPages(site);
 }
-export async function checkPages(site,expectedSelections=92){
+export async function checkPages(site,expectedSelections=94){
  site=resolve(site);const files=walk(site);let bytes=0;
  for(const file of files){const stat=lstatSync(file);assert.ok(stat.isFile());assert.ok(stat.size<=95_000_000,'Oversized Pages file');bytes+=stat.size;assert.ok(['.html','.json','.md','.webm','.mp4','.xml','.txt',''].includes(extname(file)),'Unapproved Pages file type');}
  assert.ok(bytes<950_000_000,'Pages site exceeds budget');

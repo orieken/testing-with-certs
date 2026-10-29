@@ -61,7 +61,7 @@ writeFileSync(join(root, 'matrix.json'), JSON.stringify({ id: provenance.runId, 
 execFileSync(operator, ['--root', process.cwd(), '--project', 'magic-shop', 'matrix-merge', join(root, 'matrix.json'), join(root, 'recording-matrix.json')], { stdio: 'pipe' });
 writeFileSync(join(root, 'index.html'), `<!doctype html><html lang="en"><meta charset="utf-8"><title>RFC 8705 evidence</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:20px;background:#14213b;color:#edf2ff}a{color:#b7d6ff}li{margin:12px 0}</style><h1>RFC 8705 recorded authentication tests</h1><p>Run: ${provenance.runId} · Scenario inventory and cleanup: ${status}</p><p>Real provider authorization with test-owned callback capture; real browser API navigation. API-only checks have separate structured evidence. Certificate injection; native OS selection is outside this run. Final report playback verification is recorded in playback.json.</p><ul><li><a href="matrix.html">Filterable video matrix</a></li>${['provenance.json', 'evidence.json', 'cleanup.json', ...provenance.selections.flatMap(b => [`${b}/index.html`, `${b}/results.json`, `${b}/junit.xml`, `${b}/privacy.json`])].filter(p => existsSync(join(root, p))).map(p => `<li><a href="${p}">${p}</a></li>`).join('')}</ul>`);
 await scanArtifacts(root, { requireMountedPath: false });
-if (!gaps.length) {
+if (!gaps.length && !process.argv.includes('--index-only')) {
   const site = join(root, 'site');
   execFileSync(operator, ['--root', process.cwd(), '--project', 'magic-shop', 'matrix-site', join(root, 'matrix.json'), site], { stdio: 'pipe' });
   const evidence = join(site, 'evidence'); mkdirSync(evidence);

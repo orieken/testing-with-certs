@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {pathToFileURL} from 'node:url';
-export const artifactFamilies=['browser-debian','browser-ubi9','auth-lessons','password-otp','certificate-password','authentik','magic-shop-reports','evidence-consumer','evidence-checkout','evidence-reporting','evidence-idempotency','evidence-regional'];
+export const artifactFamilies=['browser-debian','browser-ubi9','auth-lessons','password-otp','certificate-password','authentik','rfc8705','magic-shop-reports','evidence-consumer','evidence-checkout','evidence-reporting','evidence-idempotency','evidence-regional'];
 export function selectArtifacts(pages,id,sha,attempt){
  assert.ok(Number.isSafeInteger(id)&&id>0);assert.match(sha,/^[a-f0-9]{40}$/);assert.ok(Number.isSafeInteger(attempt)&&attempt>0);
  const artifacts=pages.flatMap(p=>p.artifacts);

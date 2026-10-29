@@ -8,6 +8,7 @@ import{checkBrowserMatrix}from'./check-browser-matrix.mjs';
 import{checkAuthMatrix}from'./check-auth-matrix.mjs';
 import{indexAuthRecordings}from'./auth-recording-index.mjs';
 import{checkAuthentikEvidence}from'./check-authentik.mjs';
+import{checkNativeRfc8705}from'./native-rfc8705.mjs';
 import{artifactFamilies as families}from'./pages-artifacts.mjs';
 const project=resolve('.'),root=resolve(process.argv[2]),site=resolve(process.argv[5]);
 const run=JSON.parse(readFileSync(process.argv[3])),id=String(run.databaseId);
@@ -19,6 +20,9 @@ for(const os of ['debian','ubi9']){const path=artifacts[`browser-${os}`];const r
 for(const family of ['auth-lessons','password-otp','certificate-password']){const path=artifacts[family];const recordings=indexAuthRecordings(family,path);if(family!=='certificate-password')assert.equal(checkAuthMatrix(family,path),recordings.cases);checks.push({suite:family,...recordings});matrices.push(join(path,'recording-matrix.json'));}
 const authentik=checkAuthentikEvidence(artifacts.authentik);checks.push({suite:'authentik',...authentik,cleanup:readFileSync(join(artifacts.authentik,'cleanup.txt'),'utf8').trim(),lifecycleCleanup:readFileSync(join(artifacts.authentik,'lifecycle-cleanup.txt'),'utf8').trim()});matrices.push(join(artifacts.authentik,'recording-matrix.json'));
 for(const family of families.filter(n=>n.startsWith('evidence-'))){const m=JSON.parse(readFileSync(join(artifacts[family],'manifest.json')));assert.equal(m.runOutcome,'success');assert.equal(m.failureCleanupOutcome,'success');checks.push({suite:family,source:m.source,run:m.runOutcome,failureCleanup:m.failureCleanupOutcome});}
+checks.push(checkNativeRfc8705(artifacts.rfc8705,run,Number(options.context?.attempt||run.attempt||1)));
+execFileSync(process.execPath,['testing/reporting/rfc8705-report.mjs',artifacts.rfc8705,resolve(process.argv[4]),'--index-only'],{stdio:'pipe'});
+matrices.push(join(artifacts.rfc8705,'recording-matrix.json'));
 const combined=join(root,'combined');mkdirSync(combined);const target=join(combined,'matrix.json');writeFileSync(target,JSON.stringify({id:`native-full-${id}-${options.context?.attempt||1}`,status:'passed',passed:0,failed:0,rows:[]}));
 const operator=resolve(process.argv[4]);
 for(const args of [['matrix-merge',target,...matrices],['matrix-site',target,site]])process.stderr.write(execFileSync(operator,['--root',project,'--project','magic-shop',...args],{encoding:'utf8'}));

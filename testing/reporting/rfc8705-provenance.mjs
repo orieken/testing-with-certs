@@ -8,7 +8,8 @@ const hash = createHash('sha256');
 for (const path of new Set(files)) if (lstatSync(path).isFile()) hash.update(path).update('\0').update(readFileSync(path));
 const dirty = execFileSync('git', ['status', '--porcelain']).length > 0;
 writeFileSync(`${process.env.LAB_RFC8705_REPORT_DIR}/provenance.json`, JSON.stringify({
-  evidence: 'local-rfc8705-recorded-run', runId, project: runId, attempt: 1,
+  evidence: process.env.GITHUB_RUN_ID ? 'native-rfc8705-recorded-run' : 'local-rfc8705-recorded-run',
+  workflowRunId: process.env.GITHUB_RUN_ID || null, workflowAttempt: Number(process.env.GITHUB_RUN_ATTEMPT || 1), runId, project: runId, attempt: 1,
   sourceCommit: execFileSync('git', ['rev-parse', 'HEAD']).toString().trim(), sourceDirty: dirty,
   sourceContent: hash.digest('hex'), startedAt: new Date().toISOString(),
   selections: ['chrome', 'msedge'], runner: 'playwright', persona: 'shop-admin', phase: 'baseline',

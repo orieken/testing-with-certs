@@ -608,9 +608,38 @@ jobs:
         if: always()
         run: sh testing/cleanup-certificate-password.sh
 
+  rfc8705:
+    name: Recorded RFC 8705 in Chrome and Edge
+    if: github.event_name == 'workflow_dispatch' && inputs.full_evidence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      LAB_PROJECT: magic-shop-mtls-rfc8705-ci-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Record certificate-bound token acceptance and cross-certificate rejection
+        run: sh testing/run-oidc-mtls.sh rfc8705
+      - name: Upload RFC 8705 recordings and verified evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: rfc8705-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            artifacts/rfc8705/${{ env.LAB_PROJECT }}/
+            !artifacts/rfc8705/${{ env.LAB_PROJECT }}/site/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Always remove owned resources after failure or cancellation
+        if: always()
+        env:
+          LAB_RFC8705_REPORT_DIR: ${{ github.workspace }}/artifacts/rfc8705/${{ env.LAB_PROJECT }}
+        run: docker compose -f infra/compose.yaml -f infra/rfc8705.compose.yaml --profile '*' down --volumes --remove-orphans --timeout 10
+
   evidence-gates:
     name: Require independent live, consumer and fault gates
-    needs: [integration, certificate-password, password-otp, auth-lessons, authentik, consumer, dependency-faults, regional, operator-tests, browser-recordings]
+    needs: [integration, certificate-password, password-otp, auth-lessons, authentik, consumer, dependency-faults, regional, operator-tests, browser-recordings, rfc8705]
     if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 5
