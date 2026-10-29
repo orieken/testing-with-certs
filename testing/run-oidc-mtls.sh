@@ -40,10 +40,15 @@ cleanup() {
     cleanup_status=passed
   else result=1; fi
   if test "$mode" = rfc8705; then
+    # Linux bind mounts retain the container UID and private desktop umask.
+    # Hand only the report directory back to its host owner before indexing.
+    docker run --rm --platform linux/amd64 --network none --user 0:0 --entrypoint chown \
+      -v "$LAB_RFC8705_REPORT_DIR:/report" magic-shop-runner:03 \
+      -R "$(id -u):$(id -g)" /report || result=1
     LAB_CLEANUP_STATUS="$cleanup_status" node --input-type=module -e 'import{writeFileSync}from"node:fs";writeFileSync(`${process.env.LAB_RFC8705_REPORT_DIR}/cleanup.json`,JSON.stringify({status:process.env.LAB_CLEANUP_STATUS,containersAbsent:process.env.LAB_CLEANUP_STATUS==="passed",volumesAbsent:process.env.LAB_CLEANUP_STATUS==="passed",networksAbsent:process.env.LAB_CLEANUP_STATUS==="passed"}));' || result=1
     node testing/reporting/rfc8705-report.mjs "$LAB_RFC8705_REPORT_DIR" artifacts/operator/bin/magic-shop-operator || result=1
     if test -d "$LAB_RFC8705_REPORT_DIR/site"; then
-      docker run --rm --platform linux/amd64 --network none --entrypoint node \
+      docker run --rm --platform linux/amd64 --network none --user "$(id -u):$(id -g)" -e HOME=/tmp --entrypoint node \
         -v "$LAB_RFC8705_REPORT_DIR:/work/artifacts/rfc8705" magic-shop-runner:03 \
         /work/testing/reporting/check-rfc8705-playback.mjs /work/artifacts/rfc8705 || result=1
     fi
