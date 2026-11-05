@@ -48,6 +48,7 @@ TEST-02 now has [native certificate-password evidence](completion/18-native-cert
 14. [Local Go operator CLI/TUI guide](operator-guide.md)
 15. [Agent prompts for adopting certificate tests in another project](agent-adoption-prompts.md)
 16. [Prompt for finishing this repository's native Linux CI](ci-agent-handoff-prompt.md)
+17. [Prompt for building the recorded test evidence report in another project](test-evidence-report-prompt.md)
 
 Execute dependent implementation work in order, except for the user-requested early UI authentication increment before Prompt 05. Prompt 01 proved the Apple Silicon path before this scaffold began; the native Linux automated matrix passed on GitHub Actions, while manual-viewer/operator Linux checks remain unverified. The TODO checkboxes distinguish completed work from unverified work. See [the integrated UI completion note](completion/09-integrated-ui.md) and the earlier [UI auth increment](completion/09-ui-certificate-auth.md).
 
