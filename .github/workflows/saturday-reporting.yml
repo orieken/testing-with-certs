@@ -7,6 +7,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: saturday-reporting-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   standalone:
     runs-on: ubuntu-24.04

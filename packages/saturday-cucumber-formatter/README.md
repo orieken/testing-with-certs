@@ -14,7 +14,7 @@ npm install --save-dev @orieken/saturday-cucumber-formatter @cucumber/cucumber@1
 // cucumber.mjs
 export default {
   import: ['features/steps.mjs'],
-  format: ['progress', '@orieken/saturday-cucumber-formatter'],
+  format: ['progress', '@orieken/saturday-cucumber-formatter:saturday-formatter.log'],
   formatOptions: {
     saturday: { outputDir: 'saturday-report', title: 'Acceptance tests' },
   },
@@ -58,3 +58,5 @@ Passed, failed, skipped, pending, undefined, ambiguous, and unknown statuses are
 Archive the entire output directory for portable playback. Only Saturday-owned output directories can be replaced on a later run.
 
 For credential-sensitive suites, set `includeSteps: false` to omit runner step titles while retaining test results and attachments. Step titles can contain entered values; this option does not redact producer-supplied test names, labels, or media.
+
+Cucumber selects one formatter per output destination. Give this silent formatter a distinct output file when using another stdout formatter; otherwise Cucumber can replace the earlier stdout formatter. The sink file is separate from the generated HTML report.
