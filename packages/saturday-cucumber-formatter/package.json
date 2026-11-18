@@ -1,6 +1,6 @@
 {
   "name": "@orieken/saturday-cucumber-formatter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Saturday HTML reports for ordinary Cucumber.js projects",
   "type": "module",
   "license": "Apache-2.0",
@@ -39,7 +39,7 @@
     "@cucumber/cucumber": "12.9.0"
   },
   "dependencies": {
-    "@orieken/saturday-reporting": "workspace:0.1.0"
+    "@orieken/saturday-reporting": "workspace:0.1.1"
   },
   "peerDependencies": {
     "@cucumber/cucumber": "12.9.0"

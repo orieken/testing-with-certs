@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { assertPublishingContext, integrity, makePlan, names, registryState, releaseVersion } from './reporting-release.mjs';
+import { assertPublishingContext, integrity, makePlan, names, registryState, releaseVersion, runRelease } from './reporting-release.mjs';
 import { checkedRun } from './reporting-release-gate.mjs';
 const manifest = (name, version = '0.1.0') => ({ name: `@orieken/${name}`, version, publishConfig: { access: 'public' }, repository: { url: 'https://github.com/orieken/testing-with-certs.git' }, ...(name === 'saturday-reporting' ? {} : { dependencies: { '@orieken/saturday-reporting': `workspace:${version}` } }) });
 test('release tag, coordinated versions, and core dependencies must agree', () => {
@@ -47,6 +47,26 @@ test('registry errors and immutable-version collisions fail before publication',
   const packages = [{ name: '@orieken/example', version: '0.1.0', integrity: 'sha512-same' }];
   await assert.rejects(registryState(packages, async () => ({ status: 503 })), /Cannot inspect/);
   await assert.rejects(registryState(packages, async () => ({ status: 200, json: async () => ({ dist: { integrity: 'sha512-other' } }) })), /different bytes/);
+});
+test('dry-run retries skip identical published packages and exercise only absent packages', async () => {
+  const packages = names.map(name => ({ name: `@orieken/${name}`, version: '0.1.0', file: `${name}.tgz`, integrity: 'sha512-same' }));
+  const calls = [];
+  const results = await runRelease({ packages, distTag: 'latest' }, '/artifacts', 'dry-run', {
+    request: async url => url.includes('saturday-reporting/') ? { status: 200, json: async () => ({ dist: { integrity: 'sha512-same' } }) } : { status: 404 },
+    execute: (...args) => calls.push(args),
+  });
+  assert.equal(results[0].status, 'already published with matching integrity');
+  assert.equal(calls.length, 2);
+  assert.ok(calls.every(([command, args]) => command === 'npm' && args.includes('--dry-run') && !args.includes('--provenance')));
+  assert.ok(calls.every(([, args]) => args[1] !== '/artifacts/saturday-reporting.tgz'));
+});
+test('a dry-run collision blocks all npm commands before attempting any package', async () => {
+  let called = false;
+  await assert.rejects(runRelease({ packages: names.map(name => ({ name, version: '0.1.0', integrity: 'sha512-same' })) }, '/artifacts', 'dry-run', {
+    request: async () => ({ status: 200, json: async () => ({ dist: { integrity: 'sha512-other' } }) }),
+    execute: () => { called = true; },
+  }), /different bytes/);
+  assert.equal(called, false);
 });
 function fixture(t, brokenDependency = false) {
   const root = mkdtempSync(join(realpathSync(tmpdir()), 'saturday-release-'));

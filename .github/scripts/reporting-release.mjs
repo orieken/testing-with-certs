@@ -60,6 +60,18 @@ export function assertPublishingContext(env) {
   assert.equal(env.GITHUB_EVENT_NAME, 'push');
   assert.match(env.GITHUB_REF ?? '', /^refs\/tags\/saturday-reporting-v/);
 }
+export async function runRelease(plan, directory, command, { request = fetch, execute = execFileSync } = {}) {
+  const packages = await registryState(plan.packages, request);
+  const results = [];
+  for (const item of packages) {
+    if (!item.published) execute('npm', [
+      'publish', join(directory, item.file), '--access', 'public', '--ignore-scripts', '--registry', registry, '--tag', plan.distTag,
+      ...(command === 'dry-run' ? ['--dry-run'] : ['--provenance']),
+    ], { stdio: 'inherit' });
+    results.push({ name: item.name, version: item.version, status: item.published ? 'already published with matching integrity' : command === 'dry-run' ? 'dry run passed' : 'published' });
+  }
+  return results;
+}
 async function main() {
   const [command, folder = 'artifacts/saturday-reporting'] = process.argv.slice(2);
   assert.ok(['plan', 'dry-run', 'publish'].includes(command), 'Usage: reporting-release.mjs plan|dry-run|publish [artifact-directory]');
@@ -73,15 +85,7 @@ async function main() {
   }
   assert.deepEqual(read(planPath), plan, 'Downloaded release artifacts do not match this checkout or plan');
   if (command === 'publish') assertPublishingContext(process.env);
-  const packages = command === 'publish' ? await registryState(plan.packages) : plan.packages.map(item => ({ ...item, published: false }));
-  const results = [];
-  for (const item of packages) {
-    if (!item.published) execFileSync('npm', [
-      'publish', join(directory, item.file), '--access', 'public', '--ignore-scripts', '--registry', registry, '--tag', plan.distTag,
-      ...(command === 'dry-run' ? ['--dry-run'] : ['--provenance']),
-    ], { stdio: 'inherit' });
-    results.push({ name: item.name, version: item.version, status: item.published ? 'already published with matching integrity' : command === 'dry-run' ? 'dry run passed' : 'published' });
-  }
+  const results = await runRelease(plan, directory, command);
   writeFileSync(join(directory, 'publish-results.json'), JSON.stringify(results, null, 2) + '\n');
   if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, `### Saturday npm ${command}\n\n${results.map(item => `- ${item.name}@${item.version}: ${item.status}`).join('\n')}\n`);
 }

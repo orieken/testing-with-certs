@@ -1,6 +1,6 @@
 # Saturday reporting packages
 
-Three initial `0.1.0` packages extract the report presentation into a Node library usable by ordinary projects:
+Three coordinated packages extract the report presentation into a Node library usable by ordinary projects:
 
 | Package | Purpose |
 | --- | --- |
@@ -84,4 +84,4 @@ pnpm --filter @orieken/saturday-playwright-reporter pack --pack-destination ../.
 pnpm --filter @orieken/saturday-cucumber-formatter pack --pack-destination ../../artifacts/saturday-reporting
 ```
 
-Use pnpm to pack: it rewrites workspace dependencies into registry versions. The adapters depend on core `0.1.0`; the tarball integration checks ensure no workspace paths leak into the installed package manifests. Only claim additional Node or runner version ranges after adding and observing their compatibility jobs.
+Use pnpm to pack: it rewrites workspace dependencies into registry versions. The adapters depend on the matching core version; the tarball integration checks ensure no workspace paths leak into the installed package manifests. Only claim additional Node or runner version ranges after adding and observing their compatibility jobs.
