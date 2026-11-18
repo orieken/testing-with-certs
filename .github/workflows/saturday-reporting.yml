@@ -22,6 +22,9 @@ jobs:
           mkdir -p artifacts/saturday-reporting
           chmod 0777 artifacts/saturday-reporting
           docker run --rm -v "$PWD/artifacts/saturday-reporting:/work/artifacts/saturday-reporting" saturday-reporting:ci
+          docker run --rm --network none --user 0:0 --entrypoint chown \
+            -v "$PWD/artifacts/saturday-reporting:/report" saturday-reporting:ci \
+            -R "$(id -u):$(id -g)" /report
       - name: Save package tarballs and verified example report
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
