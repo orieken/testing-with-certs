@@ -64,6 +64,8 @@ The Go operator, provider-specific validators, CI inventories, sanitization gate
 
 ## Release checklist
 
+The [npm deployment guide](saturday-npm-publishing.md) describes tagged publishing, manual dry-runs, coordinated versions, and the one-time npm trusted-publisher setup.
+
 - [x] REPORT-PKG-01–05: three package scaffolds, versioned shared model, ported gallery, generic metadata filters, portable artifact export.
 - [x] REPORT-PKG-06–10: runner adapters, Cucumber recording example, optional Saturday labels, merge CLI.
 - [x] REPORT-PKG-11–13: standalone tarball consumers, runner baseline comparisons, edge cases, browser and artifact checks.

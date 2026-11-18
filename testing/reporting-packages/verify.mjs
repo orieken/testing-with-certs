@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { packages, root, build } from './build.mjs';
 const json = file => JSON.parse(readFileSync(file, 'utf8'));
+const version = json(join(root, 'packages/saturday-reporting/package.json')).version;
 const browser = process.argv.includes('--browser');
 const destination = join(root, 'artifacts/saturday-reporting');
 mkdirSync(destination, { recursive: true });
@@ -28,7 +29,7 @@ function installExample(name, adapter, tarballs) {
   writeFileSync(join(directory, 'package.json'), JSON.stringify(manifest));
   run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', ...(process.env.SATURDAY_NPM_OFFLINE ? ['--offline'] : [])], directory);
   const installed = json(join(directory, 'node_modules', '@orieken', adapter, 'package.json'));
-  assert.equal(installed.dependencies['@orieken/saturday-reporting'], '0.1.0');
+  assert.equal(installed.dependencies['@orieken/saturday-reporting'], version);
   mkdirSync(join(directory, 'test-results'), { recursive: true });
   return directory;
 }
@@ -139,14 +140,14 @@ try {
   const tarballs = {};
   for (const name of packages) {
     run(process.env.SATURDAY_PNPM ?? 'pnpm', ['pack', '--pack-destination', temporary], join(root, 'packages', name));
-    const file = join(temporary, `orieken-${name}-0.1.0.tgz`);
+    const file = join(temporary, `orieken-${name}-${version}.tgz`);
     const inventory = JSON.parse(run('npm', ['pack', '--dry-run', '--json', '--ignore-scripts', file], temporary))[0];
     assert.ok(inventory.files.some(f => f.path === 'dist/index.d.ts'));
     assert.ok(inventory.files.some(f => f.path === 'LICENSE'));
     assert.ok(!inventory.files.some(f => /node_modules|src\/|test\//.test(f.path)));
     if (name === 'saturday-reporting') assert.ok(inventory.files.some(f => f.path === 'dist/ui/gallery.js'));
     tarballs[name] = file;
-    cpSync(file, join(destination, `orieken-${name}-0.1.0.tgz`));
+    cpSync(file, join(destination, `orieken-${name}-${version}.tgz`));
   }
   const pw = installExample('playwright', 'saturday-playwright-reporter', tarballs);
   const cu = installExample('cucumber', 'saturday-cucumber-formatter', tarballs);
