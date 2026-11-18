@@ -1,0 +1,77 @@
+name: Publish Saturday packages to npm
+on:
+  push:
+    tags: ['saturday-reporting-v*']
+  pull_request:
+    paths: ['.github/workflows/publish-saturday-npm.yml', '.github/scripts/reporting-release*.mjs', 'packages/saturday-reporting/package.json', 'packages/saturday-playwright-reporter/package.json', 'packages/saturday-cucumber-formatter/package.json', 'testing/reporting-packages/verify.mjs']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: saturday-npm-release
+  cancel-in-progress: false
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: '24.10.0'
+          package-manager-cache: false
+      - name: Test release policy and registry retry behavior
+        run: node --test .github/scripts/reporting-release.test.mjs
+      - name: Build and verify standalone tarball consumers
+        run: |
+          docker build --progress plain -f packages/saturday-reporting/Containerfile -t saturday-reporting:release .
+          mkdir -p artifacts/saturday-reporting
+          chmod 0777 artifacts/saturday-reporting
+          docker run --rm -v "$PWD/artifacts/saturday-reporting:/work/artifacts/saturday-reporting" saturday-reporting:release
+          docker run --rm --network none --user 0:0 --entrypoint chown \
+            -v "$PWD/artifacts/saturday-reporting:/report" saturday-reporting:release \
+            -R "$(id -u):$(id -g)" /report
+      - name: Validate coordinated versions and record exact tarball integrity
+        run: node .github/scripts/reporting-release.mjs plan
+      - name: Exercise npm publishing without changing the registry
+        run: node .github/scripts/reporting-release.mjs dry-run
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: saturday-npm-${{ github.sha }}
+          path: artifacts/saturday-reporting
+          if-no-files-found: error
+          retention-days: 14
+  publish:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/saturday-reporting-v')
+    needs: prepare
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+    environment: npm
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: '24.10.0'
+          package-manager-cache: false
+      - name: Install pinned npm with trusted-publishing support
+        run: npm install --global --ignore-scripts --no-audit --no-fund npm@11.15.0
+      - name: Require both source workflows passing on this exact main commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/reporting-release-gate.mjs
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: saturday-npm-${{ github.sha }}
+          path: artifacts/saturday-reporting
+      - name: Publish verified tarballs with npm OIDC and provenance
+        run: node .github/scripts/reporting-release.mjs publish
