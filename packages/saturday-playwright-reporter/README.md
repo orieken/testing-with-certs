@@ -2,6 +2,14 @@
 
 Saturday HTML reports for ordinary Playwright Test projects. Includes a visual gallery, heatmap, split inspector, themes, filters, steps, attempts, screenshots, and video playback. No Saturday framework or Go dependency.
 
+![Saturday Playwright report in the dark visual gallery, showing test results, attachments, and recording availability](https://raw.githubusercontent.com/orieken/testing-with-certs/main/docs/assets/saturday-reporting/playwright-gallery.png)
+
+The visual gallery keeps each test and its attachments together. The light-theme split inspector below shows both attempts of a flaky Playwright test.
+
+![Saturday Playwright split inspector in the light theme, with a flaky test selected and both attempts expanded](https://raw.githubusercontent.com/orieken/testing-with-certs/main/docs/assets/saturday-reporting/playwright-inspector.png)
+
+Screenshots use the standalone verification examples, including deliberate failures and retries.
+
 ## Install and configure
 
 Initial compatibility: Node **24.x**, ESM, `@playwright/test` **1.61.0**.

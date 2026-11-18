@@ -2,6 +2,14 @@
 
 Saturday HTML reports for ordinary Cucumber.js projects. Features, scenario outline rows, steps, hooks, retries, attachments, and original statuses appear in the same gallery as Saturday’s Playwright reports. No Saturday framework is required.
 
+![Saturday Cucumber report in the dark visual gallery, showing scenario outline rows, attachments, and original scenario statuses](https://raw.githubusercontent.com/orieken/testing-with-certs/main/docs/assets/saturday-reporting/cucumber-gallery.png)
+
+The visual gallery keeps outline rows and scenario results distinct. The light-theme split inspector below shows both attempts and step results for a flaky Cucumber scenario.
+
+![Saturday Cucumber split inspector in the light theme, with a flaky scenario selected and both attempts expanded](https://raw.githubusercontent.com/orieken/testing-with-certs/main/docs/assets/saturday-reporting/cucumber-inspector.png)
+
+Screenshots use the standalone verification examples, including deliberate failures and retries.
+
 ## Install and configure
 
 Initial compatibility: Node **24.x**, ESM, `@cucumber/cucumber` **12.9.0**. This release uses that version’s supported `Formatter` API; it does not claim compatibility with later formatter-plugin APIs.
