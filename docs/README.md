@@ -32,7 +32,7 @@ TEST-02 now has [native certificate-password evidence](completion/18-native-cert
 
 ## Read and execute
 
-The [Saturday reporting packages](saturday-reporting.md) provide standalone Playwright and Cucumber HTML reports, portable media, and report merging, with build, verification, pilot, and release instructions.
+The [Saturday reporting packages](saturday-reporting.md) provide standalone Playwright and Cucumber HTML reports, portable media, and report merging, with build, verification, pilot, and release instructions. [Completion 71](completion/71-saturday-reporting-pilot.md) records the successful 36-case native authentication pilot and both new Actions jobs.
 
 1. [Decisions and architecture](architecture.md)
 2. [Mermaid infrastructure and workflow diagrams](workflows.md)

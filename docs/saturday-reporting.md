@@ -35,7 +35,7 @@ Browser verification records a real page in each runner, merges the reports, rel
 
 The output under `artifacts/saturday-reporting/` contains three tarballs, a combined example report, a screenshot when browser checks run, and `verification.json`. Example reports deliberately include failing scenarios; a failed run label is expected. The dedicated [CI workflow](../.github/workflows/saturday-reporting.yml) verifies standalone packages with pinned Node 24.10 and bundled Chromium, and runs a separate native live-authentication job with real Chrome and Edge. Its output is a CI artifact, not a GitHub Pages publication.
 
-Local implementation verification passed on macOS with Node 24.11.1 and installed Chrome, and in a clean Linux arm64 container with Node 24.10.0 and bundled Chromium. Each run verified all three tarballs, eight core tests, twelve Playwright cases, twelve Cucumber scenarios, both recordings, graceful interruption, and empty runs. Seven existing recording/naming/cleanup regressions and the repository source-complexity check also passed. The Linux check was local Docker execution; remote GitHub amd64 CI and provider-backed pilot results remain unobserved.
+Local implementation verification passed on macOS with Node 24.11.1 and installed Chrome, and in a clean Linux arm64 container with Node 24.10.0 and bundled Chromium. Each run verified all three tarballs, eight core tests, twelve Playwright cases, twelve Cucumber scenarios, both recordings, graceful interruption, and empty runs. Seven existing recording/naming/cleanup regressions and the repository source-complexity check also passed. Native GitHub amd64 verification subsequently passed both standalone and live-authentication jobs in [run 44225962468](https://github.com/orieken/testing-with-certs/actions/runs/44225962468): 36/36 live cases, 68 attached clips played, fixture restoration, and independent project cleanup. See [completion 71](completion/71-saturday-reporting-pilot.md) for source revision, artifacts, fixes, and observed limits.
 
 ## Existing-suite pilot
 
@@ -69,8 +69,8 @@ The Go operator, provider-specific validators, CI inventories, sanitization gate
 - [x] REPORT-PKG-11–13: standalone tarball consumers, runner baseline comparisons, edge cases, browser and artifact checks.
 - [x] REPORT-PKG-14: opt-in existing-suite pilots and container package/build integration.
 - [x] REPORT-PKG-15–17: integration documentation, exact initial compatibility declarations, and publishable tarball preparation.
-- [ ] Run the provider-backed certificate/password pilot in both runners and record its comparison before broader migration.
-- [ ] Observe the new Linux workflow on GitHub; local checks do not establish a remote CI result.
+- [x] Run the provider-backed certificate/password pilot in both runners: all 36 cases and 68 attached clips passed in native CI; legacy results, producer media hashes, text privacy, fixture restoration, and project cleanup were independently checked.
+- [x] Observe both new Linux workflow jobs passing on GitHub in run 44225962468; download and independently inspect their uploaded artifacts.
 - [ ] Publish core first, then adapters, after reviewing the release tarballs and confirming npm scope ownership. Registry publication is a separate action.
 
 To prepare release artifacts without publishing:
