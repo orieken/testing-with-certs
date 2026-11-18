@@ -9,7 +9,11 @@ compose_file="$root_dir/infra/compose.yaml"
 overlay_file="$root_dir/infra/teaching.compose.yaml"
 compose() {
   if [ "${LAB_PASSWORD_REPORTS:-0}" = 1 ]; then
-    docker compose -f "$compose_file" -f "$overlay_file" -f "$root_dir/infra/teaching-ci.compose.yaml" "$@"
+    if [ "${SATURDAY_AUTH_PILOT:-0}" = 1 ]; then
+      docker compose -f "$compose_file" -f "$overlay_file" -f "$root_dir/infra/teaching-ci.compose.yaml" -f "$root_dir/infra/saturday-reporting-pilot.compose.yaml" "$@"
+    else
+      docker compose -f "$compose_file" -f "$overlay_file" -f "$root_dir/infra/teaching-ci.compose.yaml" "$@"
+    fi
   else
     docker compose -f "$compose_file" -f "$overlay_file" "$@"
   fi
@@ -46,6 +50,17 @@ if [ "${LAB_PASSWORD_FORCE_FAILURE:-0}" = 1 ]; then
   exit 1
 fi
 for browser in chrome msedge; do
+  if [ "${SATURDAY_AUTH_PILOT:-0}" = 1 ]; then
+    compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e "LAB_RECORDING_PRIVACY_DIR=/work/artifacts/saturday-auth-pilot/privacy-$browser" teaching-tests \
+      node /work/testing/teaching/auth-recording-privacy.mjs
+    compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e "SATURDAY_REPORT_DIR=/work/artifacts/saturday-auth-pilot/$browser-playwright" teaching-tests \
+      sh -c 'cd /work/testing && ./node_modules/.bin/playwright test --config playwright.password.config.mjs'
+    remove_profiles
+    compose run --rm --no-deps -e "LAB_BROWSER=$browser" -e "SATURDAY_REPORT_DIR=/work/artifacts/saturday-auth-pilot/$browser-cucumber" teaching-tests \
+      sh -c 'cd /work/testing && ./node_modules/.bin/cucumber-js --config cucumber.saturday.mjs'
+    if [ "$browser" = chrome ]; then remove_profiles; fi
+    continue
+  fi
   compose run --rm --no-deps -e "LAB_BROWSER=$browser" teaching-tests \
     sh -c 'cd /work/testing && ./node_modules/.bin/playwright test --config playwright.password.config.mjs'
   remove_profiles
@@ -59,4 +74,8 @@ if [ "${LAB_PASSWORD_REPORTS:-0}" = 1 ]; then
   docker run --rm --platform linux/amd64 --network none --entrypoint node \
     -v "$LAB_PASSWORD_REPORT_DIR:/work/artifacts/certificate-password-ci" magic-shop-runner:03 \
     /work/testing/reporting/auth-recording-index.mjs certificate-password /work/artifacts/certificate-password-ci
+fi
+if [ "${SATURDAY_AUTH_PILOT:-0}" = 1 ]; then
+  compose run --rm --no-deps teaching-tests node /work/testing/reporting-packages/check-auth-pilot.mjs \
+    /work/artifacts/saturday-auth-pilot /work/artifacts/certificate-password-ci
 fi

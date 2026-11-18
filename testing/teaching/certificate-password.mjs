@@ -151,6 +151,6 @@ async function runcheckCertificatePassword(browser, kind) {
   } finally { await context.close(); }
 }
 
-export async function checkCertificatePassword(browser, kind, playwright) {
-  return withAuthRecording(browser, playwright, kind, 'certificate-password', (recorded, runtime) => runcheckCertificatePassword(recorded, kind, runtime));
+export async function checkCertificatePassword(browser, kind, playwright, onRecording) {
+  return withAuthRecording(browser, playwright, kind, 'certificate-password', (recorded, runtime) => runcheckCertificatePassword(recorded, kind, runtime), onRecording);
 }

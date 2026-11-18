@@ -1,0 +1,71 @@
+name: Saturday reporting packages
+on:
+  push:
+    paths: ['packages/**', 'testing/**', 'infra/**', 'apps/**', 'services/**', 'seed/**', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', '.github/workflows/saturday-reporting.yml']
+  pull_request:
+    paths: ['packages/**', 'testing/**', 'infra/**', 'apps/**', 'services/**', 'seed/**', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', '.github/workflows/saturday-reporting.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: saturday-reporting-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  standalone:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Build pinned standalone verification environment
+        run: docker build --progress plain -f packages/saturday-reporting/Containerfile -t saturday-reporting:ci .
+      - name: Verify tarball installs, both runners, and recorded browser playback
+        run: |
+          mkdir -p artifacts/saturday-reporting
+          chmod 0777 artifacts/saturday-reporting
+          docker run --rm -v "$PWD/artifacts/saturday-reporting:/work/artifacts/saturday-reporting" saturday-reporting:ci
+          docker run --rm --network none --user 0:0 --entrypoint chown \
+            -v "$PWD/artifacts/saturday-reporting:/report" saturday-reporting:ci \
+            -R "$(id -u):$(id -g)" /report
+      - name: Save package tarballs and verified example report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: saturday-reporting-packages
+          path: artifacts/saturday-reporting
+          if-no-files-found: error
+  live-authentication:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      LAB_PROJECT: magic-shop-saturday-ci-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Run disposable Chrome/Edge authentication pilot through both reporters
+        run: sh testing/run-saturday-auth-pilot.sh
+      - name: Remove and independently verify pilot resources
+        if: always()
+        timeout-minutes: 5
+        run: sh testing/cleanup-certificate-password.sh
+      - name: Require complete comparison and successful cleanup
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path('artifacts/saturday-auth-pilot') / os.environ['LAB_PROJECT']
+          result = json.loads((root / 'verification.json').read_text())
+          cleanup = json.loads((root / 'cleanup.json').read_text())
+          assert result['status'] == 'passed' and result['cases'] == 36
+          assert len(result['selections']) == 4 and all(x['cases'] == 9 for x in result['selections'])
+          assert len(result['playback']) == 4 and all(x['status'] == 'passed' and x['videos'] >= 9 for x in result['playback'])
+          assert cleanup['status'] == 'passed' and all(cleanup[k] for k in ('containersAbsent', 'networksAbsent', 'volumesAbsent'))
+          PY
+      - name: Save verified live pilot report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: saturday-live-authentication-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/saturday-auth-pilot/${{ env.LAB_PROJECT }}/
+          if-no-files-found: error
+          retention-days: 7

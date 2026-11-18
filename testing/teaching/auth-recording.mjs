@@ -33,7 +33,7 @@ export function installRecordingPrivacy() {
   apply(); new MutationObserver(apply).observe(document, { childList: true, subtree: true });
 }
 
-export async function withAuthRecording(browser, playwright, name, method, run) {
+export async function withAuthRecording(browser, playwright, name, method, run, onRecording) {
   const selection = recordingSelection(name, method);
   // Certificate/password also supports a non-report manual command.
   if (method === 'certificate-password' && process.env.LAB_PASSWORD_REPORTS !== '1') return run(browser, playwright);
@@ -78,5 +78,6 @@ export async function withAuthRecording(browser, playwright, name, method, run) 
       spec: method === 'rfc8705' ? 'rfc8705/browser.spec.mjs' : method.startsWith('authentik-') ? `teaching/authentik${authentikPhase(name)==='lifecycle'?'-lifecycle':''}.mjs` : `teaching/${method === 'password-totp' ? 'password-otp' : method}.mjs`, videos: videos.map(value => value.split('\\').join('/')),
       privacy: 'provider-document-hidden-before-paint',
     }, null, 2));
+    if (onRecording) await onRecording(videos.map(path => join(selection.root, path)));
   }
 }

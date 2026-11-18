@@ -1,0 +1,11 @@
+{
+  "name": "saturday-cucumber-example",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "cucumber-js" },
+  "devDependencies": {
+    "@cucumber/cucumber": "12.9.0",
+    "@orieken/saturday-cucumber-formatter": "0.1.0",
+    "@playwright/test": "1.61.0"
+  }
+}

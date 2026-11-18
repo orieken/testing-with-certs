@@ -1,0 +1,47 @@
+{
+  "name": "@orieken/saturday-playwright-reporter",
+  "version": "0.1.0",
+  "description": "Saturday HTML reports for ordinary Playwright Test projects",
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepack": "npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orieken/testing-with-certs.git",
+    "directory": "packages/saturday-playwright-reporter"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "typescript": "5.9.3",
+    "@playwright/test": "1.61.0"
+  },
+  "dependencies": {
+    "@orieken/saturday-reporting": "workspace:0.1.0"
+  },
+  "peerDependencies": {
+    "@playwright/test": "1.61.0"
+  }
+}
