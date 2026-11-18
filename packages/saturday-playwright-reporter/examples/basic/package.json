@@ -1,0 +1,10 @@
+{
+  "name": "saturday-playwright-example",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "playwright test" },
+  "devDependencies": {
+    "@playwright/test": "1.61.0",
+    "@orieken/saturday-playwright-reporter": "0.1.0"
+  }
+}

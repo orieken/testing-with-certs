@@ -7,6 +7,9 @@ COPY services/customer-api/package.json services/customer-api/package.json
 COPY testing/package.json testing/package.json
 COPY contracts/package.json contracts/package.json
 COPY packages/saturday-keycloak/package.json packages/saturday-keycloak/package.json
+COPY packages/saturday-reporting/package.json packages/saturday-reporting/package.json
+COPY packages/saturday-playwright-reporter/package.json packages/saturday-playwright-reporter/package.json
+COPY packages/saturday-cucumber-formatter/package.json packages/saturday-cucumber-formatter/package.json
 COPY spikes/certificate-login/vendor/orieken-saturday-playwright-certs-0.1.0.tgz spikes/certificate-login/vendor/orieken-saturday-playwright-certs-0.1.0.tgz
 RUN pnpm install --frozen-lockfile --fetch-timeout=30000
 COPY packages/saturday-keycloak/ packages/saturday-keycloak/

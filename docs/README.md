@@ -32,6 +32,8 @@ TEST-02 now has [native certificate-password evidence](completion/18-native-cert
 
 ## Read and execute
 
+The [Saturday reporting packages](saturday-reporting.md) provide standalone Playwright and Cucumber HTML reports, portable media, and report merging, with build, verification, pilot, and release instructions.
+
 1. [Decisions and architecture](architecture.md)
 2. [Mermaid infrastructure and workflow diagrams](workflows.md)
 3. [Certificate login and manual browser design](authentication.md) and [manual operator guide](manual-browser.md)

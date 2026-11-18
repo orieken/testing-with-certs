@@ -8,7 +8,8 @@ FROM base AS workspace
 RUN npm install --global --ignore-scripts --no-audit --no-fund pnpm@12.9.1 --fetch-timeout=30000 --fetch-retries=1
 USER node
 RUN pnpm install --frozen-lockfile --fetch-timeout=30000
-RUN pnpm --filter saturday-keycloak-prototype run build \
+RUN pnpm build:reporting \
+    && pnpm --filter saturday-keycloak-prototype run build \
     && pnpm -r --if-present run typecheck \
     && pnpm -r --if-present run build
 RUN pnpm --filter saturday-keycloak-prototype run test:build \

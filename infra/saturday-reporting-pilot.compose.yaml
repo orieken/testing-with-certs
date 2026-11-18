@@ -1,0 +1,4 @@
+services:
+  teaching-tests:
+    volumes:
+      - ${SATURDAY_PILOT_REPORT_DIR:?Set disposable pilot report directory}:/work/artifacts/saturday-auth-pilot

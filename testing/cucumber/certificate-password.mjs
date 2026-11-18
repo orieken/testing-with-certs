@@ -1,6 +1,7 @@
 import { BeforeAll, AfterAll, Given, setDefaultTimeout } from '@cucumber/cucumber';
 import { chromium } from '@playwright/test';
 import { checkCertificatePassword } from '../teaching/certificate-password.mjs';
+import { readFile } from 'node:fs/promises';
 let browser;
 setDefaultTimeout(90_000);
 BeforeAll(async () => {
@@ -10,5 +11,7 @@ BeforeAll(async () => {
 });
 AfterAll(async () => { await browser?.close(); });
 Given('the certificate and password check {string} passes', async function (kind) {
-  await checkCertificatePassword(browser, kind);
+  await checkCertificatePassword(browser, kind, undefined, process.env.SATURDAY_REPORT_DIR ? async videos => {
+    for (const [index, path] of videos.entries()) await this.attach(await readFile(path), { mediaType: 'video/webm', fileName: `Video ${index + 1}` });
+  } : undefined);
 });

@@ -5,6 +5,9 @@ RUN npm install --global pnpm@12.9.1 --fetch-timeout=30000 --fetch-retries=1
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/magic-shop/package.json apps/magic-shop/package.json
 COPY packages/saturday-keycloak/package.json packages/saturday-keycloak/package.json
+COPY packages/saturday-reporting/package.json packages/saturday-reporting/package.json
+COPY packages/saturday-playwright-reporter/package.json packages/saturday-playwright-reporter/package.json
+COPY packages/saturday-cucumber-formatter/package.json packages/saturday-cucumber-formatter/package.json
 COPY services/customer-api/package.json services/customer-api/package.json
 COPY testing/package.json testing/package.json
 COPY contracts/package.json contracts/package.json
@@ -41,12 +44,15 @@ COPY testing/container/ testing/container/
 COPY --from=dependencies /work/node_modules /work/node_modules
 COPY --from=dependencies /work/testing/node_modules /work/testing/node_modules
 COPY --from=dependencies /work/services/customer-api/node_modules /work/services/customer-api/node_modules
-COPY --from=dependencies /work/packages/saturday-keycloak/node_modules /work/packages/saturday-keycloak/node_modules
+COPY --from=dependencies /work/packages /work/packages
 RUN /work/testing/node_modules/.bin/playwright install ffmpeg && chmod -R a+rX /opt/ms-playwright
 COPY packages/saturday-keycloak/ /work/packages/saturday-keycloak/
+COPY packages/saturday-reporting/ /work/packages/saturday-reporting/
+COPY packages/saturday-playwright-reporter/ /work/packages/saturday-playwright-reporter/
+COPY packages/saturday-cucumber-formatter/ /work/packages/saturday-cucumber-formatter/
 RUN cd /work/packages/saturday-keycloak && /work/packages/saturday-keycloak/node_modules/.bin/tsc -p tsconfig.json
 COPY testing/ testing/
-RUN cd /work/testing && /work/testing/node_modules/.bin/tsc -p tsconfig.runtime.json
+RUN node testing/reporting-packages/build.mjs && cd /work/testing && /work/testing/node_modules/.bin/tsc -p tsconfig.runtime.json
 COPY contracts/ contracts/
 COPY seed/identities.json seed/identities.json
 RUN mkdir -p /home/runner /work/testing/test-results /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix && chown -R 1000:1000 /home/runner /work/testing/test-results
