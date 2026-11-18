@@ -19,8 +19,8 @@
     "@xmldom/xmldom": "0.9.12",
     "saturday-keycloak-prototype": "workspace:*",
     "xml-crypto": "6.4.0",
-    "@orieken/saturday-playwright-reporter": "workspace:0.1.0",
-    "@orieken/saturday-cucumber-formatter": "workspace:0.1.0"
+    "@orieken/saturday-playwright-reporter": "workspace:0.1.1",
+    "@orieken/saturday-cucumber-formatter": "workspace:0.1.1"
   },
   "devDependencies": {
     "@types/node": "24.10.0",

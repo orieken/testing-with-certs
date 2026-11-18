@@ -1,6 +1,6 @@
 {
   "name": "@orieken/saturday-playwright-reporter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Saturday HTML reports for ordinary Playwright Test projects",
   "type": "module",
   "license": "Apache-2.0",
@@ -39,7 +39,7 @@
     "@playwright/test": "1.61.0"
   },
   "dependencies": {
-    "@orieken/saturday-reporting": "workspace:0.1.0"
+    "@orieken/saturday-reporting": "workspace:0.1.1"
   },
   "peerDependencies": {
     "@playwright/test": "1.61.0"

@@ -221,7 +221,7 @@ importers:
   packages/saturday-cucumber-formatter:
     dependencies:
       '@orieken/saturday-reporting':
-        specifier: workspace:0.1.0
+        specifier: workspace:0.1.1
         version: link:../saturday-reporting
     devDependencies:
       '@cucumber/cucumber':
@@ -258,7 +258,7 @@ importers:
   packages/saturday-playwright-reporter:
     dependencies:
       '@orieken/saturday-reporting':
-        specifier: workspace:0.1.0
+        specifier: workspace:0.1.1
         version: link:../saturday-reporting
     devDependencies:
       '@playwright/test':
@@ -311,10 +311,10 @@ importers:
         specifier: 0.1.1
         version: 0.1.1(@cucumber/cucumber@12.9.0)(@orieken/saturday-core@0.1.3(playwright@1.61.0))(playwright@1.61.0)
       '@orieken/saturday-cucumber-formatter':
-        specifier: workspace:0.1.0
+        specifier: workspace:0.1.1
         version: link:../packages/saturday-cucumber-formatter
       '@orieken/saturday-playwright-reporter':
-        specifier: workspace:0.1.0
+        specifier: workspace:0.1.1
         version: link:../packages/saturday-playwright-reporter
       '@playwright/test':
         specifier: 1.61.0
