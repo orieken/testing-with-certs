@@ -4,7 +4,7 @@ import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,rmSync,symlinkSync} fro
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {authentikCaseNames,authentikPhase} from '../teaching/provider-matrix.mjs';
-import {safeAuthentikOutput} from './authentik.mjs';
+import {safeAuthentikOutput,safeAuthentikStage} from './authentik.mjs';
 import {checkAuthentikEvidence} from './check-authentik.mjs';
 function fixture(root){
  for(const browser of ['chrome','msedge'])for(const runner of ['playwright','cucumber']){
@@ -45,4 +45,12 @@ test('provider progress forwarding accepts only fixed credential-free events',()
  const valid='Authentik group lifecycle: withdrawn';
  assert.deepEqual(safeAuthentikOutput(valid+'\nAuthentik group lifecycle: restored'),[valid,'Authentik group lifecycle: restored']);
  for(const line of [valid+' token=private', 'prefix '+valid, 'Authentik group lifecycle: unknown', 'Bearer private', '\u001b[31m'+valid])assert.deepEqual(safeAuthentikOutput(line),[]);
+});
+
+test('failure stages retain only allowlisted first-line diagnostics for both runners',()=>{
+ assert.equal(safeAuthentikStage('Authentik stage recovery-login'),'recovery-login');
+ assert.deepEqual(safeAuthentikOutput('Authentik recovery challenge: password'),['Authentik recovery challenge: password']);
+ assert.deepEqual(safeAuthentikOutput('Authentik recovery challenge: password secret=private'),[]);
+ assert.equal(safeAuthentikStage('Error: Authentik stage recovery-fault\nBearer private'),'recovery-fault');
+ for(const message of ['Authentik stage unknown','Authentik stage recovery-login secret=private','Bearer private','prefix Authentik stage recovery-login'])assert.equal(safeAuthentikStage(message),undefined);
 });

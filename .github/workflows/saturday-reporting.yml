@@ -22,7 +22,17 @@ jobs:
       - name: Build pinned unit-test environment without browser dependencies
         run: docker build --progress plain --target unit -f packages/saturday-reporting/Containerfile -t saturday-reporting:unit .
       - name: Run core, isolated adapter callbacks, and pilot comparator unit tests
-        run: docker run --rm --network none saturday-reporting:unit
+        run: |
+          mkdir -p artifacts/saturday-reporting-unit
+          chmod 0777 artifacts/saturday-reporting-unit
+          docker run --rm --network none -v "$PWD/artifacts/saturday-reporting-unit:/work/artifacts/saturday-reporting/coverage" saturday-reporting:unit
+      - name: Save adapter coverage measurements and gate results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: saturday-adapter-coverage-${{ github.run_id }}
+          path: artifacts/saturday-reporting-unit/
+          if-no-files-found: error
   standalone:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -31,15 +41,28 @@ jobs:
         with:
           persist-credentials: false
       - name: Build pinned standalone verification environment
+        id: environment
         run: docker build --progress plain -f packages/saturday-reporting/Containerfile -t saturday-reporting:ci .
-      - name: Verify tarball installs, both runners, and recorded browser playback
+      - name: Verify tarball installs, UI regressions, both runners, and recorded playback
         run: |
           mkdir -p artifacts/saturday-reporting
           chmod 0777 artifacts/saturday-reporting
           docker run --rm -v "$PWD/artifacts/saturday-reporting:/work/artifacts/saturday-reporting" saturday-reporting:ci
+      - name: Restore artifact ownership after successful or failed verification
+        if: always() && steps.environment.outcome == 'success'
+        run: |
           docker run --rm --network none --user 0:0 --entrypoint chown \
             -v "$PWD/artifacts/saturday-reporting:/report" saturday-reporting:ci \
             -R "$(id -u):$(id -g)" /report
+      - name: Save UI results and visual regression diffs
+        if: always() && steps.environment.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: saturday-ui-results-${{ github.run_id }}
+          path: |
+            artifacts/saturday-reporting/ui-results/
+            artifacts/saturday-reporting/ui-results.json
+          if-no-files-found: ignore
       - name: Save package tarballs and verified example report
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:

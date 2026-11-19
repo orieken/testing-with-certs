@@ -14,6 +14,7 @@
     "test:matrix": "./lab matrix",
     "build:reporting": "node testing/reporting-packages/build.mjs",
     "test:reporting:unit": "node testing/reporting-packages/unit.mjs",
+    "test:reporting:ui": "node testing/reporting-packages/ui.mjs",
     "test:reporting": "node testing/reporting-packages/verify.mjs",
     "test:reporting:browser": "node testing/reporting-packages/verify.mjs --browser"
   }

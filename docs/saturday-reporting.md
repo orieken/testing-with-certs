@@ -24,6 +24,12 @@ This command builds the packages, then runs core tests, isolated Playwright `onB
 
 The **Adapter callback unit tests** CI job runs this suite in the pinned Node 24.10 `unit` container target, which does not install browser dependencies. Standalone and npm release verification also run the unit suite before testing packed consumers.
 
+Each adapter must independently retain **100% line coverage, 100% function coverage, and at least 90% branch coverage**. Initial measured branch coverage is 91.53% for Playwright and 94.55% for Cucumber. Missing or invalid coverage fails the job. CI retains per-adapter JSON, LCOV, and gate output in its coverage artifact.
+
+`pnpm test:reporting:ui` runs offline report interaction tests on desktop and mobile viewports: combined filters, empty searches, keyboard operation, retries, modal Escape/focus restoration, theme persistence, and horizontal overflow. Linux amd64 with the pinned bundled Chromium additionally compares eight strict pixel baselines covering gallery, heatmap, and inspector in both themes, plus mobile gallery layouts. Other platforms and explicitly selected browser channels run interaction checks but skip pixel comparisons.
+
+Visual baselines are never updated automatically in CI. Generate deliberate changes in the pinned Linux amd64 image with `node testing/reporting-packages/ui.mjs --update-snapshots`, inspect the resulting PNGs under `testing/reporting-packages/ui-snapshots/`, and commit approved changes. Video pixels are masked because browser-native playback controls are dynamic; real playback remains covered by packed-consumer verification. CI retains actual/expected/diff screenshots and UI results on failure.
+
 For complete package and browser verification:
 
 ```sh

@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { packages, root, build } from './build.mjs';
 import { runUnitTests } from './unit.mjs';
+import { runUiTests } from './ui.mjs';
 const json = file => JSON.parse(readFileSync(file, 'utf8'));
 const version = json(join(root, 'packages/saturday-reporting/package.json')).version;
 const browser = process.argv.includes('--browser');
@@ -171,6 +172,7 @@ try {
   const moved = join(temporary, 'relocated');
   cpSync(merged, moved, { recursive: true });
   const browserTests = browser ? await verifyBrowser(pw, join(moved, 'index.html')) : null;
+  if (browser) runUiTests({ buildPackages: false });
   // The same installed packages must also work with ordinary successful runs.
   run(process.execPath, ['node_modules/@playwright/test/cli.js', 'test'], pw);
   run(process.execPath, ['node_modules/@cucumber/cucumber/bin/cucumber.js'], cu);
