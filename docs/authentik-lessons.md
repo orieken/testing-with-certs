@@ -53,6 +53,8 @@ provider logout plus a clean return and isolated profile, and OIDC broker-state
 or SAML signature rejection. OIDC code-exchange negatives cover wrong/missing
 PKCE verifiers, consumed codes, and unregistered callbacks on both exchanges.
 Six additional OIDC cases cover controlled cancellation, interrupted callback, provider/token unavailability, interrupted token response, and failed logout navigation, each followed by a successful login in the same context. See [the shared recovery contract](oidc-testing.md#cancellation-and-recovery).
+
+Recovery accepts a fresh identification form, a resumed password challenge, or a completed provider SSO login. A failed password submission can leave the existing session at its password challenge; the test must resume that challenge without clearing cookies or storage. All three paths still run the original identity, audience, and API-denial controls. Both runners emit only allowlisted failure-stage and recovery-challenge labels, with raw diagnostics withheld.
 OIDC state cases change only state on real pending callbacks. The separate SAML
 application callback fixture retains its invalid-code/unmatched-state input.
 The SAML signature negative

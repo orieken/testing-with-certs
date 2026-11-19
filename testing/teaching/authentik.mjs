@@ -11,6 +11,7 @@ import {checkJwksLifecycle} from './oidc-jwks.mjs';
 import {jwksCaseNames} from '../../infra/oidc-token-fixture/cases.mjs';
 import {checkUpstreamIdToken} from './oidc-upstream.mjs';
 import {checkOidcRecovery} from './oidc-recovery.mjs';
+import {completeAuthentikSignIn} from './authentik-login.mjs';
 import {oidcRecoveryKinds} from './oidc-recovery-cases.mjs';
 import {checkAuthentikBoundary,captureCallback} from './authentik-boundaries.mjs';
 import {authentikCaseNames,authentikLifecycleCaseNames} from './provider-matrix.mjs';
@@ -34,7 +35,8 @@ export async function checkAuthentik(browser,name,playwright){
   page.on('response',async r=>{if(!r.url().startsWith('https://shop.magic.test:9743/api/v3/flows/executor/')||r.status()!==200)return;try{const v=await r.json();if(Object.keys(v.field_errors??{}).length||Object.keys(v.response_errors??{}).length)providerRejected=true;}catch{}});
   page.on('response',response=>{if(response.url()===endpoint&&response.status()===200)captured=response;});
   async function begin(){await page.goto(`${shop}/teaching/${method}`);await page.getByRole('button',{name:`Sign in with authentik ${method.endsWith('oidc')?'OIDC':'SAML'}`,exact:true}).click();}
-  async function identify(){stage='provider-username';await page.locator('input[name="uidField"]').fill(user.username);await page.getByRole('button',{name:'Log in',exact:true}).click();stage='provider-password';if(kind==='disabled-user'){await expect.poll(async()=>providerRejected||await page.locator('ak-stage-password input[type="password"]').count()>0).toBe(true);if(providerRejected)return;}await page.locator('ak-stage-password input[type="password"]').fill(kind==='wrong-password'?'intentionally-incorrect-password':user.password);stage='provider-submit';await page.getByRole('button',{name:'Continue',exact:true}).click();}
+  async function submitPassword(){stage='provider-password';await page.locator('ak-stage-password input[type="password"]').fill(kind==='wrong-password'?'intentionally-incorrect-password':user.password);stage='provider-submit';await page.getByRole('button',{name:'Continue',exact:true}).click();}
+  async function identify(){stage='provider-username';await page.locator('input[name="uidField"]').fill(user.username);await page.getByRole('button',{name:'Log in',exact:true}).click();stage='provider-password';if(kind==='disabled-user'){await expect.poll(async()=>providerRejected||await page.locator('ak-stage-password input[type="password"]').count()>0).toBe(true);if(providerRejected)return;}await submitPassword();}
   async function validate(tokens,role=true){
    const token=tokens.access_token;
    stage='claims';const claims=JSON.parse(Buffer.from(token.split('.')[1],'base64url').toString());
@@ -52,8 +54,13 @@ export async function checkAuthentik(browser,name,playwright){
   }
   async function login(allowSso=false,role=true){
    captured=undefined;await begin();
-   if(allowSso)await expect(page.locator('input[name="uidField"]').or(page.getByTestId('lesson-user')).first()).toBeVisible({timeout:30000});
-   if(!allowSso||!await page.getByTestId('lesson-user').isVisible())await identify();
+   if(allowSso){
+    const identity=page.getByTestId('lesson-user'),password=page.locator('ak-stage-password input[type="password"]');
+    await expect(page.locator('input[name="uidField"]').or(password).or(identity).first()).toBeVisible({timeout:30000});
+    return completeAuthentikSignIn({identityVisible:()=>identity.isVisible(),passwordVisible:()=>password.isVisible(),identify,submitPassword,
+     accepted:()=>accepted(role),onChallenge:value=>console.log(`Authentik recovery challenge: ${value}`)});
+   }
+   await identify();
    return accepted(role);
   }
   async function logout(){

@@ -5,6 +5,8 @@ import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync,
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { packages, root, build } from './build.mjs';
+import { runUnitTests } from './unit.mjs';
+import { runUiTests } from './ui.mjs';
 const json = file => JSON.parse(readFileSync(file, 'utf8'));
 const version = json(join(root, 'packages/saturday-reporting/package.json')).version;
 const browser = process.argv.includes('--browser');
@@ -136,7 +138,7 @@ async function verifyBrowser(directory, pagePath) {
 }
 try {
   build();
-  run(process.execPath, ['--test', 'packages/saturday-reporting/test/reporting.test.mjs', 'testing/reporting-packages/auth-pilot.test.mjs'], root);
+  runUnitTests({ buildPackages: false });
   const tarballs = {};
   for (const name of packages) {
     run(process.env.SATURDAY_PNPM ?? 'pnpm', ['pack', '--pack-destination', temporary], join(root, 'packages', name));
@@ -170,6 +172,7 @@ try {
   const moved = join(temporary, 'relocated');
   cpSync(merged, moved, { recursive: true });
   const browserTests = browser ? await verifyBrowser(pw, join(moved, 'index.html')) : null;
+  if (browser) runUiTests({ buildPackages: false });
   // The same installed packages must also work with ordinary successful runs.
   run(process.execPath, ['node_modules/@playwright/test/cli.js', 'test'], pw);
   run(process.execPath, ['node_modules/@cucumber/cucumber/bin/cucumber.js'], cu);
@@ -180,7 +183,7 @@ try {
   run(process.execPath, ['node_modules/@cucumber/cucumber/bin/cucumber.js', '--tags', '@not-selected'], cu);
   assert.equal(json(join(pw, 'saturday-report/report.json')).runs[0].tests.length, 0);
   assert.equal(json(join(cu, 'saturday-report/report.json')).runs[0].tests.length, 0);
-  const summary = { node: process.version, playwright: '1.61.0', cucumber: '12.9.0', coreTests: 8, playwrightTests: playwright.runs[0].tests.length, cucumberTests: cucumber.runs[0].tests.length, browserTests, gracefulInterruption: true, emptyRuns: true, tarballs: packages.length };
+  const summary = { node: process.version, playwright: json(join(pw, 'node_modules/@playwright/test/package.json')).version, cucumber: json(join(cu, 'node_modules/@cucumber/cucumber/package.json')).version, coreTests: 8, playwrightTests: playwright.runs[0].tests.length, cucumberTests: cucumber.runs[0].tests.length, browserTests, gracefulInterruption: true, emptyRuns: true, tarballs: packages.length };
   writeFileSync(join(destination, 'verification.json'), JSON.stringify(summary, null, 2) + '\n');
   console.log('PASS: standalone tarball installs, runner baseline comparisons, retries, parallel execution, report merge, and successful reruns');
   console.log(JSON.stringify(summary));

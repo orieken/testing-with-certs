@@ -12,10 +12,10 @@ Screenshots use the standalone verification examples, including deliberate failu
 
 ## Install and configure
 
-Initial compatibility: Node **24.x**, ESM, `@playwright/test` **1.61.0**.
+Compatibility: Node **24.x**, ESM, `@playwright/test` **1.65.1**.
 
 ```sh
-npm install --save-dev @orieken/saturday-playwright-reporter @playwright/test@1.61.0
+npm install --save-dev @orieken/saturday-playwright-reporter @playwright/test@1.65.1
 ```
 
 ```js
