@@ -92,6 +92,9 @@ for (const theme of ['dark', 'light']) for (const view of ['gallery', 'heatmap',
     if (theme === 'light') await page.getByRole('button', { name: 'Toggle theme' }).click();
     await page.locator(`[data-view="${view}"]`).click();
     // Native video pixels are dynamic; playback is checked separately by the packed-consumer suite.
-    await expect(page).toHaveScreenshot(`${view}-${theme}.png`, { fullPage: true, mask: [page.locator('video')] });
+    const capture = { fullPage: true, animations: 'disabled', mask: [page.locator('video')] };
+    // Keep a diagnostic image even when strict mode rejects a missing reference before comparison.
+    await page.screenshot({ ...capture, path: info.outputPath(`${view}-${theme}-actual.png`) });
+    await expect(page).toHaveScreenshot(`${view}-${theme}.png`, capture);
   });
 }
