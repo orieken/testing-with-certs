@@ -13,6 +13,7 @@
     "build:test": "sh testing/run-all.sh all",
     "test:matrix": "./lab matrix",
     "build:reporting": "node testing/reporting-packages/build.mjs",
+    "test:reporting:unit": "node testing/reporting-packages/unit.mjs",
     "test:reporting": "node testing/reporting-packages/verify.mjs",
     "test:reporting:browser": "node testing/reporting-packages/verify.mjs --browser"
   }

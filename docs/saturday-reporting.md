@@ -14,6 +14,18 @@ See the package READMEs for [Playwright configuration](../packages/saturday-play
 
 ## Build and verify
 
+Run the unit suite without starting browsers or authentication services:
+
+```sh
+pnpm test:reporting:unit
+```
+
+This command builds the packages, then runs core tests, isolated Playwright `onBegin`/`onEnd` tests, Cucumber envelope/`finished` tests, and pilot-comparison tests. The adapter tests replace only the shared report writer and supply synthetic runner results or a stub event collector. They exercise the real adapter classes and Cucumber superclass cleanup without rendering reports or writing artifacts. Node's module-mocking flag is confined to the unit-test process.
+
+The **Adapter callback unit tests** CI job runs this suite in the pinned Node 24.10 `unit` container target, which does not install browser dependencies. Standalone and npm release verification also run the unit suite before testing packed consumers.
+
+For complete package and browser verification:
+
 ```sh
 pnpm install --frozen-lockfile
 pnpm build:reporting

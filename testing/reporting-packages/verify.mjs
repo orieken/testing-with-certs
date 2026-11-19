@@ -5,6 +5,7 @@ import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync,
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { packages, root, build } from './build.mjs';
+import { runUnitTests } from './unit.mjs';
 const json = file => JSON.parse(readFileSync(file, 'utf8'));
 const version = json(join(root, 'packages/saturday-reporting/package.json')).version;
 const browser = process.argv.includes('--browser');
@@ -136,7 +137,7 @@ async function verifyBrowser(directory, pagePath) {
 }
 try {
   build();
-  run(process.execPath, ['--test', 'packages/saturday-reporting/test/reporting.test.mjs', 'testing/reporting-packages/auth-pilot.test.mjs'], root);
+  runUnitTests({ buildPackages: false });
   const tarballs = {};
   for (const name of packages) {
     run(process.env.SATURDAY_PNPM ?? 'pnpm', ['pack', '--pack-destination', temporary], join(root, 'packages', name));

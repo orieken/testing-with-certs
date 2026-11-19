@@ -1,12 +1,18 @@
-FROM node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9
+FROM node:24.10.0-bookworm-slim@sha256:b8d2197aff9129d16c801a3e3e1b2a873c4946480f5a310f38056df2268c38d9 AS dependencies
 WORKDIR /work
 ENV CI=true PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 PLAYWRIGHT_BROWSERS_PATH=/opt/ms-playwright
 COPY --chown=node:node . .
 RUN npm install --global --ignore-scripts --no-audit --no-fund pnpm@12.9.1 --fetch-timeout=30000 --fetch-retries=1 \
     && pnpm install --frozen-lockfile --fetch-timeout=30000 \
-    && pnpm --filter @orieken/saturday-playwright-reporter exec playwright install --with-deps chromium \
-    && chmod -R a+rX /opt/ms-playwright \
     && mkdir -p /work/artifacts \
     && chown node:node /work /work/artifacts
+
+FROM dependencies AS unit
+USER node
+CMD ["node", "testing/reporting-packages/unit.mjs"]
+
+FROM dependencies AS browser
+RUN pnpm --filter @orieken/saturday-playwright-reporter exec playwright install --with-deps chromium \
+    && chmod -R a+rX /opt/ms-playwright
 USER node
 CMD ["node", "testing/reporting-packages/verify.mjs", "--browser"]
