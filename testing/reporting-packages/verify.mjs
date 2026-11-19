@@ -183,7 +183,7 @@ try {
   run(process.execPath, ['node_modules/@cucumber/cucumber/bin/cucumber.js', '--tags', '@not-selected'], cu);
   assert.equal(json(join(pw, 'saturday-report/report.json')).runs[0].tests.length, 0);
   assert.equal(json(join(cu, 'saturday-report/report.json')).runs[0].tests.length, 0);
-  const summary = { node: process.version, playwright: '1.61.0', cucumber: '12.9.0', coreTests: 8, playwrightTests: playwright.runs[0].tests.length, cucumberTests: cucumber.runs[0].tests.length, browserTests, gracefulInterruption: true, emptyRuns: true, tarballs: packages.length };
+  const summary = { node: process.version, playwright: json(join(pw, 'node_modules/@playwright/test/package.json')).version, cucumber: json(join(cu, 'node_modules/@cucumber/cucumber/package.json')).version, coreTests: 8, playwrightTests: playwright.runs[0].tests.length, cucumberTests: cucumber.runs[0].tests.length, browserTests, gracefulInterruption: true, emptyRuns: true, tarballs: packages.length };
   writeFileSync(join(destination, 'verification.json'), JSON.stringify(summary, null, 2) + '\n');
   console.log('PASS: standalone tarball installs, runner baseline comparisons, retries, parallel execution, report merge, and successful reruns');
   console.log(JSON.stringify(summary));

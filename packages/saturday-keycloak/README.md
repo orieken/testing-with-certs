@@ -35,7 +35,7 @@ separately under `dist-tests`, excluded from the packed file set. The package
 is developed and packed inside containers. A clean packed installation is
 checked by `Consumer.Containerfile`; no workspace links are used there.
 
-This prototype currently pins Playwright Test 1.61.0 and Cucumber 12.9.0.
+This prototype currently pins Playwright Test 1.65.1 and Cucumber 12.9.0.
 The earlier Cucumber 11.3.0 integration was exercised with Chrome
 154.0.8037.97 and Edge 154.0.4258.62 on Apple Silicon amd64 emulation;
 the refreshed runner and independent packed consumer pass with Cucumber 12.9.0.

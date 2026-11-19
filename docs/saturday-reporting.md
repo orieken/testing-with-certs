@@ -8,7 +8,7 @@ Three coordinated packages extract the report presentation into a Node library u
 | `@orieken/saturday-playwright-reporter` | Playwright Test results, steps, attempts, annotations, and attachments |
 | `@orieken/saturday-cucumber-formatter` | Cucumber features, example rows, hooks, attempts, tags, and attachments |
 
-The packages use TypeScript and ESM with Node 24.x. The adapters declare exact initial peers: Playwright 1.61.0 and Cucumber 12.9.0. Saturday framework packages are optional producers of metadata, not runtime dependencies. The Cucumber adapter uses the Formatter API shipped in 12.9.0, not an unverified later plugin API.
+The packages use TypeScript and ESM with Node 24.x. The adapters declare exact supported peers: Playwright 1.65.1 and Cucumber 12.9.0. Saturday framework packages are optional producers of metadata, not runtime dependencies. The Cucumber adapter uses the Formatter API shipped in 12.9.0, not an unverified later plugin API.
 
 See the package READMEs for [Playwright configuration](../packages/saturday-playwright-reporter/README.md), [Cucumber configuration and video hooks](../packages/saturday-cucumber-formatter/README.md), and [core types, merging, and artifact policy](../packages/saturday-reporting/README.md).
 
@@ -28,7 +28,7 @@ Each adapter must independently retain **100% line coverage, 100% function cover
 
 `pnpm test:reporting:ui` runs offline report interaction tests on desktop and mobile viewports: combined filters, empty searches, keyboard operation, retries, modal Escape/focus restoration, theme persistence, and horizontal overflow. Linux amd64 with the pinned bundled Chromium additionally compares eight strict pixel baselines covering gallery, heatmap, and inspector in both themes, plus mobile gallery layouts. Other platforms and explicitly selected browser channels run interaction checks but skip pixel comparisons.
 
-Visual baselines are never updated automatically in CI. Generate deliberate changes in the pinned Linux amd64 image with `node testing/reporting-packages/ui.mjs --update-snapshots`, inspect the resulting PNGs under `testing/reporting-packages/ui-snapshots/`, and commit approved changes. Video pixels are masked because browser-native playback controls are dynamic; real playback remains covered by packed-consumer verification. CI retains actual/expected/diff screenshots and UI results on failure.
+Visual baselines are never updated automatically in CI. The committed references use Playwright 1.65.1's bundled Chromium on Linux amd64. Generate deliberate changes in the pinned Linux amd64 image with `node testing/reporting-packages/ui.mjs --update-snapshots`, inspect the resulting PNGs under `testing/reporting-packages/ui-snapshots/`, and commit approved changes. Video pixels are masked because browser-native playback controls are dynamic; real playback remains covered by packed-consumer verification. CI retains actual/expected/diff screenshots and UI results on failure.
 
 For complete package and browser verification:
 
