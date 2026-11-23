@@ -68,6 +68,20 @@ Use the version from the package manifests. Stable versions publish with npm's `
 
 The publishing gate requires that the tag matches the manifests, the commit belongs to `main`, and both source workflows succeeded on that exact main push. It waits for in-progress checks, accounting for the repository's 75-minute authentication jobs. PRs, branches, forks, and manual validation runs cannot enter the publish step.
 
+## Verify published npm consumers
+
+Every successful tag publication automatically runs **Clean npm consumer smoke tests** in a separate job without publishing credentials. It waits up to ten minutes for all three exact versions to become visible on npm, then creates temporary Playwright and Cucumber projects outside the checkout with an empty npm cache. Runner versions come from the published adapters' exact peer dependencies. Lockfile checks require registry URLs, coordinated package versions, and integrity hashes matching the release plan. Local tarballs, workspace links, and Saturday framework dependencies cannot satisfy the check; the plain Cucumber project also must not install Playwright.
+
+The smoke tests check passing runs, retries, deliberate failures, PNG attachments, Playwright recordings and playback, report merging, and offline HTML rendering without JavaScript errors or network requests. Expected failing fixtures must produce nonzero runner exits, while separate successful runs must exit cleanly. The workflow retains consumer sources, lockfiles, command logs, HTML/JSON reports, media, screenshots, and `summary.json` as `saturday-npm-smoke-RUN_ID-ATTEMPT`, including diagnostic artifacts on failure. A smoke failure makes the release workflow fail even though publication has already completed; it does not remove published versions.
+
+To recheck an existing version without preparing or publishing packages:
+
+```sh
+gh workflow run publish-saturday-npm.yml --ref main -f smoke_version=0.1.2
+```
+
+For a local run with Node 24 and browser-install permissions, use `SATURDAY_SMOKE_VERSION=0.1.2 node .github/scripts/reporting-release-smoke.mjs`. It installs Chromium and its system dependencies. Set `SATURDAY_SMOKE_SKIP_BROWSER_INSTALL=1` only when a compatible browser runtime is already provisioned. This manual mode verifies registry integrity against the clean install; automatic tagged releases additionally compare it with the verified release-plan artifact.
+
 ## Recover a partial release
 
 Rerun the failed tag workflow after resolving the reported problem. It checks all three registry versions before publishing anything. Already-published versions are skipped only if their registry integrity equals the verified tarball; differing bytes fail the release. Network or registry errors also fail instead of being interpreted as an absent package. Published npm versions are immutable: make a new coordinated version for changed contents.
