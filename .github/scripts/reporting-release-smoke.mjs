@@ -107,6 +107,13 @@ for (const [directory, runner, count] of [[pw,'playwright',3],[cu,'cucumber',4]]
   assert.equal(content.includes('SMOKE_RAW_PRIVATE_ERROR'), false, 'Raw errors must not enter portable reports');
   const report = JSON.parse(content), run = report.runs[0];
   assert.equal(run.runner, runner); assert.equal(run.status, 'failed'); assert.equal(run.tests.length, count);
+  const expected = runner === 'playwright' ? {
+    'Browser passes with a screenshot': 'passed', 'Browser retry is reported as flaky': 'flaky', 'Browser deliberate failure is preserved': 'failed',
+  } : {
+    'Plain Cucumber passes alpha': 'passed', 'Plain Cucumber passes beta': 'passed', 'Plain Cucumber retry is reported as flaky': 'flaky', 'Plain Cucumber deliberate failure is preserved': 'failed',
+  };
+  assert.equal(new Set(run.tests.map(test => test.title)).size, count);
+  for (const test of run.tests) assert.equal(test.outcome, expected[test.title], `Wrong outcome for ${test.title}`);
   const flaky = run.tests.find(test => test.outcome === 'flaky');
   assert.ok(flaky); assert.equal(flaky.attempts.length, 2);
   assert.equal(flaky.attempts[0].status, 'failed'); assert.equal(flaky.attempts[1].status, 'passed');
