@@ -5,6 +5,12 @@ on:
   pull_request:
     paths: ['.github/workflows/publish-saturday-npm.yml', '.github/scripts/reporting-release*.mjs', 'packages/saturday-reporting/package.json', 'packages/saturday-playwright-reporter/package.json', 'packages/saturday-cucumber-formatter/package.json', 'testing/reporting-packages/verify.mjs']
   workflow_dispatch:
+    inputs:
+      smoke_version:
+        description: 'Smoke-test an existing npm version only; leave blank for the normal release dry-run'
+        type: string
+        required: false
+        default: ''
 permissions:
   contents: read
 concurrency:
@@ -12,6 +18,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   prepare:
+    if: github.event_name != 'workflow_dispatch' || inputs.smoke_version == ''
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -24,7 +31,7 @@ jobs:
           node-version: '24.10.0'
           package-manager-cache: false
       - name: Test release policy and registry retry behavior
-        run: node --test .github/scripts/reporting-release.test.mjs
+        run: node --test .github/scripts/reporting-release.test.mjs .github/scripts/reporting-release-smoke.test.mjs
       - name: Build and verify standalone tarball consumers
         run: |
           docker build --progress plain -f packages/saturday-reporting/Containerfile -t saturday-reporting:release .
@@ -75,3 +82,42 @@ jobs:
           path: artifacts/saturday-reporting
       - name: Publish verified tarballs with npm OIDC and provenance
         run: node .github/scripts/reporting-release.mjs publish
+  npm-smoke:
+    name: Clean npm consumer smoke tests
+    needs: [prepare, publish]
+    if: >-
+      !cancelled() &&
+      ((github.event_name == 'push' && needs.publish.result == 'success') ||
+       (github.event_name == 'workflow_dispatch' && inputs.smoke_version != ''))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: '24.10.0'
+          package-manager-cache: false
+      - name: Test npm propagation and consumer-install policy
+        run: node --test .github/scripts/reporting-release-smoke.test.mjs
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        if: github.event_name == 'push'
+        with:
+          name: saturday-npm-${{ github.sha }}
+          path: artifacts/saturday-release
+      - name: Install exact published versions in clean projects and verify reports
+        env:
+          SATURDAY_SMOKE_VERSION: ${{ inputs.smoke_version }}
+          SATURDAY_SMOKE_RELEASE_PLAN: ${{ github.event_name == 'push' && 'artifacts/saturday-release/release-plan.json' || '' }}
+        run: node .github/scripts/reporting-release-smoke.mjs
+      - name: Retain npm consumer sources, lockfiles, logs, reports, and screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: saturday-npm-smoke-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/saturday-npm-smoke/
+          if-no-files-found: warn
+          retention-days: 14
