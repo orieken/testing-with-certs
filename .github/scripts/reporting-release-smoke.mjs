@@ -26,9 +26,9 @@ const projects = [
 const json = path => JSON.parse(readFileSync(path, 'utf8'));
 const write = (path, contents) => { mkdirSync(dirname(path), { recursive: true }); writeFileSync(path, contents); };
 const manifest = (directory, name, dependencies) => write(join(directory, 'package.json'), JSON.stringify({ name, private: true, type: 'module', devDependencies: dependencies }, null, 2));
-function run(directory, executable, args, expected = 0, extraEnv = {}, allowFailure = false) {
+function run(directory, executable, args, expected = 0, extraEnv = {}, { allowFailure = false, timeoutMs = 240000 } = {}) {
   console.log(`RUN ${directory}: ${executable} ${args.join(' ')}`);
-  const child = spawnSync(executable, args, { cwd: directory, encoding: 'utf8', timeout: 240000, maxBuffer: 5000000, env: { ...process.env, ...extraEnv } });
+  const child = spawnSync(executable, args, { cwd: directory, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 5000000, env: { ...process.env, ...extraEnv } });
   console.log(child.stdout ?? '');
   if (child.stderr) console.log(child.stderr);
   const logDirectory = join(evidence, 'logs'); mkdirSync(logDirectory, { recursive: true });
@@ -50,7 +50,7 @@ process.env.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = '1'; delete process.env.NODE_PATH
 manifest(pw, 'npm-playwright-smoke', { '@playwright/test': release.playwright, '@orieken/saturday-playwright-reporter': version, '@orieken/saturday-reporting': version });
 manifest(cu, 'npm-cucumber-smoke', { '@cucumber/cucumber': release.cucumber, '@orieken/saturday-cucumber-formatter': version });
 manifest(cb, 'npm-cucumber-browser-smoke', { '@cucumber/cucumber': release.cucumber, '@orieken/saturday-cucumber-formatter': version, playwright: release.playwright });
-for (const { directory } of projects) await installFromRegistry(() => run(directory, 'npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--prefer-online', '--registry', registry], 0, {}, true), { deadline: registryDeadline });
+for (const { directory } of projects) await installFromRegistry(() => run(directory, 'npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--prefer-online', '--registry', registry], 0, {}, { allowFailure: true }), { deadline: registryDeadline });
 
 const installations = [];
 for (const { directory, name } of projects) {
@@ -62,7 +62,7 @@ for (const { directory, name } of projects) {
   cpSync(join(directory, 'package-lock.json'), join(evidence, directory.split('/').at(-1) + '-package-lock.json'));
 }
 assert.equal(existsSync(join(cu, 'node_modules/@playwright')), false, 'Cucumber formatter must work without Playwright');
-if (process.env.SATURDAY_SMOKE_SKIP_BROWSER_INSTALL !== '1') run(pw, 'node', ['node_modules/@playwright/test/cli.js', 'install', '--with-deps', 'chromium']);
+if (process.env.SATURDAY_SMOKE_SKIP_BROWSER_INSTALL !== '1') run(pw, 'node', ['node_modules/@playwright/test/cli.js', 'install', '--with-deps', 'chromium'], 0, {}, { timeoutMs: 600000 });
 
 write(join(pw, 'playwright.config.mjs'), `import {defineConfig} from '@playwright/test';
 export default defineConfig({testDir:'./tests',workers:1,retries:1,timeout:20000,
