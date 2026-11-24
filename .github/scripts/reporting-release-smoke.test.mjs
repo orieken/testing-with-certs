@@ -2,6 +2,11 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { names } from './reporting-release.mjs';
 import { registry, validateRelease, waitForRelease, verifyInstalledLock, installFromRegistry } from './reporting-release-smoke-policy.mjs';
+import { browserMediaReceipts } from './reporting-release-smoke-media.mjs';
+import { createHash } from 'node:crypto';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const version = '0.1.2';
 function metadata() {
@@ -96,9 +101,58 @@ test('consumer locks require npm bytes and reject local sources, missing adapter
 
 test('plain Cucumber must not acquire a Playwright dependency, including a nested one', () => {
   const release = validateRelease(version, metadata());
-  assert.equal(verifyInstalledLock(lock(true), release, { cucumberOnly: true }).length, 2);
+  assert.equal(verifyInstalledLock(lock(true), release, { consumer: 'cucumber' }).length, 2);
   for (const path of ['node_modules/@playwright/test', 'node_modules/playwright', 'node_modules/another/node_modules/playwright-core']) {
     const sample = lock(true); sample.packages[path] = { version: '1.65.1', resolved: `${registry}/browser.tgz` };
-    assert.throws(() => verifyInstalledLock(sample, release, { cucumberOnly: true }), /must not install Playwright/);
+    assert.throws(() => verifyInstalledLock(sample, release, { consumer: 'cucumber' }), /must not install Playwright/);
   }
+});
+
+test('browser Cucumber installs the formatter with an exact browser version and no Playwright reporter', () => {
+  const release = validateRelease(version, metadata()), sample = lock(true);
+  sample.packages['node_modules/playwright'] = { version: release.playwright, resolved: `${registry}/playwright.tgz` };
+  assert.equal(verifyInstalledLock(sample, release, { consumer: 'cucumber-browser' }).length, 2);
+  sample.packages['node_modules/playwright'].version = '1.61.0';
+  assert.throws(() => verifyInstalledLock(sample, release, { consumer: 'cucumber-browser' }), /pinned Playwright/);
+});
+
+function mediaFixture(t, { width = 640, webm = Buffer.from('1a45dfa300','hex') } = {}) {
+  const directory = mkdtempSync(join(tmpdir(), 'saturday-smoke-media-'));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  mkdirSync(join(directory,'media'));
+  // Header fixtures exercise file/metadata checks; the browser smoke decodes real PNGs and WebMs.
+  const png = Buffer.alloc(24);Buffer.from('89504e470d0a1a0a','hex').copy(png);png.writeUInt32BE(width,16);png.writeUInt32BE(360,20);
+  const hashes = {}, attachments = [];
+  for (const [key, bytes, type] of [['png',png,'image/png'],['webm',webm,'video/webm']]) {
+    hashes[key] = createHash('sha256').update(bytes).digest('hex');
+    const path = `media/${hashes[key]}.${key}`;writeFileSync(join(directory,path),bytes);
+    attachments.push({ contentType:type,availability:'available',path });
+  }
+  return {directory,hashes,test:{title:'Recorded retry',attempts:[{index:1,attachments}]}};
+}
+
+test('browser media receipts retain scenario, attempt, and exact producer hashes', t => {
+  const fixture = mediaFixture(t);
+  assert.deepEqual(browserMediaReceipts(fixture.directory,[fixture.test]),[{title:'Recorded retry',attempt:1,...fixture.hashes}]);
+});
+
+test('missing, omitted, or tampered browser attachments fail the smoke gate', t => {
+  for (const mutate of [
+    items => items.pop(),
+    items => { items[0].availability = 'omitted'; },
+    items => { items[0].path = '../outside.png'; },
+  ]) {
+    const fixture = mediaFixture(t);mutate(fixture.test.attempts[0].attachments);
+    assert.throws(() => browserMediaReceipts(fixture.directory,[fixture.test]));
+  }
+  const fixture = mediaFixture(t);
+  writeFileSync(join(fixture.directory,fixture.test.attempts[0].attachments[0].path),'tampered');
+  assert.throws(() => browserMediaReceipts(fixture.directory,[fixture.test]),/Media bytes/);
+});
+
+test('browser media rejects placeholder screenshots and invalid recording headers', t => {
+  const tiny = mediaFixture(t,{width:1});
+  assert.throws(() => browserMediaReceipts(tiny.directory,[tiny.test]),/real browser viewport/);
+  const invalid = mediaFixture(t,{webm:Buffer.from('not a recording')});
+  assert.throws(() => browserMediaReceipts(invalid.directory,[invalid.test]),/must be WebM/);
 });

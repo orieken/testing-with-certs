@@ -77,13 +77,14 @@ export async function installFromRegistry(execute, { deadline, pause = delay, no
   }
 }
 
-export function verifyInstalledLock(lock, release, { cucumberOnly = false } = {}) {
+export function verifyInstalledLock(lock, release, { consumer = 'playwright' } = {}) {
+  assert.ok(['playwright','cucumber','cucumber-browser'].includes(consumer), 'Unknown npm smoke consumer');
   const installed = [];
   for (const [path, item] of Object.entries(lock.packages)) {
     if (!path) continue;
     assert.equal(item.link, undefined, `Unexpected package link: ${path}`);
     assert.ok(item.resolved?.startsWith(`${registry}/`), `Non-registry dependency: ${path}`);
-    if (cucumberOnly) assert.ok(!/node_modules\/(?:@playwright\/|playwright(?:-core)?$)/.test(path), 'Plain Cucumber must not install Playwright');
+    if (consumer === 'cucumber') assert.ok(!/node_modules\/(?:@playwright\/|playwright(?:-core)?$)/.test(path), 'Plain Cucumber must not install Playwright');
     if (!path.includes('node_modules/@orieken/')) continue;
     const name = path.slice(path.lastIndexOf('node_modules/') + 'node_modules/'.length);
     const expected = release.packages.find(item => item.name === name);
@@ -92,7 +93,8 @@ export function verifyInstalledLock(lock, release, { cucumberOnly = false } = {}
     assert.equal(item.integrity, expected.integrity, `Installed bytes differ from npm metadata: ${name}`);
     installed.push({ name, version: item.version, resolved: item.resolved, integrity: item.integrity });
   }
-  const expectedNames = ['@orieken/saturday-reporting', cucumberOnly ? '@orieken/saturday-cucumber-formatter' : '@orieken/saturday-playwright-reporter'];
+  if (consumer === 'cucumber-browser') assert.equal(lock.packages['node_modules/playwright']?.version, release.playwright, 'Browser Cucumber must use the pinned Playwright version');
+  const expectedNames = ['@orieken/saturday-reporting', consumer === 'playwright' ? '@orieken/saturday-playwright-reporter' : '@orieken/saturday-cucumber-formatter'];
   assert.deepEqual(installed.map(item => item.name).sort(), expectedNames.sort());
   return installed;
 }
